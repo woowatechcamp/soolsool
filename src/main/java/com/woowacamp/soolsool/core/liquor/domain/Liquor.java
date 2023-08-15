@@ -3,20 +3,21 @@ package com.woowacamp.soolsool.core.liquor.domain;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "liquors")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class Liquor extends BaseEntity {
 
     @Id
@@ -24,24 +25,24 @@ public class Liquor extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "category")
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category")
     private Category category;
 
-    @Column(name = "legion")
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region")
     private Region region;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 30)
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "price", length = 255)
     private String price;
 
-    @Column(name = "brand")
+    @Column(name = "brand", length = 20)
     private String brand;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 255)
     private String imageUrl;
 
     @Column(name = "alcohol")
@@ -52,4 +53,5 @@ public class Liquor extends BaseEntity {
 
     @Column(name = "stock")
     private String stock;
+
 }
