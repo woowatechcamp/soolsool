@@ -5,12 +5,11 @@ import com.woowacamp.soolsool.core.liquor.domain.Region;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -18,7 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "order_item")
+@Table(name = "order_items")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class OrderItem extends BaseEntity {
@@ -29,30 +28,30 @@ public class OrderItem extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(name = "liquor_category")
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "liquor_category")
     private Category category;
 
-    @Column(name = "liquor_legion")
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "liquor_region")
     private Region region;
 
-    @Column(name = "liquor_name")
+    @Column(name = "liquor_name", length = 30)
     private String name;
 
     // TODO: total price는 price와 quantity로 구할 수 있지 않나?
     // TODO: colum 순서
 
-    @Column(name = "liquor_price")
+    @Column(name = "liquor_price", length = 255)
     private String price;
 
-    @Column(name = "liquor_brand")
+    @Column(name = "liquor_brand", length = 20)
     private String brand;
 
-    @Column(name = "liquor_image_url")
+    @Column(name = "liquor_image_url", length = 255)
     private String imageUrl;
 
     @Column(name = "liquor_alcohol")
