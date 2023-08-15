@@ -25,20 +25,27 @@ public class Member extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 255)
     private String email;
+
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "phone_number")
+    @Column(name = "name", length = 20)
+    private String name;
+
+    @Column(name = "phone_number", length = 13)
     private String phoneNumber;
 
-    @Column(name = "address")
+    @Column(name = "mileage", length = 255)
+    private String mileage;
+
+    @Column(name = "address", length = 100)
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", length = 20)
     private RoleType role;
 
     @Builder
