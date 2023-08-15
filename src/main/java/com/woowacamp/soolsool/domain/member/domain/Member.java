@@ -43,11 +43,11 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-        final String email,
-        final String password,
-        final String phoneNumber,
-        final String address,
-        final RoleType role
+        String email,
+        String password,
+        String phoneNumber,
+        String address,
+        RoleType role
     ) {
         this.email = email;
         this.password = password;
