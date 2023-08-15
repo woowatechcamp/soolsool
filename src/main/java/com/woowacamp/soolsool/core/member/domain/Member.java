@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.domain.member.domain;
+package com.woowacamp.soolsool.core.member.domain;
 
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
