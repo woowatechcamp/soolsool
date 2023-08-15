@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.14'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "org.sonarqube" version "4.2.1.3168"
 }
 
 group = 'com.woowacamp'
@@ -36,4 +37,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "woowatechcamp_soolsool"
+        property "sonar.organization", "woowatechcamp"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
