@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "cart_items")
@@ -32,17 +33,18 @@ public class CartItem extends BaseEntity {
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "liquor_id")
+    @JoinColumn(name = "liquor_id", nullable = false)
     private Liquor liquor;
 
-    @Column(name = "liquor_quantity")
-    private LiquorQuantity quantity;
+    @ColumnDefault("1")
+    @Column(name = "quantity", nullable = false)
+    private CartItemQuantity quantity;
 
     @Builder
     public CartItem(
         final Long memberId,
         final Liquor liquor,
-        final LiquorQuantity quantity
+        final CartItemQuantity quantity
     ) {
         this.memberId = memberId;
         this.liquor = liquor;
