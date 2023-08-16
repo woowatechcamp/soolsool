@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,9 +33,21 @@ public class Order extends BaseEntity {
     private OrderStatus status;
 
     @Column(name = "total_price")
-    private String totalPrice;
+    private OrderPrice totalPrice;
 
     @Column(name = "total_quantity")
-    private String totalQuantity;
+    private OrderQuantity totalQuantity;
 
+    @Builder
+    public Order(
+        final Long memberId,
+        final OrderStatus status,
+        final OrderPrice totalPrice,
+        final OrderQuantity totalQuantity
+    ) {
+        this.memberId = memberId;
+        this.status = status;
+        this.totalPrice = totalPrice;
+        this.totalQuantity = totalQuantity;
+    }
 }
