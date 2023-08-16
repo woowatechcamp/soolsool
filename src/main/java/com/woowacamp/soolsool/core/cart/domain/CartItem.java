@@ -14,10 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "cart_items")
+@Getter
 @NoArgsConstructor(access = PROTECTED)
 public class CartItem extends BaseEntity {
 
@@ -28,16 +30,20 @@ public class CartItem extends BaseEntity {
 
     @Column(name = "member_id")
     private Long memberId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_id")
-
     private Liquor liquor;
 
     @Column(name = "liquor_quantity")
-    private int quantity;
+    private LiquorQuantity quantity;
 
     @Builder
-    public CartItem(Long memberId, Liquor liquor, int quantity) {
+    public CartItem(
+        final Long memberId,
+        final Liquor liquor,
+        final LiquorQuantity quantity
+    ) {
         this.memberId = memberId;
         this.liquor = liquor;
         this.quantity = quantity;

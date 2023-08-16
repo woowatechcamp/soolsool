@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.order.domain;
 
-import com.woowacamp.soolsool.core.liquor.domain.Category;
-import com.woowacamp.soolsool.core.liquor.domain.Region;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorType;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,11 +33,11 @@ public class OrderItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_category")
-    private Category category;
+    private LiquorType liquorType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_region")
-    private Region region;
+    private LiquorRegion liquorRegion;
 
     @Column(name = "liquor_name", length = 30)
     private String name;

@@ -11,12 +11,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @Table(name = "liquors")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Liquor extends BaseEntity {
 
@@ -26,32 +27,60 @@ public class Liquor extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category")
-    private Category category;
+    @JoinColumn(name = "type_id")
+    private LiquorType liquorType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region")
-    private Region region;
+    @JoinColumn(name = "region_id")
+    private LiquorRegion liquorRegion;
 
-    @Column(name = "name", length = 30)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id")
+    private LiquorStatus liquorStatus;
 
-    @Column(name = "price", length = 255)
-    private String price;
+    @Column(name = "name")
+    private LiquorName name;
 
-    @Column(name = "brand", length = 20)
-    private String brand;
+    @Column(name = "price")
+    private LiquorPrice price;
 
-    @Column(name = "image_url", length = 255)
-    private String imageUrl;
+    @Column(name = "brand")
+    private LiquorBrand brand;
 
-    @Column(name = "alcohol")
-    private String alcohol;
-
-    @Column(name = "volume")
-    private String volume;
+    @Column(name = "image_url")
+    private LiquorImageUrl imageUrl;
 
     @Column(name = "stock")
-    private String stock;
+    private LiquorStock stock;
 
+    @Column(name = "alcohol")
+    private LiquorAlcohol alcohol;
+
+    @Column(name = "volume")
+    private LiquorVolume volume;
+
+    @Builder
+    public Liquor(
+        final LiquorType liquorType,
+        final LiquorRegion liquorRegion,
+        final LiquorStatus liquorStatus,
+        final LiquorName name,
+        final LiquorPrice price,
+        final LiquorBrand brand,
+        final LiquorImageUrl imageUrl,
+        final LiquorStock stock,
+        final LiquorAlcohol alcohol,
+        final LiquorVolume volume
+    ) {
+        this.liquorType = liquorType;
+        this.liquorRegion = liquorRegion;
+        this.liquorStatus = liquorStatus;
+        this.name = name;
+        this.price = price;
+        this.brand = brand;
+        this.imageUrl = imageUrl;
+        this.stock = stock;
+        this.alcohol = alcohol;
+        this.volume = volume;
+    }
 }

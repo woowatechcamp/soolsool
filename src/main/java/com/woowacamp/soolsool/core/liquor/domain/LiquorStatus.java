@@ -1,32 +1,39 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
-import com.woowacamp.soolsool.global.common.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "regions")
+@Table(name = "liquor_regions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Region extends BaseEntity {
+public class LiquorStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "name")
+    private StatusType type;
 
-    @Builder
-    public Region(String name) {
-        this.name = name;
+    enum StatusType {
+
+        판매중,
+        판매중지,
+        ;
+
     }
+
 }

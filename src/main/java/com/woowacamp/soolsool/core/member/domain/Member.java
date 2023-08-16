@@ -3,11 +3,12 @@ package com.woowacamp.soolsool.core.member.domain;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,41 +26,45 @@ public class Member extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", length = 255)
-    private String email;
+    @Column(name = "email", nullable = false, unique = true)
+    private MemberEmail email;
 
+    @Column(name = "password", nullable = false)
+    private MemberPassword password;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "name", nullable = false)
+    private MemberName name;
 
-    @Column(name = "name", length = 20)
-    private String name;
+    @Column(name = "phone_number", nullable = false)
+    private MemberPhoneNumber phoneNumber;
 
-    @Column(name = "phone_number", length = 13)
-    private String phoneNumber;
+    @Column(name = "mileage", nullable = false)
+    private MemberMileage mileage;
 
-    @Column(name = "mileage", length = 255)
-    private String mileage;
+    @Column(name = "address", nullable = false)
+    private MemberAddress address;
 
-    @Column(name = "address", length = 100)
-    private String address;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", length = 20)
-    private RoleType role;
+    @JoinColumn(name = "role")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MemberRole role;
 
     @Builder
     public Member(
-        String email,
-        String password,
-        String phoneNumber,
-        String address,
-        RoleType role
+        final MemberEmail email,
+        final MemberPassword password,
+        final MemberName name,
+        final MemberPhoneNumber phoneNumber,
+        final MemberMileage mileage,
+        final MemberAddress address,
+        final MemberRole role
     ) {
         this.email = email;
         this.password = password;
+        this.name = name;
         this.phoneNumber = phoneNumber;
+        this.mileage = mileage;
         this.address = address;
         this.role = role;
     }
+
 }
