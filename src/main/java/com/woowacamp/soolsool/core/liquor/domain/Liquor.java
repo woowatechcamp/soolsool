@@ -35,30 +35,31 @@ public class Liquor extends BaseEntity {
     private LiquorRegion liquorRegion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id")
+    @JoinColumn(name = "status_id", nullable = false)
     private LiquorStatus liquorStatus;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 30)
     private LiquorName name;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false, length = 255)
     private LiquorPrice price;
 
-    @Column(name = "brand")
+    @Column(name = "brand", nullable = false, length = 20)
     private LiquorBrand brand;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false, length = 255)
     private LiquorImageUrl imageUrl;
 
-    @Column(name = "stock")
+    @Column(name = "stock", nullable = false)
     private LiquorStock stock;
 
-    @Column(name = "alcohol")
+    @Column(name = "alcohol", nullable = false)
     private LiquorAlcohol alcohol;
 
-    @Column(name = "volume")
+    @Column(name = "volume", nullable = false)
     private LiquorVolume volume;
 
+    // TODO: 필드가 너무 많은데 Liquor 정보를 모으는 VO가 필요할 것 같다
     @Builder
     public Liquor(
         final LiquorType liquorType,

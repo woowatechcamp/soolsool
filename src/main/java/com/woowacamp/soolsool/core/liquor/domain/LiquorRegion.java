@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
@@ -28,18 +29,21 @@ public class LiquorRegion extends BaseEntity {
     @Column(name = "name")
     private RegionType type;
 
+    @Getter
+    @RequiredArgsConstructor
     enum RegionType {
 
-        경기도,
-        강원도,
-        충청북도,
-        충청남도,
-        경상북도,
-        경상남도,
-        전라북도,
-        전라남도,
-        제주도,
+        GYEONGGI_DO("경기도"),
+        GANGWON_DO("강원도"),
+        CHUNGCHEONGBUK_DO("충청북도"),
+        CHUNGCHEONGNAM_DO("충청남도"),
+        GYEONGSANGBUK_DO("경상북도"),
+        GYEONGSANGNAM_DO("경상남도"),
+        JEOLLABUK_DO("전라북도"),
+        JEOLLANAM_DO("전라남도"),
+        JEJU_DO("제주도"),
         ;
 
+        private final String name;
     }
 }

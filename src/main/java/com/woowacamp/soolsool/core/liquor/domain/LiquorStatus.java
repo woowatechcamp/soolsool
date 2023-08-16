@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
@@ -28,12 +29,14 @@ public class LiquorStatus {
     @Column(name = "name")
     private StatusType type;
 
+    @Getter
+    @RequiredArgsConstructor
     enum StatusType {
 
-        판매중,
-        판매중지,
+        ON_SALE("판매중"),
+        STOPPED("판매중지"),
         ;
 
+        private final String status;
     }
-
 }

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
@@ -28,17 +29,19 @@ public class LiquorType extends BaseEntity {
     @Column(name = "name")
     private BrewType type;
 
+    @Getter
+    @RequiredArgsConstructor
     enum BrewType {
 
-        소주,
-        증류주,
-        리큐르,
-        막걸리,
-        약주,
-        청주,
-        과실주,
-        기타주류,
+        SOJU("소주"),
+        DISTILLED("증류주"),
+        MAKGEOLLI("막걸리"),
+        PURE("약주"),
+        RICE("청주"),
+        BERRY("과실주"),
+        ETC("기타주류"),
         ;
 
+        private final String type;
     }
 }
