@@ -26,22 +26,22 @@ public class Member extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private MemberEmail email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 60)
     private MemberPassword password;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 20)
     private MemberName name;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number", nullable = false, length = 13)
     private MemberPhoneNumber phoneNumber;
 
-    @Column(name = "mileage", nullable = false)
+    @Column(name = "mileage", nullable = false, length = 255)
     private MemberMileage mileage;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", nullable = false, length = 100)
     private MemberAddress address;
 
     @JoinColumn(name = "role")
