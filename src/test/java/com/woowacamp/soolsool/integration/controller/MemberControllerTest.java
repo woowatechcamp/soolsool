@@ -93,4 +93,24 @@ class MemberControllerTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("성공 : 멤버 삭제")
+    void deleteMember() {
+        // given
+        TestFixture.addMember();
+
+        // when
+        ExtractableResponse<Response> response = RestAssured.given()
+            .log().all()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .delete("/members")
+            .then()
+            .log().all()
+            .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 }

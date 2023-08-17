@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,5 +42,12 @@ public class MemberController {
         Long userId = 1L;
         memberService.modifyMember(userId, memberModifyRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> removeMember() {
+        Long userId = 1L;
+        memberService.removeMember(userId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
