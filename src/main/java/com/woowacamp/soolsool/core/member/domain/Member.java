@@ -12,7 +12,6 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberRole;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Convert;
