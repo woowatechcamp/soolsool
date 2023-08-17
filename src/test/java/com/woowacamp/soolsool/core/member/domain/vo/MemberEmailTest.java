@@ -43,7 +43,7 @@ class MemberEmailTest {
     @DisplayName("회원 이메일이 255자 초과일 경우 ShoppingException을 던진다.")
     void createFailInvalidLength() {
         /* given */
-        final String email = "a".repeat(239) + "@woowafriends.com"; // length = 256
+        String email = "a".repeat(239) + "@woowafriends.com"; // length = 256
 
         /* when & then */
         assertThatThrownBy(() -> new MemberEmail(email))
@@ -68,9 +68,9 @@ class MemberEmailTest {
     @DisplayName("이메일이 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        final MemberEmail origin = new MemberEmail("woowacamp@woowafriends.com");
-        final MemberEmail same = new MemberEmail("woowacamp@woowafriends.com");
-        final MemberEmail different = new MemberEmail("haha@woowafriends.com");
+        MemberEmail origin = new MemberEmail("woowacamp@woowafriends.com");
+        MemberEmail same = new MemberEmail("woowacamp@woowafriends.com");
+        MemberEmail different = new MemberEmail("haha@woowafriends.com");
 
         /* when & then */
         assertAll(

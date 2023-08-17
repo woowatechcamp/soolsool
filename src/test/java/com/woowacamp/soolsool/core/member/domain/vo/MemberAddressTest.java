@@ -18,7 +18,7 @@ class MemberAddressTest {
     @DisplayName("회원 주소를 정상적으로 생성한다.")
     void create() {
         /* given */
-        final String address = "서울 송파구 올림픽로 295 7층";
+        String address = "서울 송파구 올림픽로 295 7층";
 
         /* when & then */
         assertThatCode(() -> new MemberAddress(address))
@@ -42,7 +42,7 @@ class MemberAddressTest {
     @DisplayName("회원 주소가 100자 초과일 경우 ShoppingException을 던진다.")
     void createFailInvalidLength() {
         /* given */
-        final String address = "가".repeat(101);
+        String address = "가".repeat(101);
 
         /* when & then */
         assertThatThrownBy(() -> new MemberAddress(address))
@@ -54,9 +54,9 @@ class MemberAddressTest {
     @DisplayName("주소이 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        final MemberAddress origin = new MemberAddress("서울 송파구 올림픽로 295 7층");
-        final MemberAddress same = new MemberAddress("서울 송파구 올림픽로 295 7층");
-        final MemberAddress different = new MemberAddress("대구 동구 동대구로 550");
+        MemberAddress origin = new MemberAddress("서울 송파구 올림픽로 295 7층");
+        MemberAddress same = new MemberAddress("서울 송파구 올림픽로 295 7층");
+        MemberAddress different = new MemberAddress("대구 동구 동대구로 550");
 
         /* when & then */
         assertAll(

@@ -17,7 +17,7 @@ class MemberMileageTest {
     @DisplayName("회원 마일리지를 정상적으로 생성한다.")
     void create() {
         /* given */
-        final BigInteger mileage = BigInteger.valueOf(10_000L);
+        BigInteger mileage = BigInteger.valueOf(10_000L);
 
         /* when & then */
         assertThatCode(() -> new MemberMileage(mileage))
@@ -28,7 +28,7 @@ class MemberMileageTest {
     @DisplayName("회원 마일리지가 0 미만일 경우 ShoppingException을 던진다.")
     void createFailWithInvalidMileage() {
         /* given */
-        final BigInteger mileage = BigInteger.valueOf(-1L);
+        BigInteger mileage = BigInteger.valueOf(-1L);
 
         /* when & then */
         assertThatThrownBy(() -> new MemberMileage(mileage))
@@ -52,9 +52,9 @@ class MemberMileageTest {
     @DisplayName("회원 마일리지가 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        final MemberMileage origin = new MemberMileage(BigInteger.ONE);
-        final MemberMileage same = new MemberMileage(BigInteger.ONE);
-        final MemberMileage different = new MemberMileage(BigInteger.ZERO);
+        MemberMileage origin = new MemberMileage(BigInteger.ONE);
+        MemberMileage same = new MemberMileage(BigInteger.ONE);
+        MemberMileage different = new MemberMileage(BigInteger.ZERO);
 
         /* when & then */
         assertAll(
