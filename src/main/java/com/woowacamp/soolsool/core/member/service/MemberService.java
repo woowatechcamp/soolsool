@@ -38,4 +38,11 @@ public class MemberService {
         member.update(memberModifyRequest);
         memberRepository.save(member);
     }
+
+    @Transactional
+    public void removeMember(Long userId) {
+        Member member = memberRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보가 없습니다."));
+        memberRepository.delete(member);
+    }
 }

@@ -15,6 +15,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.core.member.service.MemberService;
+import com.woowacamp.soolsool.support.TestHelper;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @DisplayName("멤버 : 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
-class MemberSerivceTest {
+class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -89,19 +90,7 @@ class MemberSerivceTest {
     void readMeber() {
         // given
         Long userId = 1L;
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
-            "CUSTOMER",
-            "test@email.com",
-            "test_password",
-            "최배달",
-            "010-1234-5678",
-            "0",
-            "서울시 잠실역"
-        );
-        MemberRole memberRole = MemberRole.builder()
-            .name(MemberRoleType.CUSTOMER)
-            .build();
-        Member member = Member.of(memberRole, memberCreateRequest);
+        Member member = TestHelper.getMember();
         MemberFindResponse memberFindResponseExpected = MemberFindResponse.of(member);
 
         // when
@@ -133,19 +122,7 @@ class MemberSerivceTest {
             "new_name",
             "new_address"
         );
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
-            "CUSTOMER",
-            "test@email.com",
-            "test_password",
-            "최배달",
-            "010-1234-5678",
-            "0",
-            "서울시 잠실역"
-        );
-        MemberRole memberRole = MemberRole.builder()
-            .name(MemberRoleType.CUSTOMER)
-            .build();
-        Member member = Member.of(memberRole, memberCreateRequest);
+        Member member = TestHelper.getMember();
 
         // when
         when(memberRepository.findById(userId)).thenReturn(Optional.ofNullable(member));
@@ -166,5 +143,22 @@ class MemberSerivceTest {
             () -> assertThat(member.getAddress().getAddress())
                 .isEqualTo(memberModifyRequest.getAddress())
         );
+    }
+
+    @Test
+    @DisplayName("성공 : 회원 정보 삭제")
+    void removeMember() {
+        // given
+        Long userId = 1L;
+        Member member = TestHelper.getMember();
+
+        // when
+        when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
+        Assertions.assertThatNoException()
+            .isThrownBy(() -> memberService.removeMember(userId));
+
+        // then
+        verify(memberRepository).findById(userId);
+        verify(memberRepository).delete(member);
     }
 }
