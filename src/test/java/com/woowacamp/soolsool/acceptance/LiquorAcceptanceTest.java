@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.acceptance;
 
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -63,12 +64,13 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             300);
         ExtractableResponse<Response> saveLiquor = Liquor.saveLiquor(accessToken,
             saveLiquorRequest);
+        Long liquorId = Long.parseLong(saveLiquor.header("Location").split("/")[2]);
         ModifyLiquorRequest modifyLiquorRequest = new ModifyLiquorRequest(
             "SOJU",
             "GYEONGGI_DO",
             "ON_SALE",
             "안동소주",
-            "일품",
+            "3000",
             "브랜드",
             "soolsool.png",
             100,
@@ -79,9 +81,14 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = Liquor.modifyLiquor(
             accessToken,
+            liquorId,
             modifyLiquorRequest
         );
+
+        // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
+        assertThat(response.body().as(ApiResponse.class)
+            .getMessage()).isEqualTo(LIQUOR_UPDATED.getMessage());
     }
 
 }
