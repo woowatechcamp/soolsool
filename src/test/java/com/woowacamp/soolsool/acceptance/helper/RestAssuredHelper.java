@@ -24,5 +24,24 @@ public class RestAssuredHelper {
                 .extract();
         }
 
+        public static ExtractableResponse<Response> liquorDetail(String location) {
+            return RestAssured
+                    .given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get(location)
+                    .then().log().all()
+                    .extract();
+        }
+
+        public static ExtractableResponse<Response> liquorList() {
+            return RestAssured
+                    .given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get("/liquors")
+                    .then().log().all()
+                    .extract();
+        }
     }
 }
