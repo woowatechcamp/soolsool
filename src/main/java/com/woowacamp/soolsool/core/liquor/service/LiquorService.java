@@ -16,6 +16,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,22 +30,17 @@ public class LiquorService {
     private final LiquorTypeRepository liquorTypeRepository;
 
     public Long saveLiquor(SaveLiquorRequest request) {
-        LiquorRegionType liquorRegionType = LiquorRegionType.valueOf(request.getRegionName());
-        LiquorBrewType type = LiquorBrewType.valueOf(request.getTypeName());
-        LiquorStatusType statusType = LiquorStatusType.valueOf(request.getStatusName());
-
         LiquorType liquorType = liquorTypeRepository
-            .findByType(type)
-            .orElseThrow(
-                () -> new RuntimeException(NOT_LIQUOR_BREW_TYPE_FOUND.getMessage()));
+            .findByType(LiquorBrewType.findType(request.getTypeName()))
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_TYPE_FOUND));
 
         LiquorRegion liquorRegion = liquorRegionRepository
-            .findByType(liquorRegionType)
-            .orElseThrow(() -> new RuntimeException(NOT_LIQUOR_REGION_TYPE_FOUND.getMessage()));
+            .findByType(LiquorRegionType.findType(request.getRegionName()))
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_TYPE_FOUND));
 
         LiquorStatus liquorStatus = liquorStatusRepository
-            .findByType(statusType)
-            .orElseThrow(() -> new RuntimeException(NOT_LIQUOR_STATUS_TYPE_FOUND.getMessage()));
+            .findByType(LiquorStatusType.findType(request.getStatusName()))
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_TYPE_FOUND));
 
         Liquor liquor = Liquor.of(
             liquorType, liquorRegion,
