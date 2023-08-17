@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
-import com.woowacamp.soolsool.core.member.dto.request.MemberCreateRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
@@ -43,7 +43,7 @@ class MemberServiceTest {
     @DisplayName("성공 : 멤버 회원 가입")
     void createMember() {
         // given
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
             "CUSTOMER",
             "test@email.com",
             "test_password",
@@ -55,13 +55,13 @@ class MemberServiceTest {
         MemberRole memberRole = MemberRole.builder()
             .name(MemberRoleType.CUSTOMER)
             .build();
-        Member member = Member.of(memberRole, memberCreateRequest);
+        Member member = Member.of(memberRole, memberAddRequest);
 
         // when
         when(memberRoleRepository.findById(1L)).thenReturn(Optional.ofNullable(memberRole));
         when(memberRepository.save(any(Member.class))).thenReturn(member);
         Assertions.assertThatNoException()
-            .isThrownBy(() -> memberService.addMember(memberCreateRequest));
+            .isThrownBy(() -> memberService.addMember(memberAddRequest));
 
         // then
         verify(memberRoleRepository).findById(1L);
@@ -71,23 +71,23 @@ class MemberServiceTest {
             () -> assertThat(memberCaptor.getValue().getRole().getName())
                 .isEqualTo(MemberRoleType.CUSTOMER),
             () -> assertThat(memberCaptor.getValue().getEmail().getEmail())
-                .isEqualTo(memberCreateRequest.getEmail()),
+                .isEqualTo(memberAddRequest.getEmail()),
             () -> assertThat(memberCaptor.getValue().getPassword().getPassword())
-                .isEqualTo(memberCreateRequest.getPassword()),
+                .isEqualTo(memberAddRequest.getPassword()),
             () -> assertThat(memberCaptor.getValue().getName().getName())
-                .isEqualTo(memberCreateRequest.getName()),
+                .isEqualTo(memberAddRequest.getName()),
             () -> assertThat(memberCaptor.getValue().getPhoneNumber().getPhoneNumber())
-                .isEqualTo(memberCreateRequest.getPhoneNumber()),
+                .isEqualTo(memberAddRequest.getPhoneNumber()),
             () -> assertThat(memberCaptor.getValue().getMileage().getMileage())
-                .isEqualTo(memberCreateRequest.getMileage()),
+                .isEqualTo(memberAddRequest.getMileage()),
             () -> assertThat(memberCaptor.getValue().getAddress().getAddress())
-                .isEqualTo(memberCreateRequest.getAddress())
+                .isEqualTo(memberAddRequest.getAddress())
         );
     }
 
     @Test
     @DisplayName("성공 : 멤버 조회")
-    void readMeber() {
+    void readMember() {
         // given
         Long userId = 1L;
         Member member = TestHelper.getMember();

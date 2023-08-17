@@ -2,11 +2,13 @@ package com.woowacamp.soolsool.core.member.service;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
-import com.woowacamp.soolsool.core.member.dto.request.MemberCreateRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.global.exception.DefaultErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,24 +21,24 @@ public class MemberService {
     private final MemberRoleRepository memberRoleRepository;
 
     @Transactional
-    public void addMember(MemberCreateRequest memberCreateRequest) {
+    public void addMember(MemberAddRequest memberAddRequest) {
         MemberRole memberRole = memberRoleRepository.findById(1L)
-            .orElseThrow(() -> new IllegalArgumentException("회원 타입 정보가 없습니다."));
-        Member member = Member.of(memberRole, memberCreateRequest);
+            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_ROLE_TYPE));
+        Member member = Member.of(memberRole, memberAddRequest);
         memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
     public MemberFindResponse findMember(Long userId) {
         Member member = memberRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보가 없습니다."));
+            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
         return MemberFindResponse.of(member);
     }
 
     @Transactional
     public void modifyMember(Long userId, MemberModifyRequest memberModifyRequest) {
         Member member = memberRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보가 없습니다."));
+            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
         member.update(memberModifyRequest);
         memberRepository.save(member);
     }
@@ -44,7 +46,7 @@ public class MemberService {
     @Transactional
     public void removeMember(Long userId) {
         Member member = memberRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보가 없습니다."));
+            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
         memberRepository.delete(member);
     }
 }
