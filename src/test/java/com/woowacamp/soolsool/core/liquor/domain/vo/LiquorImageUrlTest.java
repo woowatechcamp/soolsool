@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.member.domain.vo;
+package com.woowacamp.soolsool.core.liquor.domain.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -11,52 +11,52 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-@DisplayName("회원 주소 단위 테스트")
-class MemberAddressTest {
+@DisplayName("술 이미지 경로 단위 테스트")
+class LiquorImageUrlTest {
 
     @Test
-    @DisplayName("회원 주소를 정상적으로 생성한다.")
+    @DisplayName("술 이미지 경로를 정상적으로 생성한다.")
     void create() {
         /* given */
-        String address = "서울 송파구 올림픽로 295 7층";
+        String imageUrl = "soju.png";
 
         /* when & then */
-        assertThatCode(() -> new MemberAddress(address))
+        assertThatCode(() -> new LiquorImageUrl(imageUrl))
             .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
     @NullAndEmptySource
-    @DisplayName("회원 주소가 null 혹은 공백일 경우 ShoppingException을 던진다.")
-    void createFailWithNullOrEmpty(String address) {
+    @DisplayName("술 이미지 경로가 null 혹은 공백일 경우 ShoppingException을 던진다.")
+    void createFailWithNullOrEmpty(String imageUrl) {
         /* given */
 
 
         /* when & then */
-        assertThatThrownBy(() -> new MemberAddress(address))
+        assertThatThrownBy(() -> new LiquorImageUrl(imageUrl))
             .isExactlyInstanceOf(ShoppingException.class)
-            .hasMessage("회원 주소는 null이거나 공백일 수 없습니다.");
+            .hasMessage("술 이미지 경로는 null이거나 공백일 수 없습니다.");
     }
 
     @Test
-    @DisplayName("회원 주소가 100자 초과일 경우 ShoppingException을 던진다.")
+    @DisplayName("술 이미지 경로가 255자 초과일 경우 ShoppingException을 던진다.")
     void createFailInvalidLength() {
         /* given */
-        String address = "가".repeat(101);
+        String imageUrl = "a".repeat(256);
 
         /* when & then */
-        assertThatThrownBy(() -> new MemberAddress(address))
+        assertThatThrownBy(() -> new LiquorImageUrl(imageUrl))
             .isExactlyInstanceOf(ShoppingException.class)
-            .hasMessage("회원 주소는 100자보다 길 수 없습니다.");
+            .hasMessage("술 이미지 경로는 255자보다 길 수 없습니다.");
     }
 
     @Test
-    @DisplayName("주소이 동일하면 동일한 객체이다.")
+    @DisplayName("술 이미지 경로가 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        MemberAddress origin = new MemberAddress("서울 송파구 올림픽로 295 7층");
-        MemberAddress same = new MemberAddress("서울 송파구 올림픽로 295 7층");
-        MemberAddress different = new MemberAddress("대구 동구 동대구로 550");
+        LiquorImageUrl origin = new LiquorImageUrl("soju.png");
+        LiquorImageUrl same = new LiquorImageUrl("soju.png");
+        LiquorImageUrl different = new LiquorImageUrl("not_soju.png");
 
         /* when & then */
         assertAll(

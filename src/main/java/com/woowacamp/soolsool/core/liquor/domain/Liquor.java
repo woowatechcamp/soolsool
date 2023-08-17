@@ -12,10 +12,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
@@ -45,16 +42,16 @@ public class Liquor extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
-    private LiquorType liquorType;
+    @JoinColumn(name = "brew_id", nullable = false)
+    private LiquorBrew brew;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
-    private LiquorRegion liquorRegion;
+    private LiquorRegion region;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
-    private LiquorStatus liquorStatus;
+    private LiquorStatus status;
 
     @Column(name = "name", nullable = false, length = 30)
     @Convert(converter = LiquorNameConverter.class)
@@ -86,9 +83,9 @@ public class Liquor extends BaseEntity {
 
     @Builder
     public Liquor(
-        final LiquorType liquorType,
-        final LiquorRegion liquorRegion,
-        final LiquorStatus liquorStatus,
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
         final LiquorName name,
         final LiquorPrice price,
         final LiquorBrand brand,
@@ -97,9 +94,9 @@ public class Liquor extends BaseEntity {
         final LiquorAlcohol alcohol,
         final LiquorVolume volume
     ) {
-        this.liquorType = liquorType;
-        this.liquorRegion = liquorRegion;
-        this.liquorStatus = liquorStatus;
+        this.brew = brew;
+        this.region = region;
+        this.status = status;
         this.name = name;
         this.price = price;
         this.brand = brand;

@@ -13,7 +13,7 @@ class MemberRoleTest {
     @DisplayName("회원 역할을 정상적으로 생성한다.")
     void create() {
         /* given */
-        final MemberRoleType type = MemberRoleType.CUSTOMER;
+        MemberRoleType type = MemberRoleType.CUSTOMER;
 
         /* when & then */
         assertThatCode(() -> new MemberRole(type))
