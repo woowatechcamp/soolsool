@@ -27,6 +27,7 @@ public class RestAssuredHelper {
 
         public static ExtractableResponse<Response> modifyLiquor(
             String accessToken,
+            Long liquorId,
             ModifyLiquorRequest modifyLiquorRequest) {
             return RestAssured
                 .given().log().all()
@@ -34,7 +35,7 @@ public class RestAssuredHelper {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .body(modifyLiquorRequest)
-                .when().put("/liquors")
+                .when().put("/liquors/{liquorId}", liquorId)
                 .then().log().all()
                 .extract();
         }

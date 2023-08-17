@@ -2,14 +2,17 @@ package com.woowacamp.soolsool.core.liquor.service;
 
 import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_REGION_TYPE_FOUND;
 import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_STATUS_TYPE_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
@@ -128,4 +131,41 @@ class LiquorServiceTest {
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_LIQUOR_STATUS_TYPE_FOUND.getMessage());
     }
+
+    @Test
+    @DisplayName("liquor를 수정한다.")
+    void modifyLiquorTestWithSuccess() {
+        // given
+        SaveLiquorRequest saveLiquorRequest = new SaveLiquorRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
+            100, 12.0,
+            300);
+        Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
+        ModifyLiquorRequest modifyLiquorRequest = new ModifyLiquorRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "안동소주",
+            "3000",
+            "브랜드",
+            "soolsool.png",
+            100,
+            12.0,
+            1
+        );
+        // when
+        liquorService.modifyLiquor(saveLiquorId, modifyLiquorRequest);
+
+        // then
+        Liquor findLiquor = liquorRepository.findById(saveLiquorId).orElseThrow();
+        assertThat(findLiquor.getName()).extracting("name")
+            .isEqualTo(modifyLiquorRequest.getName());
+    }
+
 }
