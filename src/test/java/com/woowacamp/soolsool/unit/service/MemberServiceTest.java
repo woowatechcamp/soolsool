@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.service;
+package com.woowacamp.soolsool.unit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.domain;
+package com.woowacamp.soolsool.unit.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
