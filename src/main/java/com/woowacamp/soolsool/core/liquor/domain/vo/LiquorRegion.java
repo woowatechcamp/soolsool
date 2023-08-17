@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "liquor_regions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LiquorRegion extends BaseEntity {
+public class LiquorRegion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

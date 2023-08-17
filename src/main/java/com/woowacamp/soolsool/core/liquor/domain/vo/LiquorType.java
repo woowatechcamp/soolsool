@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class LiquorType extends BaseEntity {
+public class LiquorType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
