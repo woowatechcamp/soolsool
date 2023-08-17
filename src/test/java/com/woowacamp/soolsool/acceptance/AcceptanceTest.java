@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class AcceptanceTest {
+public abstract class AcceptanceTest {
 
     @LocalServerPort
     int port;
