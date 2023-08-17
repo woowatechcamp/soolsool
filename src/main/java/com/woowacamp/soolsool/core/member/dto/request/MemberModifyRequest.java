@@ -22,7 +22,11 @@ public class MemberModifyRequest {
     private final String address;
 
     @Builder
-    public MemberModifyRequest(String password, String name, String address) {
+    public MemberModifyRequest(
+        final String password,
+        final String name,
+        final String address
+    ) {
         this.password = password;
         this.name = name;
         this.address = address;

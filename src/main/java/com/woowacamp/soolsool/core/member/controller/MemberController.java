@@ -24,7 +24,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Void> addMember(@RequestBody @Valid MemberAddRequest memberAddRequest) {
+    public ResponseEntity<Void> addMember(
+        @RequestBody @Valid final MemberAddRequest memberAddRequest
+    ) {
         memberService.addMember(memberAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -38,7 +40,8 @@ public class MemberController {
 
     @PatchMapping
     public ResponseEntity<Void> modifyMember(
-        @RequestBody @Valid MemberModifyRequest memberModifyRequest) {
+        @RequestBody @Valid final MemberModifyRequest memberModifyRequest
+    ) {
         Long userId = 1L;
         memberService.modifyMember(userId, memberModifyRequest);
         return ResponseEntity.status(HttpStatus.OK).build();

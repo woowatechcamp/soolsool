@@ -15,11 +15,11 @@ public class MemberFindResponse {
 
     @Builder
     public MemberFindResponse(
-        String roleName,
-        String email,
-        String name,
-        String mileage,
-        String address
+        final String roleName,
+        final String email,
+        final String name,
+        final String mileage,
+        final String address
     ) {
         this.roleName = roleName;
         this.email = email;
@@ -28,7 +28,7 @@ public class MemberFindResponse {
         this.address = address;
     }
 
-    public static MemberFindResponse of(Member member) {
+    public static MemberFindResponse of(final Member member) {
         return MemberFindResponse.builder()
             .roleName(member.getRole().getName().getType())
             .email(member.getEmail().getEmail())

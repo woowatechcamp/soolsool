@@ -23,7 +23,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleValidationException(
-        final MethodArgumentNotValidException exception) {
+        final MethodArgumentNotValidException exception
+    ) {
         log.error("Validation 에러 : {}", exception.getMessage());
 
         final ErrorCode errorCode = DefaultErrorCode.DEFAULT_VALIDATION_ERROR;

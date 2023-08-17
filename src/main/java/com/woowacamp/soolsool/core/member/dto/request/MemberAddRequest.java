@@ -38,8 +38,15 @@ public class MemberAddRequest {
     private final String address;
 
     @Builder
-    public MemberAddRequest(String memberRoleType, String email, String password, String name,
-        String phoneNumber, String mileage, String address) {
+    public MemberAddRequest(
+        final String memberRoleType,
+        final String email,
+        final String password,
+        final String name,
+        final String phoneNumber,
+        final String mileage,
+        final String address
+    ) {
         this.memberRoleType = memberRoleType;
         this.email = email;
         this.password = password;
