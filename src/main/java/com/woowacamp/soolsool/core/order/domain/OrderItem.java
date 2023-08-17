@@ -46,46 +46,46 @@ public class OrderItem extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "liquor_category")
+    @Column(name = "liquor_category", nullable = false, length = 20)
     @Convert(converter = OrderItemTypeConverter.class)
     private OrderItemType liquorType;
 
-    @Column(name = "liquor_region", length = 30)
+    @Column(name = "liquor_region", nullable = false, length = 30)
     @Convert(converter = OrderItemRegionConverter.class)
     private OrderItemRegion liquorRegion;
 
-    @Column(name = "liquor_name", length = 30)
+    @Column(name = "liquor_name", nullable = false, length = 30)
     @Convert(converter = OrderItemNameConverter.class)
     private OrderItemName name;
 
-    @Column(name = "liquor_original_price", length = 255)
+    @Column(name = "liquor_original_price", nullable = false, length = 255)
     @Convert(converter = OrderItemPriceConverter.class)
     private OrderItemPrice originalPrice;
 
-    @Column(name = "liquor_purchased_price", length = 255)
+    @Column(name = "liquor_purchased_price", nullable = false, length = 255)
     @Convert(converter = OrderItemPriceConverter.class)
     private OrderItemPrice purchasedPrice;
 
-    @Column(name = "liquor_brand", length = 20)
+    @Column(name = "liquor_brand", nullable = false, length = 20)
     @Convert(converter = OrderItemBrandConverter.class)
     private OrderItemBrand brand;
 
-    @Column(name = "liquor_image_url", length = 255)
+    @Column(name = "liquor_image_url", nullable = false, length = 255)
     @Convert(converter = OrderItemImageUrlConverter.class)
     private OrderItemImageUrl imageUrl;
 
-    @Column(name = "liquor_alcohol")
+    @Column(name = "liquor_alcohol", nullable = false)
     @Convert(converter = OrderItemAlcoholConverter.class)
     private OrderItemAlcohol alcohol;
 
-    @Column(name = "liquor_volume")
+    @Column(name = "liquor_volume", nullable = false)
     @Convert(converter = OrderItemVolumeConverter.class)
     private OrerItemVolume volume;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     @Convert(converter = OrderItemQuantityConverter.class)
     private OrderItemQuantity quantity;
 

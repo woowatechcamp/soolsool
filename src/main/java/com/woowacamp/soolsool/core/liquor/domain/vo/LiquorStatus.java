@@ -25,6 +25,6 @@ public class LiquorStatus {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 20)
     private LiquorStatusType type;
 }

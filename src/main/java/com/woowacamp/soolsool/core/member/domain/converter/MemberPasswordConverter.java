@@ -14,6 +14,6 @@ public class MemberPasswordConverter implements AttributeConverter<MemberPasswor
 
     @Override
     public MemberPassword convertToEntityAttribute(final String dbData) {
-        return null;
+        return new MemberPassword(dbData);
     }
 }

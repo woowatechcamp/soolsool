@@ -31,18 +31,18 @@ public class Order extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
     private OrderStatus status;
 
-    @Column(name = "total_price")
+    @Column(name = "total_price", nullable = false)
     @Convert(converter = OrderPriceConverter.class)
     private OrderPrice totalPrice;
-    
-    @Column(name = "total_quantity")
+
+    @Column(name = "total_quantity", nullable = false)
     @Convert(converter = OrderQuantityConverter.class)
     private OrderQuantity totalQuantity;
 

@@ -16,5 +16,4 @@ public class MemberEmailConverter implements AttributeConverter<MemberEmail, Str
     public MemberEmail convertToEntityAttribute(final String dbData) {
         return new MemberEmail(dbData);
     }
-
 }

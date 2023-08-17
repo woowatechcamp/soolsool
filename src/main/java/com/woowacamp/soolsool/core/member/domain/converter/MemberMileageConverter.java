@@ -15,6 +15,6 @@ public class MemberMileageConverter implements AttributeConverter<MemberMileage,
 
     @Override
     public MemberMileage convertToEntityAttribute(final BigInteger dbData) {
-        return null;
+        return new MemberMileage(dbData);
     }
 }

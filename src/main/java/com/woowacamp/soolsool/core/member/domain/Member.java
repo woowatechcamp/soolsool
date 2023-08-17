@@ -64,8 +64,8 @@ public class Member extends BaseEntity {
     @Convert(converter = MemberAddressConverter.class)
     private MemberAddress address;
 
-    @JoinColumn(name = "role")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role", nullable = false)
     private MemberRole role;
 
     @Builder

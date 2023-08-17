@@ -13,5 +13,3 @@ public enum LiquorStatusType {
 
     private final String status;
 }
-
-

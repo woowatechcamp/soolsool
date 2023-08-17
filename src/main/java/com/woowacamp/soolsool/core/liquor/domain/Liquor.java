@@ -45,11 +45,11 @@ public class Liquor extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", nullable = false)
     private LiquorType liquorType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id")
+    @JoinColumn(name = "region_id", nullable = false)
     private LiquorRegion liquorRegion;
 
     @ManyToOne(fetch = FetchType.LAZY)

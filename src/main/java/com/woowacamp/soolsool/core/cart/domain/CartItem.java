@@ -32,7 +32,7 @@ public class CartItem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
