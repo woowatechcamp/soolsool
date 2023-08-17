@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LiquorRegionRepository extends JpaRepository<LiquorRegion, Long> {
 
-    Optional<LiquorRegion> findByType(LiquorRegionType type);
+    Optional<LiquorRegion> findByType(final LiquorRegionType type);
 }

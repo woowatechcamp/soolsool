@@ -29,7 +29,7 @@ public class LiquorService {
     private final LiquorRegionRepository liquorRegionRepository;
     private final LiquorTypeRepository liquorTypeRepository;
 
-    public Long saveLiquor(SaveLiquorRequest request) {
+    public Long saveLiquor(final SaveLiquorRequest request) {
         LiquorType liquorType = liquorTypeRepository
             .findByType(LiquorBrewType.findType(request.getTypeName()))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_TYPE_FOUND));
