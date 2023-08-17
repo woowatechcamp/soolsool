@@ -4,11 +4,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class MemberAddRequest {
 
     private final String memberRoleType;
@@ -37,4 +36,16 @@ public class MemberAddRequest {
     @NotBlank(message = "주소는 필수 입력 값입니다.")
     @Size(max = 100, message = "주소 길이가 너무 깁니다.")
     private final String address;
+
+    @Builder
+    public MemberAddRequest(String memberRoleType, String email, String password, String name,
+        String phoneNumber, String mileage, String address) {
+        this.memberRoleType = memberRoleType;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.mileage = mileage;
+        this.address = address;
+    }
 }

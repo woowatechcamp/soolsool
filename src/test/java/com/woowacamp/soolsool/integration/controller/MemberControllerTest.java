@@ -22,15 +22,15 @@ class MemberControllerTest extends AcceptanceTest {
     @DisplayName("성공 : 멤버 등록")
     void createMember() {
         // given
-        MemberAddRequest memberAddRequest = new MemberAddRequest(
-            "CUSTOMER",
-            "test@email.com",
-            "test_password",
-            "최배달",
-            "010-1234-5678",
-            "0",
-            "서울시 잠실역"
-        );
+        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
+            .memberRoleType("CUSTOMER")
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
+            .build();
 
         // when
         ExtractableResponse<Response> response = RestAssured.given()
@@ -78,11 +78,6 @@ class MemberControllerTest extends AcceptanceTest {
             .name("modify_name")
             .address("modify_address")
             .build();
-//        MemberModifyRequest modifyRequest = new MemberModifyRequest(
-//            "modify_password",
-//            "modify_name",
-//            "modify_name"
-//        );
 
         // when
         ExtractableResponse<Response> response = RestAssured.given()

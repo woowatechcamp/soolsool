@@ -9,15 +9,15 @@ import org.springframework.http.MediaType;
 public class TestFixture {
 
     public static ExtractableResponse<Response> addMember() {
-        MemberAddRequest memberAddRequest = new MemberAddRequest(
-            "CUSTOMER",
-            "test@email.com",
-            "test_password",
-            "최배달",
-            "010-1234-5678",
-            "0",
-            "서울시 잠실역"
-        );
+        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
+            .memberRoleType("CUSTOMER")
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
+            .build();
 
         return RestAssured.given()
             .when()
