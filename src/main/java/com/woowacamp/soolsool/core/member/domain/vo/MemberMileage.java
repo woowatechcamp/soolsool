@@ -11,4 +11,8 @@ import lombok.RequiredArgsConstructor;
 public class MemberMileage {
 
     private final BigInteger mileage;
+
+    public MemberMileage(String mileage) {
+        this(new BigInteger(mileage));
+    }
 }
