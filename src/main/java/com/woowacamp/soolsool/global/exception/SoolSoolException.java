@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.global.exception;
 
-
 import lombok.Getter;
 
 @Getter

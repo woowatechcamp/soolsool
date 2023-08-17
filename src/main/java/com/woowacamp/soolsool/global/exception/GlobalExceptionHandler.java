@@ -14,8 +14,8 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleShoppingException(final SoolSoolException e) {
         log.error("message : {}", e.getMessage());
 
-        ErrorCode errorCode = e.getErrorCode();
-        ErrorResponse errorResponse = ErrorResponse.from(errorCode);
+        final ErrorCode errorCode = e.getErrorCode();
+        final ErrorResponse errorResponse = ErrorResponse.from(errorCode);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorCode.getStatus()));
     }
