@@ -7,14 +7,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum LiquorBrewType {
 
-    SOJU("소주"),
-    DISTILLED("증류주"),
-    MAKGEOLLI("막걸리"),
-    PURE("약주"),
-    RICE("청주"),
-    BERRY("과실주"),
-    ETC("기타주류"),
+    SOJU("소주", "SOJU"),
+    DISTILLED("증류주", "DISTILLED"),
+    MAKGEOLLI("막걸리", "MAKGEOLLI"),
+    PURE("약주", "PURE"),
+    RICE("청주", "RICE"),
+    BERRY("과실주", "BERRY"),
+    ETC("기타주류", "ETC"),
     ;
 
     private final String type;
+    private final String eType;
 }
