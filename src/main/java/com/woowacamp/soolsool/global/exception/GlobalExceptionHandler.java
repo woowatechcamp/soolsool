@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ShoppingException.class)
-    protected ResponseEntity<ErrorResponse> handleShoppingException(final ShoppingException e) {
+    @ExceptionHandler(SoolSoolException.class)
+    protected ResponseEntity<ErrorResponse> handleShoppingException(final SoolSoolException e) {
         log.error("message : {}", e.getMessage());
 
         ErrorCode errorCode = e.getErrorCode();

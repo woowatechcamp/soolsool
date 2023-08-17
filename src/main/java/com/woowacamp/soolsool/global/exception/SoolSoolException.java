@@ -4,11 +4,11 @@ package com.woowacamp.soolsool.global.exception;
 import lombok.Getter;
 
 @Getter
-public class ShoppingException extends RuntimeException {
+public class SoolSoolException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public ShoppingException(final ErrorCode errorCode) {
+    public SoolSoolException(final ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
