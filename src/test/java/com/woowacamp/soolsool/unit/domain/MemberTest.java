@@ -13,11 +13,11 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("MemberEntityTest")
+@DisplayName("멩버 : 도메인 테스트")
 class MemberTest {
 
     @Test
-    @DisplayName("Member Entity 객체 생성 성공")
+    @DisplayName("성공 : Member Entity 객체 생성 성공")
     void createMemberEntity() {
         // given
         String email = "test@email.com";
