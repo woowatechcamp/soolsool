@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.member.domain.vo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.global.exception.ShoppingException;
 import java.math.BigInteger;
@@ -52,10 +53,16 @@ class MemberMileageTest {
     void equalsAndHashCode() {
         /* given */
         final MemberMileage origin = new MemberMileage(BigInteger.ONE);
-        final MemberMileage another = new MemberMileage(BigInteger.ONE);
+        final MemberMileage same = new MemberMileage(BigInteger.ONE);
+        final MemberMileage different = new MemberMileage(BigInteger.ZERO);
 
         /* when & then */
-        assertThat(origin).isEqualTo(another);
-        assertThat(origin).hasSameHashCodeAs(another);
+        assertAll(
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+        );
+
     }
 }
