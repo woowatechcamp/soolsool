@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.member.domain.converter;
 
-import com.woowacamp.soolsool.core.member.domain.MemberPhoneNumber;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class MemberPhoneNumberConverter implements AttributeConverter<MemberPhoneNumber, String> {
 
     @Override

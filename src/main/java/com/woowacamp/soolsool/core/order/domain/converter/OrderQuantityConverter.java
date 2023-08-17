@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.order.domain.converter;
 
-import com.woowacamp.soolsool.core.order.domain.OrderQuantity;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class OrderQuantityConverter implements AttributeConverter<OrderQuantity, Integer> {
 
     @Override

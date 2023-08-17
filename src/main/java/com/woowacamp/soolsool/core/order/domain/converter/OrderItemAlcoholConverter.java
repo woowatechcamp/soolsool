@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.order.domain.converter;
 
-import com.woowacamp.soolsool.core.order.domain.OrderItemAlcohol;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemAlcohol;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class OrderItemAlcoholConverter implements AttributeConverter<OrderItemAlcohol, Double> {
 
     @Override

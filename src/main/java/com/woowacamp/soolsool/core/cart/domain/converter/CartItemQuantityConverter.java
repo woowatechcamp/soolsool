@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.cart.domain.converter;
 
-import com.woowacamp.soolsool.core.cart.domain.CartItemQuantity;
+import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class CartItemQuantityConverter implements AttributeConverter<CartItemQuantity, Integer> {
 
     @Override

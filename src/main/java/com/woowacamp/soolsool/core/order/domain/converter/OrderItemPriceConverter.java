@@ -1,11 +1,11 @@
 package com.woowacamp.soolsool.core.order.domain.converter;
 
-import com.woowacamp.soolsool.core.order.domain.OrderItemPrice;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemPrice;
 import java.math.BigInteger;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class OrderItemPriceConverter implements AttributeConverter<OrderItemPrice, BigInteger> {
 
     @Override

@@ -1,7 +1,21 @@
 package com.woowacamp.soolsool.core.member.domain;
 
+import com.woowacamp.soolsool.core.member.domain.converter.MemberAddressConverter;
+import com.woowacamp.soolsool.core.member.domain.converter.MemberEmailConverter;
+import com.woowacamp.soolsool.core.member.domain.converter.MemberMileageConverter;
+import com.woowacamp.soolsool.core.member.domain.converter.MemberNameConverter;
+import com.woowacamp.soolsool.core.member.domain.converter.MemberPasswordConverter;
+import com.woowacamp.soolsool.core.member.domain.converter.MemberPhoneNumberConverter;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberAddress;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberRole;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,21 +41,27 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true, length = 255)
+    @Convert(converter = MemberEmailConverter.class)
     private MemberEmail email;
 
     @Column(name = "password", nullable = false, length = 60)
+    @Convert(converter = MemberPasswordConverter.class)
     private MemberPassword password;
 
     @Column(name = "name", nullable = false, length = 20)
+    @Convert(converter = MemberNameConverter.class)
     private MemberName name;
 
     @Column(name = "phone_number", nullable = false, length = 13)
+    @Convert(converter = MemberPhoneNumberConverter.class)
     private MemberPhoneNumber phoneNumber;
 
     @Column(name = "mileage", nullable = false, length = 255)
+    @Convert(converter = MemberMileageConverter.class)
     private MemberMileage mileage;
 
     @Column(name = "address", nullable = false, length = 100)
+    @Convert(converter = MemberAddressConverter.class)
     private MemberAddress address;
 
     @JoinColumn(name = "role")

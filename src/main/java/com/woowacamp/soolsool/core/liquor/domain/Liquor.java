@@ -1,7 +1,25 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorBrandConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorImageUrlConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorNameConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorPriceConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorStockConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorVolumeConverter;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorAlcohol;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -39,27 +57,33 @@ public class Liquor extends BaseEntity {
     private LiquorStatus liquorStatus;
 
     @Column(name = "name", nullable = false, length = 30)
+    @Convert(converter = LiquorNameConverter.class)
     private LiquorName name;
 
     @Column(name = "price", nullable = false, length = 255)
+    @Convert(converter = LiquorPriceConverter.class)
     private LiquorPrice price;
 
     @Column(name = "brand", nullable = false, length = 20)
+    @Convert(converter = LiquorBrandConverter.class)
     private LiquorBrand brand;
 
     @Column(name = "image_url", nullable = false, length = 255)
+    @Convert(converter = LiquorImageUrlConverter.class)
     private LiquorImageUrl imageUrl;
 
     @Column(name = "stock", nullable = false)
+    @Convert(converter = LiquorStockConverter.class)
     private LiquorStock stock;
 
     @Column(name = "alcohol", nullable = false)
+    @Convert(converter = LiquorAlcoholConverter.class)
     private LiquorAlcohol alcohol;
 
     @Column(name = "volume", nullable = false)
+    @Convert(converter = LiquorVolumeConverter.class)
     private LiquorVolume volume;
 
-    // TODO: 필드가 너무 많은데 Liquor 정보를 모으는 VO가 필요할 것 같다
     @Builder
     public Liquor(
         final LiquorType liquorType,

@@ -1,7 +1,26 @@
 package com.woowacamp.soolsool.core.order.domain;
 
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemAlcoholConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemBrandConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemImageUrlConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemNameConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemPriceConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemQuantityConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemRegionConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemTypeConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemVolumeConverter;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemAlcohol;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemImageUrl;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemName;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemPrice;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemQuantity;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemRegion;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemType;
+import com.woowacamp.soolsool.core.order.domain.vo.OrerItemVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,40 +49,47 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "liquor_category")
+    @Column(name = "liquor_category")
+    @Convert(converter = OrderItemTypeConverter.class)
     private OrderItemType liquorType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "liquor_region")
+    @Column(name = "liquor_region", length = 30)
+    @Convert(converter = OrderItemRegionConverter.class)
     private OrderItemRegion liquorRegion;
 
     @Column(name = "liquor_name", length = 30)
+    @Convert(converter = OrderItemNameConverter.class)
     private OrderItemName name;
 
     @Column(name = "liquor_original_price", length = 255)
+    @Convert(converter = OrderItemPriceConverter.class)
     private OrderItemPrice originalPrice;
 
     @Column(name = "liquor_purchased_price", length = 255)
+    @Convert(converter = OrderItemPriceConverter.class)
     private OrderItemPrice purchasedPrice;
 
     @Column(name = "liquor_brand", length = 20)
+    @Convert(converter = OrderItemBrandConverter.class)
     private OrderItemBrand brand;
 
     @Column(name = "liquor_image_url", length = 255)
+    @Convert(converter = OrderItemImageUrlConverter.class)
     private OrderItemImageUrl imageUrl;
 
     @Column(name = "liquor_alcohol")
+    @Convert(converter = OrderItemAlcoholConverter.class)
     private OrderItemAlcohol alcohol;
 
     @Column(name = "liquor_volume")
+    @Convert(converter = OrderItemVolumeConverter.class)
     private OrerItemVolume volume;
 
     @Column(name = "quantity")
+    @Convert(converter = OrderItemQuantityConverter.class)
     private OrderItemQuantity quantity;
 
     // TODO: 주문서 객체로 변경?
-    // TODO: 필드가 너무 많다. -> VO로 묶기 필요
     @Builder
     public OrderItem(
         final Order order,

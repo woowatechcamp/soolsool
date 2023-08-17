@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.order.domain.converter;
 
-import com.woowacamp.soolsool.core.order.domain.OrderItemBrand;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class OrderItemBrandConverter implements AttributeConverter<OrderItemBrand, String> {
 
     @Override

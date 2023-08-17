@@ -1,7 +1,13 @@
 package com.woowacamp.soolsool.core.order.domain;
 
+import com.woowacamp.soolsool.core.order.domain.converter.OrderPriceConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderQuantityConverter;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderStatus;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,9 +39,11 @@ public class Order extends BaseEntity {
     private OrderStatus status;
 
     @Column(name = "total_price")
+    @Convert(converter = OrderPriceConverter.class)
     private OrderPrice totalPrice;
-
+    
     @Column(name = "total_quantity")
+    @Convert(converter = OrderQuantityConverter.class)
     private OrderQuantity totalQuantity;
 
     @Builder

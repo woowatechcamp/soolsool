@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.liquor.domain.converter;
 
-import com.woowacamp.soolsool.core.liquor.domain.LiquorBrand;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class LiquorBrandConverter implements AttributeConverter<LiquorBrand, String> {
 
     @Override

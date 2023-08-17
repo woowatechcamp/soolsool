@@ -2,9 +2,12 @@ package com.woowacamp.soolsool.core.cart.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import com.woowacamp.soolsool.core.cart.domain.converter.CartItemQuantityConverter;
+import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,6 +41,7 @@ public class CartItem extends BaseEntity {
 
     @ColumnDefault("1")
     @Column(name = "quantity", nullable = false)
+    @Convert(converter = CartItemQuantityConverter.class)
     private CartItemQuantity quantity;
 
     @Builder

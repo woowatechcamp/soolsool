@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.member.domain.converter;
 
-import com.woowacamp.soolsool.core.member.domain.MemberPassword;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
+@Converter
 public class MemberPasswordConverter implements AttributeConverter<MemberPassword, String> {
 
     @Override
