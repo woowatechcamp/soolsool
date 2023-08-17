@@ -17,5 +17,4 @@ public class SaveLiquorRequest {
     private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
-    
 }

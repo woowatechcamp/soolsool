@@ -111,8 +111,9 @@ public class Liquor extends BaseEntity {
         this.volume = volume;
     }
 
-    public static Liquor of(LiquorType liquorType, LiquorRegion liquorRegion,
-        final LiquorStatus liquorStatus, SaveLiquorRequest request) {
+    public static Liquor of(
+        final LiquorType liquorType, final LiquorRegion liquorRegion,
+        final LiquorStatus liquorStatus, final SaveLiquorRequest request) {
         return new Liquor(
             liquorType,
             liquorRegion,

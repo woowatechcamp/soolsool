@@ -24,6 +24,7 @@ public class LiquorController {
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
         @RequestBody final SaveLiquorRequest saveLiquorRequest) {
         Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
+
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
             .body(ApiResponse.of(LIQUOR_CREATED, null));
     }
