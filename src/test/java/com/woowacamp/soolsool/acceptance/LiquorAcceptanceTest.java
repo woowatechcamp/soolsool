@@ -1,18 +1,20 @@
 package com.woowacamp.soolsool.acceptance;
 
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.acceptance.helper.RestAssuredHelper.Liquor;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
+import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
 @DisplayName("술 상품 관련 기능")
 class LiquorAcceptanceTest extends AcceptanceTest {
@@ -21,23 +23,29 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 상품을 등록할 수 있다")
     void saveLiquor() {
         // given
+        String accessToken = "1234";
         SaveLiquorRequest saveLiquorRequest = new SaveLiquorRequest(
-            "소주",
-            "경기도",
-            "판매중",
-            "새로", "3000",
-            "브랜드", "/url",
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
             100, 12.0,
             300);
 
         // when
         ExtractableResponse<Response> response = Liquor.saveLiquor(
-            "1234",
+            accessToken,
             saveLiquorRequest
         );
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(CREATED.value());
+        ApiResponse actual = response.body().as(ApiResponse.class);
+        assertThat(actual.getMessage())
+            .isEqualTo(LIQUOR_CREATED.getMessage());
     }
 
     @Test

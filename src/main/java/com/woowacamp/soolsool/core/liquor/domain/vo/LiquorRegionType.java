@@ -1,5 +1,8 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
+import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_REGION_TYPE_FOUND;
+
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -21,4 +24,11 @@ public enum LiquorRegionType {
     private final String name;
     private final String eName;
 
+    public static LiquorRegionType findType(final String name) {
+        try {
+            return valueOf(name);
+        } catch (IllegalArgumentException e) {
+            throw new SoolSoolException(NOT_LIQUOR_REGION_TYPE_FOUND);
+        }
+    }
 }

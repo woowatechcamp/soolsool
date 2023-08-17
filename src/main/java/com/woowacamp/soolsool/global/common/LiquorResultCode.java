@@ -1,0 +1,18 @@
+package com.woowacamp.soolsool.global.common;
+
+import static org.springframework.http.HttpStatus.CREATED;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum LiquorResultCode implements ResultCode {
+
+    LIQUOR_CREATED(CREATED.value(), "L101", "술 상품이 정상적으로 생성되었습니다."),
+    ;
+
+    private final int status;
+    private final String code;
+    private final String message;
+}

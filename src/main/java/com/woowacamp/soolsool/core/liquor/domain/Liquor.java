@@ -17,7 +17,9 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
+import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -107,5 +109,22 @@ public class Liquor extends BaseEntity {
         this.stock = stock;
         this.alcohol = alcohol;
         this.volume = volume;
+    }
+
+    public static Liquor of(
+        final LiquorType liquorType, final LiquorRegion liquorRegion,
+        final LiquorStatus liquorStatus, final SaveLiquorRequest request) {
+        return new Liquor(
+            liquorType,
+            liquorRegion,
+            liquorStatus,
+            new LiquorName(request.getName()),
+            new LiquorPrice(new BigInteger(request.getPrice())),
+            new LiquorBrand(request.getBrand()),
+            new LiquorImageUrl(request.getImageUrl()),
+            new LiquorStock(request.getStock()),
+            new LiquorAlcohol(request.getAlcohol()),
+            new LiquorVolume(request.getVolume())
+        );
     }
 }
