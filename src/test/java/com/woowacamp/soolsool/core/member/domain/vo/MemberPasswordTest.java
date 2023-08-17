@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,32 +22,32 @@ class MemberPasswordTest {
 
         /* when & then */
         assertThatCode(() -> new MemberPassword(password))
-            .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
     @NullAndEmptySource
-    @DisplayName("회원 비밀번호가 null 혹은 공백일 경우 ShoppingException을 던진다.")
+    @DisplayName("회원 비밀번호가 null 혹은 공백일 경우 SoolSoolException을 던진다.")
     void createFailWithNullOrEmpty(String password) {
         /* given */
 
 
         /* when & then */
         assertThatThrownBy(() -> new MemberPassword(password))
-            .isExactlyInstanceOf(ShoppingException.class)
-            .hasMessage("회원 비밀번호는 null이거나 공백일 수 없습니다.");
+                .isExactlyInstanceOf(SoolSoolException.class)
+                .hasMessage("회원 비밀번호는 null이거나 공백일 수 없습니다.");
     }
 
     @Test
-    @DisplayName("회원 비밀번호가 60자 초과일 경우 ShoppingException을 던진다.")
+    @DisplayName("회원 비밀번호가 60자 초과일 경우 SoolSoolException을 던진다.")
     void createFailInvalidLength() {
         /* given */
         String password = "a".repeat(61);
 
         /* when & then */
         assertThatThrownBy(() -> new MemberPassword(password))
-            .isExactlyInstanceOf(ShoppingException.class)
-            .hasMessage("회원 비밀번호은 60자보다 길 수 없습니다.");
+                .isExactlyInstanceOf(SoolSoolException.class)
+                .hasMessage("회원 비밀번호은 60자보다 길 수 없습니다.");
     }
 
     @Test
@@ -60,10 +60,10 @@ class MemberPasswordTest {
 
         /* when & then */
         assertAll(
-            () -> assertThat(origin).isEqualTo(same),
-            () -> assertThat(origin).hasSameHashCodeAs(same),
-            () -> assertThat(origin).isNotEqualTo(different),
-            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+                () -> assertThat(origin).isEqualTo(same),
+                () -> assertThat(origin).hasSameHashCodeAs(same),
+                () -> assertThat(origin).isNotEqualTo(different),
+                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }
