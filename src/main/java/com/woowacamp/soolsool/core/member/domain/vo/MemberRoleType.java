@@ -1,8 +1,15 @@
 package com.woowacamp.soolsool.core.member.domain.vo;
 
-public enum MemberRoleType {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    CUSTOMER,
-    VENDOR,
+@Getter
+@RequiredArgsConstructor
+public enum MemberRoleType {
+    
+    CUSTOMER("고객"),
+    VENDOR("판매자"),
     ;
+
+    private final String type;
 }
