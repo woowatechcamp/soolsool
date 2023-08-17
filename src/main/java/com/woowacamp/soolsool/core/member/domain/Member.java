@@ -13,6 +13,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import com.woowacamp.soolsool.core.member.dto.request.MemberCreateRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -100,5 +101,9 @@ public class Member extends BaseEntity {
             .build();
     }
 
-
+    public void update(MemberModifyRequest memberModifyRequest) {
+        this.password = new MemberPassword(memberModifyRequest.getPassword());
+        this.name = new MemberName(memberModifyRequest.getName());
+        this.address = new MemberAddress(memberModifyRequest.getAddress());
+    }
 }

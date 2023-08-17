@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.member.service;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.dto.request.MemberCreateRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
@@ -28,5 +29,13 @@ public class MemberService {
         Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보가 없습니다."));
         return MemberFindResponse.of(member);
+    }
+
+    @Transactional
+    public void modifyMember(Long userId, MemberModifyRequest memberModifyRequest) {
+        Member member = memberRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보가 없습니다."));
+        member.update(memberModifyRequest);
+        memberRepository.save(member);
     }
 }

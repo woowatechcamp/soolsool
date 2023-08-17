@@ -10,6 +10,7 @@ import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberCreateRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
@@ -119,6 +120,51 @@ class MemberSerivceTest {
                 .isEqualTo(memberFindResponseExpected.getEmail()),
             () -> assertThat(memberFindResponse.getAddress())
                 .isEqualTo(memberFindResponseExpected.getAddress())
+        );
+    }
+
+    @Test
+    @DisplayName("성공 : 회원 정보 수정")
+    void modifyMember() {
+        // given
+        Long userId = 1L;
+        MemberModifyRequest memberModifyRequest = new MemberModifyRequest(
+            "new_password",
+            "new_name",
+            "new_address"
+        );
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(
+            "CUSTOMER",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역"
+        );
+        MemberRole memberRole = MemberRole.builder()
+            .name(MemberRoleType.CUSTOMER)
+            .build();
+        Member member = Member.of(memberRole, memberCreateRequest);
+
+        // when
+        when(memberRepository.findById(userId)).thenReturn(Optional.ofNullable(member));
+        member.update(memberModifyRequest);
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
+        Assertions.assertThatNoException()
+            .isThrownBy(() -> memberService.modifyMember(userId, memberModifyRequest));
+
+        // then
+        verify(memberRepository).findById(1L);
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+        verify(memberRepository).save(memberCaptor.capture());
+        assertAll(
+            () -> assertThat(member.getPassword().getPassword())
+                .isEqualTo(memberModifyRequest.getPassword()),
+            () -> assertThat(member.getName().getName())
+                .isEqualTo(memberModifyRequest.getName()),
+            () -> assertThat(member.getAddress().getAddress())
+                .isEqualTo(memberModifyRequest.getAddress())
         );
     }
 }
