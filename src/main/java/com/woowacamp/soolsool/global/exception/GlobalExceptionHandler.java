@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(SoolSoolException.class)
-    protected ResponseEntity<ErrorResponse> handleShoppingException(final SoolSoolException e) {
+    protected ResponseEntity<ErrorResponse> handleSoolSoolException(final SoolSoolException e) {
         log.error("message : {}", e.getMessage());
 
         final ErrorCode errorCode = e.getErrorCode();
