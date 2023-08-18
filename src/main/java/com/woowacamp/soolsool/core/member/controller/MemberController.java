@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.member.controller;
 
+import com.woowacamp.soolsool.core.auth.dto.LoginUser;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
@@ -33,28 +34,26 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberFindResponse> findMember() {
-        Long userId = 1L;
-        MemberFindResponse memberFindResponse = memberService.findMember(userId);
+    public ResponseEntity<MemberFindResponse> findMember(final @LoginUser Long userId) {
+        final MemberFindResponse memberFindResponse = memberService.findMember(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(memberFindResponse);
     }
 
     @PatchMapping
     public ResponseEntity<Void> modifyMember(
-        @RequestBody @Valid final MemberModifyRequest memberModifyRequest
+        @RequestBody @Valid final MemberModifyRequest memberModifyRequest,
+        final @LoginUser Long userId
     ) {
-        Long userId = 1L;
         memberService.modifyMember(userId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeMember() {
-        Long userId = 1L;
+    public ResponseEntity<Void> removeMember(final @LoginUser Long userId) {
         memberService.removeMember(userId);
-        
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
