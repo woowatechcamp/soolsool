@@ -39,10 +39,10 @@ class LiquorBrandTest {
     }
 
     @Test
-    @DisplayName("술 브랜드가 30자를 초과할 경우 SoolSoolException를 던진다.")
+    @DisplayName("술 브랜드가 20자를 초과할 경우 SoolSoolException를 던진다.")
     void createFailInvalidLength() {
         /* given */
-        String name = "소".repeat(31);
+        String name = "소".repeat(21);
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorBrand(name))
@@ -67,4 +67,3 @@ class LiquorBrandTest {
         );
     }
 }
-
