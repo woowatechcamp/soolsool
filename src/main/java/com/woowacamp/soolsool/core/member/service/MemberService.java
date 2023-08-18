@@ -22,22 +22,22 @@ public class MemberService {
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
-        MemberRole memberRole = memberRoleRepository.findById(1L)
+        final MemberRole memberRole = memberRoleRepository.findById(1L)
             .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_ROLE_TYPE));
-        Member member = memberAddRequest.toMember(memberRole);
+        final Member member = memberAddRequest.toMember(memberRole);
         memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
     public MemberFindResponse findMember(final Long userId) {
-        Member member = memberRepository.findById(userId)
+        final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
         return MemberFindResponse.of(member);
     }
 
     @Transactional
     public void modifyMember(final Long userId, final MemberModifyRequest memberModifyRequest) {
-        Member member = memberRepository.findById(userId)
+        final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
         member.update(memberModifyRequest);
         memberRepository.save(member);
@@ -45,7 +45,7 @@ public class MemberService {
 
     @Transactional
     public void removeMember(final Long userId) {
-        Member member = memberRepository.findById(userId)
+        final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
         memberRepository.delete(member);
     }
