@@ -1,5 +1,8 @@
 package com.woowacamp.soolsool.core.liquor.controller;
 
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
@@ -20,8 +23,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.util.annotation.Nullable;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,10 +52,19 @@ public class LiquorController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<LiquorElementResponse>> liquorList(@PageableDefault final Pageable pageable) {
-        PageRequest sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+    public ApiResponse<List<LiquorElementResponse>> liquorList(
+            @RequestParam @Nullable final LiquorBrewType brewType,
+            @RequestParam @Nullable final LiquorRegionType regionType,
+            @RequestParam @Nullable final LiquorStatusType statusType,
+            @RequestParam @Nullable final String brand,
+            @PageableDefault final Pageable pageable
+    ) {
+        final PageRequest sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.by("createdAt").descending());
 
-        return ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, liquorService.liquorList(sortPageable));
+        final List<LiquorElementResponse> response = liquorService.liquorList(brewType, regionType, statusType,
+                brand, sortPageable);
+
+        return ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, response);
     }
 }
