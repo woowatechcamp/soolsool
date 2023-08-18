@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.acceptance;
 
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -10,6 +11,7 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -138,17 +140,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .extract();
         Long liquorId = Long.parseLong(saveLiquor.header("Location").split("/")[2]);
+
         // when
-        ExtractableResponse<Response> deleteLiquor = RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, accessToken)
-            .when().delete("/liquors/${liquorId}", liquorId)
+            .when().delete("/liquors/{liquorId}", liquorId)
             .then().log().all()
             .extract();
-        // then
-        assertThat(deleteLiquor.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
 
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+//        assertThat(response.body().as(ApiResponse.class)
+//            .getMessage()).isEqualTo(LIQUOR_DELETED.getMessage());
+        assertThat(response.body().as(new TypeRef<ApiResponse<Void>>() {
+        }).getMessage()).isEqualTo(LIQUOR_DELETED.getMessage());
+    }
 }
