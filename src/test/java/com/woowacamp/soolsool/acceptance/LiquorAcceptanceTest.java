@@ -15,6 +15,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("술 상품 관련 기능")
@@ -109,6 +110,45 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(OK.value());
         assertThat(response.body().as(ApiResponse.class)
             .getMessage()).isEqualTo(LIQUOR_UPDATED.getMessage());
+    }
+
+    @Test
+    @DisplayName("술 상품을 삭제할 수 있다.")
+    void removeLiquorTest() {
+        // given
+        String accessToken = "1234";
+        LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
+            100, 12.0,
+            300);
+
+        ExtractableResponse<Response> saveLiquor = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .body(saveLiquorRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract();
+        Long liquorId = Long.parseLong(saveLiquor.header("Location").split("/")[2]);
+        // when
+        ExtractableResponse<Response> deleteLiquor = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .when().delete("/liquors/${liquorId}", liquorId)
+            .then().log().all()
+            .extract();
+        // then
+        assertThat(deleteLiquor.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
 }
