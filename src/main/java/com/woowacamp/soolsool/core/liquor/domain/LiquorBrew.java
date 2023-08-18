@@ -26,7 +26,7 @@ public class LiquorBrew extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, length = 20)
+    @Column(name = "name", nullable = false, length = 20)
     private LiquorBrewType type;
 
     public LiquorBrew(final LiquorBrewType type) {

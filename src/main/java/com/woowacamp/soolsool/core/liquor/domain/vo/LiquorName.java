@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -23,14 +23,13 @@ public class LiquorName {
 
     private void validateIsValidLength(final String name) {
         if (name.length() > MAX_LENGTH) {
-            throw new ShoppingException("술 이름은 30자보다 길 수 없습니다.");
-
+            throw new SoolSoolException(LiquorErrorCode.INVALID_LENGTH_NAME);
         }
     }
 
     private void validateIsNotNullOrEmpty(final String name) {
         if (!StringUtils.hasText(name)) {
-            throw new ShoppingException("술 이름은 null이거나 공백일 수 없습니다.");
+            throw new SoolSoolException(LiquorErrorCode.NO_CONTENT_NAME);
         }
     }
 }

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,26 +27,26 @@ class LiquorImageUrlTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @DisplayName("술 이미지 경로가 null 혹은 공백일 경우 ShoppingException을 던진다.")
+    @DisplayName("술 이미지 경로가 null 혹은 공백일 경우 SoolSoolException을 던진다.")
     void createFailWithNullOrEmpty(String imageUrl) {
         /* given */
 
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorImageUrl(imageUrl))
-            .isExactlyInstanceOf(ShoppingException.class)
+            .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("술 이미지 경로는 null이거나 공백일 수 없습니다.");
     }
 
     @Test
-    @DisplayName("술 이미지 경로가 255자 초과일 경우 ShoppingException을 던진다.")
+    @DisplayName("술 이미지 경로가 255자 초과일 경우 SoolSoolException을 던진다.")
     void createFailInvalidLength() {
         /* given */
         String imageUrl = "a".repeat(256);
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorImageUrl(imageUrl))
-            .isExactlyInstanceOf(ShoppingException.class)
+            .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("술 이미지 경로는 255자보다 길 수 없습니다.");
     }
 

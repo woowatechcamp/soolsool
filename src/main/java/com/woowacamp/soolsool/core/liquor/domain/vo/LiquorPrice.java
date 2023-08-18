@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-
 import com.woowacamp.soolsool.global.exception.ShoppingException;
 import java.math.BigInteger;
 import java.util.Objects;

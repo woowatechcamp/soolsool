@@ -23,7 +23,6 @@ public class MemberAddress {
     private void validateIsValidLength(final String address) {
         if (address.length() > MAX_LENGTH) {
             throw new ShoppingException("회원 주소는 100자보다 길 수 없습니다.");
-
         }
     }
 

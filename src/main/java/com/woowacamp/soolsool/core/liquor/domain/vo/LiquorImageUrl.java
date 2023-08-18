@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -22,14 +23,13 @@ public class LiquorImageUrl {
 
     private void validateIsValidLength(final String imageUrl) {
         if (imageUrl.length() > MAX_LENGTH) {
-            throw new ShoppingException("술 이미지 경로는 255자보다 길 수 없습니다.");
-
+            throw new SoolSoolException(LiquorErrorCode.INVALID_LENGTH_IMAGE_URL);
         }
     }
 
     private void validateIsNotNullOrEmpty(final String imageUrl) {
         if (!StringUtils.hasText(imageUrl)) {
-            throw new ShoppingException("술 이미지 경로는 null이거나 공백일 수 없습니다.");
+            throw new SoolSoolException(LiquorErrorCode.NO_CONTENT_IMAGE_URL);
         }
     }
 }

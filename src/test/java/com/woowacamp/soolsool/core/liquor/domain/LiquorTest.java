@@ -36,7 +36,7 @@ class LiquorTest {
         LiquorVolume volume = new LiquorVolume(500);
 
         /* when */
-        final Liquor liquor = Liquor.builder()
+        Liquor liquor = Liquor.builder()
             .brew(brew)
             .region(region)
             .status(status)

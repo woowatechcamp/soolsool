@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,26 +27,26 @@ class LiquorNameTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @DisplayName("술 이름이 null 혹은 공백일 경우 ShoppingException을 던진다.")
+    @DisplayName("술 이름이 null 혹은 공백일 경우 SoolSoolException을 던진다.")
     void createFailWithNullOrEmpty(String name) {
         /* given */
 
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorName(name))
-            .isExactlyInstanceOf(ShoppingException.class)
+            .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("술 이름은 null이거나 공백일 수 없습니다.");
     }
 
     @Test
-    @DisplayName("술 이름이 30자를 초과할 경우 ShoppingException을 던진다.")
+    @DisplayName("술 이름이 30자를 초과할 경우 SoolSoolException을 던진다.")
     void createFailInvalidLength() {
         /* given */
         String name = "소".repeat(31);
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorName(name))
-            .isExactlyInstanceOf(ShoppingException.class)
+            .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("술 이름은 30자보다 길 수 없습니다.");
     }
 

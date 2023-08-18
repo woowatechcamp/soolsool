@@ -15,7 +15,7 @@ class LiquorAlcoholTest {
     @DisplayName("술 도수를 정상적으로 생성한다.")
     void create() {
         /* given */
-        final double alcohol = 17.2;
+        double alcohol = 17.2;
 
         /* when & then */
         assertThatCode(() -> new LiquorAlcohol(alcohol))
@@ -38,9 +38,9 @@ class LiquorAlcoholTest {
     @DisplayName("술 도수가 같다면 같은 객체이다.")
     void equalsAndHashcode() {
         /* given */
-        final LiquorAlcohol origin = new LiquorAlcohol(12.3);
-        final LiquorAlcohol same = new LiquorAlcohol(12.3);
-        final LiquorAlcohol different = new LiquorAlcohol(77.7);
+        LiquorAlcohol origin = new LiquorAlcohol(12.3);
+        LiquorAlcohol same = new LiquorAlcohol(12.3);
+        LiquorAlcohol different = new LiquorAlcohol(77.7);
 
         /* when & then */
         assertAll(

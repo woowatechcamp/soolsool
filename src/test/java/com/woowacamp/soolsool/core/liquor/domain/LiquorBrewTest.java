@@ -13,10 +13,10 @@ class LiquorBrewTest {
     @DisplayName("술 종류를 정상적으로 생성한다.")
     void create() {
         /* given */
-        final LiquorBrewType type = LiquorBrewType.BERRY;
+        LiquorBrewType type = LiquorBrewType.BERRY;
 
         /* when */
-        final LiquorBrew brew = new LiquorBrew(type);
+        LiquorBrew brew = new LiquorBrew(type);
 
         /* then */
         assertThat(brew.getType()).isEqualTo(type);

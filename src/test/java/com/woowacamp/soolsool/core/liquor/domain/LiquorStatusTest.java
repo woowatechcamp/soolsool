@@ -13,10 +13,10 @@ class LiquorStatusTest {
     @DisplayName("술 상태를 정상적으로 생성한다.")
     void create() {
         /* given */
-        final LiquorStatusType type = LiquorStatusType.ON_SALE;
+        LiquorStatusType type = LiquorStatusType.ON_SALE;
 
         /* when */
-        final LiquorStatus status = new LiquorStatus(type);
+        LiquorStatus status = new LiquorStatus(type);
 
         /* then */
         assertThat(status.getType()).isEqualTo(type);

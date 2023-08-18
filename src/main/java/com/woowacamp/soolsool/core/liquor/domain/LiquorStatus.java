@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
-
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import javax.persistence.Column;
 import javax.persistence.Entity;

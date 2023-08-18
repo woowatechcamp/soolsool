@@ -13,7 +13,7 @@ class LiquorRegionTest {
     @DisplayName("술 단위를 정상적으로 생성한다.")
     void create() {
         /* given */
-        final LiquorRegionType type = LiquorRegionType.GYEONGGI_DO;
+        LiquorRegionType type = LiquorRegionType.GYEONGGI_DO;
 
         /* when */
         LiquorRegion liquorRegion = new LiquorRegion(type);
