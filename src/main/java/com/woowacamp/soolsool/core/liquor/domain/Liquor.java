@@ -91,9 +91,12 @@ public class Liquor extends BaseEntity {
         final LiquorType liquorType,
         final LiquorRegion liquorRegion,
         final LiquorStatus liquorStatus,
-        final String name, final String price,
-        final String brand, final String imageUrl,
-        final int stock, final Double alcohol,
+        final String name,
+        final String price,
+        final String brand,
+        final String imageUrl,
+        final int stock,
+        final Double alcohol,
         final int volume
     ) {
         this.liquorType = liquorType;
@@ -108,8 +111,12 @@ public class Liquor extends BaseEntity {
         this.volume = new LiquorVolume(volume);
     }
 
-    public void update(LiquorType modifyLiquorType, LiquorRegion modifyLiquorRegion,
-        LiquorStatus modifyLiquorStatus, LiquorModifyRequest request) {
+    public void update(
+        final LiquorType modifyLiquorType,
+        final LiquorRegion modifyLiquorRegion,
+        final LiquorStatus modifyLiquorStatus,
+        final LiquorModifyRequest request
+    ) {
         this.liquorType = modifyLiquorType;
         this.liquorRegion = modifyLiquorRegion;
         this.liquorStatus = modifyLiquorStatus;

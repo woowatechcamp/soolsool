@@ -30,11 +30,12 @@ public class LiquorController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
-        @RequestBody final LiquorSaveRequest liquorSaveRequest) {
-        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        @RequestBody final LiquorSaveRequest liquorSaveRequest
+    ) {
+        final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
-            .body(ApiResponse.of(LIQUOR_CREATED, null));
+            .body(ApiResponse.from(LIQUOR_CREATED));
     }
 
     @PutMapping("/{liquorId}")
@@ -43,15 +44,18 @@ public class LiquorController {
         @RequestBody final LiquorModifyRequest liquorModifyRequest
     ) {
         liquorService.modifyLiquor(liquorId, liquorModifyRequest);
-        return ResponseEntity.ok(ApiResponse.of(LIQUOR_UPDATED, null));
+
+        return ResponseEntity.ok(ApiResponse.from(LIQUOR_UPDATED));
     }
 
     @DeleteMapping("/{liquorId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<ApiResponse<Void>> deleteLiquor(
-        @PathVariable final Long liquorId) {
+        @PathVariable final Long liquorId
+    ) {
         liquorService.deleteLiquor(liquorId);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-            .body(ApiResponse.of(LIQUOR_DELETED, null));
+            .body(ApiResponse.from(LIQUOR_DELETED));
     }
 }
