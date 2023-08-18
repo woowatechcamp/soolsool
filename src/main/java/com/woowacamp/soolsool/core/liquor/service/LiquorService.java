@@ -61,4 +61,10 @@ public class LiquorService {
     }
 
 
+    @Transactional
+    public void deleteLiquor(final Long liquorId) {
+        Liquor liquor = liquorRepository.findById(liquorId)
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
+        liquorRepository.delete(liquor);
+    }
 }

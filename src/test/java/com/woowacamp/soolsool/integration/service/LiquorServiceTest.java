@@ -20,6 +20,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -130,5 +131,30 @@ class LiquorServiceTest {
         assertThatCode(() -> liquorService.modifyLiquor(LIQUOR_ID, liquorModifyRequest))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_LIQUOR_FOUND.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("liquor를 삭제한다.")
+    void deleteLiquorTest() {
+        // given
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
+            100, 12.0,
+            300);
+        final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+
+        // when
+        liquorService.deleteLiquor(saveLiquorId);
+        final Optional<Liquor> liquor = liquorRepository.findById(saveLiquorId);
+        
+        // then
+        assertThat(liquor).isEmpty();
     }
 }
