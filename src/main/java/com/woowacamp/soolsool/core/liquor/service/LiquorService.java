@@ -11,13 +11,20 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
+import com.woowacamp.soolsool.global.exception.LiquorErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,5 +54,35 @@ public class LiquorService {
             liquorStatus, request
         );
         return liquorRepository.save(liquor).getId();
+    }
+
+    public LiquorDetailResponse liquorDetail(final Long liquorId) {
+        final Liquor liquor = liquorRepository.findById(liquorId)
+                .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_FOUND));
+
+        return new LiquorDetailResponse(
+                liquor.getId(),
+                liquor.getName().getName(),
+                liquor.getPrice().getPrice().toString(),
+                liquor.getBrand().getBrand(),
+                liquor.getImageUrl().getImageUrl(),
+                liquor.getStock().getStock(),
+                liquor.getAlcohol().getAlcohol(),
+                liquor.getVolume().getVolume()
+        );
+    }
+
+    public List<LiquorElementResponse> liquorList(final Pageable pageable) {
+        Page<Liquor> liquors = liquorRepository.findAll(pageable);
+
+        return liquors.getContent().stream()
+                .map(liquor -> new LiquorElementResponse(
+                        liquor.getId(),
+                        liquor.getName().getName(),
+                        liquor.getPrice().getPrice().toString(),
+                        liquor.getImageUrl().getImageUrl(),
+                        liquor.getStock().getStock()
+                ))
+                .collect(Collectors.toList());
     }
 }

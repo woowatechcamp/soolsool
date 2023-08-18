@@ -2,9 +2,10 @@ package com.woowacamp.soolsool.acceptance;
 
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpStatus.CREATED;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacamp.soolsool.acceptance.helper.RestAssuredHelper.Liquor;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
@@ -13,6 +14,7 @@ import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -53,18 +55,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     void liquorDetail() {
         // given
         SaveLiquorRequest saveLiquorRequest = new SaveLiquorRequest(
-                "소주",
-                "경기도",
-                "판매중",
-                "새로", "3000",
-                "브랜드", "/url",
-                100, 12.0,
+                "SOJU",
+                "GYEONGGI_DO",
+                "ON_SALE",
+                "새로",
+                "3000",
+                "브랜드",
+                "/url",
+                100,
+                12.0,
                 300);
 
         String location = Liquor.saveLiquor("accessToken", saveLiquorRequest).header("Location");
 
         // when
-        LiquorDetailResponse liquorDetailResponse = Liquor.liquorDetail(location).as(LiquorDetailResponse.class);
+        LiquorDetailResponse liquorDetailResponse = Liquor.liquorDetail(location).jsonPath()
+                .getObject("data", LiquorDetailResponse.class);
 
         // then
         assertAll(
@@ -79,24 +85,30 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("술 목록을 조회할 수 있다")
+    @DisplayName("술 목록을 최신순으로 조회할 수 있다")
     void liquorList() {
         // given
         SaveLiquorRequest saveSojuRequest = new SaveLiquorRequest(
-                "소주",
-                "경기도",
-                "판매중",
-                "새로", "3000",
-                "브랜드", "/soju-url",
-                100, 12.0,
+                "SOJU",
+                "GYEONGGI_DO",
+                "ON_SALE",
+                "새로",
+                "3000",
+                "브랜드",
+                "/soju-url",
+                100,
+                12.0,
                 300);
         SaveLiquorRequest saveBeerRequest = new SaveLiquorRequest(
-                "맥주",
-                "경기도",
-                "판매중",
-                "하이트", "4000",
-                "진로", "/beer-url",
-                200, 24.0,
+                "SOJU",
+                "GYEONGGI_DO",
+                "ON_SALE",
+                "하이트",
+                "4000",
+                "진로",
+                "/beer-url",
+                200,
+                24.0,
                 600);
         String accessToken = "accessToken";
 
@@ -104,19 +116,19 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         Liquor.saveLiquor(accessToken, saveBeerRequest);
 
         // when
-        List<LiquorElementResponse> liquors = Liquor.liquorList().jsonPath().getList(".",
+        List<LiquorElementResponse> liquors = Liquor.liquorList().jsonPath().getList("data",
                 LiquorElementResponse.class);
-
+        System.out.println(liquors.stream().map(LiquorElementResponse::getName).collect(Collectors.toList()));
         // then
         assertAll(
                 () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
-                        .containsExactly("소주", "맥주"),
+                        .containsExactly("하이트", "새로"),
                 () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
-                        .containsExactly("3000", "4000"),
+                        .containsExactlyInAnyOrder("4000", "3000"),
                 () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
-                        .containsExactly("/soju-url", "/beer-url"),
+                        .containsExactlyInAnyOrder("/beer-url", "/soju-url"),
                 () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                        .containsExactly(100, 200)
+                        .containsExactlyInAnyOrder(200, 100)
         );
     }
 }

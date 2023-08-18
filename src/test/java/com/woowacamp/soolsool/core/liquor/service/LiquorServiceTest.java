@@ -15,6 +15,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
+import com.woowacamp.soolsool.global.exception.LiquorErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,18 +115,30 @@ class LiquorServiceTest {
     void saveLiquorTestWithTypeFails() {
         // given
         SaveLiquorRequest saveLiquorRequest = new SaveLiquorRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE2",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+                "SOJU",
+                "GYEONGGI_DO",
+                "ON_SALE2",
+                "새로",
+                "3000",
+                "브랜드",
+                "/url",
+                100, 12.0,
+                300);
         // when & then
         assertThatCode(() -> liquorService.saveLiquor(saveLiquorRequest))
-            .isInstanceOf(SoolSoolException.class)
-            .hasMessage(NOT_LIQUOR_STATUS_TYPE_FOUND.getMessage());
+                .isInstanceOf(SoolSoolException.class)
+                .hasMessage(NOT_LIQUOR_STATUS_TYPE_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("liquor가 없는 경우, 예외를 반환한다.")
+    void liquorDetailTestWithNotFound() {
+        // given
+
+
+        // when & then
+        assertThatCode(() -> liquorService.liquorDetail(99999L))
+                .isInstanceOf(SoolSoolException.class)
+                .hasMessage(LiquorErrorCode.NOT_LIQUOR_FOUND.getMessage());
     }
 }

@@ -1,16 +1,26 @@
 package com.woowacamp.soolsool.core.liquor.controller;
 
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
-
+import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import com.woowacamp.soolsool.global.common.LiquorResultCode;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,6 +36,21 @@ public class LiquorController {
         Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
 
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
-            .body(ApiResponse.of(LIQUOR_CREATED, null));
+            .body(ApiResponse.of(LiquorResultCode.LIQUOR_CREATED, null));
+    }
+
+    @GetMapping("/{liquorId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<LiquorDetailResponse> liquorDetail(@PathVariable final Long liquorId) {
+        return ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, liquorService.liquorDetail(liquorId));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<List<LiquorElementResponse>> liquorList(@PageableDefault final Pageable pageable) {
+        PageRequest sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by("createdAt").descending());
+
+        return ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, liquorService.liquorList(sortPageable));
     }
 }
