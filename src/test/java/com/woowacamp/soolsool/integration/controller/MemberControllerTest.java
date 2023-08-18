@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@DisplayName("멤버 : 컨트롤러 테스트")
+@DisplayName("회원 : 인수 테스트")
 class MemberControllerTest extends AcceptanceTest {
 
     @Test
-    @DisplayName("성공 : 멤버 등록")
+    @DisplayName("성공 : 회원 등록")
     void createMember() {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
@@ -33,28 +33,30 @@ class MemberControllerTest extends AcceptanceTest {
             .build();
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given()
-            .log().all()
-            .when()
+        ExtractableResponse<Response> response = RestAssured
+            .given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
+            .log().all()
+            .when()
             .post("/members")
             .then()
             .log().all()
             .extract();
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("성공 : 멤버 조회")
+    @DisplayName("성공 : 회원 조회")
     void getMember() {
         // given
         TestFixture.addMember();
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given()
+        ExtractableResponse<Response> response = RestAssured
+            .given()
             .log().all()
             .when()
             .get("/members")
@@ -69,7 +71,7 @@ class MemberControllerTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("성공 : 멤버 수정")
+    @DisplayName("성공 : 회원 수정")
     void modifyMember() {
         // given
         TestFixture.addMember();
@@ -80,11 +82,12 @@ class MemberControllerTest extends AcceptanceTest {
             .build();
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given()
-            .log().all()
-            .when()
+        ExtractableResponse<Response> response = RestAssured
+            .given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
+            .log().all()
+            .when()
             .patch("/members")
             .then()
             .log().all()
@@ -95,16 +98,16 @@ class MemberControllerTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("성공 : 멤버 삭제")
+    @DisplayName("성공 : 회원 삭제")
     void deleteMember() {
         // given
         TestFixture.addMember();
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given()
+        ExtractableResponse<Response> response = RestAssured
+            .given()
             .log().all()
             .when()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .delete("/members")
             .then()
             .log().all()

@@ -12,7 +12,7 @@ public class MemberMileage {
 
     private final BigInteger mileage;
 
-    public MemberMileage(String mileage) {
+    public MemberMileage(final String mileage) {
         this(new BigInteger(mileage));
     }
 }

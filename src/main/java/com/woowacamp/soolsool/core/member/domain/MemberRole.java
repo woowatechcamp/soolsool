@@ -30,7 +30,7 @@ public class MemberRole {
     private MemberRoleType name;
 
     @Builder
-    public MemberRole(MemberRoleType name) {
+    public MemberRole(final MemberRoleType name) {
         this.name = name;
     }
 }

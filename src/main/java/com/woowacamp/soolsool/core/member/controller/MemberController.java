@@ -28,13 +28,15 @@ public class MemberController {
         @RequestBody @Valid final MemberAddRequest memberAddRequest
     ) {
         memberService.addMember(memberAddRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping
     public ResponseEntity<MemberFindResponse> findMember() {
         Long userId = 1L;
         MemberFindResponse memberFindResponse = memberService.findMember(userId);
+
         return ResponseEntity.status(HttpStatus.OK).body(memberFindResponse);
     }
 
@@ -44,6 +46,7 @@ public class MemberController {
     ) {
         Long userId = 1L;
         memberService.modifyMember(userId, memberModifyRequest);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -51,6 +54,7 @@ public class MemberController {
     public ResponseEntity<Void> removeMember() {
         Long userId = 1L;
         memberService.removeMember(userId);
+        
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

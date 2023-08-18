@@ -89,7 +89,7 @@ public class Member extends BaseEntity {
         this.address = address;
     }
 
-    public static Member of(MemberRole memberRole, MemberAddRequest memberAddRequest) {
+    public static Member of(final MemberRole memberRole, final MemberAddRequest memberAddRequest) {
         return Member.builder()
             .role(memberRole)
             .email(new MemberEmail(memberAddRequest.getEmail()))
@@ -101,7 +101,7 @@ public class Member extends BaseEntity {
             .build();
     }
 
-    public void update(MemberModifyRequest memberModifyRequest) {
+    public void update(final MemberModifyRequest memberModifyRequest) {
         this.password = new MemberPassword(memberModifyRequest.getPassword());
         this.name = new MemberName(memberModifyRequest.getName());
         this.address = new MemberAddress(memberModifyRequest.getAddress());
