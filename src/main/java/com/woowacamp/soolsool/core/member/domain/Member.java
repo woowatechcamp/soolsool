@@ -93,4 +93,8 @@ public class Member extends BaseEntity {
         this.name = new MemberName(memberModifyRequest.getName());
         this.address = new MemberAddress(memberModifyRequest.getAddress());
     }
+
+    public boolean matchPassword(final String password) {
+        return this.password.matchPassword(password);
+    }
 }

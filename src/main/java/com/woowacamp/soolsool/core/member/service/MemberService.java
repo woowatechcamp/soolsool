@@ -1,7 +1,12 @@
 package com.woowacamp.soolsool.core.member.service;
 
+import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_MATCH_PASSWORD;
+
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
+import com.woowacamp.soolsool.core.member.dto.request.LoginRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
@@ -10,10 +15,12 @@ import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.global.exception.DefaultErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -31,14 +38,14 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberFindResponse findMember(final Long userId) {
         final Member member = memberRepository.findById(userId)
-            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
         return MemberFindResponse.of(member);
     }
 
     @Transactional
     public void modifyMember(final Long userId, final MemberModifyRequest memberModifyRequest) {
         final Member member = memberRepository.findById(userId)
-            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
         member.update(memberModifyRequest);
         memberRepository.save(member);
     }
@@ -46,7 +53,18 @@ public class MemberService {
     @Transactional
     public void removeMember(final Long userId) {
         final Member member = memberRepository.findById(userId)
-            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
         memberRepository.delete(member);
+    }
+
+    @Transactional(readOnly = true)
+    public Member matchMember(final LoginRequest loginRequest) {
+        final Member member = memberRepository.findByEmail(new MemberEmail(loginRequest.getEmail()))
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+
+        if (!member.matchPassword(loginRequest.getPassword())) {
+            throw new SoolSoolException(MEMBER_NO_MATCH_PASSWORD);
+        }
+        return member;
     }
 }

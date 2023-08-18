@@ -33,4 +33,8 @@ public class MemberPassword {
             throw new SoolSoolException(MemberErrorCode.NO_CONTENT_PASSWORD);
         }
     }
+
+    public boolean matchPassword(final String password) {
+        return this.password.equals(password);
+    }
 }
