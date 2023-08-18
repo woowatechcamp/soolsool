@@ -21,7 +21,7 @@ public class TestHelper {
             .password(new MemberPassword("test_password"))
             .name(new MemberName("최배달"))
             .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
-            .mileage(new MemberMileage("0"))
+            .mileage(MemberMileage.from("0"))
             .address(new MemberAddress("서울시 잠실역"))
             .build();
     }

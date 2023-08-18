@@ -71,7 +71,7 @@ public class MemberAddRequest {
             .password(new MemberPassword(this.password))
             .name(new MemberName(this.name))
             .phoneNumber(new MemberPhoneNumber(this.phoneNumber))
-            .mileage(new MemberMileage(this.mileage))
+            .mileage(MemberMileage.from(this.mileage))
             .address(new MemberAddress(this.address))
             .build();
 
