@@ -41,16 +41,16 @@ public class MemberMileageUsage extends BaseEntity {
 
     @Column(name = "amount")
     @Convert(converter = MemberMileageConverter.class)
-    private MemberMileage mileage;
+    private MemberMileage amount;
 
     @Builder
     public MemberMileageUsage(
         final Member member,
         final Order order,
-        final MemberMileage mileage
+        final String amount
     ) {
         this.member = member;
         this.order = order;
-        this.mileage = mileage;
+        this.amount = MemberMileage.from(amount);
     }
 }
