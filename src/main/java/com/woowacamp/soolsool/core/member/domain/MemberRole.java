@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,9 +26,10 @@ public class MemberRole {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false, length = 20)
+    @Column(name = "name", nullable = false, length = 20, unique = true)
     private MemberRoleType name;
-    
+
+    @Builder
     public MemberRole(final MemberRoleType name) {
         this.name = name;
     }

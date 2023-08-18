@@ -13,6 +13,10 @@ public class MemberMileage {
 
     private final BigInteger mileage;
 
+    public static MemberMileage from(final String mileage) {
+        return new MemberMileage(new BigInteger(mileage));
+    }
+
     public MemberMileage(final BigInteger mileage) {
         validateIsNotNull(mileage);
         validateIsValidSize(mileage);
