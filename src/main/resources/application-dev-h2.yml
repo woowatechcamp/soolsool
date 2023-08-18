@@ -1,6 +1,8 @@
 spring:
+  config:
+    activate:
+      on-profile: dev-h2
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     properties:
@@ -8,3 +10,4 @@ spring:
         format_sql: true
         show_sql: true
     defer-datasource-initialization: true
+  ®

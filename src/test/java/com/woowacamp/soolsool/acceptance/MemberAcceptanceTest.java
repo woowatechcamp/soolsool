@@ -1,8 +1,7 @@
-package com.woowacamp.soolsool.integration.controller;
+package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
@@ -15,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("회원 : 인수 테스트")
-class MemberControllerTest extends AcceptanceTest {
+class MemberAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("성공 : 회원 등록")
