@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.member.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.member.exception.MemberErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,7 @@ import org.springframework.util.StringUtils;
 public class MemberName {
 
     private static final int MAX_LENGTH = 13;
+
     private final String name;
 
     public MemberName(final String name) {
@@ -21,14 +23,13 @@ public class MemberName {
 
     private void validateIsValidLength(final String name) {
         if (name.length() > MAX_LENGTH) {
-            throw new ShoppingException("회원 이름은 13자보다 길 수 없습니다.");
-
+            throw new SoolSoolException(MemberErrorCode.INVALID_LENGTH_NAME);
         }
     }
 
     private void validateIsNotNullOrEmpty(final String name) {
         if (!StringUtils.hasText(name)) {
-            throw new ShoppingException("회원 이름은 null이거나 공백일 수 없습니다.");
+            throw new SoolSoolException(MemberErrorCode.NO_CONTENT_NAME);
         }
     }
 }

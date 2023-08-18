@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.member.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.member.exception.MemberErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
@@ -21,13 +22,13 @@ public class MemberMileage {
 
     private void validateIsValidSize(final BigInteger mileage) {
         if (mileage.compareTo(BigInteger.ZERO) < 0) {
-            throw new ShoppingException("회원 마일리지는 0 미만일 수 없습니다.");
+            throw new SoolSoolException(MemberErrorCode.INVALID_SIZE_MILEAGE);
         }
     }
 
     private void validateIsNotNull(final BigInteger mileage) {
         if (Objects.isNull(mileage)) {
-            throw new ShoppingException("회원 마일리지는 null일 수 없습니다.");
+            throw new SoolSoolException(MemberErrorCode.NO_CONTENT_MILEAGE);
         }
     }
 }

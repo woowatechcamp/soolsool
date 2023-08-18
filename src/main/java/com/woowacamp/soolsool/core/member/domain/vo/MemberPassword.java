@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.member.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.member.exception.MemberErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -22,14 +23,14 @@ public class MemberPassword {
 
     private void validateIsValidLength(final String password) {
         if (password.length() > MAX_LENGTH) {
-            throw new ShoppingException("회원 비밀번호은 60자보다 길 수 없습니다.");
+            throw new SoolSoolException(MemberErrorCode.INVALID_LENGTH_PASSWORD);
 
         }
     }
 
     private void validateIsNotNullOrEmpty(final String password) {
         if (!StringUtils.hasText(password)) {
-            throw new ShoppingException("회원 비밀번호는 null이거나 공백일 수 없습니다.");
+            throw new SoolSoolException(MemberErrorCode.NO_CONTENT_PASSWORD);
         }
     }
 }

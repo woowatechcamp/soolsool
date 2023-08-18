@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.member.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.member.exception.MemberErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,8 +11,8 @@ import org.springframework.util.StringUtils;
 @EqualsAndHashCode
 public class MemberEmail {
 
-    private static final Pattern emailPattern = Pattern
-        .compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern
+            .compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final int MAX_LENGTH = 255;
 
     private final String email;
@@ -26,20 +27,19 @@ public class MemberEmail {
 
     private void validateIsValidLength(final String email) {
         if (email.length() > MAX_LENGTH) {
-            throw new ShoppingException("회원 이메일은 255자보다 길 수 없습니다.");
-
+            throw new SoolSoolException(MemberErrorCode.INVALID_LENGTH_EMAIL);
         }
     }
 
     private void validateIsNotNullOrEmpty(final String email) {
         if (!StringUtils.hasText(email)) {
-            throw new ShoppingException("회원 이메일은 null이거나 공백일 수 없습니다.");
+            throw new SoolSoolException(MemberErrorCode.NO_CONTENT_EMAIL);
         }
     }
 
     private void validateIsValidFormat(final String email) {
-        if (!emailPattern.matcher(email).matches()) {
-            throw new ShoppingException("회원 이메일이 표준 이메일 양식에 맞지 않습니다.");
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            throw new SoolSoolException(MemberErrorCode.INVALID_FORMAT_EMAIL);
         }
     }
 }
