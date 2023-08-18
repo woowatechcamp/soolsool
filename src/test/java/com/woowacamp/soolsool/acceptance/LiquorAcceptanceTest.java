@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -69,6 +69,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "/url",
             100, 12.0,
             300);
+
         ExtractableResponse<Response> saveLiquor = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,9 +79,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .when().post("/liquors")
             .then().log().all()
             .extract();
-        
+
         Long liquorId = Long.parseLong(saveLiquor.header("Location").split("/")[2]);
-        ModifyLiquorRequest modifyLiquorRequest = new ModifyLiquorRequest(
+        LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
             "SOJU",
             "GYEONGGI_DO",
             "ON_SALE",
@@ -99,7 +100,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, accessToken)
-            .body(modifyLiquorRequest)
+            .body(liquorModifyRequest)
             .when().put("/liquors/{liquorId}", liquorId)
             .then().log().all()
             .extract();

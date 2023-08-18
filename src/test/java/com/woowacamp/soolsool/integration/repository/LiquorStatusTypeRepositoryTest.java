@@ -29,8 +29,7 @@ class LiquorStatusTypeRepositoryTest {
     @DisplayName("LiquorStatus의 name를 가지고 LiquorStatus을 조회한다.")
     void findByLiquorRegionType_type() {
         // given
-        LiquorStatus 판매중 = liquorStatusRepository
-            .findByType(ON_SALE);
+        LiquorStatus 판매중 = liquorStatusRepository.findByType(ON_SALE);
         // when & then
         assertThat(판매중.getType().getStatus()).isEqualTo(ON_SALE.getStatus());
     }

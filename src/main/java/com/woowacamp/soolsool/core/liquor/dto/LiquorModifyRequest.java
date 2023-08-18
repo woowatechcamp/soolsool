@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ModifyLiquorRequest {
+public class LiquorModifyRequest {
 
     private final String typeName;
     private final String regionName;

@@ -17,7 +17,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
-import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;
@@ -107,9 +107,9 @@ public class Liquor extends BaseEntity {
         this.alcohol = new LiquorAlcohol(alcohol);
         this.volume = new LiquorVolume(volume);
     }
-    
+
     public void update(LiquorType modifyLiquorType, LiquorRegion modifyLiquorRegion,
-        LiquorStatus modifyLiquorStatus, ModifyLiquorRequest request) {
+        LiquorStatus modifyLiquorStatus, LiquorModifyRequest request) {
         this.liquorType = modifyLiquorType;
         this.liquorRegion = modifyLiquorRegion;
         this.liquorStatus = modifyLiquorStatus;

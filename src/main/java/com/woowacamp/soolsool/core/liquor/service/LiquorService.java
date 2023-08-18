@@ -9,8 +9,8 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
@@ -43,22 +43,21 @@ public class LiquorService {
     }
 
     @Transactional
-    public void modifyLiquor(Long liquorId, ModifyLiquorRequest modifyLiquorRequest) {
+    public void modifyLiquor(Long liquorId, LiquorModifyRequest liquorModifyRequest) {
         Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
         LiquorType modifyLiquorType = liquorTypeRepository
-            .findByType(LiquorBrewType.valueOf(modifyLiquorRequest.getTypeName()));
-
+            .findByType(LiquorBrewType.valueOf(liquorModifyRequest.getTypeName()));
         LiquorRegion modifyLiquorRegion = liquorRegionRepository
-            .findByType(LiquorRegionType.valueOf(modifyLiquorRequest.getRegionName()));
-
+            .findByType(LiquorRegionType.valueOf(liquorModifyRequest.getRegionName()));
         LiquorStatus modifyLiquorStatus = liquorStatusRepository
-            .findByType(LiquorStatusType.valueOf(modifyLiquorRequest.getStatusName()));
+            .findByType(LiquorStatusType.valueOf(liquorModifyRequest.getStatusName()));
 
         liquor.update(
             modifyLiquorType, modifyLiquorRegion,
-            modifyLiquorStatus, modifyLiquorRequest);
+            modifyLiquorStatus, liquorModifyRequest
+        );
     }
 
 

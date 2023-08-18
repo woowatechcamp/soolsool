@@ -10,8 +10,8 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
@@ -84,7 +84,7 @@ class LiquorServiceTest {
             100, 12.0,
             300);
         Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
-        ModifyLiquorRequest modifyLiquorRequest = new ModifyLiquorRequest(
+        LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
             "SOJU",
             "GYEONGGI_DO",
             "ON_SALE",
@@ -97,12 +97,12 @@ class LiquorServiceTest {
             1
         );
         // when
-        liquorService.modifyLiquor(saveLiquorId, modifyLiquorRequest);
+        liquorService.modifyLiquor(saveLiquorId, liquorModifyRequest);
 
         // then
         Liquor findLiquor = liquorRepository.findById(saveLiquorId).orElseThrow();
         assertThat(findLiquor.getName()).extracting("name")
-            .isEqualTo(modifyLiquorRequest.getName());
+            .isEqualTo(liquorModifyRequest.getName());
     }
 
 }
