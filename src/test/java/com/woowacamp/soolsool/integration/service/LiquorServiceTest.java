@@ -1,9 +1,7 @@
-package com.woowacamp.soolsool.core.liquor.service;
+package com.woowacamp.soolsool.integration.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
@@ -11,11 +9,11 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
+import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +52,7 @@ class LiquorServiceTest {
     @DisplayName("liquor를 저장한다.")
     void saveLiquorTest() {
         // given
-        LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU",
             "GYEONGGI_DO",
             "ON_SALE",
@@ -64,45 +62,9 @@ class LiquorServiceTest {
             "/url",
             100, 12.0,
             300);
+        
         // when & then
-        assertThatCode(() -> liquorService.saveLiquor(saveLiquorRequest))
+        assertThatCode(() -> liquorService.saveLiquor(liquorSaveRequest))
             .doesNotThrowAnyException();
     }
-
-    @Test
-    @DisplayName("liquor를 수정한다.")
-    void modifyLiquorTestWithSuccess() {
-        // given
-        LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
-        Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
-        ModifyLiquorRequest modifyLiquorRequest = new ModifyLiquorRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "안동소주",
-            "3000",
-            "브랜드",
-            "soolsool.png",
-            100,
-            12.0,
-            1
-        );
-        // when
-        liquorService.modifyLiquor(saveLiquorId, modifyLiquorRequest);
-
-        // then
-        Liquor findLiquor = liquorRepository.findById(saveLiquorId).orElseThrow();
-        assertThat(findLiquor.getName()).extracting("name")
-            .isEqualTo(modifyLiquorRequest.getName());
-    }
-
 }

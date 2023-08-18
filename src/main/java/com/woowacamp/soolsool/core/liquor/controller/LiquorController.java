@@ -3,8 +3,8 @@ package com.woowacamp.soolsool.core.liquor.controller;
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
 
+import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
-import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
@@ -26,8 +26,8 @@ public class LiquorController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
-        @RequestBody final SaveLiquorRequest saveLiquorRequest) {
-        Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
+        @RequestBody final LiquorSaveRequest liquorSaveRequest) {
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
             .body(ApiResponse.of(LIQUOR_CREATED, null));

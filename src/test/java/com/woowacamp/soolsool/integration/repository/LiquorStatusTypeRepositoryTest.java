@@ -1,12 +1,11 @@
-package com.woowacamp.soolsool.core.liquor.repository;
+package com.woowacamp.soolsool.integration.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType.ON_SALE;
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_STATUS_TYPE_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,9 +30,7 @@ class LiquorStatusTypeRepositoryTest {
     void findByLiquorRegionType_type() {
         // given
         LiquorStatus 판매중 = liquorStatusRepository
-            .findByType(ON_SALE)
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_TYPE_FOUND));
-
+            .findByType(ON_SALE);
         // when & then
         assertThat(판매중.getType().getStatus()).isEqualTo(ON_SALE.getStatus());
     }

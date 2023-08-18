@@ -18,7 +18,6 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
-import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;
@@ -92,43 +91,23 @@ public class Liquor extends BaseEntity {
         final LiquorType liquorType,
         final LiquorRegion liquorRegion,
         final LiquorStatus liquorStatus,
-        final LiquorName name,
-        final LiquorPrice price,
-        final LiquorBrand brand,
-        final LiquorImageUrl imageUrl,
-        final LiquorStock stock,
-        final LiquorAlcohol alcohol,
-        final LiquorVolume volume
+        final String name, final String price,
+        final String brand, final String imageUrl,
+        final int stock, final Double alcohol,
+        final int volume
     ) {
         this.liquorType = liquorType;
         this.liquorRegion = liquorRegion;
         this.liquorStatus = liquorStatus;
-        this.name = name;
-        this.price = price;
-        this.brand = brand;
-        this.imageUrl = imageUrl;
-        this.stock = stock;
-        this.alcohol = alcohol;
-        this.volume = volume;
+        this.name = new LiquorName(name);
+        this.price = new LiquorPrice(new BigInteger(price));
+        this.brand = new LiquorBrand(brand);
+        this.imageUrl = new LiquorImageUrl(imageUrl);
+        this.stock = new LiquorStock(stock);
+        this.alcohol = new LiquorAlcohol(alcohol);
+        this.volume = new LiquorVolume(volume);
     }
-
-    public static Liquor of(
-        final LiquorType liquorType, final LiquorRegion liquorRegion,
-        final LiquorStatus liquorStatus, final SaveLiquorRequest request) {
-        return new Liquor(
-            liquorType,
-            liquorRegion,
-            liquorStatus,
-            new LiquorName(request.getName()),
-            new LiquorPrice(new BigInteger(request.getPrice())),
-            new LiquorBrand(request.getBrand()),
-            new LiquorImageUrl(request.getImageUrl()),
-            new LiquorStock(request.getStock()),
-            new LiquorAlcohol(request.getAlcohol()),
-            new LiquorVolume(request.getVolume())
-        );
-    }
-
+    
     public void update(LiquorType modifyLiquorType, LiquorRegion modifyLiquorRegion,
         LiquorStatus modifyLiquorStatus, ModifyLiquorRequest request) {
         this.liquorType = modifyLiquorType;

@@ -1,12 +1,11 @@
-package com.woowacamp.soolsool.core.liquor.repository;
+package com.woowacamp.soolsool.integration.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType.BERRY;
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_BREW_TYPE_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,8 +30,7 @@ class LiquorTypeRepositoryTest {
     void findByLiquorType_type() {
         // given
         LiquorType 과실주 = liquorTypeRepository
-            .findByType(BERRY)
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_TYPE_FOUND));
+            .findByType(BERRY);
 
         // when & then
         assertThat(과실주.getType().getType()).isEqualTo(BERRY.getType());

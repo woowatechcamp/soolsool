@@ -6,14 +6,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.woowacamp.soolsool.acceptance.helper.RestAssuredHelper.Liquor;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
-import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 @DisplayName("술 상품 관련 기능")
 class LiquorAcceptanceTest extends AcceptanceTest {
@@ -23,7 +25,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     void saveLiquor() {
         // given
         String accessToken = "1234";
-        SaveLiquorRequest saveLiquorRequest = new SaveLiquorRequest(
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU",
             "GYEONGGI_DO",
             "ON_SALE",
@@ -35,10 +37,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             300);
 
         // when
-        ExtractableResponse<Response> response = Liquor.saveLiquor(
-            accessToken,
-            saveLiquorRequest
-        );
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .body(liquorSaveRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(CREATED.value());
@@ -52,7 +59,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     void modifyLiquorTest() {
         // given
         String accessToken = "1234";
-        SaveLiquorRequest saveLiquorRequest = new SaveLiquorRequest(
+        LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
             "SOJU",
             "GYEONGGI_DO",
             "ON_SALE",
@@ -62,8 +69,16 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "/url",
             100, 12.0,
             300);
-        ExtractableResponse<Response> saveLiquor = Liquor.saveLiquor(accessToken,
-            saveLiquorRequest);
+        ExtractableResponse<Response> saveLiquor = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .body(saveLiquorRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract();
+        
         Long liquorId = Long.parseLong(saveLiquor.header("Location").split("/")[2]);
         ModifyLiquorRequest modifyLiquorRequest = new ModifyLiquorRequest(
             "SOJU",
@@ -79,11 +94,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         );
 
         // when
-        ExtractableResponse<Response> response = Liquor.modifyLiquor(
-            accessToken,
-            liquorId,
-            modifyLiquorRequest
-        );
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .body(modifyLiquorRequest)
+            .when().put("/liquors/{liquorId}", liquorId)
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());

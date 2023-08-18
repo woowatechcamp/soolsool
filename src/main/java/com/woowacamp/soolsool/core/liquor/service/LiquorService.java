@@ -1,9 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.service;
 
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_BREW_TYPE_FOUND;
 import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_REGION_TYPE_FOUND;
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_STATUS_TYPE_FOUND;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
@@ -12,8 +9,8 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.ModifyLiquorRequest;
-import com.woowacamp.soolsool.core.liquor.dto.SaveLiquorRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
@@ -33,23 +30,15 @@ public class LiquorService {
     private final LiquorTypeRepository liquorTypeRepository;
 
     @Transactional
-    public Long saveLiquor(final SaveLiquorRequest request) {
+    public Long saveLiquor(final LiquorSaveRequest request) {
         LiquorType liquorType = liquorTypeRepository
-            .findByType(LiquorBrewType.findType(request.getTypeName()))
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_TYPE_FOUND));
-
+            .findByType(LiquorBrewType.valueOf(request.getTypeName()));
         LiquorRegion liquorRegion = liquorRegionRepository
-            .findByType(LiquorRegionType.findType(request.getRegionName()))
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_TYPE_FOUND));
-
+            .findByType(LiquorRegionType.valueOf(request.getRegionName()));
         LiquorStatus liquorStatus = liquorStatusRepository
-            .findByType(LiquorStatusType.findType(request.getStatusName()))
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_TYPE_FOUND));
+            .findByType(LiquorStatusType.valueOf(request.getStatusName()));
 
-        Liquor liquor = Liquor.of(
-            liquorType, liquorRegion,
-            liquorStatus, request
-        );
+        Liquor liquor = request.toEntity(liquorType, liquorRegion, liquorStatus);
         return liquorRepository.save(liquor).getId();
     }
 
@@ -59,21 +48,18 @@ public class LiquorService {
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
         LiquorType modifyLiquorType = liquorTypeRepository
-            .findByType(LiquorBrewType.findType(modifyLiquorRequest.getTypeName()))
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_TYPE_FOUND));
+            .findByType(LiquorBrewType.valueOf(modifyLiquorRequest.getTypeName()));
 
         LiquorRegion modifyLiquorRegion = liquorRegionRepository
-            .findByType(LiquorRegionType.findType(modifyLiquorRequest.getRegionName()))
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_TYPE_FOUND));
+            .findByType(LiquorRegionType.valueOf(modifyLiquorRequest.getRegionName()));
 
         LiquorStatus modifyLiquorStatus = liquorStatusRepository
-            .findByType(LiquorStatusType.findType(modifyLiquorRequest.getStatusName()))
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_TYPE_FOUND));
+            .findByType(LiquorStatusType.valueOf(modifyLiquorRequest.getStatusName()));
 
         liquor.update(
             modifyLiquorType, modifyLiquorRegion,
             modifyLiquorStatus, modifyLiquorRequest);
     }
 
-    
+
 }

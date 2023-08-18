@@ -9,6 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+// TODO : data.sql 추가시 삭제 예정
 @Component
 @RequiredArgsConstructor
 public class LiquorRegionTypeConfigurer {
