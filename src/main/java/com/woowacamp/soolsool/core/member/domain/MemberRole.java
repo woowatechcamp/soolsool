@@ -1,5 +1,6 @@
-package com.woowacamp.soolsool.core.member.domain.vo;
+package com.woowacamp.soolsool.core.member.domain;
 
+import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,4 +27,8 @@ public class MemberRole {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 20)
     private MemberRoleType name;
+    
+    public MemberRole(final MemberRoleType name) {
+        this.name = name;
+    }
 }
