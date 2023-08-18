@@ -1,5 +1,6 @@
-package com.woowacamp.soolsool.core.liquor.domain.vo;
+package com.woowacamp.soolsool.core.member.domain;
 
+import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,16 +10,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@Table(name = "liquor_regions")
+@Table(name = "roles")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LiquorRegion {
+public class MemberRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,6 +26,11 @@ public class LiquorRegion {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false, length = 20)
-    private LiquorRegionType type;
+    @Column(name = "name", nullable = false, length = 20, unique = true)
+    private MemberRoleType name;
+
+    @Builder
+    public MemberRole(final MemberRoleType name) {
+        this.name = name;
+    }
 }

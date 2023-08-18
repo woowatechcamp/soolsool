@@ -12,7 +12,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberRole;
+import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -40,6 +40,10 @@ public class Member extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private MemberRole role;
+
     @Column(name = "email", nullable = false, unique = true, length = 255)
     @Convert(converter = MemberEmailConverter.class)
     private MemberEmail email;
@@ -64,27 +68,29 @@ public class Member extends BaseEntity {
     @Convert(converter = MemberAddressConverter.class)
     private MemberAddress address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role", nullable = false)
-    private MemberRole role;
 
     @Builder
     public Member(
+        final MemberRole role,
         final MemberEmail email,
         final MemberPassword password,
         final MemberName name,
         final MemberPhoneNumber phoneNumber,
         final MemberMileage mileage,
-        final MemberAddress address,
-        final MemberRole role
+        final MemberAddress address
     ) {
+        this.role = role;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.mileage = mileage;
         this.address = address;
-        this.role = role;
     }
 
+    public void update(final MemberModifyRequest memberModifyRequest) {
+        this.password = new MemberPassword(memberModifyRequest.getPassword());
+        this.name = new MemberName(memberModifyRequest.getName());
+        this.address = new MemberAddress(memberModifyRequest.getAddress());
+    }
 }

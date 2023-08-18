@@ -1,5 +1,7 @@
-package com.woowacamp.soolsool.core.member.domain.vo;
+package com.woowacamp.soolsool.core.liquor.domain;
 
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
+import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,9 +16,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "roles")
+@Table(name = "liquor_brews")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberRole {
+public class LiquorBrew extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,5 +27,9 @@ public class MemberRole {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 20)
-    private MemberRoleType name;
+    private LiquorBrewType type;
+
+    public LiquorBrew(final LiquorBrewType type) {
+        this.type = type;
+    }
 }

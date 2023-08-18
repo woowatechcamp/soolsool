@@ -1,5 +1,6 @@
-package com.woowacamp.soolsool.core.liquor.domain.vo;
+package com.woowacamp.soolsool.core.liquor.domain;
 
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,11 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "liquor_types")
+@Table(name = "liquor_status")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class LiquorType {
+public class LiquorStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,5 +28,9 @@ public class LiquorType {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 20)
-    private LiquorBrewType type;
+    private LiquorStatusType type;
+
+    public LiquorStatus(final LiquorStatusType type) {
+        this.type = type;
+    }
 }
