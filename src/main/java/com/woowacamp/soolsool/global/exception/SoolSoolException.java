@@ -8,7 +8,19 @@ public class SoolSoolException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public SoolSoolException(final ErrorCode errorCode) {
-        super(errorCode.getMessage());
         this.errorCode = errorCode;
+    }
+
+    public int getStatus() {
+        return errorCode.getStatus();
+    }
+
+    public String getCode() {
+        return errorCode.getCode();
+    }
+
+    @Override
+    public String getMessage() {
+        return errorCode.getMessage();
     }
 }
