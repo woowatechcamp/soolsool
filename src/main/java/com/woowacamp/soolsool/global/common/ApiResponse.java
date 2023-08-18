@@ -1,22 +1,31 @@
 package com.woowacamp.soolsool.global.common;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-// TODO : API Response NOARgs 이 없어서 파싱이 안되서, 일단 final을 지웠는데, 고쳐주세요
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponse<T> {
 
-    private int status;
-    private String code;
-    private String message;
-    private T data;
+    private final int status;
+    private final String code;
+    private final String message;
+    private final T data;
 
-    private ApiResponse(ResultCode resultCode, T data) {
+    // TODO: Jackson으로 줄일 순 없을까?
+    @JsonCreator
+    public ApiResponse(
+        final int status,
+        final String code,
+        final String message,
+        final T data
+    ) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    private ApiResponse(final ResultCode resultCode, final T data) {
         this(
             resultCode.getStatus(),
             resultCode.getCode(),
