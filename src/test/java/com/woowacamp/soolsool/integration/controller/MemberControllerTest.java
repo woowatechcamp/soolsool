@@ -56,12 +56,9 @@ class MemberControllerTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-            .given()
-            .log().all()
-            .when()
-            .get("/members")
-            .then()
-            .log().all()
+            .given().log().all()
+            .when().get("/members")
+            .then().log().all()
             .extract();
 
         // then
@@ -83,14 +80,11 @@ class MemberControllerTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-            .given()
+            .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
-            .log().all()
-            .when()
-            .patch("/members")
-            .then()
-            .log().all()
+            .when().patch("/members")
+            .then().log().all()
             .extract();
 
         // then
@@ -105,12 +99,10 @@ class MemberControllerTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-            .given()
-            .log().all()
+            .given().log().all()
             .when()
             .delete("/members")
-            .then()
-            .log().all()
+            .then().log().all()
             .extract();
 
         // then
