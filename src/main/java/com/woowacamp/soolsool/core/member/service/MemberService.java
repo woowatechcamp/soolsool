@@ -24,7 +24,7 @@ public class MemberService {
     public void addMember(final MemberAddRequest memberAddRequest) {
         MemberRole memberRole = memberRoleRepository.findById(1L)
             .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_ROLE_TYPE));
-        Member member = Member.of(memberRole, memberAddRequest);
+        Member member = memberAddRequest.toMember(memberRole);
         memberRepository.save(member);
     }
 

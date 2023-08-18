@@ -55,7 +55,7 @@ class MemberServiceTest {
         MemberRole memberRole = MemberRole.builder()
             .name(MemberRoleType.CUSTOMER)
             .build();
-        Member member = Member.of(memberRole, memberAddRequest);
+        Member member = memberAddRequest.toMember(memberRole);
 
         // when
         when(memberRoleRepository.findById(1L)).thenReturn(Optional.ofNullable(memberRole));

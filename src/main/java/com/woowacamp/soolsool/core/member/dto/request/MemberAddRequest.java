@@ -1,5 +1,13 @@
 package com.woowacamp.soolsool.core.member.dto.request;
 
+import com.woowacamp.soolsool.core.member.domain.Member;
+import com.woowacamp.soolsool.core.member.domain.MemberRole;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberAddress;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -54,5 +62,18 @@ public class MemberAddRequest {
         this.phoneNumber = phoneNumber;
         this.mileage = mileage;
         this.address = address;
+    }
+
+    public Member toMember(final MemberRole memberRole) {
+        return Member.builder()
+            .role(memberRole)
+            .email(new MemberEmail(this.email))
+            .password(new MemberPassword(this.password))
+            .name(new MemberName(this.name))
+            .phoneNumber(new MemberPhoneNumber(this.phoneNumber))
+            .mileage(new MemberMileage(this.mileage))
+            .address(new MemberAddress(this.address))
+            .build();
+
     }
 }

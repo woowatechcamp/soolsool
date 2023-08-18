@@ -12,7 +12,6 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
-import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
@@ -87,18 +86,6 @@ public class Member extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.mileage = mileage;
         this.address = address;
-    }
-
-    public static Member of(final MemberRole memberRole, final MemberAddRequest memberAddRequest) {
-        return Member.builder()
-            .role(memberRole)
-            .email(new MemberEmail(memberAddRequest.getEmail()))
-            .password(new MemberPassword(memberAddRequest.getPassword()))
-            .name(new MemberName(memberAddRequest.getName()))
-            .phoneNumber(new MemberPhoneNumber(memberAddRequest.getPhoneNumber()))
-            .mileage(new MemberMileage(memberAddRequest.getMileage()))
-            .address(new MemberAddress(memberAddRequest.getAddress()))
-            .build();
     }
 
     public void update(final MemberModifyRequest memberModifyRequest) {
