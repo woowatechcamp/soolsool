@@ -44,5 +44,4 @@ class MemberTest {
             () -> assertThat(member.getRole().getName()).isEqualTo(memberRoleType)
         );
     }
-
 }
