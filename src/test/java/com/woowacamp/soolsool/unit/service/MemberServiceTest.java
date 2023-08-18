@@ -8,6 +8,12 @@ import static org.mockito.Mockito.when;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberAddress;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
@@ -15,7 +21,6 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.core.member.service.MemberService;
-import com.woowacamp.soolsool.support.TestHelper;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -90,7 +95,17 @@ class MemberServiceTest {
     void readMember() {
         // given
         Long userId = 1L;
-        Member member = TestHelper.getMember();
+        Member member = Member.builder()
+            .role(MemberRole.builder()
+                .name(MemberRoleType.CUSTOMER)
+                .build())
+            .email(new MemberEmail("test@email.com"))
+            .password(new MemberPassword("test_password"))
+            .name(new MemberName("최배달"))
+            .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
+            .mileage(MemberMileage.from("0"))
+            .address(new MemberAddress("서울시 잠실역"))
+            .build();
         MemberFindResponse memberFindResponseExpected = MemberFindResponse.of(member);
 
         // when
@@ -122,7 +137,17 @@ class MemberServiceTest {
             "new_name",
             "new_address"
         );
-        Member member = TestHelper.getMember();
+        Member member = Member.builder()
+            .role(MemberRole.builder()
+                .name(MemberRoleType.CUSTOMER)
+                .build())
+            .email(new MemberEmail("test@email.com"))
+            .password(new MemberPassword("test_password"))
+            .name(new MemberName("최배달"))
+            .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
+            .mileage(MemberMileage.from("0"))
+            .address(new MemberAddress("서울시 잠실역"))
+            .build();
 
         // when
         when(memberRepository.findById(userId)).thenReturn(Optional.ofNullable(member));
@@ -150,7 +175,17 @@ class MemberServiceTest {
     void removeMember() {
         // given
         Long userId = 1L;
-        Member member = TestHelper.getMember();
+        Member member = Member.builder()
+            .role(MemberRole.builder()
+                .name(MemberRoleType.CUSTOMER)
+                .build())
+            .email(new MemberEmail("test@email.com"))
+            .password(new MemberPassword("test_password"))
+            .name(new MemberName("최배달"))
+            .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
+            .mileage(MemberMileage.from("0"))
+            .address(new MemberAddress("서울시 잠실역"))
+            .build();
 
         // when
         when(memberRepository.findById(userId)).thenReturn(Optional.of(member));

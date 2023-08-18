@@ -6,7 +6,6 @@ import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
-import com.woowacamp.soolsool.support.TestFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -52,7 +51,22 @@ class MemberControllerTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 조회")
     void getMember() {
         // given
-        TestFixture.addMember();
+        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
+            .memberRoleType("CUSTOMER")
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
+            .build();
+
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -71,7 +85,23 @@ class MemberControllerTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 수정")
     void modifyMember() {
         // given
-        TestFixture.addMember();
+        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
+            .memberRoleType("CUSTOMER")
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
+            .build();
+
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
+
         MemberModifyRequest modifyRequest = MemberModifyRequest.builder()
             .password("modify_password")
             .name("modify_name")
@@ -95,7 +125,22 @@ class MemberControllerTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 삭제")
     void deleteMember() {
         // given
-        TestFixture.addMember();
+        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
+            .memberRoleType("CUSTOMER")
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
+            .build();
+
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
 
         // when
         ExtractableResponse<Response> response = RestAssured
