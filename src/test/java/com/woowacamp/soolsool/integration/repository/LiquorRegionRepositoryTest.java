@@ -1,12 +1,11 @@
-package com.woowacamp.soolsool.core.liquor.repository;
+package com.woowacamp.soolsool.integration.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType.GYEONGGI_DO;
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_REGION_TYPE_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +29,7 @@ class LiquorRegionRepositoryTest {
     @DisplayName("LiquorRegionStatus의 name를 가지고 LiquorRegion을 조회한다.")
     void findByLiquorRegionType_type() {
         // given
-        LiquorRegion 경기도 = liquorRegionRepository.findByType(GYEONGGI_DO)
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_TYPE_FOUND));
+        LiquorRegion 경기도 = liquorRegionRepository.findByType(GYEONGGI_DO).orElseThrow();
 
         // when & then
         assertThat(경기도.getType().getName()).isEqualTo(GYEONGGI_DO.getName());
