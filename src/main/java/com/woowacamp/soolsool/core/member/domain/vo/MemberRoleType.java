@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MemberRoleType {
 
-    CUSTOMER("구매자"),
-    VENDOR("판매자"),
+    CUSTOMER("구매자", "CUSTOMER"),
+    VENDOR("판매자", "VENDOR"),
     ;
 
     private final String type;
+    private final String eType;
+    
 }
