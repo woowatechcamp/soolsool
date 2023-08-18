@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.unit.service;
+package com.woowacamp.soolsool.core.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -8,19 +8,12 @@ import static org.mockito.Mockito.when;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberAddress;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberName;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
-import com.woowacamp.soolsool.core.member.service.MemberService;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -99,12 +92,12 @@ class MemberServiceTest {
             .role(MemberRole.builder()
                 .name(MemberRoleType.CUSTOMER)
                 .build())
-            .email(new MemberEmail("test@email.com"))
-            .password(new MemberPassword("test_password"))
-            .name(new MemberName("최배달"))
-            .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
-            .mileage(MemberMileage.from("0"))
-            .address(new MemberAddress("서울시 잠실역"))
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
             .build();
         MemberFindResponse memberFindResponseExpected = MemberFindResponse.of(member);
 
@@ -141,12 +134,12 @@ class MemberServiceTest {
             .role(MemberRole.builder()
                 .name(MemberRoleType.CUSTOMER)
                 .build())
-            .email(new MemberEmail("test@email.com"))
-            .password(new MemberPassword("test_password"))
-            .name(new MemberName("최배달"))
-            .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
-            .mileage(MemberMileage.from("0"))
-            .address(new MemberAddress("서울시 잠실역"))
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
             .build();
 
         // when
@@ -179,12 +172,12 @@ class MemberServiceTest {
             .role(MemberRole.builder()
                 .name(MemberRoleType.CUSTOMER)
                 .build())
-            .email(new MemberEmail("test@email.com"))
-            .password(new MemberPassword("test_password"))
-            .name(new MemberName("최배달"))
-            .phoneNumber(new MemberPhoneNumber("010-1234-5678"))
-            .mileage(MemberMileage.from("0"))
-            .address(new MemberAddress("서울시 잠실역"))
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("0")
+            .address("서울시 잠실역")
             .build();
 
         // when
