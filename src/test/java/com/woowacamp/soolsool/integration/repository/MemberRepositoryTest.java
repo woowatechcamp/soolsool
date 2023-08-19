@@ -21,10 +21,10 @@ class MemberRepositoryTest {
     @DisplayName("이메일로 member를 조회한다.")
     void memberCreateTest() {
         // given
-        final Optional<Member> member = memberRepository.findByEmail(
+        Optional<Member> member = memberRepository.findByEmail(
             new MemberEmail("woowafriends@naver.com"));
+
         // when & then
         assertThat(member).isNotEmpty();
     }
-
 }

@@ -14,13 +14,14 @@ public class AuthorizationExtractor {
 
     public String extractToken(final HttpServletRequest request) {
         final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+
         while (headers.hasMoreElements()) {
             final String token = headers.nextElement();
             if (token.toLowerCase().startsWith(EXTRACT_TYPE.toLowerCase())) {
                 return token.substring(EXTRACT_TYPE.length()).trim();
             }
         }
-        
+
         return Strings.EMPTY;
     }
 }

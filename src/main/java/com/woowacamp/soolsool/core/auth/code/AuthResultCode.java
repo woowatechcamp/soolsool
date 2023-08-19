@@ -1,5 +1,6 @@
-package com.woowacamp.soolsool.global.common;
+package com.woowacamp.soolsool.core.auth.code;
 
+import com.woowacamp.soolsool.global.common.ResultCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

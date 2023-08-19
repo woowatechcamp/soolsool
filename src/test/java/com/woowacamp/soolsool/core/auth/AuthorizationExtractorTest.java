@@ -24,11 +24,11 @@ class AuthorizationExtractorTest {
     @DisplayName("토큰을 정상적으로 추출한다.")
     void extractTokenSuccessTest() {
         /* given */
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer 123");
 
         /* when */
-        final String extract = authorizationExtractor.extractToken(request);
+        String extract = authorizationExtractor.extractToken(request);
 
         /* then */
         assertThat(extract).isEqualTo("123");
@@ -38,10 +38,10 @@ class AuthorizationExtractorTest {
     @DisplayName("토큰 헤더가 존재하지 않을때, token은 empty이다")
     void extractTokenFailWithDoesNotExistHeader() {
         /* given */
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = new MockHttpServletRequest();
 
         /* when & then */
-        final String token = authorizationExtractor.extractToken(request);
+        String token = authorizationExtractor.extractToken(request);
         assertThat(token).isEmpty();
     }
 
@@ -50,11 +50,11 @@ class AuthorizationExtractorTest {
     @DisplayName("토큰 값이 존재하지 않으면 token은 empty이다")
     void extractTokenFailWithDoesNotExistValue(final String value) {
         /* given */
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, value);
 
         /* when & then */
-        final String token = authorizationExtractor.extractToken(request);
+        String token = authorizationExtractor.extractToken(request);
         assertThat(token).isEmpty();
     }
 
@@ -62,11 +62,11 @@ class AuthorizationExtractorTest {
     @DisplayName("토큰 값이 Bearer로 시작하지 않으면 token은 empty이다")
     void extractTokenFailWithDoesNotStartWithBearer() {
         /* given */
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, "Bear 123");
 
         /* when & then */
-        final String token = authorizationExtractor.extractToken(request);
+        String token = authorizationExtractor.extractToken(request);
         assertThat(token).isEmpty();
     }
 }

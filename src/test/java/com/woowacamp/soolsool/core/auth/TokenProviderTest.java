@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.auth;
 
+import static com.woowacamp.soolsool.core.auth.code.AuthErrorCode.TOKEN_ERROR;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
-import static com.woowacamp.soolsool.global.exception.AuthErrorCode.TOKEN_ERROR;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.core.auth.util.TokenProvider;

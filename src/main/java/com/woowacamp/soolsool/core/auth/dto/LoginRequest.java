@@ -18,5 +18,4 @@ public class LoginRequest {
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
     @Size(max = 60, message = "password 길이가 너무 깁니다.")
     private final String password;
-
 }

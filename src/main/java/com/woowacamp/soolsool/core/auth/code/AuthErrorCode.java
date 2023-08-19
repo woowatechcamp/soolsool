@@ -1,7 +1,8 @@
-package com.woowacamp.soolsool.global.exception;
+package com.woowacamp.soolsool.core.auth.code;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+import com.woowacamp.soolsool.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.auth.util;
 
-import static com.woowacamp.soolsool.global.exception.AuthErrorCode.TOKEN_ERROR;
+import static com.woowacamp.soolsool.core.auth.code.AuthErrorCode.TOKEN_ERROR;
 
 import com.woowacamp.soolsool.core.auth.dto.UserDto;
 import com.woowacamp.soolsool.core.member.domain.Member;
@@ -35,7 +35,7 @@ public class TokenProvider {
         return Jwts.builder()
             .setSubject(member.getId().toString())
             .setIssuedAt(now)
-            .claim(ROLE_TYPE, member.getRole().getName().getEType())
+            .claim(ROLE_TYPE, member.getRole().getName().toString())
             .setExpiration(validity)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
@@ -57,7 +57,7 @@ public class TokenProvider {
                 .parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token).getBody();
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (final JwtException | IllegalArgumentException e) {
             throw new SoolSoolException(TOKEN_ERROR);
         }
     }

@@ -32,11 +32,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
             .when().post("/auth/login")
             .then().log().all()
             .extract();
-        
+
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body().as(new TypeRef<ApiResponse<LoginResponse>>() {
-            }).getData()
+            })
+            .getData()
             .getAccessToken())
             .isNotNull();
     }

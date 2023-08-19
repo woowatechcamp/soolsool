@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.auth.controller;
 
-import static com.woowacamp.soolsool.global.common.AuthResultCode.LOGIN_SUCCESS;
+import static com.woowacamp.soolsool.core.auth.code.AuthResultCode.LOGIN_SUCCESS;
 
 import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
@@ -22,7 +22,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
-        @RequestBody LoginRequest loginRequest) {
+        @RequestBody LoginRequest loginRequest
+    ) {
         final LoginResponse token = authService.createToken(loginRequest);
 
         return ResponseEntity.ok(ApiResponse.of(LOGIN_SUCCESS, token));

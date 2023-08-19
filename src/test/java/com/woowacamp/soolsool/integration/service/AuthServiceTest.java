@@ -33,7 +33,6 @@ class AuthServiceTest {
             .doesNotThrowAnyException();
     }
 
-
     @Test
     @DisplayName("이메일이 일치하지 않으면 토큰 발급에 실패한다")
     void throwErrorWithWrongEmail() {

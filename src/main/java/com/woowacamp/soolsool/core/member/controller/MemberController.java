@@ -57,7 +57,8 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<Void>> removeMember(final @LoginUser Long userId) {
+    public ResponseEntity<ApiResponse<Void>> removeMember(final @LoginUser Long userId
+    ) {
         memberService.removeMember(userId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

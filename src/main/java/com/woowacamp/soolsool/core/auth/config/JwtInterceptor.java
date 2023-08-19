@@ -26,7 +26,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         final HttpServletResponse response,
         final Object handler
     ) {
-
         final String token = authorizationExtractor.extractToken(request);
         tokenProvider.validateToken(token);
 
@@ -43,11 +42,10 @@ public class JwtInterceptor implements HandlerInterceptor {
         final Class<Vendor> vendorClass,
         final String authority
     ) {
-
         final HandlerMethod handlerMethod = (HandlerMethod) handler;
         final String vendorClassName = vendorClass.getSimpleName().toUpperCase();
 
-        return handlerMethod.getMethodAnnotation(vendorClass) == null ||
-            authority.equals(vendorClassName);
+        return handlerMethod.getMethodAnnotation(vendorClass) == null
+            || authority.equals(vendorClassName);
     }
 }

@@ -26,7 +26,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
 
     private String findToken(String email, String password) {
         LoginRequest loginRequest = new LoginRequest(email, password);
-        // when
+
         ExtractableResponse<Response> loginResponse = RestAssured
             .given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -34,9 +34,11 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .when().post("/auth/login")
             .then().log().all()
             .extract();
-        final String accessToken = loginResponse.body()
-            .as(new TypeRef<ApiResponse<LoginResponse>>() {
-            }).getData().getAccessToken();
+
+        String accessToken = loginResponse.body().as(new TypeRef<ApiResponse<LoginResponse>>() {
+            })
+            .getData()
+            .getAccessToken();
         return accessToken;
     }
 
@@ -90,7 +92,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .post("/members")
             .then();
-        final String token = findToken(EMAIL, PASSWORD);
+        String token = findToken(EMAIL, PASSWORD);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -128,7 +130,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .post("/members")
             .then();
-        final String token = findToken(EMAIL, PASSWORD);
+        String token = findToken(EMAIL, PASSWORD);
 
         MemberModifyRequest modifyRequest = MemberModifyRequest.builder()
             .password("modify_password")
@@ -170,14 +172,13 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .post("/members")
             .then();
-        final String token = findToken(EMAIL, PASSWORD);
+        String token = findToken(EMAIL, PASSWORD);
 
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .when()
-            .delete("/members")
+            .when().delete("/members")
             .then().log().all()
             .extract();
 
