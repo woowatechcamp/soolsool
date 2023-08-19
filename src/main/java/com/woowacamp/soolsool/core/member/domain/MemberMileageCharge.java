@@ -33,7 +33,7 @@ public class MemberMileageCharge extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "amount", nullable = false, length = 255)
+    @Column(name = "amount", nullable = false)
     @Convert(converter = MemberMileageConverter.class)
     private MemberMileage amount;
 

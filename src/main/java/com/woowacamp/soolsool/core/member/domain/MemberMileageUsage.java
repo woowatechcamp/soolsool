@@ -39,7 +39,7 @@ public class MemberMileageUsage extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     @Convert(converter = MemberMileageConverter.class)
     private MemberMileage amount;
 
