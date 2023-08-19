@@ -1,7 +1,8 @@
 package com.woowacamp.soolsool.core.auth.service;
 
-import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_INFORMATION;
-import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_MATCH_PASSWORD;
+
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_MATCH_PASSWORD;
 
 import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
@@ -29,7 +30,7 @@ public class AuthService {
         if (!member.matchPassword(loginRequest.getPassword())) {
             throw new SoolSoolException(MEMBER_NO_MATCH_PASSWORD);
         }
-        
+
         return new LoginResponse(tokenProvider.createToken(member));
     }
 }

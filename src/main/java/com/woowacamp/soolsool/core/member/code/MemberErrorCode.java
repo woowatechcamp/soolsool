@@ -29,7 +29,7 @@ public enum MemberErrorCode implements ErrorCode {
 
     MEMBER_NO_INFORMATION(400, "M101", "회원 정보를 찾을 수 없습니다."),
     MEMBER_NO_ROLE_TYPE(400, "M101", "일치하는 회원 타입이 없습니다."),
-    ;
+    MEMBER_NO_MATCH_PASSWORD(400, "M101", "비밀번호가 일치하지 않습니다");
 
     private final int status;
     private final String code;

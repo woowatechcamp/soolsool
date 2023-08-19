@@ -1,12 +1,12 @@
 package com.woowacamp.soolsool.core.auth;
 
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.global.exception.AuthErrorCode.TOKEN_ERROR;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.core.auth.util.TokenProvider;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.global.exception.DefaultErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ class TokenProviderTest {
     @BeforeEach
     void setup() {
         member = memberRepository.findById(3L)
-            .orElseThrow(() -> new SoolSoolException(DefaultErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
     }
 
     @Test

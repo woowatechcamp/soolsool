@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.integration.service;
 
-import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_INFORMATION;
-import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_MATCH_PASSWORD;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_MATCH_PASSWORD;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
