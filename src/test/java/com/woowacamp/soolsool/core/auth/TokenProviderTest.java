@@ -39,7 +39,7 @@ class TokenProviderTest {
     @DisplayName("토큰이 정상적으로 추출된다.")
     void validateToken() {
         // given
-        final String token = tokenProvider.createToken(member);
+        String token = tokenProvider.createToken(member);
 
         // when & then
         assertThatCode(() -> tokenProvider.validateToken(token)).doesNotThrowAnyException();

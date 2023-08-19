@@ -38,7 +38,7 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMember(
-        final @LoginUser Long userId) {
+        @LoginUser final Long userId) {
         final MemberFindResponse memberFindResponse = memberService.findMember(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -57,8 +57,8 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<Void>> removeMember(final @LoginUser Long userId
-    ) {
+    public ResponseEntity<ApiResponse<Void>> removeMember(
+        @LoginUser final Long userId) {
         memberService.removeMember(userId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

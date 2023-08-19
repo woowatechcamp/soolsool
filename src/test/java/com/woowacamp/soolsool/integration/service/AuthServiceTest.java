@@ -17,8 +17,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @Import({AuthService.class, TokenProvider.class})
 class AuthServiceTest {
-
-
+    
     @Autowired
     private AuthService authService;
 
