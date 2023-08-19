@@ -6,6 +6,9 @@ import com.woowacamp.soolsool.core.cart.domain.converter.CartItemQuantityConvert
 import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -23,20 +26,22 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "cart_items")
-@Getter
 @NoArgsConstructor(access = PROTECTED)
 public class CartItem extends BaseEntity {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
     private Long id;
 
     @Column(name = "member_id", nullable = false)
+    @Getter
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_id", nullable = false)
+    @Getter
     private Liquor liquor;
 
     @ColumnDefault("1")
@@ -48,10 +53,22 @@ public class CartItem extends BaseEntity {
     public CartItem(
         final Long memberId,
         final Liquor liquor,
-        final CartItemQuantity quantity
+        final int quantity
     ) {
+        validateIsNotNullLiquor(liquor);
+
         this.memberId = memberId;
         this.liquor = liquor;
-        this.quantity = quantity;
+        this.quantity = new CartItemQuantity(quantity);
+    }
+
+    public int getQuantity() {
+        return this.quantity.getQuantity();
+    }
+
+    private void validateIsNotNullLiquor(final Liquor liquor) {
+        if (Objects.isNull(liquor)) {
+            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
+        }
     }
 }
