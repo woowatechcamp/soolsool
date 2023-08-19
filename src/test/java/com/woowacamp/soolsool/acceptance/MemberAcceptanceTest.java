@@ -21,15 +21,34 @@ import org.springframework.http.MediaType;
 @DisplayName("회원 : 인수 테스트")
 class MemberAcceptanceTest extends AcceptanceTest {
 
+    private static final String EMAIL = "test@email.com";
+    private static final String PASSWORD = "test_password";
+
+    private String findToken(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        // when
+        ExtractableResponse<Response> loginResponse = RestAssured
+            .given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(loginRequest).log().all()
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract();
+        final String accessToken = loginResponse.body()
+            .as(new TypeRef<ApiResponse<LoginResponse>>() {
+            }).getData().getAccessToken();
+        return accessToken;
+    }
+
     @Test
     @DisplayName("성공 : 회원 등록")
     void createMember() {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("woowafriendss@naver.com")
-            .password("woowa")
-            .name("김배달")
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -57,16 +76,21 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("woowafriends@naver.com")
-            .password("woowa")
-            .name("김배달")
+            .email(EMAIL)
+            .password(PASSWORD)
+            .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
             .build();
 
-        final String token = findToken(memberAddRequest);
-
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
+        final String token = findToken(EMAIL, PASSWORD);
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
@@ -78,7 +102,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         MemberFindResponse memberFindResponse = response.as(MemberFindResponse.class);
-        assertThat(memberFindResponse.getName()).isEqualTo("김배달");
+        assertThat(memberFindResponse.getName()).isEqualTo("최배달");
     }
 
     @Test
@@ -87,15 +111,22 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("woowafriends@naver.com")
-            .password("woowa")
+            .email("test@email.com")
+            .password("test_password")
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
             .build();
 
-        final String token = findToken(memberAddRequest);
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
+        final String token = findToken(EMAIL, PASSWORD);
+
         MemberModifyRequest modifyRequest = MemberModifyRequest.builder()
             .password("modify_password")
             .name("modify_name")
@@ -105,8 +136,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
             .when().patch("/members")
             .then().log().all()
@@ -116,49 +147,32 @@ class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private String findToken(MemberAddRequest memberAddRequest) {
-        RestAssured.given()
-            .when()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(memberAddRequest)
-            .post("/members")
-            .then();
-
-        String email = "woowafriends@naver.com";
-        String password = "woowa";
-        LoginRequest loginRequest = new LoginRequest(email, password);
-        // when
-        ExtractableResponse<Response> loginResponse = RestAssured
-            .given()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(loginRequest).log().all()
-            .when().post("/auth/login")
-            .then().log().all()
-            .extract();
-        final String accessToken = loginResponse.body()
-            .as(new TypeRef<ApiResponse<LoginResponse>>() {
-            }).getData().getAccessToken();
-        return accessToken;
-    }
-
     @Test
     @DisplayName("성공 : 회원 삭제")
     void deleteMember() {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("woowafriends@naver.com")
-            .password("woowa")
+            .email("test@email.com")
+            .password("test_password")
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
             .build();
-        final String accessToken = findToken(memberAddRequest);
+
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
+        final String token = findToken(EMAIL, PASSWORD);
+
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .when()
             .delete("/members")
             .then().log().all()
