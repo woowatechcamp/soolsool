@@ -1,9 +1,11 @@
 package com.woowacamp.soolsool.core.member.controller;
 
+import com.woowacamp.soolsool.core.member.code.MemberResultCode;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.service.MemberService;
+import com.woowacamp.soolsool.global.common.ApiResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,37 +26,41 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Void> addMember(
+    public ResponseEntity<ApiResponse<Void>> addMember(
         @RequestBody @Valid final MemberAddRequest memberAddRequest
     ) {
         memberService.addMember(memberAddRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, null));
     }
 
     @GetMapping
-    public ResponseEntity<MemberFindResponse> findMember() {
-        Long userId = 1L;
-        MemberFindResponse memberFindResponse = memberService.findMember(userId);
+    public ResponseEntity<ApiResponse<MemberFindResponse>> findMember() {
+        final Long memberId = 1L;
+        MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(memberFindResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, memberFindResponse));
     }
 
     @PatchMapping
-    public ResponseEntity<Void> modifyMember(
+    public ResponseEntity<ApiResponse<Void>> modifyMember(
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
-        Long userId = 1L;
-        memberService.modifyMember(userId, memberModifyRequest);
+        final Long memberId = 1L;
+        memberService.modifyMember(memberId, memberModifyRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.of(MemberResultCode.MEMBER_MODIFY_SUCCESS, null));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeMember() {
-        Long userId = 1L;
-        memberService.removeMember(userId);
-        
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<ApiResponse<Void>> removeMember() {
+        final Long memberId = 1L;
+        memberService.removeMember(memberId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+            .body(ApiResponse.of(MemberResultCode.MEMBER_DELETE_SUCCESS, null));
     }
 }

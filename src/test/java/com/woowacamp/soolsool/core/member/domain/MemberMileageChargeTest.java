@@ -1,19 +1,19 @@
 package com.woowacamp.soolsool.core.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("회원 단위 테스트")
-class MemberTest {
+@DisplayName("멤버 마일리지 충전 단위 테스트")
+class MemberMileageChargeTest {
 
     @Test
-    @DisplayName("회원을 정상적으로 생성한다.")
-    void create() {
-        /* given */
+    @DisplayName("엔티티 정상 생성")
+    void createMemberMileageCharge() {
+        // given
         String email = "woowatechcamp@woowafriends.com";
         String password = "q1w2e3r4!";
         String name = "솔라";
@@ -21,8 +21,6 @@ class MemberTest {
         String mileage = "0";
         String address = "서울 송파구 올림픽로 295 7층";
         MemberRole role = new MemberRole(MemberRoleType.CUSTOMER);
-
-        /* when */
         Member member = Member.builder()
             .email(email)
             .password(password)
@@ -32,16 +30,19 @@ class MemberTest {
             .address(address)
             .role(role)
             .build();
+        String charge = "100000";
 
-        /* then */
-        assertAll(
-            () -> assertThat(member.getEmail().getEmail()).isEqualTo(email),
-            () -> assertThat(member.getPassword().getPassword()).isEqualTo(password),
-            () -> assertThat(member.getName().getName()).isEqualTo(name),
-            () -> assertThat(member.getPhoneNumber().getPhoneNumber()).isEqualTo(phoneNumber),
-            () -> assertThat(member.getMileage().getMileage()).isEqualTo(mileage),
-            () -> assertThat(member.getAddress().getAddress()).isEqualTo(address),
-            () -> assertThat(member.getRole()).isEqualTo(role)
+        // when
+        MemberMileageCharge memberMileageCharge = MemberMileageCharge.builder()
+            .member(member)
+            .amount(charge)
+            .build();
+
+        // then
+        Assertions.assertAll(
+            () -> assertThat(memberMileageCharge.getMember())
+                .usingRecursiveComparison().isEqualTo(member),
+            () -> assertThat(memberMileageCharge.getAmount().getMileage()).isEqualTo(charge)
         );
     }
 }

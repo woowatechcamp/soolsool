@@ -76,7 +76,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        MemberFindResponse memberFindResponse = response.as(MemberFindResponse.class);
+        MemberFindResponse memberFindResponse = response
+            .jsonPath()
+            .getObject("data", MemberFindResponse.class);
         assertThat(memberFindResponse.getName()).isEqualTo("최배달");
     }
 
