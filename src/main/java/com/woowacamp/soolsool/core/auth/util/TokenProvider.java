@@ -49,7 +49,7 @@ public class TokenProvider {
     }
 
     private Claims parseClaimBody(final String token) {
-        if (token.isEmpty()) {
+        if (token == null || token.isEmpty()) {
             throw new SoolSoolException(TOKEN_ERROR);
         }
         try {

@@ -25,7 +25,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         final HttpServletRequest request,
         final HttpServletResponse response,
         final Object handler
-    ) throws Exception {
+    ) {
 
         final String token = authorizationExtractor.extractToken(request);
         tokenProvider.validateToken(token);

@@ -33,21 +33,8 @@ public class ApiResponse<T> {
             data
         );
     }
-
-    private ApiResponse(final ResultCode resultCode) {
-        this(
-            resultCode.getStatus(),
-            resultCode.getCode(),
-            resultCode.getMessage(),
-            null
-        );
-    }
-
+    
     public static <T> ApiResponse<T> of(final ResultCode resultCode, final T data) {
         return new ApiResponse<>(resultCode, data);
-    }
-
-    public static <T> ApiResponse<T> from(final ResultCode resultCode) {
-        return new ApiResponse<>(resultCode);
     }
 }

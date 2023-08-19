@@ -39,6 +39,4 @@ class AuthAcceptanceTest extends AcceptanceTest {
             .getAccessToken())
             .isNotNull();
     }
-
-
 }

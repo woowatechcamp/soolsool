@@ -91,6 +91,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .post("/members")
             .then();
         final String token = findToken(EMAIL, PASSWORD);
+
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()

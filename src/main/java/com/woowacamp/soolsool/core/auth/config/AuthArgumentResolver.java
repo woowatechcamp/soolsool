@@ -33,7 +33,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         final ModelAndViewContainer mavContainer,
         final NativeWebRequest webRequest,
         final WebDataBinderFactory binderFactory
-    ) throws Exception {
+    ) {
 
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = authorizationExtractor.extractToken(request);

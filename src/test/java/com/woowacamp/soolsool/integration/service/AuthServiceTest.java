@@ -24,9 +24,11 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("이메일과 비밀번호가 일치하면 token을 발급한다.")
-    void getMemberWithEmailAndPassword() {
-        final String email = "woowafriends@naver.com";
-        LoginRequest loginRequest = new LoginRequest(email, "woowa");
+    void createTokenWithEmailAndPassword() {
+        // given
+        LoginRequest loginRequest = new LoginRequest("woowafriends@naver.com", "woowa");
+
+        // when & then
         assertThatCode(() -> authService.createToken(loginRequest))
             .doesNotThrowAnyException();
     }
@@ -35,7 +37,13 @@ class AuthServiceTest {
     @Test
     @DisplayName("이메일이 일치하지 않으면 토큰 발급에 실패한다")
     void throwErrorWithWrongEmail() {
-        LoginRequest loginRequest = new LoginRequest("wrongwoowafriends@naver.com", "woowa");
+        // given
+        LoginRequest loginRequest = new LoginRequest(
+            "wrongwoowafriends@naver.com",
+            "woowa"
+        );
+
+        // when & then
         assertThatCode(() -> authService.createToken(loginRequest))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(MEMBER_NO_INFORMATION.getMessage());
@@ -44,7 +52,13 @@ class AuthServiceTest {
     @Test
     @DisplayName("비밀번호가 일치하지 않으면 토큰 발급에 실패한다")
     void throwErrorWithWrongPassword() {
-        LoginRequest loginRequest = new LoginRequest("woowafriends@naver.com", "wrongwoowa");
+        // given
+        LoginRequest loginRequest = new LoginRequest(
+            "woowafriends@naver.com",
+            "wrongwoowa"
+        );
+
+        // when & then
         assertThatCode(() -> authService.createToken(loginRequest))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(MEMBER_NO_MATCH_PASSWORD.getMessage());
