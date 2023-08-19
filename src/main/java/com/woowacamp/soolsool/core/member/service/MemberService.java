@@ -2,11 +2,14 @@ package com.woowacamp.soolsool.core.member.service;
 
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.Member;
+import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -21,6 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberRoleRepository memberRoleRepository;
+    private final MemberMileageChargeRepository memberMileageChargeRepository;
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
@@ -46,6 +50,7 @@ public class MemberService {
     public MemberFindResponse findMember(final Long userId) {
         final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+
         return MemberFindResponse.from(member);
     }
 
@@ -53,6 +58,7 @@ public class MemberService {
     public void modifyMember(final Long userId, final MemberModifyRequest memberModifyRequest) {
         final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+
         member.update(memberModifyRequest);
         memberRepository.save(member);
     }
@@ -61,6 +67,23 @@ public class MemberService {
     public void removeMember(final Long userId) {
         final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+        
         memberRepository.delete(member);
+    }
+
+    @Transactional
+    public void addMemberMileage(
+        final Long userId,
+        final MemberMileageChargeRequest memberMileageChargeRequest
+    ) {
+        final Member member = memberRepository.findById(userId)
+            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+
+        member.updateMileage(memberMileageChargeRequest.getAmount());
+        memberRepository.save(member);
+
+        final MemberMileageCharge memberMileageCharge =
+            memberMileageChargeRequest.toMemberMileageCharge(member);
+        memberMileageChargeRepository.save(memberMileageCharge);
     }
 }
