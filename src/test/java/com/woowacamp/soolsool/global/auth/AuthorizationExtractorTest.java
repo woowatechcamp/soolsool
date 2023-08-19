@@ -1,8 +1,8 @@
-package com.woowacamp.soolsool.core.auth;
+package com.woowacamp.soolsool.global.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.core.auth.util.AuthorizationExtractor;
+import com.woowacamp.soolsool.global.auth.util.AuthorizationExtractor;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

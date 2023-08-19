@@ -1,11 +1,11 @@
 package com.woowacamp.soolsool.core.member.controller;
 
-import com.woowacamp.soolsool.core.auth.dto.LoginUser;
 import com.woowacamp.soolsool.core.member.code.MemberResultCode;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.service.MemberService;
+import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

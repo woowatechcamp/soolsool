@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.auth.config;
+package com.woowacamp.soolsool.global.auth.config;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;

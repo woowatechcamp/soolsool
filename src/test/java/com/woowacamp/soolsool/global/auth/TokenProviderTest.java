@@ -1,12 +1,12 @@
-package com.woowacamp.soolsool.core.auth;
+package com.woowacamp.soolsool.global.auth;
 
-import static com.woowacamp.soolsool.core.auth.code.AuthErrorCode.TOKEN_ERROR;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.global.auth.code.AuthErrorCode.TOKEN_ERROR;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.woowacamp.soolsool.core.auth.util.TokenProvider;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
+import com.woowacamp.soolsool.global.auth.util.TokenProvider;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
