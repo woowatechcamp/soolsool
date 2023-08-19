@@ -20,15 +20,14 @@ class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 등록")
     void createMember() {
         // given
-        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
-            .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
-            .name("최배달")
-            .phoneNumber("010-1234-5678")
-            .mileage("0")
-            .address("서울시 잠실역")
-            .build();
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "CUSTOMER",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역");
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -50,15 +49,14 @@ class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 조회")
     void getMember() {
         // given
-        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
-            .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
-            .name("최배달")
-            .phoneNumber("010-1234-5678")
-            .mileage("0")
-            .address("서울시 잠실역")
-            .build();
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "CUSTOMER",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역");
 
         RestAssured.given()
             .when()
@@ -86,15 +84,14 @@ class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 수정")
     void modifyMember() {
         // given
-        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
-            .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
-            .name("최배달")
-            .phoneNumber("010-1234-5678")
-            .mileage("0")
-            .address("서울시 잠실역")
-            .build();
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "CUSTOMER",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역");
 
         RestAssured.given()
             .when()
@@ -103,11 +100,10 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .post("/members")
             .then();
 
-        MemberModifyRequest modifyRequest = MemberModifyRequest.builder()
-            .password("modify_password")
-            .name("modify_name")
-            .address("modify_address")
-            .build();
+        MemberModifyRequest modifyRequest = new MemberModifyRequest(
+            "modify_password",
+            "modify_name",
+            "modify_address");
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -126,15 +122,14 @@ class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("성공 : 회원 삭제")
     void deleteMember() {
         // given
-        MemberAddRequest memberAddRequest = MemberAddRequest.builder()
-            .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
-            .name("최배달")
-            .phoneNumber("010-1234-5678")
-            .mileage("0")
-            .address("서울시 잠실역")
-            .build();
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "CUSTOMER",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역");
 
         RestAssured.given()
             .when()
