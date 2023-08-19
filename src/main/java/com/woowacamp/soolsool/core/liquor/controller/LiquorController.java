@@ -5,6 +5,11 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
+
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
@@ -19,7 +24,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,10 +43,31 @@ public class LiquorController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
-        @RequestBody final LiquorSaveRequest liquorSaveRequest) {
-        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        @RequestBody final LiquorSaveRequest liquorSaveRequest
+    ) {
+        final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
+            .body(ApiResponse.from(LIQUOR_CREATED));
+    }
+
+    @PutMapping("/{liquorId}")
+    public ResponseEntity<ApiResponse<Void>> modifyLiquor(
+        @PathVariable Long liquorId,
+        @RequestBody final LiquorModifyRequest liquorModifyRequest
+    ) {
+        liquorService.modifyLiquor(liquorId, liquorModifyRequest);
+
+        return ResponseEntity.ok(ApiResponse.from(LIQUOR_UPDATED));
+    }
+
+    @DeleteMapping("/{liquorId}")
+    public ResponseEntity<ApiResponse<Void>> deleteLiquor(
+        @PathVariable final Long liquorId
+    ) {
+        liquorService.deleteLiquor(liquorId);
+
+        return ResponseEntity.ok().body(ApiResponse.from(LIQUOR_DELETED));
             .body(ApiResponse.of(LiquorResultCode.LIQUOR_CREATED, null));
     }
 

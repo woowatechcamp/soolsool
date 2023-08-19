@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.repository;
 
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

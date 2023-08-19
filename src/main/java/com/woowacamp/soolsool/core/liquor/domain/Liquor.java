@@ -12,11 +12,9 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;
@@ -36,26 +34,29 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "liquors")
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Liquor extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @Getter
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
-    private LiquorType liquorType;
+    @JoinColumn(name = "brew_id", nullable = false)
+    @Getter
+    private LiquorBrew brew;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
-    private LiquorRegion liquorRegion;
+    @Getter
+    private LiquorRegion region;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
-    private LiquorStatus liquorStatus;
+    @Getter
+    private LiquorStatus status;
 
     @Column(name = "name", nullable = false, length = 30)
     @Convert(converter = LiquorNameConverter.class)
@@ -87,17 +88,20 @@ public class Liquor extends BaseEntity {
 
     @Builder
     public Liquor(
-        final LiquorType liquorType,
-        final LiquorRegion liquorRegion,
-        final LiquorStatus liquorStatus,
-        final String name, final String price,
-        final String brand, final String imageUrl,
-        final int stock, final Double alcohol,
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
+        final String name,
+        final String price,
+        final String brand,
+        final String imageUrl,
+        final int stock,
+        final Double alcohol,
         final int volume
     ) {
-        this.liquorType = liquorType;
-        this.liquorRegion = liquorRegion;
-        this.liquorStatus = liquorStatus;
+        this.brew = brew;
+        this.region = region;
+        this.status = status;
         this.name = new LiquorName(name);
         this.price = new LiquorPrice(new BigInteger(price));
         this.brand = new LiquorBrand(brand);
@@ -107,4 +111,49 @@ public class Liquor extends BaseEntity {
         this.volume = new LiquorVolume(volume);
     }
 
+    public void update(
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
+        final LiquorModifyRequest request
+    ) {
+        this.brew = brew;
+        this.region = region;
+        this.status = status;
+        this.name = new LiquorName(request.getName());
+        this.price = LiquorPrice.from(request.getPrice());
+        this.brand = new LiquorBrand(request.getBrand());
+        this.imageUrl = new LiquorImageUrl(request.getImageUrl());
+        this.stock = new LiquorStock(request.getStock());
+        this.alcohol = new LiquorAlcohol(request.getAlcohol());
+        this.volume = new LiquorVolume(request.getVolume());
+    }
+
+    public String getName() {
+        return this.name.getName();
+    }
+
+    public BigInteger getPrice() {
+        return this.price.getPrice();
+    }
+
+    public String getBrand() {
+        return this.brand.getBrand();
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl.getImageUrl();
+    }
+
+    public int getStock() {
+        return this.stock.getStock();
+    }
+
+    public double getAlcohol() {
+        return this.alcohol.getAlcohol();
+    }
+
+    public int getVolume() {
+        return this.volume.getVolume();
+    }
 }
