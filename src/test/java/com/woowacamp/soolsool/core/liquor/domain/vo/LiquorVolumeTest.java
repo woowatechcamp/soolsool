@@ -17,21 +17,21 @@ class LiquorVolumeTest {
     @DisplayName("술 용량을 정상적으로 생성한다.")
     void create() {
         /* given */
-        int stock = 777;
+        int volume = 777;
 
         /* when & then */
-        assertThatCode(() -> new LiquorStock(stock))
+        assertThatCode(() -> new LiquorVolume(volume))
                 .doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("술 용량이 0 미만일 경우 SoolSoolException을 던진다.")
-    void createFailWithInvalidStock() {
+    void createFailWithInvalidVolume() {
         /* given */
-        int stock = -1;
+        int volume = -1;
 
         /* when & then */
-        assertThatThrownBy(() -> new LiquorStock(stock))
+        assertThatThrownBy(() -> new LiquorVolume(volume))
                 .isExactlyInstanceOf(SoolSoolException.class)
                 .hasMessage("술 용량은 0 미만일 수 없습니다.");
     }
@@ -40,9 +40,9 @@ class LiquorVolumeTest {
     @DisplayName("술 용량이 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        LiquorStock origin = new LiquorStock(777);
-        LiquorStock same = new LiquorStock(777);
-        LiquorStock different = new LiquorStock(123);
+        LiquorVolume origin = new LiquorVolume(777);
+        LiquorVolume same = new LiquorVolume(777);
+        LiquorVolume different = new LiquorVolume(123);
 
         /* when & then */
         assertAll(
