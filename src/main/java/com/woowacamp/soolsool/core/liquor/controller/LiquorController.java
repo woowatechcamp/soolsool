@@ -43,7 +43,8 @@ public class LiquorController {
     }
 
     @GetMapping("/{liquorId}")
-    public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(@PathVariable final Long liquorId) {
+    public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(
+        @PathVariable final Long liquorId) {
         final LiquorDetailResponse response = liquorService.liquorDetail(liquorId);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, response));
@@ -51,17 +52,19 @@ public class LiquorController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorList(
-            @RequestParam @Nullable final LiquorBrewType brewType,
-            @RequestParam @Nullable final LiquorRegionType regionType,
-            @RequestParam @Nullable final LiquorStatusType statusType,
-            @RequestParam @Nullable final String brand,
-            @PageableDefault final Pageable pageable
+        @RequestParam @Nullable final LiquorBrewType brewType,
+        @RequestParam @Nullable final LiquorRegionType regionType,
+        @RequestParam @Nullable final LiquorStatusType statusType,
+        @RequestParam @Nullable final String brand,
+        @PageableDefault final Pageable pageable
     ) {
-        final PageRequest sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-                Sort.by("createdAt").descending());
+        final PageRequest sortPageable = PageRequest.of(pageable.getPageNumber(),
+            pageable.getPageSize(),
+            Sort.by("createdAt").descending());
 
-        final List<LiquorElementResponse> response = liquorService.liquorList(brewType, regionType, statusType,
-                brand, sortPageable);
+        final List<LiquorElementResponse> response = liquorService.liquorList(brewType, regionType,
+            statusType,
+            brand, sortPageable);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, response));
     }

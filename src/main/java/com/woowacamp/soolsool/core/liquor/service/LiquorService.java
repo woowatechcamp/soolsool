@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -37,68 +38,59 @@ public class LiquorService {
     private final LiquorRegionRepository liquorRegionRepository;
     private final LiquorTypeRepository liquorTypeRepository;
 
+    @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
         LiquorType liquorType = liquorTypeRepository
-                .findByType(LiquorBrewType.valueOf(request.getTypeName()))
-                .orElseThrow();
+            .findByType(LiquorBrewType.valueOf(request.getTypeName()))
+            .orElseThrow();
         LiquorRegion liquorRegion = liquorRegionRepository
-                .findByType(LiquorRegionType.valueOf(request.getRegionName()))
-                .orElseThrow();
+            .findByType(LiquorRegionType.valueOf(request.getRegionName()))
+            .orElseThrow();
         LiquorStatus liquorStatus = liquorStatusRepository
-                .findByType(LiquorStatusType.valueOf(request.getStatusName()))
-                .orElseThrow();
+            .findByType(LiquorStatusType.valueOf(request.getStatusName()))
+            .orElseThrow();
 
         Liquor liquor = request.toEntity(liquorType, liquorRegion, liquorStatus);
         return liquorRepository.save(liquor).getId();
     }
 
+    @Transactional(readOnly = true)
     public LiquorDetailResponse liquorDetail(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
-                .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_FOUND));
+            .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_FOUND));
 
-        return new LiquorDetailResponse(
-                liquor.getId(),
-                liquor.getName().getName(),
-                liquor.getPrice().getPrice().toString(),
-                liquor.getBrand().getBrand(),
-                liquor.getImageUrl().getImageUrl(),
-                liquor.getStock().getStock(),
-                liquor.getAlcohol().getAlcohol(),
-                liquor.getVolume().getVolume()
-        );
+        return LiquorDetailResponse.from(liquor);
     }
 
+    @Transactional(readOnly = true)
     public List<LiquorElementResponse> liquorList(
-            final LiquorBrewType brewType,
-            final LiquorRegionType regionType,
-            final LiquorStatusType statusType,
-            final String brand,
-            final Pageable pageable
+        final LiquorBrewType brewType,
+        final LiquorRegionType regionType,
+        final LiquorStatusType statusType,
+        final String brand,
+        final Pageable pageable
     ) {
         final LiquorType liquorType = liquorTypeRepository.findByType(brewType).orElse(null);
-        final LiquorRegion liquorRegion = liquorRegionRepository.findByType(regionType).orElse(null);
-        final LiquorStatus liquorStatus = liquorStatusRepository.findByType(statusType).orElse(null);
+        final LiquorRegion liquorRegion = liquorRegionRepository.findByType(regionType)
+            .orElse(null);
+        final LiquorStatus liquorStatus = liquorStatusRepository.findByType(statusType)
+            .orElse(null);
 
-        final Specification<Liquor> conditions = searchWith(liquorType, liquorRegion, liquorStatus, brand);
+        final Specification<Liquor> conditions = searchWith(liquorType, liquorRegion, liquorStatus,
+            brand);
 
         final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
 
         return liquors.getContent().stream()
-                .map(liquor -> new LiquorElementResponse(
-                        liquor.getId(),
-                        liquor.getName().getName(),
-                        liquor.getPrice().getPrice().toString(),
-                        liquor.getImageUrl().getImageUrl(),
-                        liquor.getStock().getStock()
-                ))
-                .collect(Collectors.toList());
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
     }
 
     private Specification<Liquor> searchWith(
-            final LiquorType liquorType,
-            final LiquorRegion liquorRegion,
-            final LiquorStatus liquorStatus,
-            final String brand
+        final LiquorType liquorType,
+        final LiquorRegion liquorRegion,
+        final LiquorStatus liquorStatus,
+        final String brand
     ) {
         return ((root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();

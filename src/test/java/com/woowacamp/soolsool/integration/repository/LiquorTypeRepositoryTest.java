@@ -22,7 +22,7 @@ class LiquorTypeRepositoryTest {
     @BeforeEach
     void setUpLiquorType() {
         Arrays.stream(LiquorBrewType.values())
-                .forEach(type -> liquorTypeRepository.save(new LiquorType(null, type)));
+            .forEach(type -> liquorTypeRepository.save(new LiquorType(null, type)));
     }
 
     @Test
@@ -30,8 +30,8 @@ class LiquorTypeRepositoryTest {
     void findByLiquorType_type() {
         // given
         LiquorType 과실주 = liquorTypeRepository
-                .findByType(BERRY)
-                .orElseThrow();
+            .findByType(BERRY)
+            .orElseThrow();
 
         // when & then
         assertThat(과실주.getType().getType()).isEqualTo(BERRY.getType());

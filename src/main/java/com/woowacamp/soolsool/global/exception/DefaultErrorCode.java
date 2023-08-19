@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DefaultErrorCode implements ErrorCode {
-    
+
     DEFAULT_ERROR(400, "D101", "기본 예외입니다."),
     ;
 

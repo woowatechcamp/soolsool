@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,4 +16,17 @@ public class LiquorDetailResponse {
     private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
+
+    public static LiquorDetailResponse from(final Liquor liquor) {
+        return new LiquorDetailResponse(
+            liquor.getId(),
+            liquor.getName().getName(),
+            liquor.getPrice().getPrice().toString(),
+            liquor.getBrand().getBrand(),
+            liquor.getImageUrl().getImageUrl(),
+            liquor.getStock().getStock(),
+            liquor.getAlcohol().getAlcohol(),
+            liquor.getVolume().getVolume()
+        );
+    }
 }

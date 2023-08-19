@@ -10,8 +10,8 @@ public class LiquorBrewTypeConverter implements Converter<String, LiquorBrewType
     @Override
     public LiquorBrewType convert(final String brewType) {
         return Arrays.stream(LiquorBrewType.values())
-                .filter(value -> Objects.equals(value.getType(), brewType))
-                .findFirst()
-                .orElse(null);
+            .filter(value -> Objects.equals(value.getType(), brewType))
+            .findFirst()
+            .orElse(null);
     }
 }

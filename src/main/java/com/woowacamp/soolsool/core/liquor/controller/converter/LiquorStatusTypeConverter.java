@@ -10,8 +10,8 @@ public class LiquorStatusTypeConverter implements Converter<String, LiquorStatus
     @Override
     public LiquorStatusType convert(final String statusType) {
         return Arrays.stream(LiquorStatusType.values())
-                .filter(value -> Objects.equals(value.getStatus(), statusType))
-                .findFirst()
-                .orElse(null);
+            .filter(value -> Objects.equals(value.getStatus(), statusType))
+            .findFirst()
+            .orElse(null);
     }
 }
