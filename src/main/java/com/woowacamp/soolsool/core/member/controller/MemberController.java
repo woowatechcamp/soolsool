@@ -34,7 +34,7 @@ public class MemberController {
         memberService.addMember(memberAddRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, null));
+            .body(ApiResponse.from(MemberResultCode.MEMBER_CREATE_SUCCESS));
     }
 
     @GetMapping
@@ -55,7 +55,7 @@ public class MemberController {
         memberService.modifyMember(userId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_MODIFY_SUCCESS, null));
+            .body(ApiResponse.from(MemberResultCode.MEMBER_MODIFY_SUCCESS));
     }
 
     @DeleteMapping
@@ -65,7 +65,7 @@ public class MemberController {
         memberService.removeMember(userId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_DELETE_SUCCESS, null));
+            .body(ApiResponse.from(MemberResultCode.MEMBER_DELETE_SUCCESS));
     }
 
     @PatchMapping("/mileage")
@@ -76,6 +76,6 @@ public class MemberController {
         memberService.addMemberMileage(memberId, memberMileageChargeRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_MILEAGE_CHARGE_SUCCESS, null));
+            .body(ApiResponse.from(MemberResultCode.MEMBER_MILEAGE_CHARGE_SUCCESS));
     }
 }

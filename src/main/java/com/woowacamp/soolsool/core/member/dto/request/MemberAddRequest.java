@@ -2,6 +2,7 @@ package com.woowacamp.soolsool.core.member.dto.request;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberAddRequest {
 
-    private final String memberRoleType;
+    private final MemberRoleType memberRoleType;
 
     @Email(message = "email 형식과 맞지 않습니다.")
     @NotBlank(message = "email은 필수 입력 값입니다.")
