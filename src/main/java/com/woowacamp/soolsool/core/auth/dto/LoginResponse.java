@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.member.controller;
+package com.woowacamp.soolsool.core.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

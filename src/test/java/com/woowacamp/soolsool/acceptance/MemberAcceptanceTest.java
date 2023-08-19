@@ -2,8 +2,8 @@ package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.core.member.controller.LoginResponse;
-import com.woowacamp.soolsool.core.member.dto.request.LoginRequest;
+import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
+import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;

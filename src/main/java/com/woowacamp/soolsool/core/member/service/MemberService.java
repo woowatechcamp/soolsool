@@ -1,12 +1,9 @@
 package com.woowacamp.soolsool.core.member.service;
 
 import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_INFORMATION;
-import static com.woowacamp.soolsool.global.exception.DefaultErrorCode.MEMBER_NO_MATCH_PASSWORD;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
-import com.woowacamp.soolsool.core.member.dto.request.LoginRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
@@ -55,16 +52,5 @@ public class MemberService {
         final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
         memberRepository.delete(member);
-    }
-
-    @Transactional(readOnly = true)
-    public Member matchMember(final LoginRequest loginRequest) {
-        final Member member = memberRepository.findByEmail(new MemberEmail(loginRequest.getEmail()))
-            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
-
-        if (!member.matchPassword(loginRequest.getPassword())) {
-            throw new SoolSoolException(MEMBER_NO_MATCH_PASSWORD);
-        }
-        return member;
     }
 }

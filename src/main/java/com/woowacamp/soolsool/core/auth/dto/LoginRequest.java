@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.member.dto.request;
+package com.woowacamp.soolsool.core.auth.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
