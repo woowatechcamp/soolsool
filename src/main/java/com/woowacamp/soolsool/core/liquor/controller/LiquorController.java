@@ -37,8 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.util.annotation.Nullable;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/liquors")
+@RequiredArgsConstructor
 public class LiquorController {
 
     private final LiquorService liquorService;

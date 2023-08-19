@@ -74,11 +74,19 @@ public class CartItem extends BaseEntity {
         }
     }
 
-    public boolean isSameWith(final CartItem other) {
+    public boolean hasSameLiquorWith(final CartItem other) {
         if (liquor == null || other.liquor == null) {
             return false;
         }
 
-        return liquor.isSameWith(other.liquor);
+        return liquor.equals(other.liquor);
+    }
+
+    public boolean hasDifferentMemberIdWith(final Long otherMemberId) {
+        return !memberId.equals(otherMemberId);
+    }
+
+    public boolean hasStoppedLiquor() {
+        return liquor.isStopped();
     }
 }

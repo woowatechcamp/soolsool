@@ -13,7 +13,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.member.domain.Member;
-import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,20 +50,9 @@ class CartItemRepositoryTest {
 
     @BeforeEach
     void setUpMember() {
-        MemberRole memberRole = memberRoleRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("MemberRole이 존재하지 않습니다."));
-
-        Member member = Member.builder()
-            .role(memberRole)
-            .email("test@email.com")
-            .password("test_password")
-            .name("최배달")
-            .phoneNumber("010-1234-5678")
-            .mileage("0")
-            .address("서울시 잠실역")
-            .build();
-
-        commonMemberId = memberRepository.save(member).getId();
+        Member member = memberRepository.findById(4L)
+            .orElseThrow(() -> new RuntimeException("Member가 존재하지 않습니다."));
+        commonMemberId = member.getId();
     }
 
     @Test

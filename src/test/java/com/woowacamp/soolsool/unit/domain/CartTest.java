@@ -1,8 +1,9 @@
 package com.woowacamp.soolsool.unit.domain;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.woowacamp.soolsool.core.cart.code.CartErrorCode;
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
@@ -68,7 +69,9 @@ class CartTest {
         );
 
         // when & then
-        assertThrows(SoolSoolException.class, () -> new Cart(1L, cartItems));
+        assertThatThrownBy(() -> new Cart(1L, cartItems))
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage(CartErrorCode.NOT_EQUALS_MEMBER.getMessage());
     }
 
     @Test
@@ -86,7 +89,9 @@ class CartTest {
         CartItem newCartItem = new CartItem(1L, beer, 1);
 
         // when & then
-        assertThrows(SoolSoolException.class, () -> cart.addCartItem(newCartItem));
+        assertThatThrownBy(() -> cart.addCartItem(newCartItem))
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage(CartErrorCode.EXCEED_MAX_CART_SIZE.getMessage());
     }
 
     @Test
@@ -101,7 +106,9 @@ class CartTest {
         Cart cart = new Cart(1L, cartItems);
 
         // when & then
-        assertThrows(SoolSoolException.class, () -> cart.addCartItem(sameCartItem));
+        assertThatThrownBy(() -> cart.addCartItem(sameCartItem))
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage(CartErrorCode.EXISTS_CART_ITEM.getMessage());
     }
 
     @Test
@@ -124,6 +131,8 @@ class CartTest {
         CartItem cartItem = new CartItem(1L, stoppedLiquor, 1);
 
         // when & then
-        assertThrows(SoolSoolException.class, () -> cart.addCartItem(cartItem));
+        assertThatThrownBy(() -> cart.addCartItem(cartItem))
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage(CartErrorCode.STOPPED_LIQUOR.getMessage());
     }
 }

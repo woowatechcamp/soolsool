@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
+import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorBrandConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorImageUrlConverter;
@@ -17,7 +18,10 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -105,7 +109,6 @@ public class Liquor extends BaseEntity {
         this(null, brew, region, status, name, price, brand, imageUrl, stock, alcohol, volume);
     }
 
-    @Builder
     public Liquor(
         final Long id,
         final LiquorBrew brew,
@@ -119,6 +122,8 @@ public class Liquor extends BaseEntity {
         final Double alcohol,
         final int volume
     ) {
+        validateIsNotNullableCategory(brew, region, status);
+
         this.id = id;
         this.brew = brew;
         this.region = region;
@@ -130,6 +135,12 @@ public class Liquor extends BaseEntity {
         this.stock = new LiquorStock(stock);
         this.alcohol = new LiquorAlcohol(alcohol);
         this.volume = new LiquorVolume(volume);
+    }
+
+    private void validateIsNotNullableCategory(final Object... objects) {
+        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
+            throw new SoolSoolException(LiquorErrorCode.INVALID_CATEGORY);
+        }
     }
 
     public void update(
@@ -148,10 +159,6 @@ public class Liquor extends BaseEntity {
         this.stock = new LiquorStock(request.getStock());
         this.alcohol = new LiquorAlcohol(request.getAlcohol());
         this.volume = new LiquorVolume(request.getVolume());
-    }
-
-    public boolean isSameWith(final Liquor other) {
-        return id.equals(other.id);
     }
 
     public boolean isStopped() {

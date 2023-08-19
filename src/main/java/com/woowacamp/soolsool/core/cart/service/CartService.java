@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.cart.service;
 
-import com.woowacamp.soolsool.core.cart.code.CartItemErrorCode;
+import com.woowacamp.soolsool.core.cart.code.CartErrorCode;
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
@@ -15,17 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CartItemService {
+public class CartService {
 
     private final CartItemRepository cartItemRepository;
     private final LiquorRepository liquorRepository;
 
     @Transactional
-    public void saveCartItem(final Long memberId, final CartItemSaveRequest request) {
+    public Long saveCartItem(final Long memberId, final CartItemSaveRequest request) {
         final Liquor liquor = liquorRepository.findById(request.getLiquorId())
-            .orElseThrow(() -> new SoolSoolException(CartItemErrorCode.NOT_FOUND_LIQUOR));
+            .orElseThrow(() -> new SoolSoolException(CartErrorCode.NOT_FOUND_LIQUOR));
 
-        final CartItem newCartItem = CartItem.builder()
+        CartItem newCartItem = CartItem.builder()
             .memberId(memberId)
             .liquor(liquor)
             .quantity(request.getQuantity())
@@ -34,7 +34,9 @@ public class CartItemService {
         final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
         cart.addCartItem(newCartItem);
 
-        cartItemRepository.save(newCartItem);
+        newCartItem = cartItemRepository.save(newCartItem);
+
+        return newCartItem.getId();
     }
 
     private List<CartItem> findAllByMemberIdOrderByCreatedAtDesc(final Long memberId) {
