@@ -72,25 +72,29 @@ public class Member extends BaseEntity {
     @Builder
     public Member(
         final MemberRole role,
-        final MemberEmail email,
-        final MemberPassword password,
-        final MemberName name,
-        final MemberPhoneNumber phoneNumber,
-        final MemberMileage mileage,
-        final MemberAddress address
+        final String email,
+        final String password,
+        final String name,
+        final String phoneNumber,
+        final String mileage,
+        final String address
     ) {
         this.role = role;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.mileage = mileage;
-        this.address = address;
+        this.email = new MemberEmail(email);
+        this.password = new MemberPassword(password);
+        this.name = new MemberName(name);
+        this.phoneNumber = new MemberPhoneNumber(phoneNumber);
+        this.mileage = MemberMileage.from(mileage);
+        this.address = new MemberAddress(address);
     }
 
     public void update(final MemberModifyRequest memberModifyRequest) {
         this.password = new MemberPassword(memberModifyRequest.getPassword());
         this.name = new MemberName(memberModifyRequest.getName());
         this.address = new MemberAddress(memberModifyRequest.getAddress());
+    }
+
+    public boolean matchPassword(final String password) {
+        return this.password.matchPassword(password);
     }
 }

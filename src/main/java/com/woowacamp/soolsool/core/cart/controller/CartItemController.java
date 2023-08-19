@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.cart.controller;
 import com.woowacamp.soolsool.core.cart.code.CartItemResultCode;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.cart.service.CartItemService;
+import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,9 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> saveCartItem(
+        @LoginUser final Long memberId,
         @RequestBody final CartItemSaveRequest cartItemSaveRequest
     ) {
-        // TODO: 로그인 구현 이후 ModelAttribute에서 memberId 가져오기
-        final Long memberId = 1L;
-
         cartItemService.saveCartItem(memberId, cartItemSaveRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)

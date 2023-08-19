@@ -5,29 +5,53 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
-import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("장바구니 : 도메인 테스트")
 class CartTest {
 
+    private Liquor soju;
+    private Liquor beer;
+
+    @BeforeEach
+    void setUpLiquor() {
+        LiquorBrew sojuBrew = new LiquorBrew(LiquorBrewType.SOJU);
+        LiquorBrew etcBrew = new LiquorBrew(LiquorBrewType.ETC);
+        LiquorRegion gyeongSangNamDoRegion = new LiquorRegion(LiquorRegionType.GYEONGSANGNAM_DO);
+        LiquorStatus onSaleStatus = new LiquorStatus(LiquorStatusType.ON_SALE);
+        LiquorStatus stoppedStatus = new LiquorStatus(LiquorStatusType.STOPPED);
+
+        soju = new Liquor(
+            1L, sojuBrew, gyeongSangNamDoRegion, onSaleStatus,
+            "안동 소주", "12000", "안동", "/soju.jpg",
+            120, 21.7, 400
+        );
+        beer = new Liquor(
+            2L, etcBrew, gyeongSangNamDoRegion, stoppedStatus,
+            "맥주", "5000", "OB", "/beer.jpg",
+            20, 5.7, 500
+        );
+    }
+
     @Test
     @DisplayName("장바구니를 생성한다.")
     void createCart() {
         // given
-        Liquor soju = Liquor.builder().build();
-        Liquor beer = Liquor.builder().build();
-
         List<CartItem> cartItems = List.of(
-            new CartItem(1L, 1L, soju, new CartItemQuantity(1)),
-            new CartItem(2L, 1L, beer, new CartItemQuantity(1))
+            new CartItem(1L, soju, 1),
+            new CartItem(1L, beer, 1)
         );
 
         // when & then
@@ -38,12 +62,9 @@ class CartTest {
     @DisplayName("장바구니의 memberId와 CartItem의 memberId가 다르면 예외를 던진다.")
     void sameMember() {
         // given
-        Liquor soju = Liquor.builder().build();
-        Liquor beer = Liquor.builder().build();
-
         List<CartItem> cartItems = List.of(
-            new CartItem(1L, 1L, soju, new CartItemQuantity(1)),
-            new CartItem(2L, 2L, beer, new CartItemQuantity(1))
+            new CartItem(1L, soju, 1),
+            new CartItem(2L, beer, 1)
         );
 
         // when & then
@@ -56,14 +77,13 @@ class CartTest {
         // given
         List<CartItem> cartItems = new ArrayList<>();
         for (long id = 1; id <= 100; id++) {
-            cartItems.add(new CartItem(id, 1L, Liquor.builder().build(),
-                new CartItemQuantity(1)));
+            // 생성 시 중복 검사를 하지 않으므로 편의상 같은 상품 반복 삽입
+            cartItems.add(new CartItem(1L, soju, 1));
         }
 
         Cart cart = new Cart(1L, cartItems);
 
-        CartItem newCartItem = new CartItem(101L, 1L, Liquor.builder().build(),
-            new CartItemQuantity(1));
+        CartItem newCartItem = new CartItem(1L, beer, 1);
 
         // when & then
         assertThrows(SoolSoolException.class, () -> cart.addCartItem(newCartItem));
@@ -73,17 +93,15 @@ class CartTest {
     @DisplayName("새로운 장바구니 상품을 추가할 때 기존에 존재하는 상품이라면 예외를 던진다.")
     void duplicate() {
         // given
-        CartItem cartItem = new CartItem(1L, 1L, Liquor.builder().build(),
-            new CartItemQuantity(1));
-        CartItem sameCart = new CartItem(1L, 1L, Liquor.builder().build(),
-            new CartItemQuantity(1));
+        CartItem cartItem = new CartItem(1L, soju, 1);
+        CartItem sameCartItem = new CartItem(1L, soju, 1);
 
-        List<CartItem> cartItems = List.of(cartItem);
+        List<CartItem> cartItems = new ArrayList<>(List.of(cartItem));
 
         Cart cart = new Cart(1L, cartItems);
 
         // when & then
-        assertThrows(SoolSoolException.class, () -> cart.addCartItem(sameCart));
+        assertThrows(SoolSoolException.class, () -> cart.addCartItem(sameCartItem));
     }
 
     @Test
@@ -94,10 +112,16 @@ class CartTest {
 
         Liquor stoppedLiquor = Liquor.builder()
             .status(new LiquorStatus(LiquorStatusType.STOPPED))
+            .name("안동 소주")
+            .price("12000")
+            .brand("안동")
+            .imageUrl("/soju.jpg")
+            .stock(120)
+            .alcohol(21.7)
+            .volume(400)
             .build();
 
-        CartItem cartItem = new CartItem(1L, 1L, stoppedLiquor,
-            new CartItemQuantity(1));
+        CartItem cartItem = new CartItem(1L, stoppedLiquor, 1);
 
         // when & then
         assertThrows(SoolSoolException.class, () -> cart.addCartItem(cartItem));

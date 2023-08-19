@@ -1,10 +1,9 @@
 package com.woowacamp.soolsool.core.cart.service;
 
+import com.woowacamp.soolsool.core.cart.code.CartItemErrorCode;
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
-import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
-import com.woowacamp.soolsool.core.cart.code.CartItemErrorCode;
 import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
@@ -29,7 +28,7 @@ public class CartItemService {
         final CartItem newCartItem = CartItem.builder()
             .memberId(memberId)
             .liquor(liquor)
-            .quantity(new CartItemQuantity(request.getQuantity()))
+            .quantity(request.getQuantity())
             .build();
 
         final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));

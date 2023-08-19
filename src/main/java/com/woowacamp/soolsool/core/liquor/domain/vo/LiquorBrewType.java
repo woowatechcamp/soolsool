@@ -16,5 +16,5 @@ public enum LiquorBrewType {
     ETC("기타주류"),
     ;
 
-    private final String type;
+    private final String name;
 }

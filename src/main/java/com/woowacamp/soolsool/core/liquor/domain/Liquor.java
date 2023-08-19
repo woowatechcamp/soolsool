@@ -15,7 +15,9 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -34,7 +36,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "liquors")
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Liquor extends BaseEntity {
@@ -42,18 +43,22 @@ public class Liquor extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @Getter
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brew_id", nullable = false)
+    @Getter
     private LiquorBrew brew;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
+    @Getter
     private LiquorRegion region;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
+    @Getter
     private LiquorStatus status;
 
     @Column(name = "name", nullable = false, length = 30)
@@ -89,27 +94,95 @@ public class Liquor extends BaseEntity {
         final LiquorBrew brew,
         final LiquorRegion region,
         final LiquorStatus status,
-        final LiquorName name,
-        final LiquorPrice price,
-        final LiquorBrand brand,
-        final LiquorImageUrl imageUrl,
-        final LiquorStock stock,
-        final LiquorAlcohol alcohol,
-        final LiquorVolume volume
+        final String name,
+        final String price,
+        final String brand,
+        final String imageUrl,
+        final int stock,
+        final Double alcohol,
+        final int volume
+    ) {
+        this(null, brew, region, status, name, price, brand, imageUrl, stock, alcohol, volume);
+    }
+
+    @Builder
+    public Liquor(
+        final Long id,
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
+        final String name,
+        final String price,
+        final String brand,
+        final String imageUrl,
+        final int stock,
+        final Double alcohol,
+        final int volume
+    ) {
+        this.id = id;
+        this.brew = brew;
+        this.region = region;
+        this.status = status;
+        this.name = new LiquorName(name);
+        this.price = new LiquorPrice(new BigInteger(price));
+        this.brand = new LiquorBrand(brand);
+        this.imageUrl = new LiquorImageUrl(imageUrl);
+        this.stock = new LiquorStock(stock);
+        this.alcohol = new LiquorAlcohol(alcohol);
+        this.volume = new LiquorVolume(volume);
+    }
+
+    public void update(
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
+        final LiquorModifyRequest request
     ) {
         this.brew = brew;
         this.region = region;
         this.status = status;
-        this.name = name;
-        this.price = price;
-        this.brand = brand;
-        this.imageUrl = imageUrl;
-        this.stock = stock;
-        this.alcohol = alcohol;
-        this.volume = volume;
+        this.name = new LiquorName(request.getName());
+        this.price = LiquorPrice.from(request.getPrice());
+        this.brand = new LiquorBrand(request.getBrand());
+        this.imageUrl = new LiquorImageUrl(request.getImageUrl());
+        this.stock = new LiquorStock(request.getStock());
+        this.alcohol = new LiquorAlcohol(request.getAlcohol());
+        this.volume = new LiquorVolume(request.getVolume());
+    }
+
+    public boolean isSameWith(final Liquor other) {
+        return id.equals(other.id);
     }
 
     public boolean isStopped() {
         return status.getType().equals(LiquorStatusType.STOPPED);
+    }
+
+    public String getName() {
+        return this.name.getName();
+    }
+
+    public BigInteger getPrice() {
+        return this.price.getPrice();
+    }
+
+    public String getBrand() {
+        return this.brand.getBrand();
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl.getImageUrl();
+    }
+
+    public int getStock() {
+        return this.stock.getStock();
+    }
+
+    public double getAlcohol() {
+        return this.alcohol.getAlcohol();
+    }
+
+    public int getVolume() {
+        return this.volume.getVolume();
     }
 }
