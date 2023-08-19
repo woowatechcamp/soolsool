@@ -32,5 +32,4 @@ public class AuthController {
 
         return ResponseEntity.ok(ApiResponse.of(LOGIN_SUCCESS, authService.createToken(member)));
     }
-
 }

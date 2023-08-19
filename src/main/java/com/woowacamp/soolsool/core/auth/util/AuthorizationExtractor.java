@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.auth;
+package com.woowacamp.soolsool.core.auth.util;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -12,12 +12,12 @@ public class AuthorizationExtractor {
 
     private static final String EXTRACT_TYPE = "Bearer";
 
-    public String extract(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+    public String extractToken(final HttpServletRequest request) {
+        final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
-            String value = headers.nextElement();
-            if (value.toLowerCase().startsWith(EXTRACT_TYPE.toLowerCase())) {
-                return value.substring(EXTRACT_TYPE.length()).trim();
+            final String token = headers.nextElement();
+            if (token.toLowerCase().startsWith(EXTRACT_TYPE.toLowerCase())) {
+                return token.substring(EXTRACT_TYPE.length()).trim();
             }
         }
         return Strings.EMPTY;

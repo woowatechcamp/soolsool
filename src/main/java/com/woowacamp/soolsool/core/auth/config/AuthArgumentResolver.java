@@ -2,7 +2,10 @@ package com.woowacamp.soolsool.core.auth.config;
 
 import com.woowacamp.soolsool.core.auth.dto.LoginUser;
 import com.woowacamp.soolsool.core.auth.dto.UserDto;
+import com.woowacamp.soolsool.core.auth.util.AuthorizationExtractor;
+import com.woowacamp.soolsool.core.auth.util.TokenProvider;
 import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,9 +16,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String PRINCIPAL = "principal";
+    private final AuthorizationExtractor authorizationExtractor;
+    private final TokenProvider tokenProvider;
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -28,11 +33,13 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         final ModelAndViewContainer mavContainer,
         final NativeWebRequest webRequest,
         final WebDataBinderFactory binderFactory
-    )
-        throws Exception {
+    ) throws Exception {
 
-        final HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
-        final UserDto principal = (UserDto) servletRequest.getAttribute(PRINCIPAL);
+        final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        final String token = authorizationExtractor.extractToken(request);
+        tokenProvider.validateToken(token);
+
+        final UserDto principal = tokenProvider.getUserDto(token);
         return Long.parseLong(principal.getSubject());
     }
 }

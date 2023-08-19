@@ -1,9 +1,11 @@
 package com.woowacamp.soolsool.core.auth.util;
 
+import static com.woowacamp.soolsool.global.exception.AuthErrorCode.TOKEN_ERROR;
+
 import com.woowacamp.soolsool.core.auth.dto.UserDto;
 import com.woowacamp.soolsool.core.member.domain.Member;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -39,26 +41,30 @@ public class TokenProvider {
             .compact();
     }
 
-    public UserDto getUserDto(final String token) {
-        final Claims body = Jwts.parser()
-            .setSigningKey(secretKey)
-            .parseClaimsJws(token)
-            .getBody();
-        final String authority = (String) body.get(ROLE_TYPE);
-
-        return new UserDto(body.getSubject(), authority);
-    }
-
-    public boolean validateToken(final String token) {
-        try {
-            final Jws<Claims> claims = Jwts
-                .parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
+    public void validateToken(final String token) {
+        final Claims body = parseClaimBody(token);
+        if (body.getExpiration().before(new Date())) {
+            throw new SoolSoolException(TOKEN_ERROR);
         }
     }
 
+    private Claims parseClaimBody(final String token) {
+        if (token.isEmpty()) {
+            throw new SoolSoolException(TOKEN_ERROR);
+        }
+        try {
+            return Jwts
+                .parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token).getBody();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new SoolSoolException(TOKEN_ERROR);
+        }
+    }
+
+    public UserDto getUserDto(final String token) {
+        final Claims body = parseClaimBody(token);
+        final String authority = (String) body.get(ROLE_TYPE);
+        return new UserDto(body.getSubject(), authority);
+    }
 }

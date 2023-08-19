@@ -2,7 +2,7 @@ package com.woowacamp.soolsool.unit.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.core.auth.AuthorizationExtractor;
+import com.woowacamp.soolsool.core.auth.util.AuthorizationExtractor;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,13 +20,13 @@ class AuthorizationExtractorTest {
 
     @Test
     @DisplayName("토큰을 정상적으로 추출한다.")
-    void extract() {
+    void extractSuccessTest() {
         /* given */
         final MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer 123");
 
         /* when */
-        final String extract = authorizationExtractor.extract(request);
+        final String extract = authorizationExtractor.extractToken(request);
 
         /* then */
         assertThat(extract).isEqualTo("123");

@@ -2,8 +2,11 @@ package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.core.auth.dto.request.LoginRequest;
+import com.woowacamp.soolsool.core.member.controller.LoginResponse;
+import com.woowacamp.soolsool.core.member.dto.request.LoginRequest;
+import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -29,9 +32,10 @@ class AuthAcceptanceTest extends AcceptanceTest {
             .when().post("/auth/login")
             .then().log().all()
             .extract();
-
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        response.body().as(new TypeRef<ApiResponse<LoginResponse>>() {
+        }).getData().getAccessToken();
     }
 
 
