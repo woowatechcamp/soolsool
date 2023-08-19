@@ -20,7 +20,7 @@ class LiquorStockTest {
 
         /* when & then */
         assertThatCode(() -> new LiquorStock(stock))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -31,8 +31,8 @@ class LiquorStockTest {
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorStock(stock))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 재고는 0 미만일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 재고는 0 미만일 수 없습니다.");
     }
 
     @Test
@@ -45,10 +45,10 @@ class LiquorStockTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

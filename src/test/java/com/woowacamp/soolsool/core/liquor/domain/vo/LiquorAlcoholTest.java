@@ -28,8 +28,9 @@ class LiquorAlcoholTest {
 
 
         /* when & then */
-        assertThatCode(() -> new LiquorAlcohol(-1.2)).isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 도수는 0 이상 실수여야 합니다.");
+        assertThatCode(() -> new LiquorAlcohol(-1.2))
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 도수는 0 이상 실수여야 합니다.");
     }
 
     @Test
@@ -42,10 +43,10 @@ class LiquorAlcoholTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

@@ -22,7 +22,7 @@ class LiquorNameTest {
 
         /* when & then */
         assertThatCode(() -> new LiquorName(name))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
@@ -34,8 +34,8 @@ class LiquorNameTest {
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorName(name))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 이름은 null이거나 공백일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 이름은 null이거나 공백일 수 없습니다.");
     }
 
     @Test
@@ -46,8 +46,8 @@ class LiquorNameTest {
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorName(name))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 이름은 30자보다 길 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 이름은 30자보다 길 수 없습니다.");
     }
 
     @Test
@@ -60,10 +60,10 @@ class LiquorNameTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

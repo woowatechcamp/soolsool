@@ -21,7 +21,7 @@ class LiquorVolumeTest {
 
         /* when & then */
         assertThatCode(() -> new LiquorVolume(volume))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -32,8 +32,8 @@ class LiquorVolumeTest {
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorVolume(volume))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 용량은 0 미만일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 용량은 0 미만일 수 없습니다.");
     }
 
     @Test
@@ -46,10 +46,10 @@ class LiquorVolumeTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

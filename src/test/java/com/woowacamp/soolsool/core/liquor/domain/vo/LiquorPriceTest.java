@@ -21,7 +21,7 @@ class LiquorPriceTest {
 
         /* when & then */
         assertThatCode(() -> new LiquorPrice(price))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -32,8 +32,8 @@ class LiquorPriceTest {
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorPrice(price))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 가격은 0 미만일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 가격은 0 미만일 수 없습니다.");
     }
 
     @Test
@@ -44,8 +44,8 @@ class LiquorPriceTest {
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorPrice(null))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("술 가격은 null일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술 가격은 null일 수 없습니다.");
     }
 
     @Test
@@ -58,10 +58,10 @@ class LiquorPriceTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
 
     }

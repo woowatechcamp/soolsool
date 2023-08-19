@@ -51,9 +51,9 @@ public class CartItem extends BaseEntity {
 
     @Builder
     public CartItem(
-            final Long memberId,
-            final Liquor liquor,
-            final int quantity
+        final Long memberId,
+        final Liquor liquor,
+        final int quantity
     ) {
         validateIsNotNullLiquor(liquor);
 
