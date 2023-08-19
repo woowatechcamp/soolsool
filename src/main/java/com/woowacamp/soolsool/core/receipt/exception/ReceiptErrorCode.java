@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.exception;
 
-import com.woowacamp.soolsool.global.exception.ErrorCode;
+import com.woowacamp.soolsool.global.code.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

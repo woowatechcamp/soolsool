@@ -1,5 +1,7 @@
 package com.woowacamp.soolsool.global.exception;
 
+import com.woowacamp.soolsool.global.code.DefaultErrorCode;
+import com.woowacamp.soolsool.global.code.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleValidationException(
-        final MethodArgumentNotValidException exception
+            final MethodArgumentNotValidException exception
     ) {
         log.error("Validation 에러 : {}", exception.getMessage());
 
