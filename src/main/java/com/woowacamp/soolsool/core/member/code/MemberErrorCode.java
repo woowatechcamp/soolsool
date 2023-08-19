@@ -27,8 +27,9 @@ public enum MemberErrorCode implements ErrorCode {
     INVALID_LENGTH_PHONE_NUMBER(400, "M112", "회원 전화번호는 13자보다 길 수 없습니다."),
     NO_CONTENT_PHONE_NUMBER(400, "M113", "회원 전화번호는 null이거나 공백일 수 없습니다."),
 
-    MEMBER_NO_INFORMATION(400, "M101", "회원 정보를 찾을 수 없습니다."),
-    MEMBER_NO_ROLE_TYPE(400, "M101", "일치하는 회원 타입이 없습니다."),
+    MEMBER_NO_INFORMATION(400, "M114", "회원 정보를 찾을 수 없습니다."),
+    MEMBER_NO_ROLE_TYPE(400, "M115", "일치하는 회원 타입이 없습니다."),
+    MEMBER_DUPLICATED_EMAIL(400, "M115", "이미 존재하는 이메일 입니다."),
     ;
 
     private final int status;
