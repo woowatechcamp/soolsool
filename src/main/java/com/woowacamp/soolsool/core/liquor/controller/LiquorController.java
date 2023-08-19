@@ -1,8 +1,8 @@
 package com.woowacamp.soolsool.core.liquor.controller;
 
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode.LIQUOR_DELETED;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode.LIQUOR_UPDATED;
 
 import com.woowacamp.soolsool.core.auth.dto.NoAuth;
 import com.woowacamp.soolsool.core.auth.dto.Vendor;
@@ -13,9 +13,9 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
-import com.woowacamp.soolsool.global.common.LiquorResultCode;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

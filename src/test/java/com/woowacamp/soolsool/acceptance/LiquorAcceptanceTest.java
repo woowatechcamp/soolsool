@@ -1,8 +1,8 @@
 package com.woowacamp.soolsool.acceptance;
 
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode.LIQUOR_DELETED;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorResultCode.LIQUOR_UPDATED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
