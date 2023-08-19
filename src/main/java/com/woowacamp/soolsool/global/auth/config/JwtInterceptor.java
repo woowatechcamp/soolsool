@@ -1,10 +1,10 @@
-package com.woowacamp.soolsool.core.auth.config;
+package com.woowacamp.soolsool.global.auth.config;
 
-import com.woowacamp.soolsool.core.auth.dto.NoAuth;
-import com.woowacamp.soolsool.core.auth.dto.UserDto;
-import com.woowacamp.soolsool.core.auth.dto.Vendor;
-import com.woowacamp.soolsool.core.auth.util.AuthorizationExtractor;
-import com.woowacamp.soolsool.core.auth.util.TokenProvider;
+import com.woowacamp.soolsool.global.auth.dto.NoAuth;
+import com.woowacamp.soolsool.global.auth.dto.UserDto;
+import com.woowacamp.soolsool.global.auth.dto.Vendor;
+import com.woowacamp.soolsool.global.auth.util.AuthorizationExtractor;
+import com.woowacamp.soolsool.global.auth.util.TokenProvider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,10 @@
-package com.woowacamp.soolsool.core.auth.controller;
+package com.woowacamp.soolsool.global.auth.controller;
 
-import static com.woowacamp.soolsool.core.auth.code.AuthResultCode.LOGIN_SUCCESS;
+import static com.woowacamp.soolsool.global.auth.code.AuthResultCode.LOGIN_SUCCESS;
 
-import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
-import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
-import com.woowacamp.soolsool.core.auth.service.AuthService;
+import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
+import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
+import com.woowacamp.soolsool.global.auth.service.AuthService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

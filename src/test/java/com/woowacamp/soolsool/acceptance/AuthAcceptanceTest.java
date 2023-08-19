@@ -2,8 +2,8 @@ package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
-import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
+import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
+import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;

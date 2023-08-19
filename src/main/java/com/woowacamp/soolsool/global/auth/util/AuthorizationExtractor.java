@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.auth.util;
+package com.woowacamp.soolsool.global.auth.util;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 

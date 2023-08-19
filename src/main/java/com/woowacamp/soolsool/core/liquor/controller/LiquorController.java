@@ -4,8 +4,6 @@ import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREAT
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
 
-import com.woowacamp.soolsool.core.auth.dto.NoAuth;
-import com.woowacamp.soolsool.core.auth.dto.Vendor;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
@@ -14,6 +12,8 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
+import com.woowacamp.soolsool.global.auth.dto.NoAuth;
+import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import com.woowacamp.soolsool.global.common.LiquorResultCode;
 import java.net.URI;

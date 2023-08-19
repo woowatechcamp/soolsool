@@ -1,14 +1,14 @@
-package com.woowacamp.soolsool.core.auth.service;
+package com.woowacamp.soolsool.global.auth.service;
 
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_MATCH_PASSWORD;
 
-import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
-import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
-import com.woowacamp.soolsool.core.auth.util.TokenProvider;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
+import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
+import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
+import com.woowacamp.soolsool.global.auth.util.TokenProvider;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

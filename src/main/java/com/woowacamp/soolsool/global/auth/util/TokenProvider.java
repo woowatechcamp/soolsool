@@ -1,9 +1,9 @@
-package com.woowacamp.soolsool.core.auth.util;
+package com.woowacamp.soolsool.global.auth.util;
 
-import static com.woowacamp.soolsool.core.auth.code.AuthErrorCode.TOKEN_ERROR;
+import static com.woowacamp.soolsool.global.auth.code.AuthErrorCode.TOKEN_ERROR;
 
-import com.woowacamp.soolsool.core.auth.dto.UserDto;
 import com.woowacamp.soolsool.core.member.domain.Member;
+import com.woowacamp.soolsool.global.auth.dto.UserDto;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
