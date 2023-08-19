@@ -1,21 +1,26 @@
 package com.woowacamp.soolsool.core.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
+import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import java.math.BigInteger;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +38,9 @@ class MemberServiceTest {
 
     @Mock
     private MemberRoleRepository memberRoleRepository;
+
+    @Mock
+    private MemberMileageChargeRepository memberMileageChargeRepository;
 
     @InjectMocks
     private MemberService memberService;
@@ -58,7 +66,7 @@ class MemberServiceTest {
         // when
         when(memberRoleRepository.findById(1L)).thenReturn(Optional.ofNullable(memberRole));
         when(memberRepository.save(any(Member.class))).thenReturn(member);
-        Assertions.assertThatNoException()
+        assertThatNoException()
             .isThrownBy(() -> memberService.addMember(memberAddRequest));
 
         // then
@@ -99,25 +107,14 @@ class MemberServiceTest {
             .mileage("0")
             .address("서울시 잠실역")
             .build();
-        MemberFindResponse memberFindResponseExpected = MemberFindResponse.from(member);
 
         // when
         when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
         MemberFindResponse memberFindResponse = memberService.findMember(userId);
 
         // then
-        assertAll(
-            () -> assertThat(memberFindResponse.getRoleName())
-                .isEqualTo(memberFindResponseExpected.getRoleName()),
-            () -> assertThat(memberFindResponse.getName())
-                .isEqualTo(memberFindResponseExpected.getName()),
-            () -> assertThat(memberFindResponse.getMileage())
-                .isEqualTo(memberFindResponseExpected.getMileage()),
-            () -> assertThat(memberFindResponse.getEmail())
-                .isEqualTo(memberFindResponseExpected.getEmail()),
-            () -> assertThat(memberFindResponse.getAddress())
-                .isEqualTo(memberFindResponseExpected.getAddress())
-        );
+        assertThat(memberFindResponse).usingRecursiveComparison()
+            .isEqualTo(memberFindResponse);
     }
 
     @Test
@@ -146,7 +143,7 @@ class MemberServiceTest {
         when(memberRepository.findById(userId)).thenReturn(Optional.ofNullable(member));
         member.update(memberModifyRequest);
         when(memberRepository.save(any(Member.class))).thenReturn(member);
-        Assertions.assertThatNoException()
+        assertThatNoException()
             .isThrownBy(() -> memberService.modifyMember(userId, memberModifyRequest));
 
         // then
@@ -182,11 +179,61 @@ class MemberServiceTest {
 
         // when
         when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
-        Assertions.assertThatNoException()
+        assertThatNoException()
             .isThrownBy(() -> memberService.removeMember(userId));
 
         // then
         verify(memberRepository).findById(userId);
         verify(memberRepository).delete(member);
+    }
+
+    @Test
+    @DisplayName("성공 : 마일리지 충전")
+    void chargeMemberMileage() {
+        // given
+        String amount = "10000";
+        MemberMileageChargeRequest memberMileageChargeRequest = new MemberMileageChargeRequest(
+            amount
+        );
+
+        Member member = Member.builder()
+            .role(MemberRole.builder()
+                .name(MemberRoleType.CUSTOMER)
+                .build())
+            .email("test@email.com")
+            .password("test_password")
+            .name("최배달")
+            .phoneNumber("010-1234-5678")
+            .mileage("5000")
+            .address("서울시 잠실역")
+            .build();
+
+        MemberMileageCharge memberMileageCharge = MemberMileageCharge.builder()
+            .member(member)
+            .amount(amount)
+            .build();
+
+        // when
+        when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
+        when(memberMileageChargeRepository.save(any(MemberMileageCharge.class)))
+            .thenReturn(memberMileageCharge);
+
+        memberService.addMemberMileage(1L, memberMileageChargeRequest);
+
+        // then
+        verify(memberRepository).findById(anyLong());
+        ArgumentCaptor<Member> memberArgumentCaptor = ArgumentCaptor.forClass(Member.class);
+        verify(memberRepository).save(memberArgumentCaptor.capture());
+        ArgumentCaptor<MemberMileageCharge> memberMileageChargeArgumentCaptor = ArgumentCaptor
+            .forClass(MemberMileageCharge.class);
+        verify(memberMileageChargeRepository).save(memberMileageChargeArgumentCaptor.capture());
+
+        assertAll(
+            () -> assertThat(memberArgumentCaptor.getValue().getMileage().getMileage())
+                .isEqualTo(new BigInteger("15000")),
+            () -> assertThat(memberMileageChargeArgumentCaptor.getValue().getAmount().getMileage())
+                .isEqualTo(new BigInteger(amount))
+        );
     }
 }
