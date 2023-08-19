@@ -3,17 +3,9 @@ package com.woowacamp.soolsool.core.liquor.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorAlcohol;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
-import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,13 +19,13 @@ class LiquorTest {
         LiquorBrew brew = new LiquorBrew(LiquorBrewType.SOJU);
         LiquorRegion region = new LiquorRegion(LiquorRegionType.GYEONGGI_DO);
         LiquorStatus status = new LiquorStatus(LiquorStatusType.ON_SALE);
-        LiquorName name = new LiquorName("마싯는 소주");
-        LiquorPrice price = new LiquorPrice(BigInteger.valueOf(10_000L));
-        LiquorBrand brand = new LiquorBrand("우아한");
-        LiquorImageUrl imageUrl = new LiquorImageUrl("soju.png");
-        LiquorStock stock = new LiquorStock(77);
-        LiquorAlcohol alcohol = new LiquorAlcohol(17.2);
-        LiquorVolume volume = new LiquorVolume(500);
+        String name = "마싯는 소주";
+        String price = "10000";
+        String brand = "우아한";
+        String imageUrl = "soju.png";
+        int stock = 77;
+        double alcohol = 17.2;
+        int volume = 500;
 
         /* when */
         Liquor liquor = Liquor.builder()
