@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+@DisplayName("계정 : 인수 테스트")
 class AuthAcceptanceTest extends AcceptanceTest {
 
     @Test

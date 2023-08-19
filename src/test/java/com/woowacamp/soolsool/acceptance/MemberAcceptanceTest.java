@@ -21,8 +21,8 @@ import org.springframework.http.MediaType;
 @DisplayName("회원 : 인수 테스트")
 class MemberAcceptanceTest extends AcceptanceTest {
 
-    private static final String EMAIL = "test@email.com";
-    private static final String PASSWORD = "test_password";
+    private static final String EMAIL = "test2@email.com";
+    private static final String PASSWORD = "test_password2";
 
     private String findToken(String email, String password) {
         LoginRequest loginRequest = new LoginRequest(email, password);
@@ -48,8 +48,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
@@ -116,8 +116,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
@@ -158,8 +158,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer {
+public class AuthWebConfig implements WebMvcConfigurer {
 
     private final JwtInterceptor jwtInterceptor;
     private final AuthArgumentResolver authArgumentResolver;
