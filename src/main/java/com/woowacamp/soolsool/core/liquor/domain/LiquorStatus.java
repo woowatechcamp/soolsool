@@ -14,8 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "liquor_status")
 @Getter
-@Table(name = "liquor_regions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LiquorStatus {
 

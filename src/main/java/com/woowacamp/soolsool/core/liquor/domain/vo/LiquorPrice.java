@@ -19,6 +19,10 @@ public class LiquorPrice {
         this.price = price;
     }
 
+    public static LiquorPrice from(final String price) {
+        return new LiquorPrice(new BigInteger(price));
+    }
+
     private void validateIsValidSize(final BigInteger price) {
         if (price.compareTo(BigInteger.ZERO) < 0) {
             throw new ShoppingException("술 가격은 0 미만일 수 없습니다.");
