@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "cart_items")
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class CartItem extends BaseEntity {
 
     @Id
@@ -53,5 +55,25 @@ public class CartItem extends BaseEntity {
         this.memberId = memberId;
         this.liquor = liquor;
         this.quantity = quantity;
+    }
+
+    public CartItem(
+        final Long id,
+        final Long memberId,
+        final Liquor liquor,
+        final CartItemQuantity quantity
+    ) {
+        this.id = id;
+        this.memberId = memberId;
+        this.liquor = liquor;
+        this.quantity = quantity;
+    }
+
+    public boolean isSameWith(final CartItem other) {
+        if (id == null || other.id == null) {
+            return false;
+        }
+
+        return id.equals(other.id);
     }
 }

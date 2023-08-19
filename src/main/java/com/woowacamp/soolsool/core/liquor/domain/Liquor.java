@@ -12,6 +12,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
@@ -27,6 +28,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +36,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "liquors")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Liquor extends BaseEntity {
 
     @Id
@@ -104,5 +107,9 @@ public class Liquor extends BaseEntity {
         this.stock = stock;
         this.alcohol = alcohol;
         this.volume = volume;
+    }
+
+    public boolean isStopped() {
+        return status.getType().equals(LiquorStatusType.STOPPED);
     }
 }
