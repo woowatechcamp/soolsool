@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.member.domain.vo;
 
-import com.woowacamp.soolsool.core.member.exception.MemberErrorCode;
+import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 public class MemberEmail {
 
     private static final Pattern EMAIL_PATTERN = Pattern
-            .compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+        .compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final int MAX_LENGTH = 255;
 
     private final String email;

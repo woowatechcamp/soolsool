@@ -28,7 +28,7 @@ public class MemberFindResponse {
         this.address = address;
     }
 
-    public static MemberFindResponse of(final Member member) {
+    public static MemberFindResponse from(final Member member) {
         return MemberFindResponse.builder()
             .roleName(member.getRole().getName().getType())
             .email(member.getEmail().getEmail())
