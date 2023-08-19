@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.auth;
+package com.woowacamp.soolsool.global.auth;
 
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.global.auth.code.AuthErrorCode.TOKEN_ERROR;

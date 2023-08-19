@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.auth;
+package com.woowacamp.soolsool.global.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
