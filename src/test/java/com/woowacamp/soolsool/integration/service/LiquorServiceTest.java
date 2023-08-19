@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.integration.service;
 import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
@@ -90,9 +91,12 @@ class LiquorServiceTest {
         liquorService.modifyLiquor(saveLiquorId, liquorModifyRequest);
 
         // then
-        Liquor liquor = liquorRepository.findById(saveLiquorId).orElseThrow();
-        assertThat(liquor.getName()).isEqualTo(liquorModifyRequest.getName());
-        assertThat(liquor.getName()).isNotEqualTo(liquorSaveRequest.getName());
+        Liquor liquor = liquorRepository.findById(saveLiquorId)
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
+        assertAll(
+            () -> assertThat(liquor.getName()).isEqualTo(liquorModifyRequest.getName()),
+            () -> assertThat(liquor.getName()).isNotEqualTo(liquorSaveRequest.getName())
+        );
     }
 
     @Test

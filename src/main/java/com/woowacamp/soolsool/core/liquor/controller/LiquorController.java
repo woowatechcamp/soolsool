@@ -71,7 +71,8 @@ public class LiquorController {
 
     @GetMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(
-        @PathVariable final Long liquorId) {
+        @PathVariable final Long liquorId
+    ) {
         final LiquorDetailResponse response = liquorService.liquorDetail(liquorId);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, response));
@@ -85,13 +86,14 @@ public class LiquorController {
         @RequestParam @Nullable final String brand,
         @PageableDefault final Pageable pageable
     ) {
-        final PageRequest sortPageable = PageRequest.of(pageable.getPageNumber(),
+        final PageRequest sortPageable = PageRequest.of(
+            pageable.getPageNumber(),
             pageable.getPageSize(),
-            Sort.by("createdAt").descending());
+            Sort.by("createdAt").descending()
+        );
 
-        final List<LiquorElementResponse> response = liquorService.liquorList(brew, region,
-            status,
-            brand, sortPageable);
+        final List<LiquorElementResponse> response = liquorService
+            .liquorList(brew, region, status, brand, sortPageable);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, response));
     }

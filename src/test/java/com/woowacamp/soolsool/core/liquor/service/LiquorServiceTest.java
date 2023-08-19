@@ -1,15 +1,14 @@
 package com.woowacamp.soolsool.core.liquor.service;
 
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +22,6 @@ class LiquorServiceTest {
 
     @Autowired
     private LiquorRepository liquorRepository;
-
-    @Autowired
-    private LiquorRegionRepository liquorRegionRepository;
-
-    @Autowired
-    private LiquorStatusRepository liquorStatusRepository;
-
-    @Autowired
-    private LiquorBrewRepository liquorBrewRepository;
 
     @Autowired
     private LiquorService liquorService;
@@ -86,7 +76,8 @@ class LiquorServiceTest {
         liquorService.modifyLiquor(saveLiquorId, liquorModifyRequest);
 
         // then
-        Liquor findLiquor = liquorRepository.findById(saveLiquorId).orElseThrow();
+        Liquor findLiquor = liquorRepository.findById(saveLiquorId)
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
         assertThat(findLiquor.getName()).isEqualTo(liquorModifyRequest.getName());
     }
 

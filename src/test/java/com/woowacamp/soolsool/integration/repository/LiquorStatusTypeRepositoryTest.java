@@ -1,10 +1,12 @@
 package com.woowacamp.soolsool.integration.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType.ON_SALE;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_STATUS_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,8 @@ class LiquorStatusTypeRepositoryTest {
     @DisplayName("LiquorStatus의 name를 가지고 LiquorStatus을 조회한다.")
     void findByLiquorRegionType_type() {
         // given
-        LiquorStatus 판매중 = liquorStatusRepository
-            .findByType(ON_SALE).orElseThrow();
+        LiquorStatus 판매중 = liquorStatusRepository.findByType(ON_SALE)
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_FOUND));
 
         // when & then
         assertThat(판매중.getType().getStatus()).isEqualTo(ON_SALE.getStatus());
