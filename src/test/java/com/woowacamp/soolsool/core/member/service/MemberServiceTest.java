@@ -99,7 +99,7 @@ class MemberServiceTest {
             .mileage("0")
             .address("서울시 잠실역")
             .build();
-        MemberFindResponse memberFindResponseExpected = MemberFindResponse.of(member);
+        MemberFindResponse memberFindResponseExpected = MemberFindResponse.from(member);
 
         // when
         when(memberRepository.findById(userId)).thenReturn(Optional.of(member));

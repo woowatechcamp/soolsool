@@ -32,7 +32,7 @@ public class MemberService {
     public MemberFindResponse findMember(final Long userId) {
         final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
-        return MemberFindResponse.of(member);
+        return MemberFindResponse.from(member);
     }
 
     @Transactional

@@ -37,8 +37,8 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMember() {
-        Long userId = 1L;
-        MemberFindResponse memberFindResponse = memberService.findMember(userId);
+        final Long memberId = 1L;
+        MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, memberFindResponse));
@@ -48,8 +48,8 @@ public class MemberController {
     public ResponseEntity<ApiResponse<Void>> modifyMember(
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
-        Long userId = 1L;
-        memberService.modifyMember(userId, memberModifyRequest);
+        final Long memberId = 1L;
+        memberService.modifyMember(memberId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.of(MemberResultCode.MEMBER_MODIFY_SUCCESS, null));
@@ -57,8 +57,8 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeMember() {
-        Long userId = 1L;
-        memberService.removeMember(userId);
+        final Long memberId = 1L;
+        memberService.removeMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(ApiResponse.of(MemberResultCode.MEMBER_DELETE_SUCCESS, null));
