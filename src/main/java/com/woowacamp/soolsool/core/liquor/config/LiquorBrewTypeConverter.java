@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.controller.converter;
+package com.woowacamp.soolsool.core.liquor.config;
 
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import java.util.Arrays;
@@ -11,8 +11,8 @@ public class LiquorBrewTypeConverter implements Converter<String, LiquorBrewType
     @Override
     public LiquorBrewType convert(final String brewType) {
         return Arrays.stream(LiquorBrewType.values())
-            .filter(value -> Objects.equals(value.getName(), brewType))
-            .findFirst()
-            .orElse(null);
+                .filter(value -> Objects.equals(value.getName(), brewType))
+                .findFirst()
+                .orElse(null);
     }
 }
