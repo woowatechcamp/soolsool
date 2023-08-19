@@ -1,9 +1,11 @@
 package com.woowacamp.soolsool.core.liquor.controller;
 
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorResultCode.LIQUOR_DELETED;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorResultCode.LIQUOR_LIST_FOUND;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorResultCode.LIQUOR_UPDATED;
 
+import com.woowacamp.soolsool.core.liquor.code.LiquorResultCode;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
@@ -15,7 +17,6 @@ import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
-import com.woowacamp.soolsool.global.common.LiquorResultCode;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +82,7 @@ public class LiquorController {
         final List<LiquorElementResponse> response = liquorService
             .liquorList(brew, region, status, brand, sortPageable);
 
-        return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, response));
+        return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }
 
     @Vendor
