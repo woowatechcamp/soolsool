@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.exception;
+package com.woowacamp.soolsool.core.liquor.code;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
