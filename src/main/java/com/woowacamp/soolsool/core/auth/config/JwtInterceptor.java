@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.auth.config;
 
+import com.woowacamp.soolsool.core.auth.dto.NoAuth;
 import com.woowacamp.soolsool.core.auth.dto.UserDto;
 import com.woowacamp.soolsool.core.auth.dto.Vendor;
 import com.woowacamp.soolsool.core.auth.util.AuthorizationExtractor;
@@ -26,25 +27,25 @@ public class JwtInterceptor implements HandlerInterceptor {
         final HttpServletResponse response,
         final Object handler
     ) {
+        final HandlerMethod handlerMethod = (HandlerMethod) handler;
+
+        if (handlerMethod.getMethodAnnotation(NoAuth.class) != null) {
+            return true;
+        }
+
         final String token = authorizationExtractor.extractToken(request);
         tokenProvider.validateToken(token);
 
         final UserDto principal = tokenProvider.getUserDto(token);
-        if (!checkVendorClass(handler, Vendor.class, principal.getAuthority())) {
-            return false;
-        }
-        log.info("유저의 정보가 유효합니다. {} ", principal.getAuthority());
-        return true;
+        return checkVendorClass(handlerMethod, Vendor.class, principal.getAuthority());
     }
 
     private boolean checkVendorClass(
-        final Object handler,
+        final HandlerMethod handlerMethod,
         final Class<Vendor> vendorClass,
         final String authority
     ) {
-        final HandlerMethod handlerMethod = (HandlerMethod) handler;
         final String vendorClassName = vendorClass.getSimpleName().toUpperCase();
-
         return handlerMethod.getMethodAnnotation(vendorClass) == null
             || authority.equals(vendorClassName);
     }
