@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,20 +18,18 @@ class LiquorAlcoholTest {
         double alcohol = 17.2;
 
         /* when & then */
-        assertThatCode(() -> new LiquorAlcohol(alcohol))
-            .doesNotThrowAnyException();
+        assertThatCode(() -> new LiquorAlcohol(alcohol)).doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("술 도수가 0 이상이 아닌 경우 ShoppingException을 던진다.")
+    @DisplayName("술 도수가 0 이상이 아닌 경우 SoolSoolException을 던진다.")
     void createFailWithIsNotGreaterThanZero() {
         /* given */
 
 
         /* when & then */
-        assertThatCode(() -> new LiquorAlcohol(-1.2))
-            .isExactlyInstanceOf(ShoppingException.class)
-            .hasMessage("술 도수는 0 이상 실수여야 합니다.");
+        assertThatCode(() -> new LiquorAlcohol(-1.2)).isExactlyInstanceOf(SoolSoolException.class)
+                .hasMessage("술 도수는 0 이상 실수여야 합니다.");
     }
 
     @Test
@@ -44,10 +42,10 @@ class LiquorAlcoholTest {
 
         /* when & then */
         assertAll(
-            () -> assertThat(origin).isEqualTo(same),
-            () -> assertThat(origin).hasSameHashCodeAs(same),
-            () -> assertThat(origin).isNotEqualTo(different),
-            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+                () -> assertThat(origin).isEqualTo(same),
+                () -> assertThat(origin).hasSameHashCodeAs(same),
+                () -> assertThat(origin).isNotEqualTo(different),
+                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

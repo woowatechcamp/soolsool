@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,19 +21,19 @@ class LiquorVolumeTest {
 
         /* when & then */
         assertThatCode(() -> new LiquorStock(stock))
-            .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("술 용량이 0 미만일 경우 ShoppingException을 던진다.")
+    @DisplayName("술 용량이 0 미만일 경우 SoolSoolException을 던진다.")
     void createFailWithInvalidStock() {
         /* given */
         int stock = -1;
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorStock(stock))
-            .isExactlyInstanceOf(ShoppingException.class)
-            .hasMessage("술 재고는 0 미만일 수 없습니다.");
+                .isExactlyInstanceOf(SoolSoolException.class)
+                .hasMessage("술 용량은 0 미만일 수 없습니다.");
     }
 
     @Test
@@ -46,10 +46,10 @@ class LiquorVolumeTest {
 
         /* when & then */
         assertAll(
-            () -> assertThat(origin).isEqualTo(same),
-            () -> assertThat(origin).hasSameHashCodeAs(same),
-            () -> assertThat(origin).isNotEqualTo(different),
-            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+                () -> assertThat(origin).isEqualTo(same),
+                () -> assertThat(origin).hasSameHashCodeAs(same),
+                () -> assertThat(origin).isNotEqualTo(different),
+                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }
