@@ -4,6 +4,8 @@ import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREAT
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
 import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
 
+import com.woowacamp.soolsool.core.auth.dto.NoAuth;
+import com.woowacamp.soolsool.core.auth.dto.Vendor;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
@@ -40,6 +42,7 @@ public class LiquorController {
 
     private final LiquorService liquorService;
 
+    @Vendor
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
         @RequestBody final LiquorSaveRequest liquorSaveRequest
@@ -50,6 +53,7 @@ public class LiquorController {
             .body(ApiResponse.from(LIQUOR_CREATED));
     }
 
+    @NoAuth
     @GetMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(
         @PathVariable final Long liquorId
@@ -59,6 +63,7 @@ public class LiquorController {
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, response));
     }
 
+    @NoAuth
     @GetMapping
     public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorList(
         @RequestParam @Nullable final LiquorBrewType brew,
@@ -79,6 +84,7 @@ public class LiquorController {
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, response));
     }
 
+    @Vendor
     @PutMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> modifyLiquor(
         @PathVariable Long liquorId,
@@ -89,6 +95,7 @@ public class LiquorController {
         return ResponseEntity.ok(ApiResponse.from(LIQUOR_UPDATED));
     }
 
+    @Vendor
     @DeleteMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> deleteLiquor(
         @PathVariable final Long liquorId

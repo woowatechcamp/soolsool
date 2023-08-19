@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.member.controller;
 
+import com.woowacamp.soolsool.core.auth.dto.LoginUser;
 import com.woowacamp.soolsool.core.member.code.MemberResultCode;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
@@ -36,9 +37,9 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<MemberFindResponse>> findMember() {
-        final Long memberId = 1L;
-        MemberFindResponse memberFindResponse = memberService.findMember(memberId);
+    public ResponseEntity<ApiResponse<MemberFindResponse>> findMember(
+        @LoginUser final Long userId) {
+        final MemberFindResponse memberFindResponse = memberService.findMember(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, memberFindResponse));
@@ -46,19 +47,20 @@ public class MemberController {
 
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> modifyMember(
-        @RequestBody @Valid final MemberModifyRequest memberModifyRequest
+        @RequestBody @Valid final MemberModifyRequest memberModifyRequest,
+        final @LoginUser Long userId
     ) {
-        final Long memberId = 1L;
-        memberService.modifyMember(memberId, memberModifyRequest);
+        memberService.modifyMember(userId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.of(MemberResultCode.MEMBER_MODIFY_SUCCESS, null));
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<Void>> removeMember() {
-        final Long memberId = 1L;
-        memberService.removeMember(memberId);
+    public ResponseEntity<ApiResponse<Void>> removeMember(
+        @LoginUser final Long userId
+    ) {
+        memberService.removeMember(userId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(ApiResponse.of(MemberResultCode.MEMBER_DELETE_SUCCESS, null));

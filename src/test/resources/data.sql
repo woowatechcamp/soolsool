@@ -26,3 +26,8 @@ insert into liquor_status(id, name)
 values (1, 'ON_SALE'),
        (2, 'STOPPED');
 
+insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
+values (3L, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa', '010-1234-5678', 1L);
+
+insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
+values (4L, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2L);

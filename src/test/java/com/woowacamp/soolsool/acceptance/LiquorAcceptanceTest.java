@@ -7,7 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
+import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
@@ -22,16 +25,38 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 @DisplayName("술 인수 테스트")
 class LiquorAcceptanceTest extends AcceptanceTest {
+
+    private static final String EMAIL = "test@email.com";
+    private static final String PASSWORD = "test_password";
+    private static final String BEARER = "Bearer ";
+
+    private String findToken(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+        ExtractableResponse<Response> loginResponse = RestAssured
+            .given()
+            .contentType(APPLICATION_JSON_VALUE)
+            .body(loginRequest).log().all()
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract();
+
+        String accessToken = loginResponse.body().as(new TypeRef<ApiResponse<LoginResponse>>() {
+            })
+            .getData()
+            .getAccessToken();
+        return accessToken;
+    }
+
 
     @Test
     @DisplayName("술 상품을 등록할 수 있다")
     void saveLiquor() {
         // given
-        String accessToken = "1234";
+        String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU",
             "GYEONGGI_DO",
@@ -46,9 +71,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .body(liquorSaveRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -64,7 +89,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 상품을 수정할 수 있다.")
     void modifyLiquorTest() {
         // given
-        String accessToken = "1234";
+        String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
             "SOJU",
             "GYEONGGI_DO",
@@ -78,9 +103,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> saveLiquor = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveLiquorRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -103,9 +128,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(liquorModifyRequest)
             .when().put("/liquors/{liquorId}", liquorId)
             .then().log().all()
@@ -121,7 +146,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 상품을 삭제할 수 있다.")
     void removeLiquorTest() {
         // given
-        String accessToken = "1234";
+        String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
             "SOJU",
             "GYEONGGI_DO",
@@ -135,9 +160,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> saveLiquor = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveLiquorRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -147,9 +172,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .when().delete("/liquors/{liquorId}", liquorId)
             .then().log().all()
             .extract();
@@ -164,7 +189,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 상세정보를 조회할 수 있다")
     void liquorDetail() {
         // given
-        String accessToken = "accessToken";
+        String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/url",
@@ -172,9 +197,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         String location = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(liquorSaveRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -183,8 +208,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         LiquorDetailResponse liquorDetailResponse = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .when().get(location)
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
@@ -219,22 +244,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "ETC", "GYEONGGI_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
             200, 24.0, 600);
-        String accessToken = "accessToken";
+        String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveSojuRequest)
             .when().post("/liquors")
             .then().log().all()
             .extract();
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveBeerRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -243,8 +268,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         List<LiquorElementResponse> liquors = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .when().get("/liquors")
             .then().log().all()
             .extract().jsonPath().getList("data", LiquorElementResponse.class);
@@ -274,22 +299,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "ETC", "GYEONGGI_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
             200, 24.0, 600);
-        String accessToken = "accessToken";
+        String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveSojuRequest)
             .when().post("/liquors")
             .then().log().all()
             .extract();
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveBeerRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -298,8 +323,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         List<LiquorElementResponse> liquors = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .param("brew", "소주")
             .when().get("/liquors")
             .then().log().all()
@@ -330,22 +355,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "ETC", "CHUNGCHEONGBUK_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
             200, 24.0, 600);
-        String accessToken = "accessToken";
+        String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveSojuRequest)
             .when().post("/liquors")
             .then().log().all()
             .extract();
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveBeerRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -354,8 +379,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         List<LiquorElementResponse> liquors = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .param("brew", "기타주류")
             .param("region", "충청북도")
             .when().get("/liquors")
@@ -387,22 +412,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "ETC", "CHUNGCHEONGBUK_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
             200, 24.0, 600);
-        String accessToken = "accessToken";
+        String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveSojuRequest)
             .when().post("/liquors")
             .then().log().all()
             .extract();
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveBeerRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -411,8 +436,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         List<LiquorElementResponse> liquors = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .param("brew", "소주")
             .param("region", "경기도")
             .param("status", "판매중지")
@@ -449,31 +474,31 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             "BERRY", "JEOLLABUK_DO", "ON_SALE",
             "얼음딸기주", "4500", "우영미", "/strawberry-url",
             20, 14.0, 400);
-        String accessToken = "accessToken";
+        String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveSojuRequest)
             .when().post("/liquors")
             .then().log().all()
             .extract();
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveBeerRequest)
             .when().post("/liquors")
             .then().log().all()
             .extract();
         RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(saveBerryRequest)
             .when().post("/liquors")
             .then().log().all()
@@ -482,8 +507,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // when
         List<LiquorElementResponse> liquors = RestAssured
             .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
             .param("brew", "BERRY")
             .param("region", "JEOLLABUK_DO")
             .param("status", "판매중")

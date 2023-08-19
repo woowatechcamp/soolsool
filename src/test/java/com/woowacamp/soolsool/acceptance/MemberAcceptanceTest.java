@@ -2,19 +2,45 @@ package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacamp.soolsool.core.auth.dto.LoginRequest;
+import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("회원 : 인수 테스트")
 class MemberAcceptanceTest extends AcceptanceTest {
+
+    private static final String EMAIL = "test2@email.com";
+    private static final String PASSWORD = "test_password2";
+
+    private String findToken(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
+
+        ExtractableResponse<Response> loginResponse = RestAssured
+            .given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(loginRequest).log().all()
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract();
+
+        String accessToken = loginResponse.body().as(new TypeRef<ApiResponse<LoginResponse>>() {
+            })
+            .getData()
+            .getAccessToken();
+        return accessToken;
+    }
 
     @Test
     @DisplayName("성공 : 회원 등록")
@@ -22,8 +48,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
@@ -52,8 +78,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
@@ -66,10 +92,12 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .post("/members")
             .then();
+        String token = findToken(EMAIL, PASSWORD);
 
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .when().get("/members")
             .then().log().all()
             .extract();
@@ -88,8 +116,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
@@ -102,6 +130,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .post("/members")
             .then();
+        String token = findToken(EMAIL, PASSWORD);
 
         MemberModifyRequest modifyRequest = MemberModifyRequest.builder()
             .password("modify_password")
@@ -112,6 +141,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
             .when().patch("/members")
@@ -128,8 +158,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // given
         MemberAddRequest memberAddRequest = MemberAddRequest.builder()
             .memberRoleType("CUSTOMER")
-            .email("test@email.com")
-            .password("test_password")
+            .email(EMAIL)
+            .password(PASSWORD)
             .name("최배달")
             .phoneNumber("010-1234-5678")
             .mileage("0")
@@ -142,12 +172,13 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .post("/members")
             .then();
+        String token = findToken(EMAIL, PASSWORD);
 
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .when()
-            .delete("/members")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .when().delete("/members")
             .then().log().all()
             .extract();
 
