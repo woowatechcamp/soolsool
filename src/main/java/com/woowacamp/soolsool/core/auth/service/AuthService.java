@@ -29,6 +29,7 @@ public class AuthService {
         if (!member.matchPassword(loginRequest.getPassword())) {
             throw new SoolSoolException(MEMBER_NO_MATCH_PASSWORD);
         }
+        
         return new LoginResponse(tokenProvider.createToken(member));
     }
 }

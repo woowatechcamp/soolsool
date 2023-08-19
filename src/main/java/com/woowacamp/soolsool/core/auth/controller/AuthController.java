@@ -7,7 +7,6 @@ import com.woowacamp.soolsool.core.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.core.auth.service.AuthService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -26,6 +24,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<LoginResponse>> login(
         @RequestBody LoginRequest loginRequest) {
         final LoginResponse token = authService.createToken(loginRequest);
+
         return ResponseEntity.ok(ApiResponse.of(LOGIN_SUCCESS, token));
     }
 }

@@ -38,15 +38,20 @@ class TokenProviderTest {
     @Test
     @DisplayName("토큰이 정상적으로 추출된다.")
     void validateToken() {
+        // given
         final String token = tokenProvider.createToken(member);
-        System.out.println("hello" + token);
+
+        // when & then
         assertThatCode(() -> tokenProvider.validateToken(token)).doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("토큰의 유효기간이 지나면 오류를 반환한다.")
     void validateTokenTestWithTimeOut() {
+        // given
         String expired = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNjkyNDI4NDk0LCJST0xFX1RZUEUiOiJDVVNUT01FUiIsImV4cCI6MTY5MjQyODQ5NH0.ywzhJeUI3eVxHKE7IlDexJSnb5zTMLJaDxkuQ6kI2h4";
+
+        // when & then
         assertThatCode(() -> tokenProvider.validateToken(expired))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(TOKEN_ERROR.getMessage());
@@ -56,6 +61,7 @@ class TokenProviderTest {
     @NullAndEmptySource
     @ParameterizedTest
     void validateTokenTestWithNullAndEmptyKey(String accessKey) {
+        // given & when & then
         assertThatCode(() -> tokenProvider.validateToken(accessKey))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(TOKEN_ERROR.getMessage());
@@ -64,7 +70,10 @@ class TokenProviderTest {
     @Test
     @DisplayName("토큰이 잘못된 값이면, 오류를 반환한다")
     void validateTokenTestWithWrongKey() {
+        // given
         String accessKey = "123";
+
+        // when & then
         assertThatCode(() -> tokenProvider.validateToken(accessKey))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(TOKEN_ERROR.getMessage());

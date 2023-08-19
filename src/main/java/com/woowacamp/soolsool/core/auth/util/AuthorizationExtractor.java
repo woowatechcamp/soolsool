@@ -20,6 +20,7 @@ public class AuthorizationExtractor {
                 return token.substring(EXTRACT_TYPE.length()).trim();
             }
         }
+        
         return Strings.EMPTY;
     }
 }
