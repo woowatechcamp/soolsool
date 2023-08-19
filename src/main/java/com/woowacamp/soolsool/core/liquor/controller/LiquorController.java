@@ -97,6 +97,4 @@ public class LiquorController {
 
         return ResponseEntity.ok().body(ApiResponse.from(LIQUOR_DELETED));
     }
-
-
 }
