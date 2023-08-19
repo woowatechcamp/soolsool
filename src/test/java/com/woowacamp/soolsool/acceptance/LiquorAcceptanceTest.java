@@ -151,7 +151,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .extract();
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body().as(new TypeRef<ApiResponse<Void>>() {
         }).getMessage()).isEqualTo(LIQUOR_DELETED.getMessage());
     }
