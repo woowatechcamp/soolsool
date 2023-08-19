@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum GlobalErrorCode implements ErrorCode {
 
-    NO_CONTENT(BAD_REQUEST.value(), "G101", "null일 수 없습니다.");
+    NO_CONTENT(BAD_REQUEST.value(), "G101", "null일 수 없습니다."),
+    ;
 
     private final int status;
     private final String code;

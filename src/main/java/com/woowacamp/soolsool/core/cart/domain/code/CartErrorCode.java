@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CartErrorCode implements ErrorCode {
 
-    INVALID_QUANTITY_SIZE(BAD_REQUEST.value(), "C101", "장바구니 상품 수량은 1개 이상이어야 합니다.");
+    INVALID_QUANTITY_SIZE(BAD_REQUEST.value(), "C101", "장바구니 상품 수량은 1개 이상이어야 합니다."),
+    ;
 
     private final int status;
     private final String code;
