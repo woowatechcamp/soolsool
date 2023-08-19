@@ -20,13 +20,13 @@ public class LiquorDetailResponse {
     public static LiquorDetailResponse from(final Liquor liquor) {
         return new LiquorDetailResponse(
             liquor.getId(),
-            liquor.getName().getName(),
-            liquor.getPrice().getPrice().toString(),
-            liquor.getBrand().getBrand(),
-            liquor.getImageUrl().getImageUrl(),
-            liquor.getStock().getStock(),
-            liquor.getAlcohol().getAlcohol(),
-            liquor.getVolume().getVolume()
+            liquor.getName(),
+            liquor.getPrice().toString(),
+            liquor.getBrand(),
+            liquor.getImageUrl(),
+            liquor.getStock(),
+            liquor.getAlcohol(),
+            liquor.getVolume()
         );
     }
 }

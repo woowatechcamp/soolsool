@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
@@ -24,7 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@DisplayName("술 상품 관련 기능")
+@DisplayName("술 인수 테스트")
 class LiquorAcceptanceTest extends AcceptanceTest {
 
     @Test
@@ -300,7 +300,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .param("brewType", "소주")
+            .param("brew", "소주")
             .when().get("/liquors")
             .then().log().all()
             .extract().jsonPath().getList("data", LiquorElementResponse.class);
@@ -356,8 +356,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .param("brewType", "기타주류")
-            .param("regionType", "충청북도")
+            .param("brew", "기타주류")
+            .param("region", "충청북도")
             .when().get("/liquors")
             .then().log().all()
             .extract().jsonPath().getList("data", LiquorElementResponse.class);
@@ -413,9 +413,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .param("brewType", "소주")
-            .param("regionType", "경기도")
-            .param("statusType", "판매중지")
+            .param("brew", "소주")
+            .param("region", "경기도")
+            .param("status", "판매중지")
             .when().get("/liquors")
             .then().log().all()
             .extract().jsonPath().getList("data", LiquorElementResponse.class);
@@ -484,9 +484,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .param("brewType", "BERRY")
-            .param("regionType", "JEOLLABUK_DO")
-            .param("statusType", "판매중")
+            .param("brew", "BERRY")
+            .param("region", "JEOLLABUK_DO")
+            .param("status", "판매중")
             .param("brand", "우영미")
             .when().get("/liquors")
             .then().log().all()

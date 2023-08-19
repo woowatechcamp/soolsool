@@ -1,14 +1,14 @@
 package com.woowacamp.soolsool.core.liquor.controller;
 
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
+import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
+
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_CREATED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_DELETED;
-import static com.woowacamp.soolsool.global.common.LiquorResultCode.LIQUOR_UPDATED;
-
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
@@ -22,9 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -68,7 +67,6 @@ public class LiquorController {
         liquorService.deleteLiquor(liquorId);
 
         return ResponseEntity.ok().body(ApiResponse.from(LIQUOR_DELETED));
-            .body(ApiResponse.of(LiquorResultCode.LIQUOR_CREATED, null));
     }
 
     @GetMapping("/{liquorId}")
@@ -81,9 +79,9 @@ public class LiquorController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorList(
-        @RequestParam @Nullable final LiquorBrewType brewType,
-        @RequestParam @Nullable final LiquorRegionType regionType,
-        @RequestParam @Nullable final LiquorStatusType statusType,
+        @RequestParam @Nullable final LiquorBrewType brew,
+        @RequestParam @Nullable final LiquorRegionType region,
+        @RequestParam @Nullable final LiquorStatusType status,
         @RequestParam @Nullable final String brand,
         @PageableDefault final Pageable pageable
     ) {
@@ -91,8 +89,8 @@ public class LiquorController {
             pageable.getPageSize(),
             Sort.by("createdAt").descending());
 
-        final List<LiquorElementResponse> response = liquorService.liquorList(brewType, regionType,
-            statusType,
+        final List<LiquorElementResponse> response = liquorService.liquorList(brew, region,
+            status,
             brand, sortPageable);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_LIST_FOUND, response));

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
+@DisplayName("술 판매 상태 repository 통합 테스트")
 class LiquorStatusTypeRepositoryTest {
 
     @Autowired

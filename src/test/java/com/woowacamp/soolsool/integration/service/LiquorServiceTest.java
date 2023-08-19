@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.integration.service;
 
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import(LiquorService.class)
+@DisplayName("술 service 통합 테스트")
 class LiquorServiceTest {
 
     @Autowired

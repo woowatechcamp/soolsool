@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import(LiquorService.class)
+@DisplayName("술 service 통합 테스트")
 class LiquorServiceTest {
 
     @Autowired

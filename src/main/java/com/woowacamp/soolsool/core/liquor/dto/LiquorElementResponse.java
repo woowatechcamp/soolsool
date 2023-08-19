@@ -17,10 +17,10 @@ public class LiquorElementResponse {
     public static LiquorElementResponse from(final Liquor liquor) {
         return new LiquorElementResponse(
             liquor.getId(),
-            liquor.getName().getName(),
-            liquor.getPrice().getPrice().toString(),
-            liquor.getImageUrl().getImageUrl(),
-            liquor.getStock().getStock()
+            liquor.getName(),
+            liquor.getPrice().toString(),
+            liquor.getImageUrl(),
+            liquor.getStock()
         );
     }
 }

@@ -1,16 +1,18 @@
 package com.woowacamp.soolsool.core.liquor.service;
 
-import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_BREW_FOUND;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_REGION_FOUND;
+import static com.woowacamp.soolsool.core.liquor.exception.LiquorErrorCode.NOT_LIQUOR_STATUS_FOUND;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
@@ -19,14 +21,12 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
-import com.woowacamp.soolsool.global.exception.LiquorErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +34,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,15 +46,6 @@ public class LiquorService {
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
-        LiquorType liquorType = liquorTypeRepository
-            .findByType(LiquorBrewType.valueOf(request.getTypeName()))
-            .orElseThrow();
-        LiquorRegion liquorRegion = liquorRegionRepository
-            .findByType(LiquorRegionType.valueOf(request.getRegionName()))
-            .orElseThrow();
-        LiquorStatus liquorStatus = liquorStatusRepository
-            .findByType(LiquorStatusType.valueOf(request.getStatusName()))
-            .orElseThrow();
         final LiquorBrew liquorBrew = getBrew(request.getBrew());
         final LiquorRegion liquorRegion = getRegion(request.getRegion());
         final LiquorStatus liquorStatus = getStatus(request.getStatus());
@@ -68,7 +58,7 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public LiquorDetailResponse liquorDetail(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
-            .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_FOUND));
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
         return LiquorDetailResponse.from(liquor);
     }
@@ -81,14 +71,12 @@ public class LiquorService {
         final String brand,
         final Pageable pageable
     ) {
-        final LiquorType liquorType = liquorTypeRepository.findByType(brewType).orElse(null);
-        final LiquorRegion liquorRegion = liquorRegionRepository.findByType(regionType)
-            .orElse(null);
-        final LiquorStatus liquorStatus = liquorStatusRepository.findByType(statusType)
-            .orElse(null);
-
-        final Specification<Liquor> conditions = searchWith(liquorType, liquorRegion, liquorStatus,
-            brand);
+        final Specification<Liquor> conditions = searchWith(
+            findLiquorBrewByType(brewType),
+            findLiquorRegionByType(regionType),
+            findLiquorStatusByType(statusType),
+            brand
+        );
 
         final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
 
@@ -98,25 +86,22 @@ public class LiquorService {
     }
 
     private Specification<Liquor> searchWith(
-        final LiquorType liquorType,
-        final LiquorRegion liquorRegion,
-        final LiquorStatus liquorStatus,
+        final Optional<LiquorBrew> brew,
+        final Optional<LiquorRegion> region,
+        final Optional<LiquorStatus> status,
         final String brand
     ) {
         return ((root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
-            if (liquorType != null) {
-                predicates.add(criteriaBuilder.equal(root.get("liquorType"), liquorType));
-            }
+            brew.ifPresent(liquorBrew -> predicates
+                .add(criteriaBuilder.equal(root.get("brew"), liquorBrew)));
 
-            if (liquorRegion != null) {
-                predicates.add(criteriaBuilder.equal(root.get("liquorRegion"), liquorRegion));
-            }
+            region.ifPresent(liquorRegion -> predicates
+                .add(criteriaBuilder.equal(root.get("region"), liquorRegion)));
 
-            if (liquorStatus != null) {
-                predicates.add(criteriaBuilder.equal(root.get("liquorStatus"), liquorStatus));
-            }
+            status.ifPresent(liquorStatus -> predicates
+                .add(criteriaBuilder.equal(root.get("status"), liquorStatus)));
 
             if (StringUtils.hasText(brand)) {
                 predicates.add(criteriaBuilder.equal(root.get("brand"), new LiquorBrand(brand)));
@@ -149,17 +134,29 @@ public class LiquorService {
     }
 
     private LiquorStatus getStatus(final String request) {
-        return liquorStatusRepository
-            .findByType(LiquorStatusType.valueOf(request));
+        return findLiquorStatusByType(LiquorStatusType.valueOf(request))
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_FOUND));
     }
 
     private LiquorRegion getRegion(final String request) {
-        return liquorRegionRepository
-            .findByType(LiquorRegionType.valueOf(request));
+        return findLiquorRegionByType(LiquorRegionType.valueOf(request))
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_FOUND));
     }
 
     private LiquorBrew getBrew(final String request) {
-        return liquorBrewRepository
-            .findByType(LiquorBrewType.valueOf(request));
+        return findLiquorBrewByType(LiquorBrewType.valueOf(request))
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_FOUND));
+    }
+
+    private Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
+        return liquorStatusRepository.findByType(statusType);
+    }
+
+    private Optional<LiquorRegion> findLiquorRegionByType(final LiquorRegionType regionType) {
+        return liquorRegionRepository.findByType(regionType);
+    }
+
+    private Optional<LiquorBrew> findLiquorBrewByType(final LiquorBrewType brewType) {
+        return liquorBrewRepository.findByType(brewType);
     }
 }
