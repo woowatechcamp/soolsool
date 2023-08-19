@@ -1,5 +1,5 @@
 ---
-name: 기능 추가 해주세요
+name: Feature template
 about: 새로운 기능이 필요해요
 title: 'feat:'
 labels: feature
@@ -14,7 +14,6 @@ ex)
 * 상품 목록 조회 기능
 ```
 
-
 <br>
 
 ## ✅ 기능 목록
@@ -25,7 +24,6 @@ ex)
 - [x] 카테고리 검색
 - [ ] 상품명 검색
 ```
-
 
 <br>
 
