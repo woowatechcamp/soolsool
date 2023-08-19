@@ -7,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum LiquorStatusType {
 
-    ON_SALE("판매중", "ON_SALE"),
-    STOPPED("판매중지", "STOPPED"),
+    ON_SALE("판매중"),
+    STOPPED("판매중지"),
     ;
 
     private final String status;
-    private final String eStatus;
 }

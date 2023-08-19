@@ -1,5 +1,7 @@
 package com.woowacamp.soolsool.core.liquor.exception;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import com.woowacamp.soolsool.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,14 @@ public enum LiquorErrorCode implements ErrorCode {
 
     INVALID_LENGTH_NAME(400, "L105", "술 이름은 30자보다 길 수 없습니다."),
     NO_CONTENT_NAME(400, "L106", "술 이름은 null이거나 공백일 수 없습니다."),
+
+    NOT_LIQUOR_BREW_FOUND(NOT_FOUND.value(), "L101", "솔 종류가 존재하지 않습니다."),
+
+    NOT_LIQUOR_STATUS_FOUND(NOT_FOUND.value(), "L102", "술 판매 상태가 존재하지 않습니다."),
+
+    NOT_LIQUOR_REGION_FOUND(NOT_FOUND.value(), "L103", "술 지역이 존재하지 않습니다."),
+
+    NOT_LIQUOR_FOUND(NOT_FOUND.value(), "L104", "술이 존재하지 않습니다."),
     ;
 
     private final int status;
