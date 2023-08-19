@@ -3,12 +3,14 @@ package com.woowacamp.soolsool.core.member.service;
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,22 @@ public class MemberService {
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
+        checkDuplicatedEmail(memberAddRequest.getEmail());
+
         final MemberRole memberRole = memberRoleRepository.findById(1L)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE));
+
         final Member member = memberAddRequest.toMember(memberRole);
         memberRepository.save(member);
+    }
+
+    private void checkDuplicatedEmail(final String email) {
+        final Optional<Member> duplicatedEmil = memberRepository
+            .findByEmail(new MemberEmail(email));
+
+        if (duplicatedEmil.isPresent()) {
+            throw new SoolSoolException(MemberErrorCode.MEMBER_DUPLICATED_EMAIL);
+        }
     }
 
     @Transactional(readOnly = true)
