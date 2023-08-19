@@ -3,18 +3,18 @@ package com.woowacamp.soolsool.core.liquor.service;
 import static com.woowacamp.soolsool.global.exception.LiquorErrorCode.NOT_LIQUOR_FOUND;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorTypeRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,44 +27,53 @@ public class LiquorService {
     private final LiquorRepository liquorRepository;
     private final LiquorStatusRepository liquorStatusRepository;
     private final LiquorRegionRepository liquorRegionRepository;
-    private final LiquorTypeRepository liquorTypeRepository;
+    private final LiquorBrewRepository liquorBrewRepository;
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
-        LiquorType liquorType = liquorTypeRepository
-            .findByType(LiquorBrewType.valueOf(request.getTypeName()));
-        LiquorRegion liquorRegion = liquorRegionRepository
-            .findByType(LiquorRegionType.valueOf(request.getRegionName()));
-        LiquorStatus liquorStatus = liquorStatusRepository
-            .findByType(LiquorStatusType.valueOf(request.getStatusName()));
+        final LiquorBrew liquorBrew = getBrew(request.getBrew());
+        final LiquorRegion liquorRegion = getRegion(request.getRegion());
+        final LiquorStatus liquorStatus = getStatus(request.getStatus());
 
-        Liquor liquor = request.toEntity(liquorType, liquorRegion, liquorStatus);
+        final Liquor liquor = request.toEntity(liquorBrew, liquorRegion, liquorStatus);
+        
         return liquorRepository.save(liquor).getId();
     }
 
     @Transactional
-    public void modifyLiquor(Long liquorId, LiquorModifyRequest liquorModifyRequest) {
-        Liquor liquor = liquorRepository.findById(liquorId)
+    public void modifyLiquor(final Long liquorId, final LiquorModifyRequest liquorModifyRequest) {
+        final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        LiquorType modifyLiquorType = liquorTypeRepository
-            .findByType(LiquorBrewType.valueOf(liquorModifyRequest.getTypeName()));
-        LiquorRegion modifyLiquorRegion = liquorRegionRepository
-            .findByType(LiquorRegionType.valueOf(liquorModifyRequest.getRegionName()));
-        LiquorStatus modifyLiquorStatus = liquorStatusRepository
-            .findByType(LiquorStatusType.valueOf(liquorModifyRequest.getStatusName()));
+        final LiquorBrew modifyLiquorBrew = getBrew(liquorModifyRequest.getTypeName());
+        final LiquorRegion modifyLiquorRegion = getRegion(liquorModifyRequest.getRegionName());
+        final LiquorStatus modifyLiquorStatus = getStatus(liquorModifyRequest.getStatusName());
 
         liquor.update(
-            modifyLiquorType, modifyLiquorRegion,
+            modifyLiquorBrew, modifyLiquorRegion,
             modifyLiquorStatus, liquorModifyRequest
         );
     }
-
 
     @Transactional
     public void deleteLiquor(final Long liquorId) {
         Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
         liquorRepository.delete(liquor);
+    }
+
+    private LiquorStatus getStatus(final String request) {
+        return liquorStatusRepository
+            .findByType(LiquorStatusType.valueOf(request));
+    }
+
+    private LiquorRegion getRegion(final String request) {
+        return liquorRegionRepository
+            .findByType(LiquorRegionType.valueOf(request));
+    }
+
+    private LiquorBrew getBrew(final String request) {
+        return liquorBrewRepository
+            .findByType(LiquorBrewType.valueOf(request));
     }
 }

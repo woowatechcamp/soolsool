@@ -36,8 +36,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "order_items")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseEntity {
 
     @Id
@@ -89,7 +89,6 @@ public class OrderItem extends BaseEntity {
     @Convert(converter = OrderItemQuantityConverter.class)
     private OrderItemQuantity quantity;
 
-    // TODO: 주문서 객체로 변경?
     @Builder
     public OrderItem(
         final Order order,

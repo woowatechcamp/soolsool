@@ -10,7 +10,6 @@ import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -49,13 +47,11 @@ public class LiquorController {
     }
 
     @DeleteMapping("/{liquorId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<ApiResponse<Void>> deleteLiquor(
         @PathVariable final Long liquorId
     ) {
         liquorService.deleteLiquor(liquorId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-            .body(ApiResponse.from(LIQUOR_DELETED));
+        return ResponseEntity.ok().body(ApiResponse.from(LIQUOR_DELETED));
     }
 }

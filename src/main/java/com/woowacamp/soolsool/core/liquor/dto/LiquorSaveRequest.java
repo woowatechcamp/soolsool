@@ -1,9 +1,9 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegion;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatus;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorType;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LiquorSaveRequest {
 
-    private final String typeName;
-    private final String regionName;
-    private final String statusName;
+    private final String brew;
+    private final String region;
+    private final String status;
     private final String name;
     private final String price;
     private final String brand;
@@ -23,14 +23,14 @@ public class LiquorSaveRequest {
     private final Integer volume;
 
     public Liquor toEntity(
-        final LiquorType liquorType,
-        final LiquorRegion liquorRegion,
-        final LiquorStatus liquorStatus
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status
     ) {
 
         return new Liquor(
-            liquorType, liquorRegion,
-            liquorStatus, name,
+            brew, region,
+            status, name,
             price, brand, imageUrl,
             stock, alcohol, volume
         );

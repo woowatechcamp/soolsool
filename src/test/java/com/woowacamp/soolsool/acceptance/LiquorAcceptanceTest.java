@@ -52,9 +52,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(CREATED.value());
-        ApiResponse actual = response.body().as(ApiResponse.class);
-        assertThat(actual.getMessage())
-            .isEqualTo(LIQUOR_CREATED.getMessage());
+        assertThat(response.body().as(new TypeRef<ApiResponse<Void>>() {
+        }).getMessage()).isEqualTo(LIQUOR_CREATED.getMessage());
     }
 
     @Test
@@ -110,8 +109,8 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
-        assertThat(response.body().as(ApiResponse.class)
-            .getMessage()).isEqualTo(LIQUOR_UPDATED.getMessage());
+        assertThat(response.body().as(new TypeRef<ApiResponse<Void>>() {
+        }).getMessage()).isEqualTo(LIQUOR_UPDATED.getMessage());
     }
 
     @Test
@@ -153,8 +152,6 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-//        assertThat(response.body().as(ApiResponse.class)
-//            .getMessage()).isEqualTo(LIQUOR_DELETED.getMessage());
         assertThat(response.body().as(new TypeRef<ApiResponse<Void>>() {
         }).getMessage()).isEqualTo(LIQUOR_DELETED.getMessage());
     }
