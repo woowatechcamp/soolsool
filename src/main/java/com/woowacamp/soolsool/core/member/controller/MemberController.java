@@ -2,6 +2,7 @@ package com.woowacamp.soolsool.core.member.controller;
 
 import com.woowacamp.soolsool.core.member.code.MemberResultCode;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.service.MemberService;
@@ -62,5 +63,16 @@ public class MemberController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(ApiResponse.of(MemberResultCode.MEMBER_DELETE_SUCCESS, null));
+    }
+
+    @PatchMapping("/mileage")
+    public ResponseEntity<ApiResponse<Void>> addMemberMileage(
+        @RequestBody @Valid MemberMileageChargeRequest memberMileageChargeRequest
+    ) {
+        final Long memberId = 1L;
+        memberService.addMemberMileage(memberId, memberMileageChargeRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse.of(MemberResultCode.MEMBER_MILEAGE_CHARGE_SUCCESS, null));
     }
 }

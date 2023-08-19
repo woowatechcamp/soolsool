@@ -67,7 +67,7 @@ public class MemberService {
     public void removeMember(final Long userId) {
         final Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
-        
+
         memberRepository.delete(member);
     }
 

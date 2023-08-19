@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import io.restassured.RestAssured;
@@ -10,6 +11,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -31,14 +33,12 @@ class MemberAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-            .given()
+            .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
-            .log().all()
-            .when()
-            .post("/members")
-            .then()
-            .log().all()
+            .when().post("/members")
+            .then().log().all()
             .extract();
 
         // then
@@ -59,15 +59,19 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "서울시 잠실역");
 
         RestAssured.given()
-            .when()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
-            .post("/members")
+            .when().post("/members")
             .then();
 
         // when
+        String accessToken = "accessToken";
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
             .when().get("/members")
             .then().log().all()
             .extract();
@@ -93,11 +97,12 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "0",
             "서울시 잠실역");
 
-        RestAssured.given()
-            .when()
+        RestAssured
+            .given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
-            .post("/members")
+            .when().post("/members")
             .then();
 
         MemberModifyRequest modifyRequest = new MemberModifyRequest(
@@ -106,9 +111,12 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "modify_address");
 
         // when
+        String accessToken = "accessToken";
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
             .body(modifyRequest)
             .when().patch("/members")
             .then().log().all()
@@ -131,22 +139,67 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "0",
             "서울시 잠실역");
 
-        RestAssured.given()
-            .when()
+        RestAssured
+            .given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
-            .post("/members")
+            .when().post("/members")
             .then();
 
         // when
+        String accessToken = "accessToken";
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .when()
-            .delete("/members")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .when().delete("/members")
             .then().log().all()
             .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("성공 : 회원 마일리지 충전 성공")
+    void chargeMemberMileage() {
+        // given
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "CUSTOMER",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역");
+
+        RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .when().post("/members")
+            .then();
+
+        String amount = "10000";
+        MemberMileageChargeRequest memberMileageChargeRequest = new MemberMileageChargeRequest(
+            amount
+        );
+
+        // when
+        String accessToken = "accessToken";
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .body(memberMileageChargeRequest)
+            .when().patch("/members/mileage")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }
