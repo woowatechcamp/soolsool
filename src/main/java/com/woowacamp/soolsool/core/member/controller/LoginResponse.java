@@ -1,17 +1,16 @@
 package com.woowacamp.soolsool.core.member.controller;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class LoginResponse {
 
-    private String accessToken;
+    private final String accessToken;
 
     @JsonCreator
-    public LoginResponse(final String token) {
+    public LoginResponse(@JsonProperty(value = "token") final String token) {
         this.accessToken = token;
     }
 }
