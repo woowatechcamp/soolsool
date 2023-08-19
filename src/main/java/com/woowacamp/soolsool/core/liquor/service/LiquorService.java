@@ -46,9 +46,9 @@ public class LiquorService {
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
-        final LiquorBrew liquorBrew = getBrew(request.getBrew());
-        final LiquorRegion liquorRegion = getRegion(request.getRegion());
-        final LiquorStatus liquorStatus = getStatus(request.getStatus());
+        final LiquorBrew liquorBrew = getLiquorBrewBrewByName(request.getBrew());
+        final LiquorRegion liquorRegion = getLiquorRegionByName(request.getRegion());
+        final LiquorStatus liquorStatus = getLiquorStatusByName(request.getStatus());
 
         final Liquor liquor = request.toEntity(liquorBrew, liquorRegion, liquorStatus);
 
@@ -116,9 +116,12 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        final LiquorBrew modifyLiquorBrew = getBrew(liquorModifyRequest.getTypeName());
-        final LiquorRegion modifyLiquorRegion = getRegion(liquorModifyRequest.getRegionName());
-        final LiquorStatus modifyLiquorStatus = getStatus(liquorModifyRequest.getStatusName());
+        final LiquorBrew modifyLiquorBrew = getLiquorBrewBrewByName(
+            liquorModifyRequest.getTypeName());
+        final LiquorRegion modifyLiquorRegion = getLiquorRegionByName(
+            liquorModifyRequest.getRegionName());
+        final LiquorStatus modifyLiquorStatus = getLiquorStatusByName(
+            liquorModifyRequest.getStatusName());
 
         liquor.update(
             modifyLiquorBrew, modifyLiquorRegion,
@@ -128,23 +131,24 @@ public class LiquorService {
 
     @Transactional
     public void deleteLiquor(final Long liquorId) {
-        Liquor liquor = liquorRepository.findById(liquorId)
+        final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
+        
         liquorRepository.delete(liquor);
     }
 
-    private LiquorStatus getStatus(final String request) {
-        return findLiquorStatusByType(LiquorStatusType.valueOf(request))
+    private LiquorStatus getLiquorStatusByName(final String name) {
+        return findLiquorStatusByType(LiquorStatusType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_FOUND));
     }
 
-    private LiquorRegion getRegion(final String request) {
-        return findLiquorRegionByType(LiquorRegionType.valueOf(request))
+    private LiquorRegion getLiquorRegionByName(final String name) {
+        return findLiquorRegionByType(LiquorRegionType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_FOUND));
     }
 
-    private LiquorBrew getBrew(final String request) {
-        return findLiquorBrewByType(LiquorBrewType.valueOf(request))
+    private LiquorBrew getLiquorBrewBrewByName(final String name) {
+        return findLiquorBrewByType(LiquorBrewType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_FOUND));
     }
 

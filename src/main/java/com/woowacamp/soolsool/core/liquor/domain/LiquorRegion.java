@@ -15,8 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @Table(name = "liquor_regions")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LiquorRegion extends BaseEntity {
 
