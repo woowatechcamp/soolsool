@@ -12,5 +12,5 @@ spring:
 security:
   jwt:
     token:
-      secret-key: 66eI65287YOV64SI66y066eb7J6I7Ja07JqU66eo64Kg66i57J2E7IiY7J6I7Ja0
+      secret-key: ${SOOLSOOL_JWT_SECRET}
       expire-length: 3600000

@@ -1,4 +1,9 @@
 spring:
-  config:
-    activate:
-      on-profile: dev-h2
+  profiles:
+    active: dev-h2
+
+security:
+  jwt:
+    token:
+      secret-key: ${SOOLSOOL_JWT_SECRET}
+      expire-length: 3600000
