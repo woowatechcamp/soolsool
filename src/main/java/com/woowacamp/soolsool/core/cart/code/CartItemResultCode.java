@@ -1,5 +1,8 @@
 package com.woowacamp.soolsool.core.cart.code;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 import com.woowacamp.soolsool.global.common.ResultCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CartItemResultCode implements ResultCode {
 
-    CART_ITEM_ADD_SUCCESS(201, "C201", "장바구니 상품 등록이 완료되었습니다."),
-    CART_ITEM_MODIFY_QUANTITY_SUCCESS(201, "C202", "장바구니 상품 수량 변경이 완료되었습니다."),
+    CART_ITEM_ADD_SUCCESS(CREATED.value(), "C201", "장바구니 상품 등록이 완료되었습니다."),
+    CART_ITEM_MODIFY_QUANTITY_SUCCESS(OK.value(), "C202", "장바구니 상품 수량 변경이 완료되었습니다."),
+    CART_ITEM_LIST_FOUND(OK.value(), "L103", "장바구니 상품 목록이 정상적으로 검색되었습니다."),
 
     ;
 
