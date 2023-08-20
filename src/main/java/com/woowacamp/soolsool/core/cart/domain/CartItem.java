@@ -1,12 +1,12 @@
 package com.woowacamp.soolsool.core.cart.domain;
 
+import static com.woowacamp.soolsool.global.exception.GlobalErrorCode.NO_CONTENT;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.woowacamp.soolsool.core.cart.domain.converter.CartItemQuantityConverter;
 import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -70,7 +70,7 @@ public class CartItem extends BaseEntity {
 
     private void validateIsNotNullLiquor(final Liquor liquor) {
         if (Objects.isNull(liquor)) {
-            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
+            throw new SoolSoolException(NO_CONTENT);
         }
     }
 
@@ -88,5 +88,9 @@ public class CartItem extends BaseEntity {
 
     public boolean hasStoppedLiquor() {
         return liquor.isStopped();
+    }
+
+    public void updateQuantity(final Integer liquorQuantity) {
+        this.quantity = new CartItemQuantity(liquorQuantity);
     }
 }
