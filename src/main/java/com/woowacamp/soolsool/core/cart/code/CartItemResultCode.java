@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 public enum CartItemResultCode implements ResultCode {
 
     CART_ITEM_ADD_SUCCESS(201, "C201", "장바구니 상품 등록이 완료되었습니다."),
+    CART_ITEM_MODIFY_QUANTITY_SUCCESS(201, "C202", "장바구니 상품 수량 변경이 완료되었습니다."),
+
     ;
 
     private final int status;

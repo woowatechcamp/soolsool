@@ -89,4 +89,8 @@ public class CartItem extends BaseEntity {
     public boolean hasStoppedLiquor() {
         return liquor.isStopped();
     }
+
+    public void updateQuantity(final Integer liquorQuantity) {
+        this.quantity = new CartItemQuantity(liquorQuantity);
+    }
 }

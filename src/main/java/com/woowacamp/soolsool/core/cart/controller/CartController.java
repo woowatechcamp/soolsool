@@ -1,6 +1,8 @@
 package com.woowacamp.soolsool.core.cart.controller;
 
-import com.woowacamp.soolsool.core.cart.code.CartItemResultCode;
+import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_ADD_SUCCESS;
+import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_MODIFY_QUANTITY_SUCCESS;
+
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.cart.service.CartService;
@@ -30,7 +32,7 @@ public class CartController {
         final Long cartItemId = cartService.saveCartItem(memberId, cartItemSaveRequest);
 
         return ResponseEntity.ok(
-            ApiResponse.of(CartItemResultCode.CART_ITEM_ADD_SUCCESS, cartItemId));
+            ApiResponse.of(CART_ITEM_ADD_SUCCESS, cartItemId));
     }
 
     @PatchMapping("/{cartItemId}")
@@ -38,6 +40,9 @@ public class CartController {
         @LoginUser final Long memberId, @PathVariable Long cartItemId,
         @RequestBody final CartItemModifyRequest cartItemModifyRequest
     ) {
-        return ResponseEntity.ok(ApiResponse.from(CartItemResultCode.CART_ITEM_ADD_SUCCESS));
+        cartService.modifyCartItemQuantity(memberId, cartItemId, cartItemModifyRequest);
+        return ResponseEntity.ok(ApiResponse.from(CART_ITEM_MODIFY_QUANTITY_SUCCESS));
     }
+
+    @
 }
