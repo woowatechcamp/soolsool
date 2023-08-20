@@ -63,9 +63,10 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> cartItemList(final Long memberId) {
-        final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
+        final List<CartItem> cartItems = cartItemRepository.findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(
+            memberId);
 
-        return cart.getCartItems().stream()
+        return cartItems.stream()
             .map(CartItemResponse::from)
             .collect(Collectors.toList());
     }
@@ -74,10 +75,16 @@ public class CartService {
     public void removeCartItem(final Long memberId, final Long cartItemId) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_CART_ITEM));
-        
+
         validateMemberId(memberId, cartItem.getMemberId());
 
         cartItemRepository.delete(cartItem);
+    }
+
+    @Transactional
+    public void removeCartItemList(final Long memberId) {
+        final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
+        cartItemRepository.deleteAllInBatch(cart.getCartItems());
     }
 
     private void validateMemberId(final Long memberId, final Long cartItemMemberId) {
