@@ -55,8 +55,8 @@ public class CartService {
         final CartItemModifyRequest cartItemModifyRequest) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
             .orElseThrow(() -> new SoolSoolException(NULL_LIQUOR));
-
-        validateMemberId(memberId, cartItem);
+        validateMemberId(memberId, cartItem.getMemberId());
+        
         cartItem.updateQuantity(cartItemModifyRequest.getLiquorQuantity());
     }
 
@@ -74,13 +74,13 @@ public class CartService {
     public void removeCartItem(final Long memberId, final Long cartItemId) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
             .orElseThrow(() -> new SoolSoolException(NULL_LIQUOR));
-        validateMemberId(memberId, cartItem);
-        
+        validateMemberId(memberId, cartItem.getMemberId());
+
         cartItemRepository.delete(cartItem);
     }
 
-    private void validateMemberId(final Long memberId, final CartItem cartItem) {
-        if (!Objects.equals(cartItem.getMemberId(), memberId)) {
+    private void validateMemberId(final Long memberId, final Long cartItemMemberId) {
+        if (!Objects.equals(cartItemMemberId, memberId)) {
             throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
     }

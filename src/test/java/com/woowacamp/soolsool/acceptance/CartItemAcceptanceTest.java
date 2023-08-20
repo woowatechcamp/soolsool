@@ -254,7 +254,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .extract().jsonPath().getObject("data", Long.class);
 
         // when
-        ExtractableResponse<Response> modifyResponse = RestAssured
+        ExtractableResponse<Response> removeResponse = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, customerAccessToken)
@@ -263,6 +263,18 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .extract();
 
         // then
-        assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
+        assertThat(removeResponse.statusCode()).isEqualTo(OK.value());
+
+        final ExtractableResponse<Response> listResponse = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .when().get("/cart-items/")
+            .then().log().all()
+            .extract();
+        assertThat(listResponse.jsonPath().getObject(
+            "data", new TypeRef<List<CartItemResponse>>() {
+            })
+        ).isEmpty();
     }
 }
