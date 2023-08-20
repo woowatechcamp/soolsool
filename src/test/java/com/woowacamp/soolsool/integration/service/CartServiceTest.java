@@ -100,8 +100,7 @@ class CartServiceTest {
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_EQUALS_MEMBER.getMessage());
     }
-
-
+    
     @Test
     @DisplayName("장바구니에 없는 상품을 삭제할 시, 예외를 던진다.")
     void removeNoExistCartItem() {
@@ -114,6 +113,4 @@ class CartServiceTest {
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_FOUND_CART_ITEM.getMessage());
     }
-
-
 }

@@ -83,8 +83,7 @@ public class CartService {
 
     @Transactional
     public void removeCartItemList(final Long memberId) {
-        final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
-        cartItemRepository.deleteAllInBatch(cart.getCartItems());
+        cartItemRepository.deleteAllByMemberId(memberId);
     }
 
     private void validateMemberId(final Long memberId, final Long cartItemMemberId) {
