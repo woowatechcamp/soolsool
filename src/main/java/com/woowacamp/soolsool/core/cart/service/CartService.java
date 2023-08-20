@@ -63,8 +63,8 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> cartItemList(final Long memberId) {
-        final List<CartItem> cartItems = cartItemRepository.findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(
-            memberId);
+        final List<CartItem> cartItems = cartItemRepository
+            .findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(memberId);
 
         return cartItems.stream()
             .map(CartItemResponse::from)

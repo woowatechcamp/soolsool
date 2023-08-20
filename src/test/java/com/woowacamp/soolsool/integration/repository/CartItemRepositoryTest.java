@@ -144,8 +144,9 @@ class CartItemRepositoryTest {
         cartItemRepository.save(cartItem2);
 
         // when
-        final List<CartItem> cartItemList = cartItemRepository
+        List<CartItem> cartItemList = cartItemRepository
             .findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(commonMemberId);
+        
         // then
         assertThat(cartItemList).hasSize(2);
     }

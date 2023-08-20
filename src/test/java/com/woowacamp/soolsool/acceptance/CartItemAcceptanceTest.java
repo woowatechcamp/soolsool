@@ -93,8 +93,9 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .when().get(location)
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
+
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
-        final Long cartItemId = RestAssured
+        Long cartItemId = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, customerAccessToken)
@@ -102,9 +103,9 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .when().post("/cart-items")
             .then().log().all()
             .extract().jsonPath().getObject("data", Long.class);
+
         // when
         CartItemModifyRequest modifyRequest = new CartItemModifyRequest(3);
-
         ExtractableResponse<Response> modifyResponse = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
@@ -189,34 +190,6 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         )).hasSize(2);
     }
 
-
-    private String getCustomerAccessToken() {
-        LoginRequest loginRequest = new LoginRequest("woowafriends@naver.com",
-            "woowa");
-
-        return BEARER_LITERAL + RestAssured
-            .given()
-            .contentType(APPLICATION_JSON_VALUE)
-            .body(loginRequest).log().all()
-            .when().post("/auth/login")
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
-    }
-
-    private String getVendorAccessToken() {
-        LoginRequest loginRequest = new LoginRequest("test@email.com",
-            "test_password");
-
-        return BEARER_LITERAL + RestAssured
-            .given()
-            .contentType(APPLICATION_JSON_VALUE)
-            .body(loginRequest).log().all()
-            .when().post("/auth/login")
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
-    }
-
-
     @Test
     @DisplayName("성공 : 장바구니 상품 삭제")
     void removeCartItem() {
@@ -243,8 +216,9 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .when().get(location)
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
+
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
-        final Long cartItemId = RestAssured
+        Long cartItemId = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, customerAccessToken)
@@ -265,7 +239,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(removeResponse.statusCode()).isEqualTo(OK.value());
 
-        final ExtractableResponse<Response> listResponse = RestAssured
+        ExtractableResponse<Response> listResponse = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, customerAccessToken)
@@ -345,4 +319,29 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(listResponse.statusCode()).isEqualTo(OK.value());
     }
 
+    private String getCustomerAccessToken() {
+        LoginRequest loginRequest = new LoginRequest("woowafriends@naver.com",
+            "woowa");
+
+        return BEARER_LITERAL + RestAssured
+            .given()
+            .contentType(APPLICATION_JSON_VALUE)
+            .body(loginRequest).log().all()
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
+    }
+
+    private String getVendorAccessToken() {
+        LoginRequest loginRequest = new LoginRequest("test@email.com",
+            "test_password");
+
+        return BEARER_LITERAL + RestAssured
+            .given()
+            .contentType(APPLICATION_JSON_VALUE)
+            .body(loginRequest).log().all()
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
+    }
 }
