@@ -3,7 +3,6 @@ package com.woowacamp.soolsool.unit.domain;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import com.woowacamp.soolsool.core.cart.code.CartErrorCode;
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
@@ -71,7 +70,7 @@ class CartTest {
         // when & then
         assertThatThrownBy(() -> new Cart(1L, cartItems))
             .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage(CartErrorCode.NOT_EQUALS_MEMBER.getMessage());
+            .hasMessage("다른 사용자의 장바구니 상품을 가지고 있습니다.");
     }
 
     @Test
@@ -91,7 +90,7 @@ class CartTest {
         // when & then
         assertThatThrownBy(() -> cart.addCartItem(newCartItem))
             .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage(CartErrorCode.EXCEED_MAX_CART_SIZE.getMessage());
+            .hasMessage("장바구니가 가득 찼습니다.");
     }
 
     @Test
@@ -108,7 +107,7 @@ class CartTest {
         // when & then
         assertThatThrownBy(() -> cart.addCartItem(sameCartItem))
             .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage(CartErrorCode.EXISTS_CART_ITEM.getMessage());
+            .hasMessage("장바구니에 이미 존재하는 상품입니다.");
     }
 
     @Test
@@ -118,6 +117,8 @@ class CartTest {
         Cart cart = new Cart(1L, List.of());
 
         Liquor stoppedLiquor = Liquor.builder()
+            .brew(new LiquorBrew(LiquorBrewType.SOJU))
+            .region(new LiquorRegion(LiquorRegionType.GYEONGSANGNAM_DO))
             .status(new LiquorStatus(LiquorStatusType.STOPPED))
             .name("안동 소주")
             .price("12000")
@@ -133,6 +134,6 @@ class CartTest {
         // when & then
         assertThatThrownBy(() -> cart.addCartItem(cartItem))
             .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage(CartErrorCode.STOPPED_LIQUOR.getMessage());
+            .hasMessage("판매가 중지된 상품은 추가할 수 없습니다.");
     }
 }

@@ -21,10 +21,7 @@ public class Cart {
     }
 
     private void validateMember(final Long memberId, final List<CartItem> cartItems) {
-        boolean hasNotSameMember = cartItems.stream()
-            .anyMatch(cartItem -> cartItem.hasDifferentMemberIdWith(memberId));
-
-        if (hasNotSameMember) {
+        if (cartItems.stream().anyMatch(cartItem -> cartItem.hasDifferentMemberIdWith(memberId))) {
             throw new SoolSoolException(CartErrorCode.NOT_EQUALS_MEMBER);
         }
     }

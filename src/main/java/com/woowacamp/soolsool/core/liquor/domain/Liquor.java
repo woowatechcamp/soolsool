@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
-import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorBrandConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorImageUrlConverter;
@@ -18,6 +17,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -139,7 +139,7 @@ public class Liquor extends BaseEntity {
 
     private void validateIsNotNullableCategory(final Object... objects) {
         if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new SoolSoolException(LiquorErrorCode.INVALID_CATEGORY);
+            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
         }
     }
 

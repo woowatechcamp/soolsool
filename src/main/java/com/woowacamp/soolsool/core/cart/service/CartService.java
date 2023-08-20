@@ -34,9 +34,7 @@ public class CartService {
         final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
         cart.addCartItem(newCartItem);
 
-        newCartItem = cartItemRepository.save(newCartItem);
-
-        return newCartItem.getId();
+        return cartItemRepository.save(newCartItem).getId();
     }
 
     private List<CartItem> findAllByMemberIdOrderByCreatedAtDesc(final Long memberId) {
