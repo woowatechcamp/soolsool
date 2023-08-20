@@ -1,7 +1,7 @@
 ---
 name: Refactor template
 about: 이거 수정 해야해요
-title: 'refactor:'
+title: 'refactor: '
 labels: refactor
 assignees: ''
 
