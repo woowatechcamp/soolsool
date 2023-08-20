@@ -1,7 +1,7 @@
 ---
 name: Documentation template
 about: 문서 작성은 늘 짜릿해
-title: 'docs:'
+title: 'docs: '
 labels: documentation
 assignees: ''
 
