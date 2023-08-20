@@ -68,7 +68,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("성공 : 상품 수량 변경")
+    @DisplayName("성공 : 장바구니 상품 수량 변경")
     void modifyCartItemCount() {
         // given
         String customerAccessToken = getCustomerAccessToken();
@@ -119,7 +119,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("성공 : 상품 조회 ")
+    @DisplayName("성공 : 장바구니 상품 조회 ")
     void CartItemList() {
         // given
         String customerAccessToken = getCustomerAccessToken();
@@ -155,7 +155,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
         CartItemSaveRequest cartItemSaveRequest2 = new CartItemSaveRequest(liquorId2, 1);
 
-        final Long cartItemId = RestAssured
+        RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, customerAccessToken)
@@ -163,7 +163,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .when().post("/cart-items")
             .then().log().all()
             .extract().jsonPath().getObject("data", Long.class);
-        final Long cartItemId2 = RestAssured
+        RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, customerAccessToken)
@@ -214,5 +214,55 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             .when().post("/auth/login")
             .then().log().all()
             .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
+    }
+
+
+    @Test
+    @DisplayName("성공 : 장바구니 상품 삭제")
+    void removeCartItem() {
+        // given
+        String customerAccessToken = getCustomerAccessToken();
+        String vendorAccessToken = getVendorAccessToken();
+
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
+            "안동소주", "12000", "안동", "/soju.jpeg",
+            120, 31.3, 300
+        );
+        String location = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, vendorAccessToken)
+            .body(liquorSaveRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract().header("Location");
+        Long liquorId = RestAssured
+            .given().log().all()
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get(location)
+            .then().log().all()
+            .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
+        final Long cartItemId = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .body(cartItemSaveRequest)
+            .when().post("/cart-items")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", Long.class);
+
+        // when
+        ExtractableResponse<Response> modifyResponse = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .when().delete("/cart-items/{cartItemId}", cartItemId)
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
     }
 }
