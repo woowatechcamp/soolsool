@@ -277,4 +277,72 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             })
         ).isEmpty();
     }
+
+    @Test
+    @DisplayName("성공 : 장바구니 상품 모두 삭제 ")
+    void removeCartItemList() {
+        // given
+        String customerAccessToken = getCustomerAccessToken();
+        String vendorAccessToken = getVendorAccessToken();
+
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
+            "안동소주", "12000", "안동", "/soju.jpeg",
+            120, 31.3, 300
+        );
+        LiquorSaveRequest liquorSaveRequest2 = new LiquorSaveRequest(
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/soju-url",
+            100, 12.0, 300);
+
+        Long liquorId = Long.parseLong(RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, vendorAccessToken)
+            .body(liquorSaveRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract().header("Location").split("/")[2]);
+        Long liquorId2 = Long.parseLong(RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, vendorAccessToken)
+            .body(liquorSaveRequest2)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract().header("Location").split("/")[2]);
+
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
+        CartItemSaveRequest cartItemSaveRequest2 = new CartItemSaveRequest(liquorId2, 1);
+
+        RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .body(cartItemSaveRequest)
+            .when().post("/cart-items")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", Long.class);
+        RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .body(cartItemSaveRequest2)
+            .when().post("/cart-items")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", Long.class);
+
+        // when
+        ExtractableResponse<Response> listResponse = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .when().delete("/cart-items/")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(listResponse.statusCode()).isEqualTo(OK.value());
+    }
+
 }

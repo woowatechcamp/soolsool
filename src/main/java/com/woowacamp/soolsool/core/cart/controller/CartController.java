@@ -2,6 +2,7 @@ package com.woowacamp.soolsool.core.cart.controller;
 
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_ADD_SUCCESS;
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_DELETED;
+import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_LIST_DELETED;
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_LIST_FOUND;
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_MODIFY_QUANTITY_SUCCESS;
 
@@ -68,5 +69,13 @@ public class CartController {
         cartService.removeCartItem(memberId, cartItemId);
 
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_DELETED));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> removeCartItemList(
+        @LoginUser final Long memberId
+    ) {
+        cartService.removeCartItemList(memberId);
+        return ResponseEntity.ok(ApiResponse.from(CART_ITEM_LIST_DELETED));
     }
 }
