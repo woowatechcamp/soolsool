@@ -1,7 +1,7 @@
 ---
 name: Feature template
 about: 새로운 기능이 필요해요
-title: 'feat:'
+title: 'feat: '
 labels: feature
 assignees: ''
 
