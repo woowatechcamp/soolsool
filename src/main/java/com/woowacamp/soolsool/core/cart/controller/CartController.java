@@ -32,11 +32,11 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Long>> saveCartItem(
+    public ResponseEntity<ApiResponse<Long>> addCartItem(
         @LoginUser final Long memberId,
         @RequestBody final CartItemSaveRequest cartItemSaveRequest
     ) {
-        final Long cartItemId = cartService.saveCartItem(memberId, cartItemSaveRequest);
+        final Long cartItemId = cartService.addCartItem(memberId, cartItemSaveRequest);
 
         return ResponseEntity.ok(ApiResponse.of(CART_ITEM_ADD_SUCCESS, cartItemId));
     }

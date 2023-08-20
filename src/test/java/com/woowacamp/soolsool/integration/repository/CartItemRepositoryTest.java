@@ -145,8 +145,8 @@ class CartItemRepositoryTest {
 
         // when
         List<CartItem> cartItemList = cartItemRepository
-            .findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(commonMemberId);
-        
+            .findAllByMemberIdOrderByCreatedAtDescWithLiquor(commonMemberId);
+
         // then
         assertThat(cartItemList).hasSize(2);
     }

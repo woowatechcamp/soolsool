@@ -28,7 +28,7 @@ public class CartService {
     private final LiquorRepository liquorRepository;
 
     @Transactional
-    public Long saveCartItem(final Long memberId, final CartItemSaveRequest request) {
+    public Long addCartItem(final Long memberId, final CartItemSaveRequest request) {
         final Liquor liquor = liquorRepository.findById(request.getLiquorId())
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_LIQUOR));
 
@@ -48,27 +48,28 @@ public class CartService {
         return cartItemRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId);
     }
 
+    @Transactional(readOnly = true)
+    public List<CartItemResponse> cartItemList(final Long memberId) {
+        final List<CartItem> cartItems = cartItemRepository
+            .findAllByMemberIdOrderByCreatedAtDescWithLiquor(memberId);
+
+        return cartItems.stream()
+            .map(CartItemResponse::from)
+            .collect(Collectors.toList());
+    }
+
     @Transactional
     public void modifyCartItemQuantity(
         final Long memberId,
         final Long cartItemId,
-        final CartItemModifyRequest cartItemModifyRequest) {
+        final CartItemModifyRequest cartItemModifyRequest
+    ) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_CART_ITEM));
 
         validateMemberId(memberId, cartItem.getMemberId());
 
         cartItem.updateQuantity(cartItemModifyRequest.getLiquorQuantity());
-    }
-
-    @Transactional(readOnly = true)
-    public List<CartItemResponse> cartItemList(final Long memberId) {
-        final List<CartItem> cartItems = cartItemRepository
-            .findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(memberId);
-
-        return cartItems.stream()
-            .map(CartItemResponse::from)
-            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -81,14 +82,14 @@ public class CartService {
         cartItemRepository.delete(cartItem);
     }
 
-    @Transactional
-    public void removeCartItemList(final Long memberId) {
-        cartItemRepository.deleteAllByMemberId(memberId);
-    }
-
     private void validateMemberId(final Long memberId, final Long cartItemMemberId) {
         if (!Objects.equals(cartItemMemberId, memberId)) {
             throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
+    }
+
+    @Transactional
+    public void removeCartItemList(final Long memberId) {
+        cartItemRepository.deleteAllByMemberId(memberId);
     }
 }

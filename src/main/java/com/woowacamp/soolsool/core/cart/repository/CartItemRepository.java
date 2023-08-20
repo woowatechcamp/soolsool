@@ -11,7 +11,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findAllByMemberIdOrderByCreatedAtDesc(final Long memberId);
 
     @Query("SELECT distinct c FROM CartItem c join fetch c.liquor where c.memberId= :memberId order by c.createdAt desc")
-    List<CartItem> findAllByMemberIdOrderByCreatedAtDescWithFetchJoin(final Long memberId);
+    List<CartItem> findAllByMemberIdOrderByCreatedAtDescWithLiquor(final Long memberId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("delete from CartItem c where c.memberId = :memberId")

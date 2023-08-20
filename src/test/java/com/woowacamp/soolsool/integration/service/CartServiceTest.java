@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import({CartService.class, LiquorService.class})
-@DisplayName("CartItemService 테스트")
+@DisplayName("CartItemService 통합 테스트")
 class CartServiceTest {
 
     @Autowired
@@ -40,7 +40,7 @@ class CartServiceTest {
 
         // when & then
         assertThrows(SoolSoolException.class,
-            () -> cartService.saveCartItem(memberId, request));
+            () -> cartService.addCartItem(memberId, request));
     }
 
     @ParameterizedTest
@@ -62,7 +62,7 @@ class CartServiceTest {
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         CartItemSaveRequest request = new CartItemSaveRequest(saveLiquorId, 1);
-        Long cartItemId = cartService.saveCartItem(memberId, request);
+        Long cartItemId = cartService.addCartItem(memberId, request);
         CartItemModifyRequest cartItemModifyRequest = new CartItemModifyRequest(quantity);
 
         // when & then
@@ -93,14 +93,14 @@ class CartServiceTest {
             300);
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         CartItemSaveRequest request = new CartItemSaveRequest(saveLiquorId, 1);
-        Long cartItemId = cartService.saveCartItem(memberId, request);
+        Long cartItemId = cartService.addCartItem(memberId, request);
 
         // when & then
         assertThatCode(() -> cartService.removeCartItem(anotherMemberId, cartItemId))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_EQUALS_MEMBER.getMessage());
     }
-    
+
     @Test
     @DisplayName("장바구니에 없는 상품을 삭제할 시, 예외를 던진다.")
     void removeNoExistCartItem() {

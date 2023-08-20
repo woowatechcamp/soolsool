@@ -1,7 +1,5 @@
 package com.woowacamp.soolsool.core.cart.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +14,7 @@ public class CartItemResponse {
     private final String imageUrl;
     private final Integer liquorQuantity;
 
-    @JsonCreator
-    public static CartItemResponse from(@JsonProperty final CartItem cartItem) {
+    public static CartItemResponse from(final CartItem cartItem) {
         return new CartItemResponse(
             cartItem.getId(),
             cartItem.getLiquor().getName(),

@@ -68,59 +68,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("성공 : 장바구니 상품 수량 변경")
-    void modifyCartItemCount() {
-        // given
-        String customerAccessToken = getCustomerAccessToken();
-        String vendorAccessToken = getVendorAccessToken();
-
-        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
-            "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
-        );
-        String location = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, vendorAccessToken)
-            .body(liquorSaveRequest)
-            .when().post("/liquors")
-            .then().log().all()
-            .extract().header("Location");
-        Long liquorId = RestAssured
-            .given().log().all()
-            .accept(APPLICATION_JSON_VALUE)
-            .when().get(location)
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
-
-        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
-        Long cartItemId = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
-            .body(cartItemSaveRequest)
-            .when().post("/cart-items")
-            .then().log().all()
-            .extract().jsonPath().getObject("data", Long.class);
-
-        // when
-        CartItemModifyRequest modifyRequest = new CartItemModifyRequest(3);
-        ExtractableResponse<Response> modifyResponse = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
-            .body(modifyRequest)
-            .when().patch("/cart-items/{cartItemId}", cartItemId)
-            .then().log().all()
-            .extract();
-
-        // then
-        assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
-    }
-
-    @Test
-    @DisplayName("성공 : 장바구니 상품 조회 ")
+    @DisplayName("성공 : 장바구니 상품 전체 조회 ")
     void CartItemList() {
         // given
         String customerAccessToken = getCustomerAccessToken();
@@ -188,6 +136,58 @@ class CartItemAcceptanceTest extends AcceptanceTest {
             new TypeRef<List<CartItemResponse>>() {
             }
         )).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("성공 : 장바구니 상품 수량 변경")
+    void modifyCartItemCount() {
+        // given
+        String customerAccessToken = getCustomerAccessToken();
+        String vendorAccessToken = getVendorAccessToken();
+
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
+            "안동소주", "12000", "안동", "/soju.jpeg",
+            120, 31.3, 300
+        );
+        String location = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, vendorAccessToken)
+            .body(liquorSaveRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract().header("Location");
+        Long liquorId = RestAssured
+            .given().log().all()
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get(location)
+            .then().log().all()
+            .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
+
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
+        Long cartItemId = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .body(cartItemSaveRequest)
+            .when().post("/cart-items")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", Long.class);
+
+        // when
+        CartItemModifyRequest modifyRequest = new CartItemModifyRequest(3);
+        ExtractableResponse<Response> modifyResponse = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, customerAccessToken)
+            .body(modifyRequest)
+            .when().patch("/cart-items/{cartItemId}", cartItemId)
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
     }
 
     @Test
