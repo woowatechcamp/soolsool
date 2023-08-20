@@ -26,5 +26,4 @@ public class CartItemResponse {
             cartItem.getQuantity()
         );
     }
-
 }

@@ -37,17 +37,17 @@ public class CartController {
     ) {
         final Long cartItemId = cartService.saveCartItem(memberId, cartItemSaveRequest);
 
-        return ResponseEntity.ok(
-            ApiResponse.of(CART_ITEM_ADD_SUCCESS, cartItemId));
+        return ResponseEntity.ok(ApiResponse.of(CART_ITEM_ADD_SUCCESS, cartItemId));
     }
 
     @PatchMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> modifyCartItemQuantity(
         @LoginUser final Long memberId,
-        @PathVariable Long cartItemId,
+        @PathVariable final Long cartItemId,
         @RequestBody final CartItemModifyRequest cartItemModifyRequest
     ) {
         cartService.modifyCartItemQuantity(memberId, cartItemId, cartItemModifyRequest);
+
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_MODIFY_QUANTITY_SUCCESS));
     }
 
@@ -61,11 +61,12 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<ApiResponse<Void>> removeCartItem(@LoginUser final Long memberId,
+    public ResponseEntity<ApiResponse<Void>> removeCartItem(
+        @LoginUser final Long memberId,
         @PathVariable final Long cartItemId
     ) {
         cartService.removeCartItem(memberId, cartItemId);
-        
+
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_DELETED));
     }
 }

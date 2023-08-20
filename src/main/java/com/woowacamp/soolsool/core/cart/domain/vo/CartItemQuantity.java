@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.cart.domain.vo;
 
-import com.woowacamp.soolsool.core.cart.domain.code.CartErrorCode;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.INVALID_QUANTITY_SIZE;
+
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.Getter;
 public class CartItemQuantity {
 
     private static final int MIN_SIZE = 1;
-    
+
     private final int quantity;
 
     public CartItemQuantity(final int quantity) {
@@ -21,7 +22,7 @@ public class CartItemQuantity {
 
     private void validateIsValidSize(final int quantity) {
         if (quantity < MIN_SIZE) {
-            throw new SoolSoolException(CartErrorCode.INVALID_QUANTITY_SIZE);
+            throw new SoolSoolException(INVALID_QUANTITY_SIZE);
         }
     }
 }

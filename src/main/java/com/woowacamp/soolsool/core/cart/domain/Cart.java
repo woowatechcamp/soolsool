@@ -1,6 +1,11 @@
 package com.woowacamp.soolsool.core.cart.domain;
 
-import com.woowacamp.soolsool.core.cart.code.CartErrorCode;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.EXCEED_MAX_CART_SIZE;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.EXISTS_CART_ITEM;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_EQUALS_MEMBER;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NULL_LIQUOR;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.STOPPED_LIQUOR;
+
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +27,7 @@ public class Cart {
 
     private void validateMember(final Long memberId, final List<CartItem> cartItems) {
         if (cartItems.stream().anyMatch(cartItem -> cartItem.hasDifferentMemberIdWith(memberId))) {
-            throw new SoolSoolException(CartErrorCode.NOT_EQUALS_MEMBER);
+            throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
     }
 
@@ -37,25 +42,25 @@ public class Cart {
 
     private void validateNull(final CartItem newCartItem) {
         if (Objects.isNull(newCartItem)) {
-            throw new SoolSoolException(CartErrorCode.NULL_LIQUOR);
+            throw new SoolSoolException(NULL_LIQUOR);
         }
     }
 
     private void validateExceedMaxSize() {
         if (cartItems.size() == MAX_CART_SIZE) {
-            throw new SoolSoolException(CartErrorCode.EXCEED_MAX_CART_SIZE);
+            throw new SoolSoolException(EXCEED_MAX_CART_SIZE);
         }
     }
 
     private void validateDuplicated(final CartItem newCartItem) {
         if (cartItems.stream().anyMatch(newCartItem::hasSameLiquorWith)) {
-            throw new SoolSoolException(CartErrorCode.EXISTS_CART_ITEM);
+            throw new SoolSoolException(EXISTS_CART_ITEM);
         }
     }
 
     private void validateLiquorStatus(final CartItem newCartItem) {
         if (newCartItem.hasStoppedLiquor()) {
-            throw new SoolSoolException(CartErrorCode.STOPPED_LIQUOR);
+            throw new SoolSoolException(STOPPED_LIQUOR);
         }
     }
 
