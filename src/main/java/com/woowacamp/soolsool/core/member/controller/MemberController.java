@@ -38,7 +38,8 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMember(
-        @LoginUser final Long userId) {
+        @LoginUser final Long userId
+    ) {
         final MemberFindResponse memberFindResponse = memberService.findMember(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -48,7 +49,7 @@ public class MemberController {
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> modifyMember(
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest,
-        final @LoginUser Long userId
+        @LoginUser final Long userId
     ) {
         memberService.modifyMember(userId, memberModifyRequest);
 

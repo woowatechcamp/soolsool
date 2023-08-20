@@ -12,11 +12,16 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -29,12 +34,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "liquors")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Liquor extends BaseEntity {
 
     @Id
@@ -99,6 +106,25 @@ public class Liquor extends BaseEntity {
         final Double alcohol,
         final int volume
     ) {
+        this(null, brew, region, status, name, price, brand, imageUrl, stock, alcohol, volume);
+    }
+
+    public Liquor(
+        final Long id,
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
+        final String name,
+        final String price,
+        final String brand,
+        final String imageUrl,
+        final int stock,
+        final Double alcohol,
+        final int volume
+    ) {
+        validateIsNotNullableCategory(brew, region, status);
+
+        this.id = id;
         this.brew = brew;
         this.region = region;
         this.status = status;
@@ -109,6 +135,12 @@ public class Liquor extends BaseEntity {
         this.stock = new LiquorStock(stock);
         this.alcohol = new LiquorAlcohol(alcohol);
         this.volume = new LiquorVolume(volume);
+    }
+
+    private void validateIsNotNullableCategory(final Object... objects) {
+        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
+            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
+        }
     }
 
     public void update(
@@ -127,6 +159,10 @@ public class Liquor extends BaseEntity {
         this.stock = new LiquorStock(request.getStock());
         this.alcohol = new LiquorAlcohol(request.getAlcohol());
         this.volume = new LiquorVolume(request.getVolume());
+    }
+
+    public boolean isStopped() {
+        return status.getType().equals(LiquorStatusType.STOPPED);
     }
 
     public String getName() {

@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,6 +28,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "cart_items")
 @NoArgsConstructor(access = PROTECTED)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class CartItem extends BaseEntity {
 
     @Id
@@ -70,5 +72,21 @@ public class CartItem extends BaseEntity {
         if (Objects.isNull(liquor)) {
             throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
         }
+    }
+
+    public boolean hasSameLiquorWith(final CartItem other) {
+        if (liquor == null || other.liquor == null) {
+            return false;
+        }
+
+        return liquor.equals(other.liquor);
+    }
+
+    public boolean hasDifferentMemberIdWith(final Long otherMemberId) {
+        return !memberId.equals(otherMemberId);
+    }
+
+    public boolean hasStoppedLiquor() {
+        return liquor.isStopped();
     }
 }
