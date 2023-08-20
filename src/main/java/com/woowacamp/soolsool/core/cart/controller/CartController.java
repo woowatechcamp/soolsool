@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.cart.controller;
 
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_ADD_SUCCESS;
+import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_DELETED;
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_LIST_FOUND;
 import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_MODIFY_QUANTITY_SUCCESS;
 
@@ -13,6 +14,7 @@ import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,5 +58,14 @@ public class CartController {
         final List<CartItemResponse> cartItemResponses = cartService.cartItemList(memberId);
 
         return ResponseEntity.ok(ApiResponse.of(CART_ITEM_LIST_FOUND, cartItemResponses));
+    }
+
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<ApiResponse<Void>> removeCartItem(@LoginUser final Long memberId,
+        @PathVariable final Long cartItemId
+    ) {
+        cartService.removeCartItem(memberId, cartItemId);
+        
+        return ResponseEntity.ok(ApiResponse.from(CART_ITEM_DELETED));
     }
 }

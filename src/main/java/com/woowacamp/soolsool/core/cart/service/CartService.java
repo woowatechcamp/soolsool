@@ -56,9 +56,7 @@ public class CartService {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
             .orElseThrow(() -> new SoolSoolException(NULL_LIQUOR));
 
-        if (!Objects.equals(cartItem.getMemberId(), memberId)) {
-            throw new SoolSoolException(NOT_EQUALS_MEMBER);
-        }
+        validateMemberId(memberId, cartItem);
         cartItem.updateQuantity(cartItemModifyRequest.getLiquorQuantity());
     }
 
@@ -66,9 +64,24 @@ public class CartService {
     public List<CartItemResponse> cartItemList(final Long memberId) {
         final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
         final List<CartItem> cartItems = cart.getCartItems();
-        
+
         return cartItems.stream()
             .map(CartItemResponse::from)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void removeCartItem(final Long memberId, final Long cartItemId) {
+        final CartItem cartItem = cartItemRepository.findById(cartItemId)
+            .orElseThrow(() -> new SoolSoolException(NULL_LIQUOR));
+        validateMemberId(memberId, cartItem);
+        
+        cartItemRepository.delete(cartItem);
+    }
+
+    private void validateMemberId(final Long memberId, final CartItem cartItem) {
+        if (!Objects.equals(cartItem.getMemberId(), memberId)) {
+            throw new SoolSoolException(NOT_EQUALS_MEMBER);
+        }
     }
 }
