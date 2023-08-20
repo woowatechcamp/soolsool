@@ -1,9 +1,9 @@
 package com.woowacamp.soolsool.core.cart.service;
 
 import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_EQUALS_MEMBER;
-import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NULL_LIQUOR;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_CART_ITEM;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_LIQUOR;
 
-import com.woowacamp.soolsool.core.cart.code.CartErrorCode;
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
@@ -30,7 +30,7 @@ public class CartService {
     @Transactional
     public Long saveCartItem(final Long memberId, final CartItemSaveRequest request) {
         final Liquor liquor = liquorRepository.findById(request.getLiquorId())
-            .orElseThrow(() -> new SoolSoolException(CartErrorCode.NOT_FOUND_LIQUOR));
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_LIQUOR));
 
         CartItem newCartItem = CartItem.builder()
             .memberId(memberId)
@@ -54,18 +54,18 @@ public class CartService {
         final Long cartItemId,
         final CartItemModifyRequest cartItemModifyRequest) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
-            .orElseThrow(() -> new SoolSoolException(NULL_LIQUOR));
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_CART_ITEM));
+
         validateMemberId(memberId, cartItem.getMemberId());
-        
+
         cartItem.updateQuantity(cartItemModifyRequest.getLiquorQuantity());
     }
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> cartItemList(final Long memberId) {
         final Cart cart = new Cart(memberId, findAllByMemberIdOrderByCreatedAtDesc(memberId));
-        final List<CartItem> cartItems = cart.getCartItems();
 
-        return cartItems.stream()
+        return cart.getCartItems().stream()
             .map(CartItemResponse::from)
             .collect(Collectors.toList());
     }
@@ -73,7 +73,8 @@ public class CartService {
     @Transactional
     public void removeCartItem(final Long memberId, final Long cartItemId) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
-            .orElseThrow(() -> new SoolSoolException(NULL_LIQUOR));
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_CART_ITEM));
+        
         validateMemberId(memberId, cartItem.getMemberId());
 
         cartItemRepository.delete(cartItem);

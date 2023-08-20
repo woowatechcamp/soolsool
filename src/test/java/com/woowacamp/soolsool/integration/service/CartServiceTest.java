@@ -1,7 +1,8 @@
 package com.woowacamp.soolsool.integration.service;
 
-
-import static com.woowacamp.soolsool.core.cart.domain.code.CartErrorCode.INVALID_QUANTITY_SIZE;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.INVALID_QUANTITY_SIZE;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_EQUALS_MEMBER;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_CART_ITEM;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -58,11 +59,12 @@ class CartServiceTest {
             "/url",
             100, 12.0,
             300);
-        final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         CartItemSaveRequest request = new CartItemSaveRequest(saveLiquorId, 1);
-        final Long cartItemId = cartService.saveCartItem(memberId, request);
-        final CartItemModifyRequest cartItemModifyRequest = new CartItemModifyRequest(quantity);
+        Long cartItemId = cartService.saveCartItem(memberId, request);
+        CartItemModifyRequest cartItemModifyRequest = new CartItemModifyRequest(quantity);
+
         // when & then
         assertThatCode(
             () -> cartService.modifyCartItemQuantity(
@@ -72,4 +74,46 @@ class CartServiceTest {
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(INVALID_QUANTITY_SIZE.getMessage());
     }
+
+    @Test
+    @DisplayName("다른 사용자가 삭제하려고 할 시, 예외를 던진다.")
+    void removeCartItemByNotEqualUser() {
+        // given
+        Long memberId = 1L;
+        Long anotherMemberId = 2L;
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
+            100, 12.0,
+            300);
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        CartItemSaveRequest request = new CartItemSaveRequest(saveLiquorId, 1);
+        Long cartItemId = cartService.saveCartItem(memberId, request);
+
+        // when & then
+        assertThatCode(() -> cartService.removeCartItem(anotherMemberId, cartItemId))
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage(NOT_EQUALS_MEMBER.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("장바구니에 없는 상품을 삭제할 시, 예외를 던진다.")
+    void removeNoExistCartItem() {
+        // given
+        Long memberId = 1L;
+        Long wrongCartItemId = 999L;
+
+        // when & then
+        assertThatCode(() -> cartService.removeCartItem(memberId, wrongCartItemId))
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage(NOT_FOUND_CART_ITEM.getMessage());
+    }
+
+
 }
