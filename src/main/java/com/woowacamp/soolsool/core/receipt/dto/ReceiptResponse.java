@@ -1,7 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.dto;
 
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
-import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -13,7 +12,7 @@ public class ReceiptResponse {
 
     private final Long id;
     private final Long memberId;
-    private final ReceiptStatus receiptStatus;
+    private final String receiptStatus;
     private final String originalTotalPrice;
     private final String mileageUsage;
     private final String purchasedTotalPrice;
@@ -26,7 +25,7 @@ public class ReceiptResponse {
             .stream()
             .map(ReceiptItemResponse::from)
             .collect(Collectors.toList());
-        
+
         return new ReceiptResponse(
             receipt.getId(),
             receipt.getMemberId(),

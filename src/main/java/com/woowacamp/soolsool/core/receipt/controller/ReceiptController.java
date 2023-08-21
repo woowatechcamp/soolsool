@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.receipt.controller;
 
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_ADD_SUCCESS;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_LIST_DELETED;
 
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
@@ -27,6 +28,7 @@ public class ReceiptController {
         @LoginUser final Long memberId
     ) {
         final Long receiptId = receiptService.addReceipt(memberId);
+
         return ResponseEntity.created(URI.create("/receipts/" + receiptId))
             .body(ApiResponse.from(RECEIPT_ADD_SUCCESS));
     }
@@ -37,6 +39,7 @@ public class ReceiptController {
         @PathVariable final Long receiptId
     ) {
         final ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
-        return ResponseEntity.ok(ApiResponse.of(RECEIPT_ADD_SUCCESS, receipt));
+
+        return ResponseEntity.ok(ApiResponse.of(RECEIPT_LIST_DELETED, receipt));
     }
 }

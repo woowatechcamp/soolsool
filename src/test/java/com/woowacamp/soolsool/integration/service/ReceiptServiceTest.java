@@ -2,12 +2,16 @@ package com.woowacamp.soolsool.integration.service;
 
 import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_CART_ITEM;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
+import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +48,7 @@ class ReceiptServiceTest {
             "/url",
             100, 12.0,
             300);
-        final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
             saveLiquorId,
             10
@@ -77,5 +81,76 @@ class ReceiptServiceTest {
         assertThatCode(() -> receiptService.addReceipt(memberId))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(MEMBER_NO_INFORMATION.getMessage());
+    }
+
+    @Test
+    @DisplayName("주문서를 올바르게 조회한다.")
+    void receiptDetails() {
+        Long memberId = 3L;
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
+            100, 12.0,
+            300);
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
+            saveLiquorId,
+            10
+        );
+        cartService.addCartItem(memberId, cartItemSaveRequest);
+        Long receiptId = receiptService.addReceipt(memberId);
+
+        // when
+        ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
+        // then
+        assertThat(receipt).extracting("id").isEqualTo(receiptId);
+    }
+
+    @Test
+    @DisplayName("멤버가 다르면, 주문서가 조회되지 않는다.")
+    void receiptDetailWithNoMemberId() {
+        // given
+        Long memberId = 3L;
+        Long anotherMemberId = 4L;
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU",
+            "GYEONGGI_DO",
+            "ON_SALE",
+            "새로",
+            "3000",
+            "브랜드",
+            "/url",
+            100, 12.0,
+            300);
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
+            saveLiquorId,
+            10
+        );
+        cartService.addCartItem(memberId, cartItemSaveRequest);
+        Long receiptId = receiptService.addReceipt(memberId);
+
+        // when & then
+        assertThatCode(() -> receiptService.findReceipt(anotherMemberId, receiptId))
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage(NOT_EQUALS_MEMBER.getMessage());
+    }
+
+    @Test
+    @DisplayName("주문서가 없으면 올바르게 조회되지 않는다.")
+    void receiptDetailWithNoItems() {
+        // given
+        Long memberId = 4L;
+        Long receiptId = 999L;
+
+        // when & then
+        assertThatCode(() -> receiptService.findReceipt(memberId, receiptId))
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage(NOT_RECEIPT_FOUND.getMessage());
     }
 }

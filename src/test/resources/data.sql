@@ -34,10 +34,4 @@ values (4L, '잠실역', 'test@email.com', '1000', '김배민', 'test_password',
 
 insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
 values (5L, '잠실역', 'hello@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 1L);
-insert into receipt_status (id, name)
-values (1L, 'CANCELED'),
-       (2L, 'COMPLETED'),
-       (3L, 'INPROGRESS'),
-       (4L, 'EXPIRED');
-
 

@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.receipt.service;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
+import static com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType.INPROGRESS;
 
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
@@ -11,6 +12,7 @@ import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItems;
+import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -45,6 +47,7 @@ public class ReceiptService {
 
         final Receipt receipt = Receipt.of(
             memberId,
+            new ReceiptStatus(INPROGRESS),
             receiptItems
         );
 
@@ -65,7 +68,7 @@ public class ReceiptService {
         if (!Objects.equals(receipt.getMemberId(), memberId)) {
             throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
-        
+
         return ReceiptResponse.from(receipt);
     }
 }

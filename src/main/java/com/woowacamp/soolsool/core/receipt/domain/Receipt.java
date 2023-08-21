@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -40,9 +41,8 @@ public class Receipt extends ReceiptBaseEntity {
     private Long memberId;
 
     @ColumnDefault("1")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receipt_status_id")
-    @Getter
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "receipt_status_id", nullable = false)
     private ReceiptStatus receiptStatus;
 
     @Column(name = "original_total_price")
@@ -65,9 +65,11 @@ public class Receipt extends ReceiptBaseEntity {
     @Getter
     private List<ReceiptItem> receiptItems = new ArrayList<>();
 
+    @Builder
     public Receipt(
         final Long id,
         final Long memberId,
+        final ReceiptStatus receiptStatus,
         final String originalTotalPrice,
         final String mileageUsage,
         final String purchasedTotalPrice,
@@ -76,6 +78,7 @@ public class Receipt extends ReceiptBaseEntity {
     ) {
         this.id = id;
         this.memberId = memberId;
+        this.receiptStatus = receiptStatus;
         this.originalTotalPrice = new ReceiptPrice(new BigInteger(originalTotalPrice));
         this.mileageUsage = new ReceiptPrice(new BigInteger(mileageUsage));
         this.purchasedTotalPrice = new ReceiptPrice(new BigInteger(purchasedTotalPrice));
@@ -85,10 +88,12 @@ public class Receipt extends ReceiptBaseEntity {
 
     public static Receipt of(
         final Long memberId,
+        final ReceiptStatus receiptStatus,
         final ReceiptItems receiptItems
     ) {
         return new Receipt(
             null, memberId,
+            receiptStatus,
             receiptItems.getTotalAmount().toString(),
             receiptItems.getMileageUsage().toString(),
             receiptItems.getPurchasedTotalPrice().toString(),
@@ -112,6 +117,10 @@ public class Receipt extends ReceiptBaseEntity {
 
     public BigInteger getPurchasedTotalPrice() {
         return purchasedTotalPrice.getPrice();
+    }
+
+    public String getReceiptStatus() {
+        return receiptStatus.getType().toString();
     }
 
     public int getTotalQuantity() {
