@@ -61,10 +61,10 @@ jobs:
 
       - name: Docker run
         run: |
-          docker pull ${{ env.DOCKER_IMAGE_NAME }} && \
+          docker pull ${{ env.DOCKER_IMAGE_NAME }} && \ 
           if docker ps -a | grep -q ${{ env.DOCKER_CONTAINER_NAME }} ; then \
             docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
-            docker rm ${{ env.DOCKER_CONTAINER_NAME }} && \
-            docker rmi $(docker image ls | awk '$1 == "${{ env.DOCKER_IMAGE_NAME }}" {print $3}') || true
+            docker rm ${{ env.DOCKER_CONTAINER_NAME }}
           fi && \
-          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_ENV_OPTION }} ${{ env.DOCKER_IMAGE_NAME }}
+          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_ENV_OPTION }} ${{ env.DOCKER_IMAGE_NAME }} && \
+          docker rmi $(docker image ls | awk '$1 == "${{ env.DOCKER_IMAGE_NAME }}" {print $3}')
