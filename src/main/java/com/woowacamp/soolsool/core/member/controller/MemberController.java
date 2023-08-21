@@ -40,7 +40,7 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<MemberFindResponse>> findMember(
+    public ResponseEntity<ApiResponse<MemberFindResponse>> findMemberDetails(
         @LoginUser final Long memberId
     ) {
         final MemberFindResponse memberFindResponse = memberService.findMember(memberId);

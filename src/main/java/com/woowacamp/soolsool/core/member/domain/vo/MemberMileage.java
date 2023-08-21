@@ -32,7 +32,7 @@ public class MemberMileage {
         }
     }
 
-    public MemberMileage charge(final BigInteger amount) {
-        return new MemberMileage(this.mileage.add(amount));
+    public MemberMileage charge(final MemberMileage amount) {
+        return new MemberMileage(this.mileage.add(amount.getMileage()));
     }
 }

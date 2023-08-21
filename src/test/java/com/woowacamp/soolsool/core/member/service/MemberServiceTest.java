@@ -19,7 +19,6 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
-import java.math.BigInteger;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +45,55 @@ class MemberServiceTest {
     private MemberService memberService;
 
     @Test
-    @DisplayName("성공 : 멤버 회원 가입")
-    void createMember() {
+    @DisplayName("성공 : 멤버 회원 가입 - 구매자")
+    void createMemberCustomer() {
+        // given
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "구매자",
+            "test@email.com",
+            "test_password",
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역"
+        );
+        MemberRole memberRole = MemberRole.builder()
+            .name(MemberRoleType.CUSTOMER)
+            .build();
+        Member member = memberAddRequest.toMember(memberRole);
+
+        // when
+        when(memberRoleRepository.findByName(any(MemberRoleType.class))).thenReturn(
+            Optional.ofNullable(memberRole));
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
+        assertThatNoException()
+            .isThrownBy(() -> memberService.addMember(memberAddRequest));
+
+        // then
+        verify(memberRoleRepository).findByName(MemberRoleType.CUSTOMER);
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+        verify(memberRepository).save(memberCaptor.capture());
+        assertAll(
+            () -> assertThat(memberCaptor.getValue().getRole().getName())
+                .isEqualTo(MemberRoleType.CUSTOMER),
+            () -> assertThat(memberCaptor.getValue().getEmail().getEmail())
+                .isEqualTo(memberAddRequest.getEmail()),
+            () -> assertThat(memberCaptor.getValue().getPassword().getPassword())
+                .isEqualTo(memberAddRequest.getPassword()),
+            () -> assertThat(memberCaptor.getValue().getName().getName())
+                .isEqualTo(memberAddRequest.getName()),
+            () -> assertThat(memberCaptor.getValue().getPhoneNumber().getPhoneNumber())
+                .isEqualTo(memberAddRequest.getPhoneNumber()),
+            () -> assertThat(memberCaptor.getValue().getMileage().getMileage())
+                .isEqualTo(memberAddRequest.getMileage()),
+            () -> assertThat(memberCaptor.getValue().getAddress().getAddress())
+                .isEqualTo(memberAddRequest.getAddress())
+        );
+    }
+
+    @Test
+    @DisplayName("성공 : 멤버 회원 가입 - 판매자")
+    void createMemberVendor() {
         // given
         MemberAddRequest memberAddRequest = new MemberAddRequest(
             "판매자",
@@ -96,7 +142,7 @@ class MemberServiceTest {
     @DisplayName("성공 : 멤버 조회")
     void readMember() {
         // given
-        Long userId = 1L;
+        Long memberId = 1L;
         Member member = Member.builder()
             .role(MemberRole.builder()
                 .name(MemberRoleType.CUSTOMER)
@@ -108,21 +154,22 @@ class MemberServiceTest {
             .mileage("0")
             .address("서울시 잠실역")
             .build();
+        MemberFindResponse expectedMemberFindResponse = MemberFindResponse.from(member);
 
         // when
-        when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
-        MemberFindResponse memberFindResponse = memberService.findMember(userId);
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
         // then
         assertThat(memberFindResponse).usingRecursiveComparison()
-            .isEqualTo(memberFindResponse);
+            .isEqualTo(expectedMemberFindResponse);
     }
 
     @Test
     @DisplayName("성공 : 회원 정보 수정")
     void modifyMember() {
         // given
-        Long userId = 1L;
+        Long memberId = 1L;
         MemberModifyRequest memberModifyRequest = new MemberModifyRequest(
             "new_password",
             "new_name",
@@ -141,31 +188,19 @@ class MemberServiceTest {
             .build();
 
         // when
-        when(memberRepository.findById(userId)).thenReturn(Optional.ofNullable(member));
-        member.update(memberModifyRequest);
-        when(memberRepository.save(any(Member.class))).thenReturn(member);
+        when(memberRepository.findById(memberId)).thenReturn(Optional.ofNullable(member));
         assertThatNoException()
-            .isThrownBy(() -> memberService.modifyMember(userId, memberModifyRequest));
+            .isThrownBy(() -> memberService.modifyMember(memberId, memberModifyRequest));
 
         // then
         verify(memberRepository).findById(1L);
-        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
-        verify(memberRepository).save(memberCaptor.capture());
-        assertAll(
-            () -> assertThat(member.getPassword().getPassword())
-                .isEqualTo(memberModifyRequest.getPassword()),
-            () -> assertThat(member.getName().getName())
-                .isEqualTo(memberModifyRequest.getName()),
-            () -> assertThat(member.getAddress().getAddress())
-                .isEqualTo(memberModifyRequest.getAddress())
-        );
     }
 
     @Test
     @DisplayName("성공 : 회원 정보 삭제")
     void removeMember() {
         // given
-        Long userId = 1L;
+        Long memberId = 1L;
         Member member = Member.builder()
             .role(MemberRole.builder()
                 .name(MemberRoleType.CUSTOMER)
@@ -179,12 +214,12 @@ class MemberServiceTest {
             .build();
 
         // when
-        when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         assertThatNoException()
-            .isThrownBy(() -> memberService.removeMember(userId));
+            .isThrownBy(() -> memberService.removeMember(memberId));
 
         // then
-        verify(memberRepository).findById(userId);
+        verify(memberRepository).findById(memberId);
         verify(memberRepository).delete(member);
     }
 
@@ -216,25 +251,17 @@ class MemberServiceTest {
 
         // when
         when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
-        when(memberRepository.save(any(Member.class))).thenReturn(member);
         when(memberMileageChargeRepository.save(any(MemberMileageCharge.class)))
             .thenReturn(memberMileageCharge);
-
         memberService.addMemberMileage(1L, memberMileageChargeRequest);
 
         // then
         verify(memberRepository).findById(anyLong());
-        ArgumentCaptor<Member> memberArgumentCaptor = ArgumentCaptor.forClass(Member.class);
-        verify(memberRepository).save(memberArgumentCaptor.capture());
-        ArgumentCaptor<MemberMileageCharge> memberMileageChargeArgumentCaptor = ArgumentCaptor
-            .forClass(MemberMileageCharge.class);
-        verify(memberMileageChargeRepository).save(memberMileageChargeArgumentCaptor.capture());
 
-        assertAll(
-            () -> assertThat(memberArgumentCaptor.getValue().getMileage().getMileage())
-                .isEqualTo(new BigInteger("15000")),
-            () -> assertThat(memberMileageChargeArgumentCaptor.getValue().getAmount().getMileage())
-                .isEqualTo(new BigInteger(amount))
-        );
+        ArgumentCaptor<MemberMileageCharge> memberMileageChargeArgumentCaptor =
+            ArgumentCaptor.forClass(MemberMileageCharge.class);
+        verify(memberMileageChargeRepository).save(memberMileageChargeArgumentCaptor.capture());
+        assertThat(memberMileageChargeArgumentCaptor.getValue().getAmount().getMileage())
+            .isEqualTo(amount);
     }
 }

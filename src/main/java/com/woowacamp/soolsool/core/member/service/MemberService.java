@@ -36,7 +36,7 @@ public class MemberService {
     public void addMember(final MemberAddRequest memberAddRequest) {
         checkDuplicatedEmail(memberAddRequest.getEmail());
 
-        final MemberRole memberRole = getMemberRole(memberAddRequest);
+        final MemberRole memberRole = getMemberRole(memberAddRequest.getMemberRoleType());
         final Member member = memberAddRequest.toMember(memberRole);
         memberRepository.save(member);
     }
@@ -50,9 +50,9 @@ public class MemberService {
         }
     }
 
-    private MemberRole getMemberRole(final MemberAddRequest memberAddRequest) {
+    private MemberRole getMemberRole(final String memberRequestRoleType) {
         final MemberRoleType memberRoleType = stream(MemberRoleType.values())
-            .filter(type -> Objects.equals(type.getType(), memberAddRequest.getMemberRoleType()))
+            .filter(type -> Objects.equals(type.getType(), memberRequestRoleType))
             .findFirst()
             .orElse(MemberRoleType.CUSTOMER);
 
@@ -74,7 +74,6 @@ public class MemberService {
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         member.update(memberModifyRequest);
-        memberRepository.save(member);
     }
 
     @Transactional
@@ -94,7 +93,6 @@ public class MemberService {
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         member.updateMileage(memberMileageChargeRequest.getAmount());
-        memberRepository.save(member);
 
         final MemberMileageCharge memberMileageCharge =
             memberMileageChargeRequest.toMemberMileageCharge(member);
