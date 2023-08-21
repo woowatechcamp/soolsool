@@ -3,7 +3,7 @@ name: Continuous deployment - development WAS
 on: [ push ]
 
 env:
-  DOCKER_IMAGE_NAME: ghcr.io/${{ github.actor }}/soolsool
+  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}l
   DOCKER_CONTAINER_NAME: soolsool-was
   DOCKER_USERNAME: woowatechcamp
   GITHUB_USERNAME: woowatechcamp
@@ -42,7 +42,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Docker run
