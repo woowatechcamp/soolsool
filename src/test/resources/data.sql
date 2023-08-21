@@ -38,3 +38,10 @@ values (1L, 'CANCELED'),
        (2L, 'COMPLETED'),
        (3L, 'INPROGRESS'),
        (4L, 'EXPIRED');
+
+insert into liquors (id, alcohol, brand, image_url, name, price, stock, volume, brew_id, region_id,
+                     status_id)
+values (3L, 10, '새로', '/sero.jpeg', '새로', 4500, 10, 250, 1L, 2L, 1L);
+insert into cart_items (id, member_id, liquor_id, quantity)
+values (3L, 3L, 3L, 1);
+

@@ -4,15 +4,9 @@ import com.woowacamp.soolsool.core.receipt.converter.ReceiptPriceConverter;
 import com.woowacamp.soolsool.core.receipt.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.vo.ReceiptPrice;
 import com.woowacamp.soolsool.core.receipt.vo.ReceiptQuantity;
-import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -26,14 +20,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "receipts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Receipt extends BaseEntity {
+public class Receipt extends ReceiptBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,10 +35,12 @@ public class Receipt extends BaseEntity {
     private Long id;
 
     @Column(name = "member_id")
+    @Getter
     private Long memberId;
 
+    @ColumnDefault("1")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receipt_status_id", nullable = false)
+    @JoinColumn(name = "receipt_status_id")
     @Getter
     private ReceiptStatus receiptStatus;
 
@@ -64,59 +60,44 @@ public class Receipt extends BaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity totalQuantity;
 
-    @Column(name = "expired_date")
-    private LocalDateTime expirationDate;
-
+    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
-    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL)
     private List<ReceiptItem> receiptItems = new ArrayList<>();
 
-    private void validateIsNotNullableCategory(final Object... objects) {
-        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
-        }
-    }
-
-    @Builder
-    public Receipt(final Long memberId,
-        final ReceiptStatus receiptStatus,
+    public static Receipt of(
+        final Long memberId,
         final String originalTotalPrice,
         final String mileageUsage,
         final String purchasedTotalPrice,
-        final int totalQuantity,
-        final LocalDateTime expirationDate,
-        final List<ReceiptItem> receiptItems
+        final int totalQuantity
     ) {
-        this(
-            null, memberId, receiptStatus, originalTotalPrice,
+        return new Receipt(
+            null, memberId,
+            originalTotalPrice,
             mileageUsage, purchasedTotalPrice,
-            totalQuantity, expirationDate, receiptItems
+            totalQuantity
         );
     }
-
 
     public Receipt(
         final Long id,
         final Long memberId,
-        final ReceiptStatus receiptStatus,
         final String originalTotalPrice,
         final String mileageUsage,
         final String purchasedTotalPrice,
-        final int totalQuantity,
-        final LocalDateTime expirationDate,
-        final List<ReceiptItem> receiptItems
+        final int totalQuantity
     ) {
-        validateIsNotNullableCategory(receiptStatus);
-
         this.id = id;
         this.memberId = memberId;
-        this.receiptStatus = receiptStatus;
         this.originalTotalPrice = new ReceiptPrice(new BigInteger(originalTotalPrice));
         this.mileageUsage = new ReceiptPrice(new BigInteger(mileageUsage));
         this.purchasedTotalPrice = new ReceiptPrice(new BigInteger(purchasedTotalPrice));
         this.totalQuantity = new ReceiptQuantity(totalQuantity);
-        this.expirationDate = expirationDate;
-        this.receiptItems = receiptItems;
+    }
+
+    public void addReceiptItems(final List<ReceiptItem> receiptItems) {
+        this.receiptItems.addAll(receiptItems);
+        receiptItems.forEach(receiptItem -> receiptItem.setReceipt(this));
     }
 
     public BigInteger getOriginalTotalPrice() {
@@ -134,5 +115,4 @@ public class Receipt extends BaseEntity {
     public int getTotalQuantity() {
         return totalQuantity.getQuantity();
     }
-
 }
