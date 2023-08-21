@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
+import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
@@ -179,5 +180,43 @@ class MemberAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("성공 : 마일리지 5000원 충전")
+    void chargeMileage() {
+        // given
+        MemberAddRequest memberAddRequest = new MemberAddRequest(
+            "CUSTOMER",
+            EMAIL,
+            PASSWORD,
+            "최배달",
+            "010-1234-5678",
+            "0",
+            "서울시 잠실역");
+        RestAssured.given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(memberAddRequest)
+            .post("/members")
+            .then();
+        String token = findToken(EMAIL, PASSWORD);
+        MemberMileageChargeRequest memberMileageChargeRequest = new MemberMileageChargeRequest(
+            "5000"
+        );
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .body(memberMileageChargeRequest)
+            .when()
+            .patch("members/mileage")
+            .then().log().all()
+            .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }
