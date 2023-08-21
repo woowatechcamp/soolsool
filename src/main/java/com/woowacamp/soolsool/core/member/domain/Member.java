@@ -86,7 +86,7 @@ public class Member extends BaseEntity {
         this.password = new MemberPassword(password);
         this.name = new MemberName(name);
         this.phoneNumber = new MemberPhoneNumber(phoneNumber);
-        this.mileage = MemberMileage.from(mileage);
+        this.mileage = new MemberMileage(new BigInteger(mileage));
         this.address = new MemberAddress(address);
     }
 
@@ -94,6 +94,10 @@ public class Member extends BaseEntity {
         this.password = new MemberPassword(memberModifyRequest.getPassword());
         this.name = new MemberName(memberModifyRequest.getName());
         this.address = new MemberAddress(memberModifyRequest.getAddress());
+    }
+
+    public void updateMileage(final String amount) {
+        this.mileage = this.mileage.charge(new MemberMileage(new BigInteger(amount)));
     }
 
     public boolean matchPassword(final String password) {
