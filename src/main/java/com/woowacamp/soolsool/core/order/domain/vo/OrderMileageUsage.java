@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.member.domain.vo;
+package com.woowacamp.soolsool.core.order.domain.vo;
 
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -9,11 +9,15 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class MemberMileage {
+public class OrderMileageUsage {
 
     private final BigInteger mileage;
 
-    public MemberMileage(final BigInteger mileage) {
+    public static OrderMileageUsage from(final String mileage) {
+        return new OrderMileageUsage(new BigInteger(mileage));
+    }
+
+    public OrderMileageUsage(final BigInteger mileage) {
         validateIsNotNull(mileage);
         validateIsValidSize(mileage);
 
@@ -30,9 +34,5 @@ public class MemberMileage {
         if (Objects.isNull(mileage)) {
             throw new SoolSoolException(MemberErrorCode.NO_CONTENT_MILEAGE);
         }
-    }
-
-    public MemberMileage charge(final MemberMileage amount) {
-        return new MemberMileage(this.mileage.add(amount.getMileage()));
     }
 }

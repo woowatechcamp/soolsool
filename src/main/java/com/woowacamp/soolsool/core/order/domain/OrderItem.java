@@ -2,23 +2,24 @@ package com.woowacamp.soolsool.core.order.domain;
 
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemAlcoholConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemBrandConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemBrewConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemImageUrlConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemNameConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemPriceConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemQuantityConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemRegionConverter;
-import com.woowacamp.soolsool.core.order.domain.converter.OrderItemTypeConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemVolumeConverter;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemAlcohol;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrew;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemImageUrl;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemName;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemQuantity;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemRegion;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderItemType;
 import com.woowacamp.soolsool.core.order.domain.vo.OrerItemVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -49,9 +50,9 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "liquor_category", nullable = false, length = 20)
-    @Convert(converter = OrderItemTypeConverter.class)
-    private OrderItemType liquorType;
+    @Column(name = "liquor_brew", nullable = false, length = 20)
+    @Convert(converter = OrderItemBrewConverter.class)
+    private OrderItemBrew liquorBrew;
 
     @Column(name = "liquor_region", nullable = false, length = 30)
     @Convert(converter = OrderItemRegionConverter.class)
@@ -92,27 +93,27 @@ public class OrderItem extends BaseEntity {
     @Builder
     public OrderItem(
         final Order order,
-        final OrderItemType liquorType,
-        final OrderItemRegion liquorRegion,
-        final OrderItemName name,
-        final OrderItemPrice originalPrice,
-        final OrderItemPrice purchasedPrice,
-        final OrderItemBrand brand,
-        final OrderItemImageUrl imageUrl,
-        final OrderItemAlcohol alcohol,
-        final OrerItemVolume volume,
-        final OrderItemQuantity quantity
+        final String liquorBrew,
+        final String liquorRegion,
+        final String name,
+        final String originalPrice,
+        final String purchasedPrice,
+        final String brand,
+        final String imageUrl,
+        final Double alcohol,
+        final Integer volume,
+        final Integer quantity
     ) {
         this.order = order;
-        this.liquorType = liquorType;
-        this.liquorRegion = liquorRegion;
-        this.name = name;
-        this.originalPrice = originalPrice;
-        this.purchasedPrice = purchasedPrice;
-        this.brand = brand;
-        this.imageUrl = imageUrl;
-        this.alcohol = alcohol;
-        this.volume = volume;
-        this.quantity = quantity;
+        this.liquorBrew = new OrderItemBrew(liquorBrew);
+        this.liquorRegion = new OrderItemRegion(liquorRegion);
+        this.name = new OrderItemName(name);
+        this.originalPrice = new OrderItemPrice(new BigInteger(originalPrice));
+        this.purchasedPrice = new OrderItemPrice(new BigInteger(purchasedPrice));
+        this.brand = new OrderItemBrand(brand);
+        this.imageUrl = new OrderItemImageUrl(imageUrl);
+        this.alcohol = new OrderItemAlcohol(alcohol);
+        this.volume = new OrerItemVolume(volume);
+        this.quantity = new OrderItemQuantity(quantity);
     }
 }

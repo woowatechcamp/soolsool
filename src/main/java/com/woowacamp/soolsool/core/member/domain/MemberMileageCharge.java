@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.member.domain;
 import com.woowacamp.soolsool.core.member.domain.converter.MemberMileageConverter;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -33,13 +34,13 @@ public class MemberMileageCharge extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "amount", nullable = false, length = 255)
+    @Column(name = "amount", nullable = false)
     @Convert(converter = MemberMileageConverter.class)
     private MemberMileage amount;
 
     @Builder
     public MemberMileageCharge(final Member member, final String amount) {
         this.member = member;
-        this.amount = MemberMileage.from(amount);
+        this.amount = new MemberMileage(new BigInteger(amount));
     }
 }
