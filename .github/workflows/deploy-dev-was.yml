@@ -74,7 +74,7 @@ jobs:
             docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
             docker rm ${{ env.DOCKER_CONTAINER_NAME }} ; \
           fi && \
-          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} --env-file=soolsool.env ${{ env.DOCKER_IMAGE_NAME }}
+          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} --env-file=~/soolsool-docker.env ${{ env.DOCKER_IMAGE_NAME }}
 
 
 #          docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
