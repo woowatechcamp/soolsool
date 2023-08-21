@@ -26,9 +26,10 @@ jobs:
           arguments: bootJar
 
       - name: build docker image
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v4
         with:
           registry: ghcr.io
+          platforms: linux/amd64, linux/arm64
           username: $ {{ env.GITHUB_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
           repository: ${{ env.GITHUB_USERNAME }}/${{ env.GITHUB_REPOSITORY }}
