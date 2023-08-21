@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
+import com.woowacamp.soolsool.core.receipt.vo.ReceiptStatusType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,5 +26,9 @@ public class ReceiptStatus {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 20)
-    private LiquorStatusType type;
+    private ReceiptStatusType type;
+
+    public ReceiptStatus(final ReceiptStatusType type) {
+        this.type = type;
+    }
 }

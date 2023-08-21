@@ -31,3 +31,10 @@ values (3L, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa',
 
 insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
 values (4L, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2L);
+
+
+insert into receipt_status (id, name)
+values (1L, 'CANCELED'),
+       (2L, 'COMPLETED'),
+       (3L, 'INPROGRESS'),
+       (4L, 'EXPIRED');

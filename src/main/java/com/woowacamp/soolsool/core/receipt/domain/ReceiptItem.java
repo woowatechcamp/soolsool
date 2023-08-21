@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "receipt_items")
-@Getter
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReceiptItem extends BaseEntity {
 
@@ -31,10 +31,12 @@ public class ReceiptItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id", nullable = false)
+    @Getter
     private Receipt receipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquor_id", nullable = false)
+    @Getter
     private Liquor liquor;
 
     @Column(name = "quantity", nullable = false)
@@ -42,8 +44,28 @@ public class ReceiptItem extends BaseEntity {
     private ReceiptQuantity quantity;
 
     @Builder
-    public ReceiptItem(final Liquor liquor, final ReceiptQuantity quantity) {
+    public ReceiptItem(final Receipt receipt, final Liquor liquor, final ReceiptQuantity quantity) {
+        this.receipt = receipt;
         this.liquor = liquor;
         this.quantity = quantity;
+    }
+
+    public static ReceiptItem of(
+        final Liquor liquor,
+        final int quantity
+    ) {
+        return new ReceiptItem(
+            null,
+            liquor,
+            new ReceiptQuantity(quantity)
+        );
+    }
+
+    public void setReceipt(final Receipt receipt) {
+        this.receipt = receipt;
+    }
+
+    public int getQuantity() {
+        return quantity.getQuantity();
     }
 }
