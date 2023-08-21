@@ -7,6 +7,7 @@ import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.service.MemberService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
+import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @NoAuth
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addMember(
         @RequestBody @Valid final MemberAddRequest memberAddRequest
@@ -39,9 +41,9 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMember(
-        @LoginUser final Long userId
+        @LoginUser final Long memberId
     ) {
-        final MemberFindResponse memberFindResponse = memberService.findMember(userId);
+        final MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, memberFindResponse));
@@ -49,10 +51,10 @@ public class MemberController {
 
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> modifyMember(
-        @RequestBody @Valid final MemberModifyRequest memberModifyRequest,
-        @LoginUser final Long userId
+        @LoginUser final Long memberId,
+        @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
-        memberService.modifyMember(userId, memberModifyRequest);
+        memberService.modifyMember(memberId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.from(MemberResultCode.MEMBER_MODIFY_SUCCESS));
@@ -60,9 +62,9 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeMember(
-        @LoginUser final Long userId
+        @LoginUser final Long memberId
     ) {
-        memberService.removeMember(userId);
+        memberService.removeMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(ApiResponse.from(MemberResultCode.MEMBER_DELETE_SUCCESS));
@@ -70,9 +72,9 @@ public class MemberController {
 
     @PatchMapping("/mileage")
     public ResponseEntity<ApiResponse<Void>> addMemberMileage(
+        @LoginUser final Long memberId,
         @RequestBody @Valid MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        final Long memberId = 1L;
         memberService.addMemberMileage(memberId, memberMileageChargeRequest);
 
         return ResponseEntity.status(HttpStatus.OK)

@@ -61,16 +61,16 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberFindResponse findMember(final Long userId) {
-        final Member member = memberRepository.findById(userId)
+    public MemberFindResponse findMember(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         return MemberFindResponse.from(member);
     }
 
     @Transactional
-    public void modifyMember(final Long userId, final MemberModifyRequest memberModifyRequest) {
-        final Member member = memberRepository.findById(userId)
+    public void modifyMember(final Long memberId, final MemberModifyRequest memberModifyRequest) {
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         member.update(memberModifyRequest);
@@ -78,8 +78,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void removeMember(final Long userId) {
-        final Member member = memberRepository.findById(userId)
+    public void removeMember(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         memberRepository.delete(member);
@@ -87,10 +87,10 @@ public class MemberService {
 
     @Transactional
     public void addMemberMileage(
-        final Long userId,
+        final Long memberId,
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        final Member member = memberRepository.findById(userId)
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         member.updateMileage(memberMileageChargeRequest.getAmount());
