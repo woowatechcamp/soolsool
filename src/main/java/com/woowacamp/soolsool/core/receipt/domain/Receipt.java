@@ -41,6 +41,7 @@ public class Receipt extends ReceiptBaseEntity {
     @Getter
     private Long memberId;
 
+    // TODO : RECEIPTSTATUS 가 이상합니다. cascasdeType =ALl을 설정 안하면 에러가 남. null 값으로.
     @ColumnDefault("1")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "receipt_status_id", nullable = false)

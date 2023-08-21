@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.receipt.controller;
 
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_ADD_SUCCESS;
-import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_LIST_DELETED;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_FOUND;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_MODIFY_STATUS_SUCCESS;
 
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptModifyRequest;
@@ -44,15 +44,17 @@ public class ReceiptController {
     ) {
         final ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
 
-        return ResponseEntity.ok(ApiResponse.of(RECEIPT_LIST_DELETED, receipt));
+        return ResponseEntity.ok(ApiResponse.of(RECEIPT_FOUND, receipt));
     }
 
     @PatchMapping("/{receiptId}")
-    public ResponseEntity<ApiResponse<Void>> modifyReceiptStatus(@LoginUser final Long memberId,
+    public ResponseEntity<ApiResponse<Void>> modifyReceiptStatus(
+        @LoginUser final Long memberId,
         @PathVariable final Long receiptId,
         @RequestBody final ReceiptModifyRequest receiptModifyRequest
     ) {
         receiptService.modifyReceiptStatus(memberId, receiptId, receiptModifyRequest);
+
         return ResponseEntity.ok(ApiResponse.from(RECEIPT_MODIFY_STATUS_SUCCESS));
     }
 }

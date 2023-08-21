@@ -75,7 +75,9 @@ public class ReceiptService {
     }
 
     @Transactional
-    public void modifyReceiptStatus(final Long memberId, final Long receiptId,
+    public void modifyReceiptStatus(
+        final Long memberId,
+        final Long receiptId,
         final ReceiptModifyRequest requestModifyRequest
     ) {
         final Receipt receipt = receiptRepository.findById(receiptId)
@@ -84,6 +86,7 @@ public class ReceiptService {
         if (!Objects.equals(receipt.getMemberId(), memberId)) {
             throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
+
         receipt.updateStatus(requestModifyRequest.getReceiptStatusType());
     }
 }

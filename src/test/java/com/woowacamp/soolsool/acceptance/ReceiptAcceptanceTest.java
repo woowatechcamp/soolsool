@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.acceptance;
 
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -10,9 +11,12 @@ import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptModifyRequest;
+import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
+import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -127,8 +131,13 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             .when().get("/receipts/{receiptId}", receiptId)
             .then().log().all()
             .extract();
+        // then
         assertThat(detailReceiptResponse.statusCode()).isEqualTo(OK.value());
 
+        assertThat(detailReceiptResponse.body().as(new TypeRef<ApiResponse<ReceiptResponse>>() {
+            })
+            .getMessage())
+            .isEqualTo(RECEIPT_FOUND.getMessage());
     }
 
     @Test
@@ -143,6 +152,7 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             "안동소주", "12000", "안동", "/soju.jpeg",
             120, 31.3, 300
         );
+        
         String location = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
@@ -188,8 +198,9 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             .when().patch("/receipts/{receiptId}", receiptId)
             .then().log().all()
             .extract();
-        assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
 
+        // then
+        assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
     }
 
     private String getCustomerAccessToken() {

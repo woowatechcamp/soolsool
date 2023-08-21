@@ -22,6 +22,7 @@ public class ReceiptItems {
         if (receiptItems.isEmpty()) {
             throw new SoolSoolException(NOT_FOUND_CART_ITEM);
         }
+
         this.items = receiptItems;
         this.totalAmount = findTotalAmount();
         this.mileageUsage = findUsedMileage(memberMileage);
