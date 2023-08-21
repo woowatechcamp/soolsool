@@ -13,10 +13,6 @@ public class MemberMileage {
 
     private final BigInteger mileage;
 
-    public static MemberMileage from(final String mileage) {
-        return new MemberMileage(new BigInteger(mileage));
-    }
-
     public MemberMileage(final BigInteger mileage) {
         validateIsNotNull(mileage);
         validateIsValidSize(mileage);
@@ -34,5 +30,9 @@ public class MemberMileage {
         if (Objects.isNull(mileage)) {
             throw new SoolSoolException(MemberErrorCode.NO_CONTENT_MILEAGE);
         }
+    }
+
+    public MemberMileage charge(final MemberMileage amount) {
+        return new MemberMileage(this.mileage.add(amount.getMileage()));
     }
 }

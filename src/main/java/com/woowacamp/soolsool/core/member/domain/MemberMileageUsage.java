@@ -4,6 +4,7 @@ import com.woowacamp.soolsool.core.member.domain.converter.MemberMileageConverte
 import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -39,7 +40,7 @@ public class MemberMileageUsage extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     @Convert(converter = MemberMileageConverter.class)
     private MemberMileage amount;
 
@@ -51,6 +52,6 @@ public class MemberMileageUsage extends BaseEntity {
     ) {
         this.member = member;
         this.order = order;
-        this.amount = MemberMileage.from(amount);
+        this.amount = new MemberMileage(new BigInteger(amount));
     }
 }
