@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.order.domain.converter;
 
-import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand.OrderMileageUsage;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderMileageUsage;
 import java.math.BigInteger;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

@@ -3,10 +3,11 @@ package com.woowacamp.soolsool.core.order.domain;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderMileageUsageConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderPriceConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderQuantityConverter;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand.OrderMileageUsage;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderMileageUsage;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -60,16 +61,16 @@ public class Order extends BaseEntity {
     public Order(
         final Long memberId,
         final OrderStatus status,
-        final OrderPrice originalTotalPrice,
-        final OrderMileageUsage mileageUsage,
-        final OrderPrice purchasedTotalPrice,
-        final OrderQuantity totalQuantity
+        final String originalTotalPrice,
+        final String mileageUsage,
+        final String purchasedTotalPrice,
+        final Integer totalQuantity
     ) {
         this.memberId = memberId;
         this.status = status;
-        this.originalTotalPrice = originalTotalPrice;
-        this.mileageUsage = mileageUsage;
-        this.purchasedTotalPrice = purchasedTotalPrice;
-        this.totalQuantity = totalQuantity;
+        this.originalTotalPrice = new OrderPrice(new BigInteger(originalTotalPrice));
+        this.mileageUsage = new OrderMileageUsage(new BigInteger(mileageUsage));
+        this.purchasedTotalPrice = new OrderPrice(new BigInteger(purchasedTotalPrice));
+        this.totalQuantity = new OrderQuantity(totalQuantity);
     }
 }

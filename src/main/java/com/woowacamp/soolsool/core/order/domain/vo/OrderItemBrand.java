@@ -1,48 +1,36 @@
 package com.woowacamp.soolsool.core.order.domain.vo;
 
 
-import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
+import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import java.math.BigInteger;
-import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Getter
 @EqualsAndHashCode
-@RequiredArgsConstructor
 public class OrderItemBrand {
+
+    private static final int MAX_LENGTH = 20;
 
     private final String brand;
 
-    @Getter
-    @EqualsAndHashCode
-    public static class OrderMileageUsage {
+    public OrderItemBrand(final String brand) {
+        validateIsNotNullOrEmpty(brand);
+        validateIsValidLength(brand);
 
-        private final BigInteger mileage;
+        this.brand = brand;
+    }
 
-        public static OrderMileageUsage from(final String mileage) {
-            return new OrderMileageUsage(new BigInteger(mileage));
+    private void validateIsValidLength(final String brand) {
+        if (brand.length() > MAX_LENGTH) {
+            throw new SoolSoolException(OrderErrorCode.INVALID_LENGTH_BRAND);
         }
+    }
 
-        public OrderMileageUsage(final BigInteger mileage) {
-            validateIsNotNull(mileage);
-            validateIsValidSize(mileage);
-
-            this.mileage = mileage;
-        }
-
-        private void validateIsValidSize(final BigInteger mileage) {
-            if (mileage.compareTo(BigInteger.ZERO) < 0) {
-                throw new SoolSoolException(MemberErrorCode.INVALID_SIZE_MILEAGE);
-            }
-        }
-
-        private void validateIsNotNull(final BigInteger mileage) {
-            if (Objects.isNull(mileage)) {
-                throw new SoolSoolException(MemberErrorCode.NO_CONTENT_MILEAGE);
-            }
+    private void validateIsNotNullOrEmpty(final String brand) {
+        if (!StringUtils.hasText(brand)) {
+            throw new SoolSoolException(OrderErrorCode.NO_CONTENT_BRAND);
         }
     }
 }
