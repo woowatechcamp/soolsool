@@ -44,7 +44,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: $ {{ env.DOCKER_IMAGE_NAME }}
+          tags: ${{ env.DOCKER_IMAGE_NAME }}
 
   #      - name: Build docker image
   #        uses: docker/build-push-action@v4
