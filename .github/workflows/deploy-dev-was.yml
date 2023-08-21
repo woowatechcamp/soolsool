@@ -3,7 +3,7 @@ name: Continuous deployment - development WAS
 on: [ push ]
 
 env:
-  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}
+  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}:latest
   DOCKER_CONTAINER_NAME: soolsool-was
   DOCKER_USERNAME: woowatechcamp
   GITHUB_USERNAME: woowatechcamp
@@ -44,7 +44,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: $ {{ env.DOCKER_IMAGE_NAME }}
 
   #      - name: Build docker image
   #        uses: docker/build-push-action@v4
@@ -69,7 +69,14 @@ jobs:
 
       - name: Docker run
         run: |
-          docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
-          docker rm ${{ env.DOCKER_CONTAINER_NAME }} && \ 
-          docker rmi ${{ env.DOCKER_IMAGE_NAME }}:latest && \
-          docker run -d -p 8080:8080 --name ${{ env.DOCKER_CONTAINER_NAME }} --restart always ${{ env.DOCKER_IMAGE_NAME }}:latest
+          docker pull ${{ env.DOCKER_IMAGE_NAME }} && \
+          if docker ps -a | grep -q ${{ env.DOCKER_CONTAINER_NAME }}; then \ 
+            docker stop ${{ env.DOCKER_CONTAINER_NAME }}
+            docker rm ${{ env.DOCKER_CONTAINER_NAME }}
+          fi \ 
+          docker run -d -p 8080:8080 --restart=always --name ${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_IMAGE_NAME }}
+
+#          docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
+#          docker rm ${{ env.DOCKER_CONTAINER_NAME }} && \
+#          docker rmi ${{ env.DOCKER_IMAGE_NAME }}:latest && \
+#          docker run -d -p 8080:8080 --name ${{ env.DOCKER_CONTAINER_NAME }} --restart always ${{ env.DOCKER_IMAGE_NAME }}:latest
