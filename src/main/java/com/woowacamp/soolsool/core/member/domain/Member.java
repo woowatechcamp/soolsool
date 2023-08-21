@@ -14,6 +14,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -62,6 +63,7 @@ public class Member extends BaseEntity {
 
     @Column(name = "mileage", nullable = false, length = 255)
     @Convert(converter = MemberMileageConverter.class)
+    @Getter
     private MemberMileage mileage;
 
     @Column(name = "address", nullable = false, length = 100)
@@ -96,5 +98,9 @@ public class Member extends BaseEntity {
 
     public boolean matchPassword(final String password) {
         return this.password.matchPassword(password);
+    }
+
+    public BigInteger getMileage() {
+        return mileage.getMileage();
     }
 }

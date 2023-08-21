@@ -33,7 +33,7 @@ public class MemberFindResponse {
             .roleName(member.getRole().getName().getType())
             .email(member.getEmail().getEmail())
             .name(member.getName().getName())
-            .mileage(member.getMileage().getMileage().toString())
+            .mileage(member.getMileage().toString())
             .address(member.getAddress().getAddress())
             .build();
     }

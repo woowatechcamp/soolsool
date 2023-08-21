@@ -76,7 +76,7 @@ class MemberServiceTest {
                 .isEqualTo(memberAddRequest.getName()),
             () -> assertThat(memberCaptor.getValue().getPhoneNumber().getPhoneNumber())
                 .isEqualTo(memberAddRequest.getPhoneNumber()),
-            () -> assertThat(memberCaptor.getValue().getMileage().getMileage())
+            () -> assertThat(memberCaptor.getValue().getMileage())
                 .isEqualTo(memberAddRequest.getMileage()),
             () -> assertThat(memberCaptor.getValue().getAddress().getAddress())
                 .isEqualTo(memberAddRequest.getAddress())

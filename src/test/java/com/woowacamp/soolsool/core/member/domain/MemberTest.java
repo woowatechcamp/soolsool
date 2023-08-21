@@ -39,7 +39,7 @@ class MemberTest {
             () -> assertThat(member.getPassword().getPassword()).isEqualTo(password),
             () -> assertThat(member.getName().getName()).isEqualTo(name),
             () -> assertThat(member.getPhoneNumber().getPhoneNumber()).isEqualTo(phoneNumber),
-            () -> assertThat(member.getMileage().getMileage()).isEqualTo(mileage),
+            () -> assertThat(member.getMileage()).isEqualTo(mileage),
             () -> assertThat(member.getAddress().getAddress()).isEqualTo(address),
             () -> assertThat(member.getRole()).isEqualTo(role)
         );
