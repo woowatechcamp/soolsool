@@ -47,7 +47,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ DOCKER_IMAGE_TAG }}
+          tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}
 
   deploy:
     needs: build
@@ -62,10 +62,10 @@ jobs:
 
       - name: Docker run
         run: |
-          docker pull ${{ env.DOCKER_IMAGE_NAME }}:${{ DOCKER_IMAGE_TAG }} && \ 
+          docker pull ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} && \ 
           if docker ps -a | grep -q ${{ env.DOCKER_CONTAINER_NAME }} ; then \
             docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
             docker rm ${{ env.DOCKER_CONTAINER_NAME }}
           fi && \
-          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_ENV_OPTION }} ${{ env.DOCKER_IMAGE_NAME }}:${{ DOCKER_IMAGE_TAG }} && \
+          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_ENV_OPTION }} ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} && \
           docker rmi $(docker image ls | awk '$1 == "${{ env.DOCKER_IMAGE_NAME }}" {print $3}')
