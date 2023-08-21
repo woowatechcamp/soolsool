@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public enum ReceiptResultCode implements ResultCode {
 
     RECEIPT_ADD_SUCCESS(CREATED.value(), "R101", "주문서 등록이 완료되었습니다."),
-    RECEIPT_MODIFY_QUANTITY_SUCCESS(OK.value(), "R102", "주문서 수량 변경이 완료되었습니다."),
+    RECEIPT_MODIFY_STATUS_SUCCESS(OK.value(), "R102", "주문서 상태 변경이 완료되었습니다."),
     RECEIPT_LIST_FOUND(OK.value(), "R103", "주문서 목록이 정상적으로 검색되었습니다."),
     RECEIPT_DELETED(NO_CONTENT.value(), "R104", "주문서가 정상적으로 삭제되었습니다."),
     RECEIPT_LIST_DELETED(NO_CONTENT.value(), "R105", "주문서가 정상적으로 삭제되었습니다."),

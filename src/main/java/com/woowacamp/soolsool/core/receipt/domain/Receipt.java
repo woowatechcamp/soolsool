@@ -4,6 +4,7 @@ import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptPriceConverte
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,5 +126,9 @@ public class Receipt extends ReceiptBaseEntity {
 
     public int getTotalQuantity() {
         return totalQuantity.getQuantity();
+    }
+
+    public void updateStatus(final String receiptStatusType) {
+        this.receiptStatus = new ReceiptStatus(ReceiptStatusType.valueOf(receiptStatusType));
     }
 }

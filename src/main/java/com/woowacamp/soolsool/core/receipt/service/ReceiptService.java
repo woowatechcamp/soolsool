@@ -13,6 +13,7 @@ import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItems;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
+import com.woowacamp.soolsool.core.receipt.dto.ReceiptModifyRequest;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -61,6 +62,7 @@ public class ReceiptService {
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ReceiptResponse findReceipt(final Long memberId, final Long receiptId) {
         final Receipt receipt = receiptRepository.findById(receiptId)
             .orElseThrow(() -> new SoolSoolException(NOT_RECEIPT_FOUND));
@@ -70,5 +72,18 @@ public class ReceiptService {
         }
 
         return ReceiptResponse.from(receipt);
+    }
+
+    @Transactional
+    public void modifyReceiptStatus(final Long memberId, final Long receiptId,
+        final ReceiptModifyRequest requestModifyRequest
+    ) {
+        final Receipt receipt = receiptRepository.findById(receiptId)
+            .orElseThrow(() -> new SoolSoolException(NOT_RECEIPT_FOUND));
+
+        if (!Objects.equals(receipt.getMemberId(), memberId)) {
+            throw new SoolSoolException(NOT_EQUALS_MEMBER);
+        }
+        receipt.updateStatus(requestModifyRequest.getReceiptStatusType());
     }
 }
