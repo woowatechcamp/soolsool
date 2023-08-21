@@ -68,4 +68,4 @@ jobs:
             docker rm ${{ env.DOCKER_CONTAINER_NAME }} ;
           fi && \
           docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_ENV_OPTION }} ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }} && \
-          docker rmi $(docker image ls | awk '$1 == "${{ env.DOCKER_IMAGE_NAME }}" {print $3}')
+          docker rmi $(docker image ls | awk '$1 == "${{ env.DOCKER_IMAGE_NAME }}" {print $3}') || true
