@@ -78,15 +78,4 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.from(MemberResultCode.MEMBER_MILEAGE_CHARGE_SUCCESS));
     }
-
-    @PatchMapping("/mileage")
-    public ResponseEntity<ApiResponse<Void>> addMemberMileage(
-        @RequestBody @Valid MemberMileageChargeRequest memberMileageChargeRequest
-    ) {
-        final Long memberId = 1L;
-        memberService.addMemberMileage(memberId, memberMileageChargeRequest);
-
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_MILEAGE_CHARGE_SUCCESS, null));
-    }
 }
