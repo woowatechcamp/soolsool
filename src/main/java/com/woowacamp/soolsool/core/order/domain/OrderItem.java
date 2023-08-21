@@ -7,7 +7,7 @@ import com.woowacamp.soolsool.core.order.domain.converter.OrderItemNameConverter
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemPriceConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemQuantityConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemRegionConverter;
-import com.woowacamp.soolsool.core.order.domain.converter.OrderItemTypeConverter;
+import com.woowacamp.soolsool.core.order.domain.converter.OrderItemBrewConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderItemVolumeConverter;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemAlcohol;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand;
@@ -16,7 +16,7 @@ import com.woowacamp.soolsool.core.order.domain.vo.OrderItemName;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemQuantity;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderItemRegion;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderItemType;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrew;
 import com.woowacamp.soolsool.core.order.domain.vo.OrerItemVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
@@ -49,9 +49,9 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "liquor_category", nullable = false, length = 20)
-    @Convert(converter = OrderItemTypeConverter.class)
-    private OrderItemType liquorType;
+    @Column(name = "liquor_brew", nullable = false, length = 20)
+    @Convert(converter = OrderItemBrewConverter.class)
+    private OrderItemBrew liquorBrew;
 
     @Column(name = "liquor_region", nullable = false, length = 30)
     @Convert(converter = OrderItemRegionConverter.class)
@@ -92,7 +92,7 @@ public class OrderItem extends BaseEntity {
     @Builder
     public OrderItem(
         final Order order,
-        final OrderItemType liquorType,
+        final OrderItemBrew liquorBrew,
         final OrderItemRegion liquorRegion,
         final OrderItemName name,
         final OrderItemPrice originalPrice,
@@ -104,7 +104,7 @@ public class OrderItem extends BaseEntity {
         final OrderItemQuantity quantity
     ) {
         this.order = order;
-        this.liquorType = liquorType;
+        this.liquorBrew = liquorBrew;
         this.liquorRegion = liquorRegion;
         this.name = name;
         this.originalPrice = originalPrice;

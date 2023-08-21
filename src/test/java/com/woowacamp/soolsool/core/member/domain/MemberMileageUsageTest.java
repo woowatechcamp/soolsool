@@ -5,9 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.order.domain.Order;
+import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderStatus;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class MemberMileageUsageTest {
 
         Order order = Order.builder()
             .memberId(1L)
-            .status(OrderStatus.ORDERED)
+            .status(new OrderStatus(OrderStatusType.COMPLETED))
             .totalPrice(new OrderPrice(BigInteger.valueOf(1000L)))
             .totalQuantity(new OrderQuantity(10))
             .build();

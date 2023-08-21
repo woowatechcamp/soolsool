@@ -4,16 +4,16 @@ import com.woowacamp.soolsool.core.order.domain.converter.OrderPriceConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderQuantityConverter;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderStatus;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,8 +34,8 @@ public class Order extends BaseEntity {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 20)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_status_id", nullable = false)
     private OrderStatus status;
 
     @Column(name = "total_price", nullable = false)
