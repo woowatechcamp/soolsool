@@ -27,8 +27,4 @@ public class ReceiptStatus {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 20)
     private ReceiptStatusType type;
-
-    public ReceiptStatus(final ReceiptStatusType type) {
-        this.type = type;
-    }
 }

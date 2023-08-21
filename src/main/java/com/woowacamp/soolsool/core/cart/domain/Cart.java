@@ -7,7 +7,6 @@ import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NULL_LIQUOR;
 import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.STOPPED_LIQUOR;
 
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -72,16 +71,6 @@ public class Cart {
     public List<CartItem> getCartItems() {
         return cartItems.stream()
             .collect(Collectors.toUnmodifiableList());
-    }
-
-    public BigInteger getTotalAmount() {
-        return cartItems.stream()
-            .map(CartItem::getTotalAmount)
-            .reduce(BigInteger.ZERO, BigInteger::add);
-    }
-
-    public int cartItemSize() {
-        return cartItems.size();
     }
 
 }

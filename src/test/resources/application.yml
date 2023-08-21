@@ -14,3 +14,10 @@ security:
     token:
       secret-key: ${SOOLSOOL_JWT_SECRET}
       expire-length: 3600000
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
