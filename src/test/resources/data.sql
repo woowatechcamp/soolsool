@@ -32,16 +32,12 @@ values (3L, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa',
 insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
 values (4L, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2L);
 
-
+insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
+values (5L, '잠실역', 'hello@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 1L);
 insert into receipt_status (id, name)
 values (1L, 'CANCELED'),
        (2L, 'COMPLETED'),
        (3L, 'INPROGRESS'),
        (4L, 'EXPIRED');
 
-insert into liquors (id, alcohol, brand, image_url, name, price, stock, volume, brew_id, region_id,
-                     status_id)
-values (3L, 10, '새로', '/sero.jpeg', '새로', 4500, 10, 250, 1L, 2L, 1L);
-insert into cart_items (id, member_id, liquor_id, quantity)
-values (3L, 3L, 3L, 1);
 

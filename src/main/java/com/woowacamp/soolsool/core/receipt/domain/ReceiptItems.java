@@ -37,7 +37,7 @@ public class ReceiptItems {
         return totalAmount;
     }
 
-    private BigInteger findUsedMileage(BigInteger memberMileage) {
+    private BigInteger findUsedMileage(final BigInteger memberMileage) {
         final BigInteger canUsedMileage = totalAmount.divide(BigInteger.valueOf(MILEAGE_PERCENT));
         return canUsedMileage.min(memberMileage);
     }
