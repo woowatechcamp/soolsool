@@ -49,5 +49,5 @@ jobs:
         run: |
           docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
           docker rm ${{ env.DOCKER_CONTAINER_NAME }} && \ 
-          docker rmi ${{ env.DOCKER_IMAGE_NAME }}:latest \
+          docker rmi ${{ env.DOCKER_IMAGE_NAME }}:latest && \
           docker run -d -p 8080:8080 --name ${{ env.DOCKER_CONTAINER_NAME }} --restart always ${{ env.DOCKER_IMAGE_NAME }}:latest
