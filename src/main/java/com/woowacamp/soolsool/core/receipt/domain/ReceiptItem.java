@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.receipt;
+package com.woowacamp.soolsool.core.receipt.domain;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.receipt.converter.ReceiptQuantityConverter;
