@@ -5,8 +5,11 @@ import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +25,15 @@ public class ReceiptController {
     public ResponseEntity<ApiResponse<Void>> addReceipt(
         @LoginUser final Long memberId
     ) {
-        receiptService.addReceipt(memberId);
+        final Long receiptId = receiptService.addReceipt(memberId);
+        return ResponseEntity.created(URI.create("/receipts/" + receiptId))
+            .body(ApiResponse.from(RECEIPT_ADD_SUCCESS));
+    }
+
+    @GetMapping("/{receiptId}")
+    public ResponseEntity<ApiResponse<Void>> receiptDetails(@LoginUser final Long memberId,
+        @PathVariable final Long receiptId) {
+        receiptService.findReceipt(memberId, receiptId);
         return ResponseEntity.ok(ApiResponse.from(RECEIPT_ADD_SUCCESS));
     }
 }
