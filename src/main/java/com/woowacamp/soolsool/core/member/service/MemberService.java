@@ -1,10 +1,13 @@
 package com.woowacamp.soolsool.core.member.service;
 
+import static java.util.Arrays.stream;
+
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
@@ -13,6 +16,7 @@ import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeReposito
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +36,7 @@ public class MemberService {
     public void addMember(final MemberAddRequest memberAddRequest) {
         checkDuplicatedEmail(memberAddRequest.getEmail());
 
-        final MemberRole memberRole = memberRoleRepository.findById(1L)
-            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE));
-
+        final MemberRole memberRole = getMemberRole(memberAddRequest);
         final Member member = memberAddRequest.toMember(memberRole);
         memberRepository.save(member);
     }
@@ -46,6 +48,16 @@ public class MemberService {
         if (duplicatedEmil.isPresent()) {
             throw new SoolSoolException(MemberErrorCode.MEMBER_DUPLICATED_EMAIL);
         }
+    }
+
+    private MemberRole getMemberRole(final MemberAddRequest memberAddRequest) {
+        final MemberRoleType memberRoleType = stream(MemberRoleType.values())
+            .filter(type -> Objects.equals(type.getType(), memberAddRequest.getMemberRoleType()))
+            .findFirst()
+            .orElse(MemberRoleType.CUSTOMER);
+
+        return memberRoleRepository.findByName(memberRoleType)
+            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE));
     }
 
     @Transactional(readOnly = true)
