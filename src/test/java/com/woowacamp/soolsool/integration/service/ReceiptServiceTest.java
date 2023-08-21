@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.integration.service;
 
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_CART_ITEM;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
-import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_FOUND_CART_ITEM;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
@@ -50,7 +50,7 @@ class ReceiptServiceTest {
             10
         );
         cartService.addCartItem(memberId, cartItemSaveRequest);
-        
+
         // when & then
         assertThatCode(() -> receiptService.addReceipt(memberId))
             .doesNotThrowAnyException();

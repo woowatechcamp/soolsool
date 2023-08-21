@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
-import com.woowacamp.soolsool.core.receipt.vo.ReceiptStatusType;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

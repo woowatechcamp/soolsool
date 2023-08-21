@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.receipt.vo;
+package com.woowacamp.soolsool.core.receipt.domain.vo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

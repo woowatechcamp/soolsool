@@ -1,9 +1,9 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
-import com.woowacamp.soolsool.core.receipt.converter.ReceiptPriceConverter;
-import com.woowacamp.soolsool.core.receipt.converter.ReceiptQuantityConverter;
-import com.woowacamp.soolsool.core.receipt.vo.ReceiptPrice;
-import com.woowacamp.soolsool.core.receipt.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptPriceConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ public class Receipt extends ReceiptBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @Getter
     private Long id;
 
     @Column(name = "member_id")

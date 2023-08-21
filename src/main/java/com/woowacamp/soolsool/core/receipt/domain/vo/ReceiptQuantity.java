@@ -1,6 +1,7 @@
-package com.woowacamp.soolsool.core.receipt.vo;
+package com.woowacamp.soolsool.core.receipt.domain.vo;
 
-import com.woowacamp.soolsool.core.receipt.exception.ReceiptErrorCode;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.INVALID_QUANTITY_SIZE;
+
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class ReceiptQuantity {
 
     private void validateIsNotLessThanZero(final int quantity) {
         if (quantity < 0) {
-            throw new SoolSoolException(ReceiptErrorCode.INVALID_QUANTITY_SIZE);
+            throw new SoolSoolException(INVALID_QUANTITY_SIZE);
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.receipt.converter.ReceiptQuantityConverter;
-import com.woowacamp.soolsool.core.receipt.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;

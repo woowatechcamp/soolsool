@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
-import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_FOUND_CART_ITEM;
+import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_CART_ITEM;
 
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
