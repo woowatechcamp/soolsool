@@ -41,6 +41,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
+          context: .
           platforms: linux/amd64, linux/arm64
           push: true
           tags: latest
@@ -50,7 +51,6 @@ jobs:
   #        with:
   #          registry: ghcr.io
   #          push: true
-  #          context: .
   #          username: $ {{ env.GITHUB_USERNAME }}
   #          password: ${{ secrets.GHCR_TOKEN }}
   #          repository: ${{ env.GITHUB_USERNAME }}/${{ env.GITHUB_REPOSITORY }}
