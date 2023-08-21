@@ -1,9 +1,9 @@
 name: Continuous deployment - development WAS
 
-on:
-  push:
-    branches:
-      - develop
+on: [ push ]
+#  push:
+#    branches:
+#      - develop
 
 env:
   DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}:latest
