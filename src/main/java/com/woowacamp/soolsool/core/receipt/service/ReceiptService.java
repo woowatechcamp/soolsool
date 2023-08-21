@@ -1,6 +1,8 @@
 package com.woowacamp.soolsool.core.receipt.service;
 
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
 
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
@@ -9,9 +11,11 @@ import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItems;
+import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +30,7 @@ public class ReceiptService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void addReceipt(final Long memberId) {
+    public Long addReceipt(final Long memberId) {
         final Member member = memberRepository
             .findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
@@ -43,8 +47,8 @@ public class ReceiptService {
             memberId,
             receiptItems
         );
-        receiptRepository.save(receipt);
 
+        return receiptRepository.save(receipt).getId();
     }
 
 
@@ -52,5 +56,16 @@ public class ReceiptService {
         return cartItems.stream()
             .map(cartItem -> ReceiptItem.of(cartItem.getLiquor(), cartItem.getQuantity()))
             .collect(Collectors.toList());
+    }
+
+    public ReceiptResponse findReceipt(final Long memberId, final Long receiptId) {
+        final Receipt receipt = receiptRepository.findById(receiptId)
+            .orElseThrow(() -> new SoolSoolException(NOT_RECEIPT_FOUND));
+
+        if (!Objects.equals(receipt.getMemberId(), memberId)) {
+            throw new SoolSoolException(NOT_EQUALS_MEMBER);
+        }
+        
+        return ReceiptResponse.from(receipt);
     }
 }
