@@ -50,7 +50,7 @@ class MemberServiceTest {
     void createMember() {
         // given
         MemberAddRequest memberAddRequest = new MemberAddRequest(
-            "CUSTOMER",
+            "판매자",
             "test@email.com",
             "test_password",
             "최배달",
@@ -59,23 +59,24 @@ class MemberServiceTest {
             "서울시 잠실역"
         );
         MemberRole memberRole = MemberRole.builder()
-            .name(MemberRoleType.CUSTOMER)
+            .name(MemberRoleType.VENDOR)
             .build();
         Member member = memberAddRequest.toMember(memberRole);
 
         // when
-        when(memberRoleRepository.findById(1L)).thenReturn(Optional.ofNullable(memberRole));
+        when(memberRoleRepository.findByName(any(MemberRoleType.class))).thenReturn(
+            Optional.ofNullable(memberRole));
         when(memberRepository.save(any(Member.class))).thenReturn(member);
         assertThatNoException()
             .isThrownBy(() -> memberService.addMember(memberAddRequest));
 
         // then
-        verify(memberRoleRepository).findById(1L);
+        verify(memberRoleRepository).findByName(MemberRoleType.VENDOR);
         ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
         verify(memberRepository).save(memberCaptor.capture());
         assertAll(
             () -> assertThat(memberCaptor.getValue().getRole().getName())
-                .isEqualTo(MemberRoleType.CUSTOMER),
+                .isEqualTo(MemberRoleType.VENDOR),
             () -> assertThat(memberCaptor.getValue().getEmail().getEmail())
                 .isEqualTo(memberAddRequest.getEmail()),
             () -> assertThat(memberCaptor.getValue().getPassword().getPassword())
