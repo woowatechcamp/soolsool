@@ -4,6 +4,7 @@ import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.receipt.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.vo.ReceiptQuantity;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -44,7 +45,11 @@ public class ReceiptItem extends BaseEntity {
     private ReceiptQuantity quantity;
 
     @Builder
-    public ReceiptItem(final Receipt receipt, final Liquor liquor, final ReceiptQuantity quantity) {
+    public ReceiptItem(
+        final Receipt receipt,
+        final Liquor liquor,
+        final ReceiptQuantity quantity
+    ) {
         this.receipt = receipt;
         this.liquor = liquor;
         this.quantity = quantity;
@@ -67,5 +72,9 @@ public class ReceiptItem extends BaseEntity {
 
     public int getQuantity() {
         return quantity.getQuantity();
+    }
+
+    public BigInteger getTotalAmount() {
+        return liquor.getPrice().multiply(new BigInteger(String.valueOf(getQuantity())));
     }
 }

@@ -64,28 +64,14 @@ public class Receipt extends ReceiptBaseEntity {
     @Getter
     private List<ReceiptItem> receiptItems = new ArrayList<>();
 
-    public static Receipt of(
-        final Long memberId,
-        final String originalTotalPrice,
-        final String mileageUsage,
-        final String purchasedTotalPrice,
-        final int totalQuantity
-    ) {
-        return new Receipt(
-            null, memberId,
-            originalTotalPrice,
-            mileageUsage, purchasedTotalPrice,
-            totalQuantity
-        );
-    }
-
     public Receipt(
         final Long id,
         final Long memberId,
         final String originalTotalPrice,
         final String mileageUsage,
         final String purchasedTotalPrice,
-        final int totalQuantity
+        final int totalQuantity,
+        final List<ReceiptItem> receiptItems
     ) {
         this.id = id;
         this.memberId = memberId;
@@ -93,6 +79,21 @@ public class Receipt extends ReceiptBaseEntity {
         this.mileageUsage = new ReceiptPrice(new BigInteger(mileageUsage));
         this.purchasedTotalPrice = new ReceiptPrice(new BigInteger(purchasedTotalPrice));
         this.totalQuantity = new ReceiptQuantity(totalQuantity);
+        addReceiptItems(receiptItems);
+    }
+
+    public static Receipt of(
+        final Long memberId,
+        final ReceiptItems receiptItems
+    ) {
+        return new Receipt(
+            null, memberId,
+            receiptItems.getTotalAmount().toString(),
+            receiptItems.getMileageUsage().toString(),
+            receiptItems.getPurchasedTotalPrice().toString(),
+            receiptItems.getReceiptItemsSize(),
+            receiptItems.getReceiptItems()
+        );
     }
 
     public void addReceiptItems(final List<ReceiptItem> receiptItems) {
