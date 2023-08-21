@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand.OrderMileageUsage;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
@@ -42,7 +43,9 @@ class MemberMileageUsageTest {
         Order order = Order.builder()
             .memberId(1L)
             .status(new OrderStatus(OrderStatusType.COMPLETED))
-            .totalPrice(new OrderPrice(BigInteger.valueOf(1000L)))
+            .originalTotalPrice(new OrderPrice(BigInteger.valueOf(1000L)))
+            .mileageUsage(new OrderMileageUsage(new BigInteger(usage)))
+            .purchasedTotalPrice(new OrderPrice(BigInteger.valueOf(1000L)))
             .totalQuantity(new OrderQuantity(10))
             .build();
 

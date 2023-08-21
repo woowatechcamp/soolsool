@@ -1,7 +1,9 @@
 package com.woowacamp.soolsool.core.order.domain;
 
+import com.woowacamp.soolsool.core.order.domain.converter.OrderMileageUsageConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderPriceConverter;
 import com.woowacamp.soolsool.core.order.domain.converter.OrderQuantityConverter;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderItemBrand.OrderMileageUsage;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
 import com.woowacamp.soolsool.global.common.BaseEntity;
@@ -38,9 +40,17 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "order_status_id", nullable = false)
     private OrderStatus status;
 
-    @Column(name = "total_price", nullable = false)
+    @Column(name = "original_total_price", nullable = false)
     @Convert(converter = OrderPriceConverter.class)
-    private OrderPrice totalPrice;
+    private OrderPrice originalTotalPrice;
+
+    @Column(name = "mileage_usage", nullable = false)
+    @Convert(converter = OrderMileageUsageConverter.class)
+    private OrderMileageUsage mileageUsage;
+
+    @Column(name = "purchased_total_price", nullable = false)
+    @Convert(converter = OrderPriceConverter.class)
+    private OrderPrice purchasedTotalPrice;
 
     @Column(name = "total_quantity", nullable = false)
     @Convert(converter = OrderQuantityConverter.class)
@@ -50,12 +60,16 @@ public class Order extends BaseEntity {
     public Order(
         final Long memberId,
         final OrderStatus status,
-        final OrderPrice totalPrice,
+        final OrderPrice originalTotalPrice,
+        final OrderMileageUsage mileageUsage,
+        final OrderPrice purchasedTotalPrice,
         final OrderQuantity totalQuantity
     ) {
         this.memberId = memberId;
         this.status = status;
-        this.totalPrice = totalPrice;
+        this.originalTotalPrice = originalTotalPrice;
+        this.mileageUsage = mileageUsage;
+        this.purchasedTotalPrice = purchasedTotalPrice;
         this.totalQuantity = totalQuantity;
     }
 }
