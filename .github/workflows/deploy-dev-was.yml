@@ -8,6 +8,7 @@ on: [ push ]
 env:
   DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}:latest
   DOCKER_CONTAINER_NAME: soolsool-was
+  DOCKER_ENV_OPTION: --env-file=/home/ubuntu/soolsool-docker.env
 
 jobs:
   build:
@@ -64,6 +65,6 @@ jobs:
           if docker ps -a | grep -q ${{ env.DOCKER_CONTAINER_NAME }} ; then \
             docker stop ${{ env.DOCKER_CONTAINER_NAME }} && \
             docker rm ${{ env.DOCKER_CONTAINER_NAME }} && \
-            docker rmi $(docker images -q) || true
+            docker rmi $(docker image ls | awk '$1 == "${{ env.DOCKER_IMAGE_NAME }}" {print $3}') || true
           fi && \
-          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} --env-file=/home/ubuntu/soolsool-docker.env ${{ env.DOCKER_IMAGE_NAME }}
+          docker run -d -p 8080:8080 --restart=always --name=${{ env.DOCKER_CONTAINER_NAME }} ${{ env.DOCKER_ENV_OPTION }} ${{ env.DOCKER_IMAGE_NAME }}
