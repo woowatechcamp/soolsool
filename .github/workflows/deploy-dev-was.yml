@@ -3,7 +3,7 @@ name: Continuous deployment - development WAS
 on: [ push ]
 
 env:
-  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}l
+  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}
   DOCKER_CONTAINER_NAME: soolsool-was
   DOCKER_USERNAME: woowatechcamp
   GITHUB_USERNAME: woowatechcamp
