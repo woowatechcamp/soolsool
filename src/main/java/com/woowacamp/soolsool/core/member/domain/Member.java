@@ -63,7 +63,6 @@ public class Member extends BaseEntity {
 
     @Column(name = "mileage", nullable = false, length = 255)
     @Convert(converter = MemberMileageConverter.class)
-    @Getter
     private MemberMileage mileage;
 
     @Column(name = "address", nullable = false, length = 100)
