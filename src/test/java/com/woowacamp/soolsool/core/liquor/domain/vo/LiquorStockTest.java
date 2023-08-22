@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,14 +24,14 @@ class LiquorStockTest {
     }
 
     @Test
-    @DisplayName("술 재고가 0 미만일 경우 ShoppingException을 던진다.")
+    @DisplayName("술 재고가 0 미만일 경우 SoolSoolException을 던진다.")
     void createFailWithInvalidStock() {
         /* given */
         int stock = -1;
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorStock(stock))
-            .isExactlyInstanceOf(ShoppingException.class)
+            .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("술 재고는 0 미만일 수 없습니다.");
     }
 

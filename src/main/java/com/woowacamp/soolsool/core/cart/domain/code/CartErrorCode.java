@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.global.auth.code;
+package com.woowacamp.soolsool.core.cart.domain.code;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum AuthErrorCode implements ErrorCode {
+public enum CartErrorCode implements ErrorCode {
 
-    TOKEN_ERROR(BAD_REQUEST.value(), "A101", "토큰이 유효하지 않습니다."),
+    INVALID_QUANTITY_SIZE(BAD_REQUEST.value(), "C101", "장바구니 상품 수량은 1개 이상이어야 합니다."),
     ;
 
     private final int status;

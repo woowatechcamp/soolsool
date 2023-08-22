@@ -6,6 +6,7 @@ import static lombok.AccessLevel.PROTECTED;
 import com.woowacamp.soolsool.core.cart.domain.converter.CartItemQuantityConverter;
 import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.global.code.GlobalErrorCode;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
