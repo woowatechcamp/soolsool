@@ -13,7 +13,7 @@ public class ReceiptItemResponse {
 
     public static ReceiptItemResponse from(final ReceiptItem receiptItem) {
         return new ReceiptItemResponse(
-            receiptItem.getLiquor().getId(),
+            receiptItem.getLiquorId(),
             receiptItem.getQuantity()
         );
     }
