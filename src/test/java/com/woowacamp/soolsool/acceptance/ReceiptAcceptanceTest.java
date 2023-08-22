@@ -19,6 +19,7 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,12 +34,11 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
         // given
         String customerAccessToken = getCustomerAccessToken();
         String vendorAccessToken = getVendorAccessToken();
-
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
-            "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
-        );
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         String location = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
@@ -84,10 +84,10 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
         String vendorAccessToken = getVendorAccessToken();
 
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
-            "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
-        );
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         String location = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
@@ -148,11 +148,11 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
         String vendorAccessToken = getVendorAccessToken();
 
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
-            "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
-        );
-        
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
+
         String location = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)

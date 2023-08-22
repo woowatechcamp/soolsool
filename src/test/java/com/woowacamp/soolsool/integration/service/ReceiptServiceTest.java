@@ -15,6 +15,7 @@ import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptMapper;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +41,10 @@ class ReceiptServiceTest {
         // given
         Long memberId = 3L;
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
             saveLiquorId,
@@ -89,15 +85,10 @@ class ReceiptServiceTest {
     void receiptDetails() {
         Long memberId = 3L;
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
             saveLiquorId,
@@ -119,15 +110,10 @@ class ReceiptServiceTest {
         Long memberId = 3L;
         Long anotherMemberId = 4L;
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
             saveLiquorId,
