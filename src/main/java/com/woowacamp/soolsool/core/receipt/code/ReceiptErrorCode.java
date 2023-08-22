@@ -15,9 +15,9 @@ public enum ReceiptErrorCode implements ErrorCode {
     INVALID_QUANTITY_SIZE(400, "R103", "주문서 개수는 0 미만일 수 없습니다."),
 
     NOT_RECEIPT_FOUND(NOT_FOUND.value(), "R104", "주문서가 존재하지 않습니다."),
-    NOT_EQUALS_MEMBER(BAD_REQUEST.value(), "C108", "다른 사용자의 주문서를 가지고 있습니다."),
+    NOT_EQUALS_MEMBER(BAD_REQUEST.value(), "R105", "다른 사용자의 주문서를 가지고 있습니다."),
 
-    ;
+    NOT_RECEIPT_TYPE_FOUND(NOT_FOUND.value(), "R106", "주문서 상태가 존재하지 않습니다.");
 
     private final int status;
     private final String code;

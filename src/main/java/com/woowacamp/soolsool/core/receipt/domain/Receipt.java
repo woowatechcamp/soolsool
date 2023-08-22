@@ -24,7 +24,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "receipts")
@@ -41,25 +40,23 @@ public class Receipt extends ReceiptBaseEntity {
     @Getter
     private Long memberId;
 
-    // TODO : RECEIPTSTATUS 가 이상합니다. cascasdeType =ALl을 설정 안하면 에러가 남. null 값으로.
-    @ColumnDefault("1")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_status_id", nullable = false)
     private ReceiptStatus receiptStatus;
 
-    @Column(name = "original_total_price")
+    @Column(name = "original_total_price", nullable = false)
     @Convert(converter = ReceiptPriceConverter.class)
     private ReceiptPrice originalTotalPrice;
 
-    @Column(name = "mileage_usage")
+    @Column(name = "mileage_usage", nullable = false)
     @Convert(converter = ReceiptPriceConverter.class)
     private ReceiptPrice mileageUsage;
 
-    @Column(name = "purchased_total_price")
+    @Column(name = "purchased_total_price", nullable = false)
     @Convert(converter = ReceiptPriceConverter.class)
     private ReceiptPrice purchasedTotalPrice;
 
-    @Column(name = "total_quantity")
+    @Column(name = "total_quantity", nullable = false)
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity totalQuantity;
 
