@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -18,7 +19,7 @@ public class LiquorStock {
 
     private void validateIsNotLessThanZero(final int stock) {
         if (stock < 0) {
-            throw new ShoppingException("술 재고는 0 미만일 수 없습니다.");
+            throw new SoolSoolException(LiquorErrorCode.INVALID_SIZE_STOCK);
         }
     }
 }

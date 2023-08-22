@@ -26,7 +26,7 @@ class ReceiptPriceTest {
     }
 
     @Test
-    @DisplayName("주문서 가격이 0 미만일 경우 ShoppingException을 던진다.")
+    @DisplayName("주문서 가격이 0 미만일 경우 SoolSoolException을 던진다.")
     void createFailWithInvalidPrice() {
         /* given */
         BigInteger price = BigInteger.valueOf(-1L);
@@ -38,7 +38,7 @@ class ReceiptPriceTest {
     }
 
     @Test
-    @DisplayName("주문서 가격이 null일 경우 ShoppingException을 던진다.")
+    @DisplayName("주문서 가격이 null일 경우 SoolSoolException을 던진다.")
     void createFailWithNull() {
         /* given */
 
