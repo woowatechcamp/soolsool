@@ -29,4 +29,8 @@ public class OrderStatus {
     public OrderStatus(final OrderStatusType type) {
         this.type = type;
     }
+
+    public static OrderStatus getByDefaultStatus() {
+        return new OrderStatus(OrderStatusType.COMPLETED);
+    }
 }

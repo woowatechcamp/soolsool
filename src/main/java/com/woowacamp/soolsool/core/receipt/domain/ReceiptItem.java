@@ -17,9 +17,13 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.global.code.GlobalErrorCode;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -31,6 +35,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -67,7 +72,6 @@ public class ReceiptItem extends BaseEntity {
 
     @Column(name = "liquor_original_price", nullable = false, length = 255)
     @Convert(converter = LiquorPriceConverter.class)
-
     private LiquorPrice liquorOriginalPrice;
 
     @Column(name = "liquor_purchased_price", nullable = false, length = 255)
@@ -98,28 +102,31 @@ public class ReceiptItem extends BaseEntity {
     @Getter
     private LocalDateTime expiredAt;
 
-    private ReceiptItem(
+    @Builder
+    public ReceiptItem(
         final Receipt receipt,
         final Long liquorId,
         final LiquorBrew liquorBrew,
         final LiquorRegion liquorRegion,
         final String liquorName,
-        final BigInteger liquorOriginalPrice,
-        final BigInteger liquorPurchasedPrice,
+        final String liquorOriginalPrice,
+        final String liquorPurchasedPrice,
         final String liquorBrand,
         final String liquorImageUrl,
-        final double liquorAlcohol,
-        final int liquorVolume,
-        final int quantity,
+        final Double liquorAlcohol,
+        final Integer liquorVolume,
+        final Integer quantity,
         final LocalDateTime expiredAt
     ) {
+        validateIsNotNullableCategory(liquorBrew, liquorRegion);
+
         this.receipt = receipt;
         this.liquorId = liquorId;
         this.liquorBrew = liquorBrew;
         this.liquorRegion = liquorRegion;
         this.liquorName = new LiquorName(liquorName);
-        this.liquorOriginalPrice = new LiquorPrice(liquorOriginalPrice);
-        this.liquorPurchasedPrice = new LiquorPrice(liquorPurchasedPrice);
+        this.liquorOriginalPrice = new LiquorPrice(new BigInteger(liquorOriginalPrice));
+        this.liquorPurchasedPrice = new LiquorPrice(new BigInteger(liquorPurchasedPrice));
         this.liquorBrand = new LiquorBrand(liquorBrand);
         this.liquorImageUrl = new LiquorImageUrl(liquorImageUrl);
         this.liquorAlcohol = new LiquorAlcohol(liquorAlcohol);
@@ -138,8 +145,8 @@ public class ReceiptItem extends BaseEntity {
             liquor.getBrew(),
             liquor.getRegion(),
             liquor.getName(),
-            liquor.getPrice(),
-            liquor.getPrice(),
+            liquor.getPrice().toString(),
+            liquor.getPrice().toString(),
             liquor.getBrand(),
             liquor.getImageUrl(),
             liquor.getAlcohol(),
@@ -149,12 +156,10 @@ public class ReceiptItem extends BaseEntity {
         );
     }
 
-    public void setReceipt(final Receipt receipt) {
-        this.receipt = receipt;
-    }
-
-    public int getQuantity() {
-        return quantity.getQuantity();
+    private void validateIsNotNullableCategory(final Object... objects) {
+        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
+            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
+        }
     }
 
     public String getLiquorBrew() {
@@ -191,5 +196,13 @@ public class ReceiptItem extends BaseEntity {
 
     public Integer getLiquorVolume() {
         return liquorVolume.getVolume();
+    }
+
+    public int getQuantity() {
+        return quantity.getQuantity();
+    }
+
+    public void setReceipt(final Receipt receipt) {
+        this.receipt = receipt;
     }
 }

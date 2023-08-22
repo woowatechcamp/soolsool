@@ -38,11 +38,6 @@ class MemberMileageUsageTest {
 
         Order order = Order.builder()
             .memberId(1L)
-            .status(new OrderStatus(OrderStatusType.COMPLETED))
-            .originalTotalPrice("1000")
-            .mileageUsage(usage)
-            .purchasedTotalPrice("1000")
-            .totalQuantity(10)
             .build();
 
         // when
