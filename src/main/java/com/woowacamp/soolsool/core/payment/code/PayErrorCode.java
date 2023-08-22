@@ -13,8 +13,9 @@ public enum PayErrorCode implements ErrorCode {
     NOT_FOUND_KAKAO_PAY_RECEIPT(404, "P002", "카카오 페이 주문 내역을 찾을 수 없습니다."),
     NOT_FOUND_ORDER_STATUS(404, "P002", "주문 상태를 찾을 수 없습니다."),
     NOT_FOUND_LIQUOR(404, "P002", "주문한 술을 찾을 수 없습니다."),
+    NOT_FOUND_PAY_APPROVE_RESPONSE(404, "P002", "페이 결제 승인 내역을 찾을 수 없습니다."),
+    NOT_FOUND_PAY_READY_RESPONSE(404, "P002", "페이 결제 준비 내역을 찾을 수 없습니다."),
     ;
-
     private final int status;
     private final String code;
     private final String message;

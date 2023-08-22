@@ -62,7 +62,7 @@ public class Receipt extends BaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity totalQuantity;
 
-    @Column(name = "expired_date")
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expiredDate = LocalDateTime.now().plusDays(30);
 
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)

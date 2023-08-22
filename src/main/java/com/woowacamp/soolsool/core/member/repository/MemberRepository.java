@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(final MemberEmail email);
-    
+
     @Lock(value = PESSIMISTIC_WRITE)
     @Query("select m from Member m where m.id = :memberId")
-    Optional<Member> findByIdWithLock(final Long id);
+    Optional<Member> findByIdWithLock(final Long memberId);
 }

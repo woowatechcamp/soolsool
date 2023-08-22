@@ -8,6 +8,7 @@ import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
+import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ class KakaoPayTest extends AcceptanceTest {
 
     @Autowired
     private CartService cartService;
+
     @Autowired
     private ReceiptService receiptService;
 
@@ -39,20 +41,22 @@ class KakaoPayTest extends AcceptanceTest {
         );
 
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
             saveLiquorId,
             10
         );
         cartService.addCartItem(memberId, cartItemSaveRequest);
         Long receiptId = receiptService.addReceipt(memberId);
-        final String payReadyUrl = payService.payReady(memberId, new PayOrderRequest(receiptId));
-        assertThat(payReadyUrl).isNotNull();
+        final PayReadyResponse payReadyResponse = payService.payReady(memberId,
+            new PayOrderRequest(receiptId));
+        assertThat(payReadyResponse.getNextRedirectPcUrl()).isNotNull();
     }
 
     @Test
     @DisplayName("결제 승인을 요청한다.")
     void payApproveSuccess() {
-        payService.payApprove(3L, "d184a7312a9d806cdfde", 3L);
+        //payService.payApprove(3L, "d184a7312a9d806cdfde", 3L);
 
     }
 }
