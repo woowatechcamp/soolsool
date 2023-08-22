@@ -35,10 +35,20 @@ public class ReceiptItem extends BaseEntity {
     @Getter
     private Receipt receipt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "liquor_id", nullable = false)
-    @Getter
-    private Liquor liquor;
+//    @JoinColumn(name = "liquor_id", nullable = false)
+//    @Getter
+//    private Liquor liquor;
+
+    private Long liquorId;
+    private String liquorBrew;
+    private String liquorRegion;
+    private String liquorName;
+    private String liquorOriginalPrice;
+    private String liquorPurchasedPrice;
+    private String liquorBrand;
+    private String liquorImageUrl;
+    private String liquorAlcohol;
+    private String liquorVolume;
 
     @Column(name = "quantity", nullable = false)
     @Convert(converter = ReceiptQuantityConverter.class)
