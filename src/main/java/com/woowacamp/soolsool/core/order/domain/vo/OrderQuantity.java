@@ -1,7 +1,8 @@
 package com.woowacamp.soolsool.core.order.domain.vo;
 
-import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
-import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
+import static com.woowacamp.soolsool.core.order.code.OrderErrorCode.NOT_POSITIVE_QUANTITY;
+import static com.woowacamp.soolsool.global.code.GlobalErrorCode.NO_CONTENT;
+
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
 import lombok.Getter;
@@ -22,13 +23,13 @@ public class OrderQuantity {
 
     private void validateIsNotNullable(final Integer quantity) {
         if (Objects.isNull(quantity)) {
-            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
+            throw new SoolSoolException(NO_CONTENT);
         }
     }
 
     private void validateIsPositive(final Integer quantity) {
         if (quantity < MIN_SIZE) {
-            throw new SoolSoolException(OrderErrorCode.NOT_POSITIVE_QUANTITY);
+            throw new SoolSoolException(NOT_POSITIVE_QUANTITY);
         }
     }
 }
