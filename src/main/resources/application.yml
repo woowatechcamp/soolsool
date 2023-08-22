@@ -7,3 +7,6 @@ security:
     token:
       secret-key: ${SOOLSOOL_JWT_SECRET}
       expire-length: 3600000
+kakao:
+  admin:
+    key: ${SOOLSOOL_KAKAO_ADMIN_KEY}
