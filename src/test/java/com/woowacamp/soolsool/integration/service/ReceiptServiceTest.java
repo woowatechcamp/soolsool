@@ -11,6 +11,7 @@ import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
+import com.woowacamp.soolsool.core.receipt.dto.ReceiptModifyRequest;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptMapper;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
@@ -137,6 +138,77 @@ class ReceiptServiceTest {
 
         // when & then
         assertThatCode(() -> receiptService.findReceipt(memberId, receiptId))
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage(NOT_RECEIPT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("주문서가 정상적으로 수정된다.")
+    void receiptModifySuccess() {
+        // given
+        Long memberId = 3L;
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
+            saveLiquorId,
+            10
+        );
+        cartService.addCartItem(memberId, cartItemSaveRequest);
+        Long receiptId = receiptService.addReceipt(memberId);
+
+        // when
+        final ReceiptModifyRequest receiptRequest = new ReceiptModifyRequest("COMPLETED");
+        receiptService.modifyReceiptStatus(memberId, receiptId, receiptRequest);
+
+        // then
+        final ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
+        assertThat(receipt.getReceiptStatus()).isEqualTo("COMPLETED");
+    }
+
+    @Test
+    @DisplayName("주문서의 주인이 아니면, 수정을 할 수 없다. ")
+    void receiptModifyFailWithNotEqualMember() {
+        // given
+        Long memberId = 3L;
+        Long anotherMemberId = 4L;
+        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
+        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
+        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(
+            saveLiquorId,
+            10
+        );
+        cartService.addCartItem(memberId, cartItemSaveRequest);
+        Long receiptId = receiptService.addReceipt(memberId);
+        final ReceiptModifyRequest receiptRequest = new ReceiptModifyRequest("COMPLETED");
+
+        // when & then
+
+        assertThatCode(
+            () -> receiptService.modifyReceiptStatus(anotherMemberId, receiptId, receiptRequest))
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage(NOT_EQUALS_MEMBER.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("주문서가 없으면,주문서의 상태를 수정을 할 수 없다. ")
+    void receiptModifyFailWithNotExistReceipt() {
+        // given
+        Long memberId = 3L;
+        Long receiptId = 999L;
+        final ReceiptModifyRequest receiptRequest = new ReceiptModifyRequest("COMPLETED");
+
+        // when & then
+        assertThatCode(
+            () -> receiptService.modifyReceiptStatus(memberId, receiptId, receiptRequest))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_RECEIPT_FOUND.getMessage());
     }

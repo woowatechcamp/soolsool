@@ -13,7 +13,6 @@ import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptModifyRequest;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ public class ReceiptService {
     private final ReceiptRepository receiptRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
-    private final ReceiptStatusRepository receiptStatusRepository;
 
     @Transactional
     public Long addReceipt(final Long memberId) {

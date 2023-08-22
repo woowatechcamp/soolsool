@@ -3,7 +3,7 @@ package com.woowacamp.soolsool.global.config;
 import com.woowacamp.soolsool.core.liquor.controller.converter.LiquorBrewTypeConverter;
 import com.woowacamp.soolsool.core.liquor.controller.converter.LiquorRegionTypeConverter;
 import com.woowacamp.soolsool.core.liquor.controller.converter.LiquorStatusTypeConverter;
-import com.woowacamp.soolsool.core.receipt.ReceiptStatusTypeConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptStatusTypeConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

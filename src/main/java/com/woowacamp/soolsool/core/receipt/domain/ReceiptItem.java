@@ -30,7 +30,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,10 +48,6 @@ public class ReceiptItem extends BaseEntity {
     @Getter
     private Receipt receipt;
 
-    //    @JoinColumn(name = "liquor_id", nullable = false)
-//    @Getter
-//    private Liquor liquor;
-
     @Getter
     @Column(name = "liquor_id", nullable = false)
     private Long liquorId;
@@ -61,30 +56,37 @@ public class ReceiptItem extends BaseEntity {
     @JoinColumn(name = "brew_id", nullable = false)
     @Getter
     private LiquorBrew liquorBrew;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
     @Getter
     private LiquorRegion liquorRegion;
-    @Column(name = "name", nullable = false, length = 30)
+
+    @Column(name = "liquor_name", nullable = false, length = 30)
     @Convert(converter = LiquorNameConverter.class)
     private LiquorName liquorName;
-    @Column(name = "original_price", nullable = false, length = 255)
+
+    @Column(name = "liquor_original_price", nullable = false, length = 255)
     @Convert(converter = LiquorPriceConverter.class)
     private LiquorPrice liquorOriginalPrice;
-    @Column(name = "purchased_price", nullable = false, length = 255)
+
+    @Column(name = "liquor_purchased_price", nullable = false, length = 255)
     @Convert(converter = LiquorPriceConverter.class)
     private LiquorPrice liquorPurchasedPrice;
-    @Column(name = "brand", nullable = false, length = 20)
+
+    @Column(name = "liquor_brand", nullable = false, length = 20)
     @Convert(converter = LiquorBrandConverter.class)
     private LiquorBrand liquorBrand;
-    @Column(name = "image_url", nullable = false, length = 255)
+
+    @Column(name = "liquor_image_url", nullable = false, length = 255)
     @Convert(converter = LiquorImageUrlConverter.class)
     private LiquorImageUrl liquorImageUrl;
-    @Column(name = "alcohol", nullable = false)
+
+    @Column(name = "liquor_alcohol", nullable = false)
     @Convert(converter = LiquorAlcoholConverter.class)
     private LiquorAlcohol liquorAlcohol;
 
-    @Column(name = "volume", nullable = false)
+    @Column(name = "liquor_volume", nullable = false)
     @Convert(converter = LiquorVolumeConverter.class)
     private LiquorVolume liquorVolume;
 
@@ -92,29 +94,32 @@ public class ReceiptItem extends BaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity quantity;
 
-
-    @Builder
-    public ReceiptItem(final Receipt receipt, final Long liquorId,
+    private ReceiptItem(
+        final Receipt receipt,
+        final Long liquorId,
         final LiquorBrew liquorBrew,
-        final LiquorRegion liquorRegion, final LiquorName liquorName,
-        final LiquorPrice liquorOriginalPrice,
-        final LiquorPrice liquorPurchasedPrice, final LiquorBrand liquorBrand,
-        final LiquorImageUrl liquorImageUrl,
-        final LiquorAlcohol liquorAlcohol, final LiquorVolume liquorVolume,
-        final ReceiptQuantity quantity) {
-
+        final LiquorRegion liquorRegion,
+        final String liquorName,
+        final BigInteger liquorOriginalPrice,
+        final BigInteger liquorPurchasedPrice,
+        final String liquorBrand,
+        final String liquorImageUrl,
+        final double liquorAlcohol,
+        final int liquorVolume,
+        final int quantity
+    ) {
         this.receipt = receipt;
         this.liquorId = liquorId;
         this.liquorBrew = liquorBrew;
         this.liquorRegion = liquorRegion;
-        this.liquorName = liquorName;
-        this.liquorOriginalPrice = liquorOriginalPrice;
-        this.liquorPurchasedPrice = liquorPurchasedPrice;
-        this.liquorBrand = liquorBrand;
-        this.liquorImageUrl = liquorImageUrl;
-        this.liquorAlcohol = liquorAlcohol;
-        this.liquorVolume = liquorVolume;
-        this.quantity = quantity;
+        this.liquorName = new LiquorName(liquorName);
+        this.liquorOriginalPrice = new LiquorPrice(liquorOriginalPrice);
+        this.liquorPurchasedPrice = new LiquorPrice(liquorPurchasedPrice);
+        this.liquorBrand = new LiquorBrand(liquorBrand);
+        this.liquorImageUrl = new LiquorImageUrl(liquorImageUrl);
+        this.liquorAlcohol = new LiquorAlcohol(liquorAlcohol);
+        this.liquorVolume = new LiquorVolume(liquorVolume);
+        this.quantity = new ReceiptQuantity(quantity);
     }
 
     public static ReceiptItem of( // 생성자로 바꾸기
@@ -126,14 +131,14 @@ public class ReceiptItem extends BaseEntity {
             liquor.getId(),
             liquor.getBrew(),
             liquor.getRegion(),
-            new LiquorName(liquor.getName()),
-            new LiquorPrice(liquor.getPrice()),
-            new LiquorPrice(liquor.getPrice()),
-            new LiquorBrand(liquor.getBrand()),
-            new LiquorImageUrl(liquor.getImageUrl()),
-            new LiquorAlcohol(liquor.getAlcohol()),
-            new LiquorVolume(liquor.getVolume()),
-            new ReceiptQuantity(quantity)
+            liquor.getName(),
+            liquor.getPrice(),
+            liquor.getPrice(),
+            liquor.getBrand(),
+            liquor.getImageUrl(),
+            liquor.getAlcohol(),
+            liquor.getVolume(),
+            quantity
         );
     }
 
@@ -143,10 +148,5 @@ public class ReceiptItem extends BaseEntity {
 
     public int getQuantity() {
         return quantity.getQuantity();
-    }
-
-    public BigInteger getTotalAmount() {
-        //return liquor.getPrice().multiply(new BigInteger(String.valueOf(getQuantity())));
-        return new BigInteger(String.valueOf(getQuantity()));
     }
 }
