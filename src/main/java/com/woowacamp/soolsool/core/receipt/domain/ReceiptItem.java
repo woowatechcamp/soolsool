@@ -17,8 +17,8 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.global.code.GlobalErrorCode;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -60,39 +60,37 @@ public class ReceiptItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brew_id", nullable = false)
-    @Getter
     private LiquorBrew liquorBrew;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
-    @Getter
     private LiquorRegion liquorRegion;
 
-    @Column(name = "name", nullable = false, length = 30)
+    @Column(name = "liquor_name", nullable = false, length = 30)
     @Convert(converter = LiquorNameConverter.class)
     private LiquorName liquorName;
 
-    @Column(name = "original_price", nullable = false, length = 255)
+    @Column(name = "liquor_original_price", nullable = false, length = 255)
     @Convert(converter = LiquorPriceConverter.class)
     private LiquorPrice liquorOriginalPrice;
 
-    @Column(name = "purchased_price", nullable = false, length = 255)
+    @Column(name = "liquor_purchased_price", nullable = false, length = 255)
     @Convert(converter = LiquorPriceConverter.class)
     private LiquorPrice liquorPurchasedPrice;
 
-    @Column(name = "brand", nullable = false, length = 20)
+    @Column(name = "liquor_brand", nullable = false, length = 20)
     @Convert(converter = LiquorBrandConverter.class)
     private LiquorBrand liquorBrand;
 
-    @Column(name = "image_url", nullable = false, length = 255)
+    @Column(name = "liquor_image_url", nullable = false, length = 255)
     @Convert(converter = LiquorImageUrlConverter.class)
     private LiquorImageUrl liquorImageUrl;
 
-    @Column(name = "alcohol", nullable = false)
+    @Column(name = "liquor_alcohol", nullable = false)
     @Convert(converter = LiquorAlcoholConverter.class)
     private LiquorAlcohol liquorAlcohol;
 
-    @Column(name = "volume", nullable = false)
+    @Column(name = "liquor_volume", nullable = false)
     @Convert(converter = LiquorVolumeConverter.class)
     private LiquorVolume liquorVolume;
 
@@ -162,6 +160,14 @@ public class ReceiptItem extends BaseEntity {
         if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
             throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
         }
+    }
+
+    public String getLiquorBrew() {
+        return liquorBrew.getType().toString();
+    }
+
+    public String getLiquorRegion() {
+        return liquorRegion.getType().toString();
     }
 
     public String getLiquorName() {

@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.global.exception;
+package com.woowacamp.soolsool.global.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

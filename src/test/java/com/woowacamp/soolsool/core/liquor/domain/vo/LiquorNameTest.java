@@ -51,7 +51,7 @@ class LiquorNameTest {
     }
 
     @Test
-    @DisplayName("술 이름가 동일하면 동일한 객체이다.")
+    @DisplayName("술 이름이 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
         LiquorName origin = new LiquorName("마싯는 소주");

@@ -23,8 +23,8 @@ public class OrderItemDetailResponse {
 
     public static OrderItemDetailResponse from(final ReceiptItem receiptItem){
         return new OrderItemDetailResponse(
-            receiptItem.getLiquorBrew().getType().getName(),
-            receiptItem.getLiquorRegion().getType().getName(),
+            receiptItem.getLiquorBrew(),
+            receiptItem.getLiquorRegion(),
             receiptItem.getLiquorName(),
             receiptItem.getLiquorOriginalPrice().toString(),
             receiptItem.getLiquorPurchasedPrice().toString(),

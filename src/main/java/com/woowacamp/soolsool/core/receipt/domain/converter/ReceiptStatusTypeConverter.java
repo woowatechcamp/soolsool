@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.receipt;
+package com.woowacamp.soolsool.core.receipt.domain.converter;
 
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import java.util.Arrays;
