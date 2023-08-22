@@ -1,7 +1,6 @@
-insert into roles(id, name)
-values (1, 'CUSTOMER'),
-       (2, 'VENDOR');
+/* -------------------- cart -------------------- */
 
+/* -------------------- liquor -------------------- */
 insert into liquor_brews(id, name)
 values (1, 'SOJU'),
        (2, 'DISTILLED'),
@@ -26,17 +25,24 @@ insert into liquor_status(id, name)
 values (1, 'ON_SALE'),
        (2, 'STOPPED');
 
+/* -------------------- member -------------------- */
+insert into roles(id, name)
+values (1, 'CUSTOMER'),
+       (2, 'VENDOR');
+
+insert into members(id, address, email, mileage, name, password, phone_number, role_id)
+values (1, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa', '010-1234-5678', 1),
+       (2, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2),
+       (3, '잠실역', 'hello@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 1);
+
+/* -------------------- order -------------------- */
 insert into order_status(id, name)
 values (1, 'COMPLETED'),
        (2, 'CANCELED');
 
+/* -------------------- receipt -------------------- */
 insert into receipt_status(id, name)
 values (1, 'INPROGRESS'),
        (2, 'CANCELED'),
        (3, 'COMPLETED'),
        (4, 'EXPIRED');
-
-insert into members(id, address, email, mileage, name, password, phone_number, role_id)
-values (3, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa', '010-1234-5678', 1),
-       (4, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2),
-       (5, '잠실역', 'hello@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 1);

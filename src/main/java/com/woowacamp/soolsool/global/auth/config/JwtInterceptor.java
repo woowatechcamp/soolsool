@@ -1,10 +1,11 @@
 package com.woowacamp.soolsool.global.auth.config;
 
+import com.woowacamp.soolsool.global.auth.code.AuthErrorCode;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
-import com.woowacamp.soolsool.global.auth.dto.UserDto;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.auth.util.AuthorizationExtractor;
 import com.woowacamp.soolsool.global.auth.util.TokenProvider;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,24 +30,26 @@ public class JwtInterceptor implements HandlerInterceptor {
     ) {
         final HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-        if (handlerMethod.getMethodAnnotation(NoAuth.class) != null) {
+        if (handlerMethod.hasMethodAnnotation(NoAuth.class)) {
             return true;
         }
 
-        final String token = authorizationExtractor.extractToken(request);
-        tokenProvider.validateToken(token);
+        // TODO: 토큰이 없을 때 메시지
+        // TODO: subject에서 권한만 VENDOR로 바꾸면 판매자처럼 행동 가능한 버그 수정
 
-        final UserDto principal = tokenProvider.getUserDto(token);
-        return checkVendorClass(handlerMethod, Vendor.class, principal.getAuthority());
+        final String token = authorizationExtractor.extractToken(request);
+        tokenProvider.validateToken(token); // TODO: getUserDto 안으로 이동해도 될 듯
+        final String authority = tokenProvider.getUserDto(token).getAuthority();
+
+        checkVendorMethod(handlerMethod, authority);
+
+        return true;
     }
 
-    private boolean checkVendorClass(
-        final HandlerMethod handlerMethod,
-        final Class<Vendor> vendorClass,
-        final String authority
-    ) {
-        final String vendorClassName = vendorClass.getSimpleName().toUpperCase();
-        return handlerMethod.getMethodAnnotation(vendorClass) == null
-            || authority.equals(vendorClassName);
+    private void checkVendorMethod(final HandlerMethod handlerMethod, final String authority) {
+        if (handlerMethod.hasMethodAnnotation(Vendor.class) &&
+            !authority.equals(Vendor.class.getSimpleName().toUpperCase())) {
+            throw new SoolSoolException(AuthErrorCode.INVALID_AUTHORITY);
+        }
     }
 }

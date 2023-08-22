@@ -64,7 +64,10 @@ public class TokenProvider {
 
     public UserDto getUserDto(final String token) {
         final Claims body = parseClaimBody(token);
+
+        // TODO: String이 아닌 MemberRoleType 활용?
         final String authority = (String) body.get(ROLE_TYPE);
+
         return new UserDto(body.getSubject(), authority);
     }
 }

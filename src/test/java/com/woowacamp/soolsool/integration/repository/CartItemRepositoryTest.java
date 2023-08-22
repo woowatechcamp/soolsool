@@ -14,7 +14,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +48,7 @@ class CartItemRepositoryTest {
 
     @BeforeEach
     void setUpMember() {
-        Member member = memberRepository.findById(4L)
+        Member member = memberRepository.findById(1L)
             .orElseThrow(() -> new RuntimeException("Member가 존재하지 않습니다."));
         commonMemberId = member.getId();
     }

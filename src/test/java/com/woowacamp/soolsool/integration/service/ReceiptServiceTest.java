@@ -40,7 +40,7 @@ class ReceiptServiceTest {
     @DisplayName("주문서를 올바르게 생성한다.")
     void addReceiptTest() {
         // given
-        Long memberId = 3L;
+        Long memberId = 1L;
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/url",
@@ -62,7 +62,7 @@ class ReceiptServiceTest {
     @DisplayName("멤버가 존재하고, 카트에 주문할 게 없으면, 주문서가 올바르게 생성되지 않는다.")
     void addReceiptWithNoCartItems() {
         // given
-        Long memberId = 4L;
+        Long memberId = 1L;
 
         // when & then
         assertThatCode(() -> receiptService.addReceipt(memberId))

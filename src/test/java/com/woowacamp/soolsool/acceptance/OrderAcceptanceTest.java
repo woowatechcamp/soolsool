@@ -68,9 +68,9 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     void setUpOrder() {
-        firstMemberOrder1 = createOrder(3L, 1L);
-        firstMemberOrder2 = createOrder(3L, 2L);
-        secondMemberOrder1 = createOrder(4L, 3L);
+        firstMemberOrder1 = createOrder(1L, 1L);
+        firstMemberOrder2 = createOrder(1L, 2L);
+        secondMemberOrder1 = createOrder(2L, 3L);
     }
 
     private String findToken(String email, String password) {

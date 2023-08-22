@@ -22,8 +22,8 @@ import org.springframework.http.MediaType;
 @DisplayName("회원 : 인수 테스트")
 class MemberAcceptanceTest extends AcceptanceTest {
 
-    private static final String EMAIL = "test2@email.com";
-    private static final String PASSWORD = "test_password2";
+    private static final String EMAIL = "camp@email.com";
+    private static final String PASSWORD = "camp";
 
     private String findToken(String email, String password) {
         LoginRequest loginRequest = new LoginRequest(email, password);
