@@ -37,7 +37,7 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -72,13 +72,13 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-        final MemberRole role,
-        final String email,
-        final String password,
-        final String name,
-        final String phoneNumber,
-        final String mileage,
-        final String address
+            final MemberRole role,
+            final String email,
+            final String password,
+            final String name,
+            final String phoneNumber,
+            final String mileage,
+            final String address
     ) {
         this.role = role;
         this.email = new MemberEmail(email);
