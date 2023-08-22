@@ -5,7 +5,9 @@ import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConve
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
+import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -28,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "receipts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Receipt extends ReceiptBaseEntity {
+public class Receipt extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,6 +62,9 @@ public class Receipt extends ReceiptBaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity totalQuantity;
 
+    @Column(name = "expired_date")
+    private LocalDateTime expiredDate = LocalDateTime.now().plusDays(30);
+
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     private List<ReceiptItem> receiptItems = new ArrayList<>();
@@ -80,8 +85,6 @@ public class Receipt extends ReceiptBaseEntity {
         this.mileageUsage = mileageUsage;
         this.purchasedTotalPrice = purchasedTotalPrice;
         this.totalQuantity = totalQuantity;
-        this.receiptItems = receiptItems;
-
         addReceiptItems(receiptItems);
     }
 
