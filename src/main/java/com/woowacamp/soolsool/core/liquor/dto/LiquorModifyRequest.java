@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,4 +18,5 @@ public class LiquorModifyRequest {
     private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
+    private final LocalDateTime expiredAt;
 }

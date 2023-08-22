@@ -9,6 +9,7 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,10 @@ class LiquorServiceTest {
     void saveLiquorTest() {
         // given
         LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         // when & then
         assertThatCode(() -> liquorService.saveLiquor(saveLiquorRequest))
             .doesNotThrowAnyException();
@@ -50,27 +46,16 @@ class LiquorServiceTest {
     void modifyLiquorTestWithSuccess() {
         // given
         LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         Long saveLiquorId = liquorService.saveLiquor(saveLiquorRequest);
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "안동소주",
-            "3000",
-            "브랜드",
-            "soolsool.png",
-            100,
-            12.0,
-            1
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "안동소주", "3000", "브랜드", "soolsool.png",
+            100, 12.0, 1,
+            LocalDateTime.now().plusYears(10L)
         );
         // when
         liquorService.modifyLiquor(saveLiquorId, liquorModifyRequest);

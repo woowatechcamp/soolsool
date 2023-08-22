@@ -14,6 +14,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,15 +47,10 @@ class LiquorServiceTest {
     void saveLiquorTest() {
         // given
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
 
         // when & then
         assertThatCode(() -> liquorService.saveLiquor(liquorSaveRequest))
@@ -66,26 +62,16 @@ class LiquorServiceTest {
     void modifyLiquorTest() {
         // given
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
-            "BERRY",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로2",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300
+            "BERRY", "GYEONGGI_DO", "ON_SALE",
+            "새로2", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(10L)
         );
         // when
         liquorService.modifyLiquor(saveLiquorId, liquorModifyRequest);
@@ -105,15 +91,10 @@ class LiquorServiceTest {
         // given
         long LIQUOR_ID = 2L;
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
-            "BERRY",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로2",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300
+            "BERRY", "GYEONGGI_DO", "ON_SALE",
+            "새로2", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(10L)
         );
         // when & then
         assertThatCode(() -> liquorService.modifyLiquor(LIQUOR_ID, liquorModifyRequest))
@@ -127,15 +108,10 @@ class LiquorServiceTest {
     void deleteLiquorTest() {
         // given
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(10L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         // when
