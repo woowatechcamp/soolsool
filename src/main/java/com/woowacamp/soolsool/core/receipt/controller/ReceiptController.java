@@ -3,7 +3,7 @@ package com.woowacamp.soolsool.core.receipt.controller;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_ADD_SUCCESS;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_FOUND;
 
-import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;

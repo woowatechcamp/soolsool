@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.receipt.dto;
+package com.woowacamp.soolsool.core.receipt.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

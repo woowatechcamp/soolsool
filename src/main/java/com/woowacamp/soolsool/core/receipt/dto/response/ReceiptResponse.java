@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.receipt.dto;
+package com.woowacamp.soolsool.core.receipt.dto.response;
 
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import java.util.List;

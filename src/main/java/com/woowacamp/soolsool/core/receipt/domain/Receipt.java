@@ -80,8 +80,6 @@ public class Receipt extends ReceiptBaseEntity {
         this.mileageUsage = mileageUsage;
         this.purchasedTotalPrice = purchasedTotalPrice;
         this.totalQuantity = totalQuantity;
-        this.receiptItems = receiptItems;
-
         addReceiptItems(receiptItems);
     }
 

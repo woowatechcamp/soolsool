@@ -19,6 +19,7 @@ import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConve
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -54,12 +55,10 @@ public class ReceiptItem extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brew_id", nullable = false)
-    @Getter
     private LiquorBrew liquorBrew;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
-    @Getter
     private LiquorRegion liquorRegion;
 
     @Column(name = "liquor_name", nullable = false, length = 30)
@@ -68,6 +67,7 @@ public class ReceiptItem extends BaseEntity {
 
     @Column(name = "liquor_original_price", nullable = false, length = 255)
     @Convert(converter = LiquorPriceConverter.class)
+
     private LiquorPrice liquorOriginalPrice;
 
     @Column(name = "liquor_purchased_price", nullable = false, length = 255)
@@ -94,6 +94,10 @@ public class ReceiptItem extends BaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity quantity;
 
+    @Column(name = "expired_at", nullable = false)
+    @Getter
+    private LocalDateTime expiredAt;
+
     private ReceiptItem(
         final Receipt receipt,
         final Long liquorId,
@@ -106,7 +110,8 @@ public class ReceiptItem extends BaseEntity {
         final String liquorImageUrl,
         final double liquorAlcohol,
         final int liquorVolume,
-        final int quantity
+        final int quantity,
+        final LocalDateTime expiredAt
     ) {
         this.receipt = receipt;
         this.liquorId = liquorId;
@@ -120,6 +125,7 @@ public class ReceiptItem extends BaseEntity {
         this.liquorAlcohol = new LiquorAlcohol(liquorAlcohol);
         this.liquorVolume = new LiquorVolume(liquorVolume);
         this.quantity = new ReceiptQuantity(quantity);
+        this.expiredAt = expiredAt;
     }
 
     public static ReceiptItem of( // 생성자로 바꾸기
@@ -138,7 +144,8 @@ public class ReceiptItem extends BaseEntity {
             liquor.getImageUrl(),
             liquor.getAlcohol(),
             liquor.getVolume(),
-            quantity
+            quantity,
+            liquor.getExpiredAt()
         );
     }
 
@@ -148,5 +155,41 @@ public class ReceiptItem extends BaseEntity {
 
     public int getQuantity() {
         return quantity.getQuantity();
+    }
+
+    public String getLiquorBrew() {
+        return liquorBrew.getType().toString();
+    }
+
+    public String getLiquorRegion() {
+        return liquorRegion.getType().toString();
+    }
+
+    public String getLiquorName() {
+        return liquorName.getName();
+    }
+
+    public BigInteger getLiquorOriginalPrice() {
+        return liquorOriginalPrice.getPrice();
+    }
+
+    public BigInteger getLiquorPurchasedPrice() {
+        return liquorPurchasedPrice.getPrice();
+    }
+
+    public String getLiquorBrand() {
+        return liquorBrand.getBrand();
+    }
+
+    public String getLiquorImageUrl() {
+        return liquorImageUrl.getImageUrl();
+    }
+
+    public Double getLiquorAlcohol() {
+        return liquorAlcohol.getAlcohol();
+    }
+
+    public Integer getLiquorVolume() {
+        return liquorVolume.getVolume();
     }
 }
