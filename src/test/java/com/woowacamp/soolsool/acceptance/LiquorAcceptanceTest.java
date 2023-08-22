@@ -49,9 +49,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             })
             .getData()
             .getAccessToken();
+
         return accessToken;
     }
-
 
     @Test
     @DisplayName("술 상품을 등록할 수 있다")

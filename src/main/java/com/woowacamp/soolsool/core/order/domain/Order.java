@@ -1,15 +1,8 @@
 package com.woowacamp.soolsool.core.order.domain;
 
-import com.woowacamp.soolsool.core.order.domain.converter.OrderMileageUsageConverter;
-import com.woowacamp.soolsool.core.order.domain.converter.OrderPriceConverter;
-import com.woowacamp.soolsool.core.order.domain.converter.OrderQuantityConverter;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderMileageUsage;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderPrice;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import java.math.BigInteger;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,36 +34,30 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "order_status_id", nullable = false)
     private OrderStatus status;
 
-    @Column(name = "original_total_price", nullable = false)
-    @Convert(converter = OrderPriceConverter.class)
-    private OrderPrice originalTotalPrice;
-
-    @Column(name = "mileage_usage", nullable = false)
-    @Convert(converter = OrderMileageUsageConverter.class)
-    private OrderMileageUsage mileageUsage;
-
-    @Column(name = "purchased_total_price", nullable = false)
-    @Convert(converter = OrderPriceConverter.class)
-    private OrderPrice purchasedTotalPrice;
-
-    @Column(name = "total_quantity", nullable = false)
-    @Convert(converter = OrderQuantityConverter.class)
-    private OrderQuantity totalQuantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receipt_id", nullable = false)
+    private Receipt receipt;
 
     @Builder
     public Order(
         final Long memberId,
-        final OrderStatus status,
-        final String originalTotalPrice,
-        final String mileageUsage,
-        final String purchasedTotalPrice,
-        final Integer totalQuantity
+        final OrderStatus orderStatus,
+        final Receipt receipt
     ) {
         this.memberId = memberId;
-        this.status = status;
-        this.originalTotalPrice = new OrderPrice(new BigInteger(originalTotalPrice));
-        this.mileageUsage = new OrderMileageUsage(new BigInteger(mileageUsage));
-        this.purchasedTotalPrice = new OrderPrice(new BigInteger(purchasedTotalPrice));
-        this.totalQuantity = new OrderQuantity(totalQuantity);
+        this.status = orderStatus;
+        this.receipt = receipt;
+    }
+
+    public static Order of(
+        final Long memberId,
+        final OrderStatus orderStatus,
+        final Receipt receipt
+    ) {
+        return new Order(memberId, orderStatus, receipt);
+    }
+
+    public void updateStatus(final OrderStatus orderStatus) {
+        this.status = orderStatus;
     }
 }

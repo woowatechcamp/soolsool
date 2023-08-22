@@ -1,5 +1,7 @@
 package com.woowacamp.soolsool.core.order.code;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import com.woowacamp.soolsool.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,14 @@ public enum OrderErrorCode implements ErrorCode {
     NO_CONTENT_NAME(400, "O107", "술 이름은 null이거나 공백일 수 없습니다."),
 
     NOT_LIQUOR_STATUS_FOUND(404, "O108", "술 판매 상태가 존재하지 않습니다."),
+
+    NOT_EXISTS_RECEIPT(500, "O109", "주문 내역을 생성할 주문서가 존재하지 않습니다."),
+
+    ACCESS_DENIED_ORDER(403, "O110", "본인의 주문 내역만 조회할 수 있습니다."),
+
+    NOT_EXISTS_ORDER(404, "O111", "주문 내역이 존재하지 않습니다."),
+
+    NOT_EXISTS_ORDER_STATUS(500, "O112", "결제 상태가 존재하지 않습니다."),
     ;
 
     private final int status;
