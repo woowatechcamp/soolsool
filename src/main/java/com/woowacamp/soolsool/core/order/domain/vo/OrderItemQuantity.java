@@ -1,7 +1,8 @@
 package com.woowacamp.soolsool.core.order.domain.vo;
 
+import static com.woowacamp.soolsool.global.code.GlobalErrorCode.NO_CONTENT;
+
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
-import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
@@ -24,7 +25,7 @@ public class OrderItemQuantity {
 
     private void validateIsNotNullable(final Integer quantity) {
         if (Objects.isNull(quantity)) {
-            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
+            throw new SoolSoolException(NO_CONTENT);
         }
     }
 

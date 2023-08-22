@@ -27,7 +27,7 @@ public class ReceiptService {
     private final ReceiptRepository receiptRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
-
+    
     @Transactional
     public Long addReceipt(final Long memberId) {
         final Member member = memberRepository.findById(memberId)

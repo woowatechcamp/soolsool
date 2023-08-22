@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.cart.domain;
 
-import static com.woowacamp.soolsool.global.exception.GlobalErrorCode.NO_CONTENT;
+import static com.woowacamp.soolsool.global.code.GlobalErrorCode.NO_CONTENT;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.woowacamp.soolsool.core.cart.domain.converter.CartItemQuantityConverter;

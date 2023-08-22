@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.order.code;
 
-import com.woowacamp.soolsool.global.exception.ErrorCode;
+import com.woowacamp.soolsool.global.code.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +20,9 @@ public enum OrderErrorCode implements ErrorCode {
     NO_CONTENT_NAME(400, "O107", "술 이름은 null이거나 공백일 수 없습니다."),
 
     NOT_LIQUOR_STATUS_FOUND(404, "O108", "술 판매 상태가 존재하지 않습니다."),
+
+    INVALID_PRICE_SIZE(400, "O109", "주문 가격은 0 이하일 수 없습니다."),
+    NO_PRICE_CONTENT(400, "O110", "주문 가격은 null일 수 없습니다."),
     ;
 
     private final int status;

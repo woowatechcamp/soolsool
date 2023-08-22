@@ -1,6 +1,9 @@
 package com.woowacamp.soolsool.core.order.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import static com.woowacamp.soolsool.core.order.code.OrderErrorCode.INVALID_PRICE_SIZE;
+import static com.woowacamp.soolsool.core.order.code.OrderErrorCode.NO_PRICE_CONTENT;
+
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
@@ -25,13 +28,13 @@ public class OrderItemPrice {
 
     private void validateIsValidSize(final BigInteger price) {
         if (price.compareTo(BigInteger.ZERO) <= 0) {
-            throw new ShoppingException("주문 상품 가격은 0 이하일 수 없습니다.");
+            throw new SoolSoolException(INVALID_PRICE_SIZE);
         }
     }
 
     private void validateIsNotNull(final BigInteger price) {
         if (Objects.isNull(price)) {
-            throw new ShoppingException("주문 상품 가격은 null일 수 없습니다.");
+            throw new SoolSoolException(NO_PRICE_CONTENT);
         }
     }
 }

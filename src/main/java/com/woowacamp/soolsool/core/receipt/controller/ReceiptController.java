@@ -42,4 +42,5 @@ public class ReceiptController {
 
         return ResponseEntity.ok(ApiResponse.of(RECEIPT_FOUND, receipt));
     }
+
 }

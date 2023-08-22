@@ -25,7 +25,7 @@ class ReceiptQuantityTest {
     }
 
     @Test
-    @DisplayName("주문서 개수가 0 미만일 경우 ShoppingException을 던진다.")
+    @DisplayName("주문서 개수가 0 미만일 경우 SoolSoolException을 던진다.")
     void createFailWithInvalidStock() {
         /* given */
         int stock = -1;

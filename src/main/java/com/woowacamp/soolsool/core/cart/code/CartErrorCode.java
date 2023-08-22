@@ -4,7 +4,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import com.woowacamp.soolsool.global.exception.ErrorCode;
+import com.woowacamp.soolsool.global.code.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

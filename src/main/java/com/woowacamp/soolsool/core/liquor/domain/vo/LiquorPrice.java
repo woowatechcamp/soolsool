@@ -1,6 +1,9 @@
 package com.woowacamp.soolsool.core.liquor.domain.vo;
 
-import com.woowacamp.soolsool.global.exception.ShoppingException;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.INVALID_SIZE_PRICE;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NO_CONTENT_PRICE;
+
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
@@ -25,13 +28,13 @@ public class LiquorPrice {
 
     private void validateIsValidSize(final BigInteger price) {
         if (price.compareTo(BigInteger.ZERO) < 0) {
-            throw new ShoppingException("술 가격은 0 미만일 수 없습니다.");
+            throw new SoolSoolException(INVALID_SIZE_PRICE);
         }
     }
 
     private void validateIsNotNull(final BigInteger price) {
         if (Objects.isNull(price)) {
-            throw new ShoppingException("술 가격은 null일 수 없습니다.");
+            throw new SoolSoolException(NO_CONTENT_PRICE);
         }
     }
 }
