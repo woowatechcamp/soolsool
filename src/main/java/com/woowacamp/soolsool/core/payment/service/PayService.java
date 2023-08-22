@@ -5,6 +5,7 @@ import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.ACCESS_DENIE
 import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_LIQUOR;
 import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_ORDER_STATUS;
 import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_RECEIPT;
+import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_MATCHED_LIQUOR_PRICE;
 
 import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
@@ -63,6 +64,9 @@ public class PayService {
         receiptItems.forEach(receiptItem -> {
             final Liquor liquor = liquorRepository.findLiquorByIdWithLock(receiptItem.getLiquorId())
                 .orElseThrow(() -> new SoolSoolException(NOT_FOUND_LIQUOR));
+            if (!Objects.equals(liquor.getPrice(), receiptItem.getLiquorOriginalPrice())) {
+                throw new SoolSoolException(NOT_MATCHED_LIQUOR_PRICE);
+            }
             liquor.decreaseStock(receiptItem.getQuantity());
         });
 
