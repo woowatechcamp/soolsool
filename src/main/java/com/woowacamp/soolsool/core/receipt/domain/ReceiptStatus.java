@@ -31,4 +31,8 @@ public class ReceiptStatus {
     public ReceiptStatus(final ReceiptStatusType type) {
         this.type = type;
     }
+
+    public void updateStatus(final ReceiptStatusType type) {
+        this.type = type;
+    }
 }

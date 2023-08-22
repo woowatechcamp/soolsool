@@ -64,6 +64,10 @@ public class Cart {
         }
     }
 
+    public boolean isEmpty() {
+        return this.cartItems.isEmpty();
+    }
+
     public Long getMemberId() {
         return memberId;
     }
@@ -71,5 +75,9 @@ public class Cart {
     public List<CartItem> getCartItems() {
         return cartItems.stream()
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    public int getCartItemSize() {
+        return this.cartItems.size();
     }
 }

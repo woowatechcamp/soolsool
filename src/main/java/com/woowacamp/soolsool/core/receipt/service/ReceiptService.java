@@ -3,26 +3,19 @@ package com.woowacamp.soolsool.core.receipt.service;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
-import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_TYPE_FOUND;
-import static com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType.INPROGRESS;
 
-import com.woowacamp.soolsool.core.cart.domain.CartItem;
+import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
-import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
-import com.woowacamp.soolsool.core.receipt.domain.ReceiptItems;
-import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptModifyRequest;
 import com.woowacamp.soolsool.core.receipt.dto.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,40 +24,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReceiptService {
 
+    private final ReceiptMapper receiptMapper;
     private final ReceiptRepository receiptRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
     private final ReceiptStatusRepository receiptStatusRepository;
 
-
     @Transactional
     public Long addReceipt(final Long memberId) {
-        final Member member = memberRepository
-            .findById(memberId)
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
 
-        final List<CartItem> cartItems = cartItemRepository
-            .findAllByMemberIdOrderByCreatedAtDescWithLiquor(memberId);
+        final Cart cart =
+            new Cart(memberId, cartItemRepository.findAllByMemberId(memberId));
 
-        final ReceiptItems receiptItems = new ReceiptItems(
-            makeReceiptItems(cartItems),
-            member.getMileage()
-        );
-
-        final Receipt receipt = Receipt.of(
-            memberId,
-            getReceiptStatusByType(INPROGRESS),
-            receiptItems
-        );
-
-        return receiptRepository.save(receipt).getId();
-    }
-
-
-    private List<ReceiptItem> makeReceiptItems(final List<CartItem> cartItems) {
-        return cartItems.stream()
-            .map(cartItem -> ReceiptItem.of(cartItem.getLiquor(), cartItem.getQuantity()))
-            .collect(Collectors.toList());
+        return receiptRepository.save(receiptMapper.mapFrom(cart, member.getMileage())).getId();
     }
 
     @Transactional(readOnly = true)
@@ -92,11 +66,10 @@ public class ReceiptService {
             throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
 
-        receipt.updateStatus(requestModifyRequest.getReceiptStatusType());
+        final ReceiptStatusType type =
+            ReceiptStatusType.valueOf(requestModifyRequest.getReceiptStatusType());
+
+        receipt.updateStatus(type);
     }
 
-    private ReceiptStatus getReceiptStatusByType(final ReceiptStatusType receiptStatusType) {
-        return receiptStatusRepository.findByType(receiptStatusType)
-            .orElseThrow(() -> new SoolSoolException(NOT_RECEIPT_TYPE_FOUND));
-    }
 }

@@ -33,4 +33,8 @@ public class ReceiptPrice {
             throw new SoolSoolException(NO_CONTENT_PRICE);
         }
     }
+
+    public ReceiptPrice subtract(final ReceiptPrice mileageUsage) {
+        return new ReceiptPrice(this.price.subtract(mileageUsage.price));
+    }
 }

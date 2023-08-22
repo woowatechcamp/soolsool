@@ -66,44 +66,32 @@ public class Receipt extends ReceiptBaseEntity {
 
     @Builder
     public Receipt(
-        final Long id,
         final Long memberId,
         final ReceiptStatus receiptStatus,
-        final String originalTotalPrice,
-        final String mileageUsage,
-        final String purchasedTotalPrice,
-        final int totalQuantity,
+        final ReceiptPrice originalTotalPrice,
+        final ReceiptPrice mileageUsage,
+        final ReceiptPrice purchasedTotalPrice,
+        final ReceiptQuantity totalQuantity,
         final List<ReceiptItem> receiptItems
     ) {
-        this.id = id;
         this.memberId = memberId;
         this.receiptStatus = receiptStatus;
-        this.originalTotalPrice = new ReceiptPrice(new BigInteger(originalTotalPrice));
-        this.mileageUsage = new ReceiptPrice(new BigInteger(mileageUsage));
-        this.purchasedTotalPrice = new ReceiptPrice(new BigInteger(purchasedTotalPrice));
-        this.totalQuantity = new ReceiptQuantity(totalQuantity);
-        addReceiptItems(receiptItems);
-    }
+        this.originalTotalPrice = originalTotalPrice;
+        this.mileageUsage = mileageUsage;
+        this.purchasedTotalPrice = purchasedTotalPrice;
+        this.totalQuantity = totalQuantity;
+        this.receiptItems = receiptItems;
 
-    public static Receipt of(
-        final Long memberId,
-        final ReceiptStatus receiptStatus,
-        final ReceiptItems receiptItems
-    ) {
-        return new Receipt(
-            null, memberId,
-            receiptStatus,
-            receiptItems.getTotalAmount().toString(),
-            receiptItems.getMileageUsage().toString(),
-            receiptItems.getPurchasedTotalPrice().toString(),
-            receiptItems.getReceiptItemsSize(),
-            receiptItems.getReceiptItems()
-        );
+        addReceiptItems(receiptItems);
     }
 
     public void addReceiptItems(final List<ReceiptItem> receiptItems) {
         this.receiptItems.addAll(receiptItems);
         receiptItems.forEach(receiptItem -> receiptItem.setReceipt(this));
+    }
+
+    public void updateStatus(final ReceiptStatusType type) {
+        this.receiptStatus.updateStatus(type);
     }
 
     public BigInteger getOriginalTotalPrice() {
@@ -124,9 +112,5 @@ public class Receipt extends ReceiptBaseEntity {
 
     public int getTotalQuantity() {
         return totalQuantity.getQuantity();
-    }
-
-    public void updateStatus(final String receiptStatusType) {
-        this.receiptStatus = new ReceiptStatus(ReceiptStatusType.valueOf(receiptStatusType));
     }
 }

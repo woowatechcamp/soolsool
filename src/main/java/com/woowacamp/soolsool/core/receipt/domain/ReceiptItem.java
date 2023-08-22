@@ -55,7 +55,7 @@ public class ReceiptItem extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public static ReceiptItem of(
+    public static ReceiptItem of( // 생성자로 바꾸기
         final Liquor liquor,
         final int quantity
     ) {
