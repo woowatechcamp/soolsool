@@ -11,4 +11,8 @@ public class KakaoPayReadyResponse {
 
     private String tid;
     private String next_redirect_pc_url;
+
+    public PayReadyResponse toReadyResponse() {
+        return new PayReadyResponse(tid, next_redirect_pc_url, null, null);
+    }
 }
