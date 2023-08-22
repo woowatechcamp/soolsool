@@ -15,6 +15,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,9 +32,6 @@ class CartItemRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private MemberRoleRepository memberRoleRepository;
 
     @Autowired
     private LiquorBrewRepository liquorBrewRepository;
@@ -114,6 +112,7 @@ class CartItemRepositoryTest {
             .stock(120)
             .alcohol(21.8)
             .volume(400)
+            .expiredAt(LocalDateTime.now().plusYears(5L))
             .build();
         liquor = liquorRepository.save(liquor);
         Liquor liquor2 = Liquor.builder()
@@ -127,6 +126,7 @@ class CartItemRepositoryTest {
             .stock(120)
             .alcohol(21.8)
             .volume(400)
+            .expiredAt(LocalDateTime.now().plusYears(5L))
             .build();
         liquor2 = liquorRepository.save(liquor2);
 
@@ -151,7 +151,6 @@ class CartItemRepositoryTest {
         assertThat(cartItemList).hasSize(2);
     }
 
-
     @Test
     @DisplayName("유저 아이디에 따른 장바구니 모든 아이템 삭제")
     void deleteAllTest() {
@@ -173,6 +172,7 @@ class CartItemRepositoryTest {
             .stock(120)
             .alcohol(21.8)
             .volume(400)
+            .expiredAt(LocalDateTime.now().plusYears(5L))
             .build();
         liquor = liquorRepository.save(liquor);
         Liquor liquor2 = Liquor.builder()
@@ -186,6 +186,7 @@ class CartItemRepositoryTest {
             .stock(120)
             .alcohol(21.8)
             .volume(400)
+            .expiredAt(LocalDateTime.now().plusYears(5L))
             .build();
         liquor2 = liquorRepository.save(liquor2);
 

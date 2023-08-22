@@ -16,6 +16,7 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,8 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
             "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
+            120, 31.3, 300,
+            LocalDateTime.now().plusYears(5L)
         );
         String location = RestAssured
             .given().log().all()
@@ -77,12 +79,15 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
             "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
+            120, 31.3, 300,
+            LocalDateTime.now().plusYears(5L)
         );
         LiquorSaveRequest liquorSaveRequest2 = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
 
         Long liquorId = Long.parseLong(RestAssured
             .given().log().all()
@@ -148,7 +153,8 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
             "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
+            120, 31.3, 300,
+            LocalDateTime.now().plusYears(5L)
         );
         String location = RestAssured
             .given().log().all()
@@ -200,7 +206,8 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
             "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
+            120, 31.3, 300,
+            LocalDateTime.now().plusYears(5L)
         );
         String location = RestAssured
             .given().log().all()
@@ -262,12 +269,15 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGSANGNAM_DO", "ON_SALE",
             "안동소주", "12000", "안동", "/soju.jpeg",
-            120, 31.3, 300
+            120, 31.3, 300,
+            LocalDateTime.now().plusYears(5L)
         );
         LiquorSaveRequest liquorSaveRequest2 = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
 
         Long liquorId = Long.parseLong(RestAssured
             .given().log().all()
