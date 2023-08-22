@@ -4,6 +4,7 @@ import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_CART
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
+import static com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType.COMPLETED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -11,7 +12,6 @@ import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
-import com.woowacamp.soolsool.core.receipt.dto.request.ReceiptModifyRequest;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptMapper;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
@@ -162,8 +162,7 @@ class ReceiptServiceTest {
         Long receiptId = receiptService.addReceipt(memberId);
 
         // when
-        ReceiptModifyRequest receiptRequest = new ReceiptModifyRequest("COMPLETED");
-        receiptService.modifyReceiptStatus(memberId, receiptId, receiptRequest);
+        receiptService.modifyReceiptStatus(memberId, receiptId, COMPLETED);
 
         // then
         ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
@@ -188,11 +187,10 @@ class ReceiptServiceTest {
         );
         cartService.addCartItem(memberId, cartItemSaveRequest);
         Long receiptId = receiptService.addReceipt(memberId);
-        ReceiptModifyRequest receiptRequest = new ReceiptModifyRequest("COMPLETED");
 
         // when & then
         assertThatCode(
-            () -> receiptService.modifyReceiptStatus(anotherMemberId, receiptId, receiptRequest))
+            () -> receiptService.modifyReceiptStatus(anotherMemberId, receiptId, COMPLETED))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_EQUALS_MEMBER.getMessage());
     }
@@ -204,11 +202,10 @@ class ReceiptServiceTest {
         // given
         Long memberId = 3L;
         Long receiptId = 999L;
-        ReceiptModifyRequest receiptRequest = new ReceiptModifyRequest("COMPLETED");
 
         // when & then
         assertThatCode(
-            () -> receiptService.modifyReceiptStatus(memberId, receiptId, receiptRequest))
+            () -> receiptService.modifyReceiptStatus(memberId, receiptId, COMPLETED))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_RECEIPT_FOUND.getMessage());
     }
