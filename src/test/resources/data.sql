@@ -30,8 +30,18 @@ insert into order_status(id, name)
 values (1, 'COMPLETED'),
        (2, 'CANCELED');
 
-insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
-values (3L, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa', '010-1234-5678', 1L);
+insert into receipt_status(id, name)
+values (1, 'INPROGRESS'),
+       (2, 'CANCELED'),
+       (3, 'COMPLETED'),
+       (4, 'EXPIRED');
 
-insert into MEMBERS(id, address, email, mileage, name, password, phone_number, role_id)
-values (4L, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2L);
+insert into members(id, address, email, mileage, name, password, phone_number, role_id)
+values (3, '잠실역', 'woowafriends@naver.com', '1000', '김배달', 'woowa', '010-1234-5678', 1),
+       (4, '잠실역', 'test@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 2),
+       (5, '잠실역', 'hello@email.com', '1000', '김배민', 'test_password', '010-1234-5678', 1);
+
+insert into receipts(id, member_id, receipt_status_id, original_total_price, mileage_usage,
+                     purchased_total_price, total_quantity)
+values (1, 3, 1, 10000, 1000, 9000, 3)
+

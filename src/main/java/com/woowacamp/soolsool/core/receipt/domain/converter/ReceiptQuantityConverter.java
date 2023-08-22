@@ -1,6 +1,6 @@
-package com.woowacamp.soolsool.core.receipt.converter;
+package com.woowacamp.soolsool.core.receipt.domain.converter;
 
-import com.woowacamp.soolsool.core.receipt.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 

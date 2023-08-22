@@ -8,6 +8,7 @@ import com.woowacamp.soolsool.core.cart.domain.vo.CartItemQuantity;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.math.BigInteger;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -64,10 +65,6 @@ public class CartItem extends BaseEntity {
         this.quantity = new CartItemQuantity(quantity);
     }
 
-    public int getQuantity() {
-        return this.quantity.getQuantity();
-    }
-
     private void validateIsNotNullLiquor(final Liquor liquor) {
         if (Objects.isNull(liquor)) {
             throw new SoolSoolException(NO_CONTENT);
@@ -92,5 +89,13 @@ public class CartItem extends BaseEntity {
 
     public void updateQuantity(final Integer liquorQuantity) {
         this.quantity = new CartItemQuantity(liquorQuantity);
+    }
+
+    public int getQuantity() {
+        return this.quantity.getQuantity();
+    }
+
+    public BigInteger getLiquorPrice() {
+        return this.liquor.getPrice();
     }
 }

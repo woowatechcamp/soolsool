@@ -102,4 +102,8 @@ public class Member extends BaseEntity {
     public boolean matchPassword(final String password) {
         return this.password.matchPassword(password);
     }
+
+    public BigInteger getMileage() {
+        return mileage.getMileage();
+    }
 }
