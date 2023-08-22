@@ -13,6 +13,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,12 +37,14 @@ class CartTest {
         soju = new Liquor(
             1L, sojuBrew, gyeongSangNamDoRegion, onSaleStatus,
             "안동 소주", "12000", "안동", "/soju.jpg",
-            120, 21.7, 400
+            120, 21.7, 400,
+            LocalDateTime.now()
         );
         beer = new Liquor(
             2L, etcBrew, gyeongSangNamDoRegion, stoppedStatus,
             "맥주", "5000", "OB", "/beer.jpg",
-            20, 5.7, 500
+            20, 5.7, 500,
+            LocalDateTime.now()
         );
     }
 

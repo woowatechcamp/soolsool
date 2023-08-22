@@ -12,6 +12,7 @@ import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,15 +51,10 @@ class CartServiceTest {
         // given
         Long memberId = 1L;
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(10L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         CartItemSaveRequest request = new CartItemSaveRequest(saveLiquorId, 1);
@@ -82,15 +78,10 @@ class CartServiceTest {
         Long memberId = 1L;
         Long anotherMemberId = 2L;
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(10L));
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
         CartItemSaveRequest request = new CartItemSaveRequest(saveLiquorId, 1);
         Long cartItemId = cartService.addCartItem(memberId, request);

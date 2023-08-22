@@ -20,6 +20,7 @@ import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.GlobalErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -93,6 +94,10 @@ public class Liquor extends BaseEntity {
     @Convert(converter = LiquorVolumeConverter.class)
     private LiquorVolume volume;
 
+    @Column(name = "expired_at", nullable = false)
+    @Getter
+    private LocalDateTime expiredAt;
+
     @Builder
     public Liquor(
         final LiquorBrew brew,
@@ -104,9 +109,14 @@ public class Liquor extends BaseEntity {
         final String imageUrl,
         final int stock,
         final Double alcohol,
-        final int volume
+        final int volume,
+        final LocalDateTime expiredAt
     ) {
-        this(null, brew, region, status, name, price, brand, imageUrl, stock, alcohol, volume);
+        this(null,
+            brew, region, status,
+            name, price, brand, imageUrl,
+            stock, alcohol, volume,
+            expiredAt);
     }
 
     public Liquor(
@@ -120,7 +130,8 @@ public class Liquor extends BaseEntity {
         final String imageUrl,
         final int stock,
         final Double alcohol,
-        final int volume
+        final int volume,
+        final LocalDateTime expiredAt
     ) {
         validateIsNotNullableCategory(brew, region, status);
 
@@ -135,6 +146,7 @@ public class Liquor extends BaseEntity {
         this.stock = new LiquorStock(stock);
         this.alcohol = new LiquorAlcohol(alcohol);
         this.volume = new LiquorVolume(volume);
+        this.expiredAt = expiredAt;
     }
 
     private void validateIsNotNullableCategory(final Object... objects) {
@@ -159,6 +171,7 @@ public class Liquor extends BaseEntity {
         this.stock = new LiquorStock(request.getStock());
         this.alcohol = new LiquorAlcohol(request.getAlcohol());
         this.volume = new LiquorVolume(request.getVolume());
+        this.expiredAt = request.getExpiredAt();
     }
 
     public boolean isStopped() {

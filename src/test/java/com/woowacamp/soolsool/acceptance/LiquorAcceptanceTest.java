@@ -20,6 +20,7 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,15 +59,10 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -91,15 +87,10 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(10L));
 
         ExtractableResponse<Response> saveLiquor = RestAssured
             .given().log().all()
@@ -113,16 +104,10 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         Long liquorId = Long.parseLong(saveLiquor.header("Location").split("/")[2]);
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "안동소주",
-            "3000",
-            "브랜드",
-            "soolsool.png",
-            100,
-            12.0,
-            1
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "안동소주", "3000", "브랜드", "soolsool.png",
+            100, 12.0, 1,
+            LocalDateTime.now().plusYears(10L)
         );
 
         // when
@@ -148,15 +133,10 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = findToken(EMAIL, PASSWORD);
         LiquorSaveRequest saveLiquorRequest = new LiquorSaveRequest(
-            "SOJU",
-            "GYEONGGI_DO",
-            "ON_SALE",
-            "새로",
-            "3000",
-            "브랜드",
-            "/url",
-            100, 12.0,
-            300);
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
 
         ExtractableResponse<Response> saveLiquor = RestAssured
             .given().log().all()
@@ -193,7 +173,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
 
         String location = RestAssured
             .given().log().all()
@@ -239,11 +221,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest saveSojuRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
         LiquorSaveRequest saveBeerRequest = new LiquorSaveRequest(
             "ETC", "GYEONGGI_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
-            200, 24.0, 600);
+            200, 24.0, 600,
+            LocalDateTime.now().plusYears(5L)
+        );
         String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
@@ -294,11 +280,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest saveSojuRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
         LiquorSaveRequest saveBeerRequest = new LiquorSaveRequest(
             "ETC", "GYEONGGI_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
-            200, 24.0, 600);
+            200, 24.0, 600,
+            LocalDateTime.now().plusYears(5L)
+        );
         String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
@@ -350,11 +340,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest saveSojuRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
         LiquorSaveRequest saveBeerRequest = new LiquorSaveRequest(
             "ETC", "CHUNGCHEONGBUK_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
-            200, 24.0, 600);
+            200, 24.0, 600,
+            LocalDateTime.now().plusYears(5L)
+        );
         String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
@@ -407,11 +401,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest saveSojuRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "STOPPED",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L)
+        );
         LiquorSaveRequest saveBeerRequest = new LiquorSaveRequest(
             "ETC", "CHUNGCHEONGBUK_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
-            200, 24.0, 600);
+            200, 24.0, 600,
+            LocalDateTime.now().plusYears(5L)
+        );
         String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
@@ -465,15 +463,19 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest saveSojuRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "STOPPED",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300);
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
         LiquorSaveRequest saveBeerRequest = new LiquorSaveRequest(
             "ETC", "CHUNGCHEONGBUK_DO", "ON_SALE",
             "하이트", "4000", "진로", "/beer-url",
-            200, 24.0, 600);
+            200, 24.0, 600,
+            LocalDateTime.now().plusYears(5L));
         LiquorSaveRequest saveBerryRequest = new LiquorSaveRequest(
             "BERRY", "JEOLLABUK_DO", "ON_SALE",
             "얼음딸기주", "4500", "우영미", "/strawberry-url",
-            20, 14.0, 400);
+            20, 14.0, 400,
+            LocalDateTime.now().plusYears(5L)
+        );
         String accessToken = findToken(EMAIL, PASSWORD);
 
         RestAssured
