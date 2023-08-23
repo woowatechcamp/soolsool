@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,17 @@ public class KakaoPayReceipt {
 
     @Column(name = "tid", nullable = false)
     private String tid;
+
+    @Builder
+    public KakaoPayReceipt(final Long receiptId, final String tid) {
+        this.receiptId = receiptId;
+        this.tid = tid;
+    }
+
+    public static KakaoPayReceipt of(final Long receiptId, final String tid) {
+        return KakaoPayReceipt.builder()
+            .receiptId(receiptId)
+            .tid(tid)
+            .build();
+    }
 }

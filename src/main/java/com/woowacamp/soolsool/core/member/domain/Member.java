@@ -107,6 +107,13 @@ public class Member extends BaseEntity {
         return mileage.getMileage();
     }
 
+    public void decreasePoint(final BigInteger mileageUsage) {
+        if (mileageUsage.compareTo(this.mileage.getMileage()) > 0) {
+            throw new IllegalArgumentException("마일리지가 부족합니다.");
+        }
+        this.mileage = this.mileage.subtract(mileageUsage);
+    }
+
     public String getRoleName() {
         return this.role.getName().getType();
     }
