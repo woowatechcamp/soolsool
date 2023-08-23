@@ -4,82 +4,40 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
-import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import java.time.LocalDateTime;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @DisplayName("CartItemRepository 테스트")
 class CartItemRepositoryTest {
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    CartItemRepository cartItemRepository;
 
     @Autowired
-    private MemberRepository memberRepository;
+    LiquorRepository liquorRepository;
 
     @Autowired
-    private LiquorBrewRepository liquorBrewRepository;
-
-    @Autowired
-    private LiquorRegionRepository liquorRegionRepository;
-
-    @Autowired
-    private LiquorStatusRepository liquorStatusRepository;
-
-    @Autowired
-    private LiquorRepository liquorRepository;
-
-    private Long commonMemberId;
-
-    @BeforeEach
-    void setUpMember() {
-        Member member = memberRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("Member가 존재하지 않습니다."));
-        commonMemberId = member.getId();
-    }
+    MemberRepository memberRepository;
 
     @Test
-    @DisplayName("save 테스트")
+    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql", "/liquor.sql"})
+    @DisplayName("CartItem을 저장한다.")
     void createCartItem() {
         // given
-        LiquorBrew liquorBrew = liquorBrewRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorBrew가 존재하지 않습니다."));
-        LiquorRegion liquorRegion = liquorRegionRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorRegion이 존재하지 않습니다."));
-        LiquorStatus liquorStatus = liquorStatusRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorStatus가 존재하지 않습니다."));
-        Liquor liquor = Liquor.builder()
-            .brew(liquorBrew)
-            .region(liquorRegion)
-            .status(liquorStatus)
-            .name("안동 소주")
-            .price("12000")
-            .brand("안동")
-            .imageUrl("/soju.jpeg")
-            .stock(120)
-            .alcohol(21.8)
-            .volume(400)
-            .build();
-        liquor = liquorRepository.save(liquor);
+        final Liquor 새로 = liquorRepository.findById(1L)
+            .orElseThrow(() -> new IllegalArgumentException("테스트 데이터가 없습니다."));
 
         CartItem cartItem = CartItem.builder()
-            .memberId(commonMemberId)
-            .liquor(liquor)
-            .quantity(1)
+            .memberId(1L)
+            .liquor(새로)
+            .quantity(2)
             .build();
 
         // when
@@ -90,122 +48,38 @@ class CartItemRepositoryTest {
     }
 
     @Test
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql",
+        "/cart-item.sql"
+    })
     @DisplayName("유저 아이디에 따른 장바구니 모두 조회")
     void cartItemListByUserId() {
-        LiquorBrew liquorBrew = liquorBrewRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorBrew가 존재하지 않습니다."));
-        LiquorRegion liquorRegion = liquorRegionRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorRegion이 존재하지 않습니다."));
-        LiquorStatus liquorStatus = liquorStatusRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorStatus가 존재하지 않습니다."));
-
-        Liquor liquor = Liquor.builder()
-            .brew(liquorBrew)
-            .region(liquorRegion)
-            .status(liquorStatus)
-            .name("안동 소주")
-            .price("12000")
-            .brand("안동")
-            .imageUrl("/soju.jpeg")
-            .stock(120)
-            .alcohol(21.8)
-            .volume(400)
-            .expiredAt(LocalDateTime.now().plusYears(5L))
-            .build();
-        liquor = liquorRepository.save(liquor);
-        Liquor liquor2 = Liquor.builder()
-            .brew(liquorBrew)
-            .region(liquorRegion)
-            .status(liquorStatus)
-            .name("새로")
-            .price("12000")
-            .brand("새로")
-            .imageUrl("/sero.jpeg")
-            .stock(120)
-            .alcohol(21.8)
-            .volume(400)
-            .expiredAt(LocalDateTime.now().plusYears(5L))
-            .build();
-        liquor2 = liquorRepository.save(liquor2);
-
-        CartItem cartItem = CartItem.builder()
-            .memberId(commonMemberId)
-            .liquor(liquor)
-            .quantity(1)
-            .build();
-        cartItemRepository.save(cartItem);
-        CartItem cartItem2 = CartItem.builder()
-            .memberId(commonMemberId)
-            .liquor(liquor2)
-            .quantity(1)
-            .build();
-        cartItemRepository.save(cartItem2);
+        // given
 
         // when
         List<CartItem> cartItemList = cartItemRepository
-            .findAllByMemberIdOrderByCreatedAtDescWithLiquor(commonMemberId);
+            .findAllByMemberIdOrderByCreatedAtDescWithLiquor(1L);
 
         // then
         assertThat(cartItemList).hasSize(2);
     }
 
     @Test
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql",
+        "/cart-item.sql"
+    })
     @DisplayName("유저 아이디에 따른 장바구니 모든 아이템 삭제")
     void deleteAllTest() {
-        LiquorBrew liquorBrew = liquorBrewRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorBrew가 존재하지 않습니다."));
-        LiquorRegion liquorRegion = liquorRegionRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorRegion이 존재하지 않습니다."));
-        LiquorStatus liquorStatus = liquorStatusRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("LiquorStatus가 존재하지 않습니다."));
-
-        Liquor liquor = Liquor.builder()
-            .brew(liquorBrew)
-            .region(liquorRegion)
-            .status(liquorStatus)
-            .name("안동 소주")
-            .price("12000")
-            .brand("안동")
-            .imageUrl("/soju.jpeg")
-            .stock(120)
-            .alcohol(21.8)
-            .volume(400)
-            .expiredAt(LocalDateTime.now().plusYears(5L))
-            .build();
-        liquor = liquorRepository.save(liquor);
-        Liquor liquor2 = Liquor.builder()
-            .brew(liquorBrew)
-            .region(liquorRegion)
-            .status(liquorStatus)
-            .name("새로")
-            .price("12000")
-            .brand("새로")
-            .imageUrl("/sero.jpeg")
-            .stock(120)
-            .alcohol(21.8)
-            .volume(400)
-            .expiredAt(LocalDateTime.now().plusYears(5L))
-            .build();
-        liquor2 = liquorRepository.save(liquor2);
-
-        CartItem cartItem = CartItem.builder()
-            .memberId(commonMemberId)
-            .liquor(liquor)
-            .quantity(1)
-            .build();
-        cartItemRepository.save(cartItem);
-        CartItem cartItem2 = CartItem.builder()
-            .memberId(commonMemberId)
-            .liquor(liquor2)
-            .quantity(1)
-            .build();
-        cartItemRepository.save(cartItem2);
+        // given
 
         // when
-        cartItemRepository.deleteAllByMemberId(commonMemberId);
+        cartItemRepository.deleteAllByMemberId(1L);
 
         // then
-        assertThat(cartItemRepository.findAllByMemberIdOrderByCreatedAtDesc(commonMemberId))
+        assertThat(cartItemRepository.findAllByMemberIdOrderByCreatedAtDesc(1L))
             .isEmpty();
     }
 }
