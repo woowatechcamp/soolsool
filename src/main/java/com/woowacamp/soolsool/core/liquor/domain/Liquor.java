@@ -68,7 +68,7 @@ public class Liquor extends BaseEntity {
     @Getter
     private LiquorStatus status;
 
-    @Column(name = "name", nullable = false, length = 30)
+    @Column(name = "name", nullable = false, length = 100)
     @Convert(converter = LiquorNameConverter.class)
     private LiquorName name;
 

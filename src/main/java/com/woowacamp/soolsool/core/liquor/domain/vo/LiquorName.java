@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 @EqualsAndHashCode
 public class LiquorName {
 
-    private static final int MAX_LENGTH = 30;
+    private static final int MAX_LENGTH = 100;
 
     private final String name;
 
