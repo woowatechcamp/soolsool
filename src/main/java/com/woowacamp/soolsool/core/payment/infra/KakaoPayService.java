@@ -72,12 +72,10 @@ public class KakaoPayService implements SimplePayService {
             if (Objects.isNull(kakaoPayReadyResponse)) {
                 throw new SoolSoolException(PayErrorCode.NOT_FOUND_PAY_READY_RESPONSE);
             }
-
             kakaoPayReceiptRepository.save(
                 KakaoPayReceipt.of(receipt.getId(), kakaoPayReadyResponse.getTid()));
             return kakaoPayReadyResponse.toReadyResponse();
         } catch (RestClientException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -110,7 +108,6 @@ public class KakaoPayService implements SimplePayService {
             }
             return kakaoPayApproveResponse.toApproveResponse();
         } catch (RestClientException e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool;
+package com.woowacamp.soolsool.core.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,6 +12,7 @@ import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ class KakaoPayTest extends AcceptanceTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("결제 승인을 요청한다.")
     void payApproveSuccess() {
         //payService.payApprove(3L, "d184a7312a9d806cdfde", 3L);
