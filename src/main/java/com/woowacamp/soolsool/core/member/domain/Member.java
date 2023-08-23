@@ -72,13 +72,13 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
-            final MemberRole role,
-            final String email,
-            final String password,
-            final String name,
-            final String phoneNumber,
-            final String mileage,
-            final String address
+        final MemberRole role,
+        final String email,
+        final String password,
+        final String name,
+        final String phoneNumber,
+        final String mileage,
+        final String address
     ) {
         this.role = role;
         this.email = new MemberEmail(email);
@@ -105,5 +105,9 @@ public class Member extends BaseEntity {
 
     public BigInteger getMileage() {
         return mileage.getMileage();
+    }
+
+    public String getRoleName() {
+        return this.role.getName().getType();
     }
 }
