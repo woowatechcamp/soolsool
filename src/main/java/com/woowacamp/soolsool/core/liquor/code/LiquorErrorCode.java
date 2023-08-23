@@ -16,7 +16,7 @@ public enum LiquorErrorCode implements ErrorCode {
     INVALID_LENGTH_IMAGE_URL(400, "L103", "술 이미지 경로는 255자보다 길 수 없습니다."),
     NO_CONTENT_IMAGE_URL(400, "L104", "술 이미지 경로는 null이거나 공백일 수 없습니다."),
 
-    INVALID_LENGTH_NAME(400, "L105", "술 이름은 30자보다 길 수 없습니다."),
+    INVALID_LENGTH_NAME(400, "L105", "술 이름은 100자보다 길 수 없습니다."),
     NO_CONTENT_NAME(400, "L106", "술 이름은 null이거나 공백일 수 없습니다."),
 
     INVALID_SIZE_ALCOHOL(400, "L107", "술 도수는 0 이상 실수여야 합니다."),

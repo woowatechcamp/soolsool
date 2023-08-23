@@ -39,15 +39,15 @@ class LiquorNameTest {
     }
 
     @Test
-    @DisplayName("술 이름이 30자를 초과할 경우 SoolSoolException을 던진다.")
+    @DisplayName("술 이름이 100자를 초과할 경우 SoolSoolException을 던진다.")
     void createFailInvalidLength() {
         /* given */
-        String name = "소".repeat(31);
+        String name = "소".repeat(101);
 
         /* when & then */
         assertThatThrownBy(() -> new LiquorName(name))
             .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage("술 이름은 30자보다 길 수 없습니다.");
+            .hasMessage("술 이름은 100자보다 길 수 없습니다.");
     }
 
     @Test
