@@ -1,10 +1,9 @@
-package com.woowacamp.soolsool.integration.repository;
+package com.woowacamp.soolsool.core.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
-import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
+@DisplayName("회원 repository 통합 테스트")
 class MemberRepositoryTest {
 
     @Autowired

@@ -1,8 +1,7 @@
-package com.woowacamp.soolsool.integration.repository;
+package com.woowacamp.soolsool.core.member.repository;
 
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-@DisplayName("멤버 타입 repository 통합 테스트")
+@DisplayName("회원 타입 repository 통합 테스트")
 class MemberRoleRepositoryTest {
 
     @Autowired
