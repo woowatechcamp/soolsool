@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.integration.service;
+package com.woowacamp.soolsool.core.liquor.service;
 
 import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
-import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -25,7 +24,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @Import(LiquorService.class)
 @DisplayName("술 service 통합 테스트")
-class LiquorServiceTest {
+class LiquorServiceIntegrationTest {
 
     @Autowired
     LiquorRepository liquorRepository;
