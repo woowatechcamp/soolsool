@@ -52,7 +52,7 @@ class MemberServiceTest {
             "구매자",
             "test@email.com",
             "test_password",
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역"
@@ -99,7 +99,7 @@ class MemberServiceTest {
             "판매자",
             "test@email.com",
             "test_password",
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역"
@@ -149,7 +149,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -181,7 +181,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -207,7 +207,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -238,7 +238,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("5000")
             .address("서울시 잠실역")

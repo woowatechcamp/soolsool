@@ -52,7 +52,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "CUSTOMER",
             EMAIL,
             PASSWORD,
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역");
@@ -81,7 +81,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "CUSTOMER",
             EMAIL,
             PASSWORD,
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역");
@@ -107,7 +107,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         MemberFindResponse memberFindResponse = response
             .jsonPath()
             .getObject("data", MemberFindResponse.class);
-        assertThat(memberFindResponse.getName()).isEqualTo("최배달");
+        assertThat(memberFindResponse.getName()).isEqualTo("최민족");
     }
 
     @Test
@@ -118,7 +118,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "CUSTOMER",
             EMAIL,
             PASSWORD,
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역");
@@ -158,7 +158,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "CUSTOMER",
             EMAIL,
             PASSWORD,
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역");
@@ -191,7 +191,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             "CUSTOMER",
             EMAIL,
             PASSWORD,
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역");

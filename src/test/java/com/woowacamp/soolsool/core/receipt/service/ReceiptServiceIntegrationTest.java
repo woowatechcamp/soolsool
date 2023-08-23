@@ -54,10 +54,10 @@ class ReceiptServiceIntegrationTest {
     @DisplayName("회원가 존재하고, 카트에 주문할 게 없으면, 주문서를 생성할 수 없다.")
     void addReceiptWithNoCartItems() {
         // given
-        Long 최배달 = 2L;
+        Long 최민족 = 2L;
 
         // when & then
-        assertThatCode(() -> receiptService.addReceipt(최배달))
+        assertThatCode(() -> receiptService.addReceipt(최민족))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_FOUND_CART_ITEM.getMessage());
     }
@@ -109,11 +109,11 @@ class ReceiptServiceIntegrationTest {
     @DisplayName("회원가 다르면, 주문서가 조회되지 않는다.")
     void receiptDetailWithNoMemberId() {
         // given
-        Long 최배달 = 2L;
+        Long 최민족 = 2L;
         Long 김배달_주문서 = 1L;
 
         // when & then
-        assertThatCode(() -> receiptService.findReceipt(최배달, 김배달_주문서))
+        assertThatCode(() -> receiptService.findReceipt(최민족, 김배달_주문서))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_EQUALS_MEMBER.getMessage());
     }
@@ -168,12 +168,12 @@ class ReceiptServiceIntegrationTest {
     @DisplayName("주문서의 주인이 아니면, 수정을 할 수 없다. ")
     void receiptModifyFailWithNotEqualMember() {
         // given
-        Long 최배달 = 2L;
+        Long 최민족 = 2L;
         Long 김배달_주문서 = 1L;
 
         // when & then
         assertThatCode(
-            () -> receiptService.modifyReceiptStatus(최배달, 김배달_주문서, COMPLETED))
+            () -> receiptService.modifyReceiptStatus(최민족, 김배달_주문서, COMPLETED))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_EQUALS_MEMBER.getMessage());
     }
