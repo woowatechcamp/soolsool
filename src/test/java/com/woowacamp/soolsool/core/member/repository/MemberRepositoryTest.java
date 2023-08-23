@@ -9,8 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
+@Sql({"/member-type.sql", "/member.sql"})
 @DisplayName("회원 repository 통합 테스트")
 class MemberRepositoryTest {
 
@@ -22,7 +24,7 @@ class MemberRepositoryTest {
     void memberCreateTest() {
         // given
         Optional<Member> member = memberRepository.findByEmail(
-            new MemberEmail("woowafriends@naver.com"));
+            new MemberEmail("kim@email.com"));
 
         // when & then
         assertThat(member).isNotEmpty();
