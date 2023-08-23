@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.fixture;
+package com.woowacamp.soolsool.acceptance.fixture;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -15,23 +15,23 @@ public abstract class RestCartFixture {
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(상품_Id, 상품_개수);
 
         return RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer " + 토큰)
-                .body(cartItemSaveRequest)
-                .when().post("/cart-items")
-                .then().log().all()
-                .extract().jsonPath().getObject("data", Long.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, "Bearer " + 토큰)
+            .body(cartItemSaveRequest)
+            .when().post("/cart-items")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", Long.class);
     }
 
     public static List<CartItemResponse> 장바구니_모두_조회(String 토큰) {
         return RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer " + 토큰)
-                .when().get("/cart-items/")
-                .then().log().all()
-                .extract().jsonPath().getObject("data", new TypeRef<>() {
-                });
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, "Bearer " + 토큰)
+            .when().get("/cart-items/")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", new TypeRef<>() {
+            });
     }
 }

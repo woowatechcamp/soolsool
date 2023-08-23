@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.fixture;
+package com.woowacamp.soolsool.acceptance.fixture;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -16,36 +16,36 @@ public abstract class RestAuthFixture {
         LoginRequest loginRequest = new LoginRequest("kim@email.com", "baedal");
 
         ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .body(loginRequest)
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .body(loginRequest)
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract();
 
         return loginResponse.body()
-                .as(new TypeRef<ApiResponse<LoginResponse>>() {
-                })
-                .getData()
-                .getAccessToken();
+            .as(new TypeRef<ApiResponse<LoginResponse>>() {
+            })
+            .getData()
+            .getAccessToken();
     }
 
     public static String 로그인_최민족_판매자() {
         LoginRequest request = new LoginRequest("choi@email.com", "minjok");
 
         ExtractableResponse<Response> loginResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract();
 
         return loginResponse.body()
-                .as(new TypeRef<ApiResponse<LoginResponse>>() {
-                })
-                .getData()
-                .getAccessToken();
+            .as(new TypeRef<ApiResponse<LoginResponse>>() {
+            })
+            .getData()
+            .getAccessToken();
     }
 
 }

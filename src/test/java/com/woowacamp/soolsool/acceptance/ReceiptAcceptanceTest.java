@@ -7,12 +7,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
-import com.woowacamp.soolsool.fixture.RestAuthFixture;
-import com.woowacamp.soolsool.fixture.RestCartFixture;
-import com.woowacamp.soolsool.fixture.RestLiquorFixture;
-import com.woowacamp.soolsool.fixture.RestMemberFixture;
-import com.woowacamp.soolsool.fixture.RestReceiptFixture;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -50,12 +50,12 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> createReceiptResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .when().post("/receipts")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .when().post("/receipts")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(createReceiptResponse.statusCode()).isEqualTo(CREATED.value());
@@ -69,19 +69,19 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> detailReceiptResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .when().get("/receipts/{receiptId}", 주문서_Id)
-                .then().log().all()
-                .extract();
-        
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .when().get("/receipts/{receiptId}", 주문서_Id)
+            .then().log().all()
+            .extract();
+
         // then
         assertThat(detailReceiptResponse.statusCode()).isEqualTo(OK.value());
 
         assertThat(detailReceiptResponse.body().as(new TypeRef<ApiResponse<ReceiptResponse>>() {
-                })
-                .getMessage())
-                .isEqualTo(RECEIPT_FOUND.getMessage());
+            })
+            .getMessage())
+            .isEqualTo(RECEIPT_FOUND.getMessage());
     }
 }

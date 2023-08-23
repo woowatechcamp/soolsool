@@ -2,7 +2,7 @@ package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.fixture.RestMemberFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
@@ -37,19 +37,19 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(loginRequest).log().all()
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract();
+            .given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(loginRequest).log().all()
+            .when().post("/auth/login")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body().as(new TypeRef<ApiResponse<LoginResponse>>() {
-                })
-                .getData()
-                .getAccessToken())
-                .isNotNull();
+            })
+            .getData()
+            .getAccessToken())
+            .isNotNull();
     }
 }

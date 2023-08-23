@@ -5,13 +5,13 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.cart.dto.response.CartItemResponse;
-import com.woowacamp.soolsool.fixture.RestAuthFixture;
-import com.woowacamp.soolsool.fixture.RestCartFixture;
-import com.woowacamp.soolsool.fixture.RestLiquorFixture;
-import com.woowacamp.soolsool.fixture.RestMemberFixture;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
@@ -51,13 +51,13 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .body(cartItemSaveRequest)
-                .when().post("/cart-items")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .body(cartItemSaveRequest)
+            .when().post("/cart-items")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
@@ -73,18 +73,18 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> listResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .when().get("/cart-items/")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .when().get("/cart-items/")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(listResponse.statusCode()).isEqualTo(OK.value());
         assertThat(listResponse.jsonPath().getObject("data",
-                new TypeRef<List<CartItemResponse>>() {
-                }
+            new TypeRef<List<CartItemResponse>>() {
+            }
         )).hasSize(2);
     }
 
@@ -99,13 +99,13 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> modifyResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .body(modifyRequest)
-                .when().patch("/cart-items/{cartItemId}", 장바구니_새로_Id)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .body(modifyRequest)
+            .when().patch("/cart-items/{cartItemId}", 장바구니_새로_Id)
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(modifyResponse.statusCode()).isEqualTo(OK.value());
@@ -120,12 +120,12 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> removeResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .when().delete("/cart-items/{cartItemId}", 장바구니_새로_Id)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .when().delete("/cart-items/{cartItemId}", 장바구니_새로_Id)
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(removeResponse.statusCode()).isEqualTo(OK.value());
@@ -142,12 +142,12 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> listResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + 김배달_토큰)
-                .when().delete("/cart-items/")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .when().delete("/cart-items/")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(listResponse.statusCode()).isEqualTo(OK.value());

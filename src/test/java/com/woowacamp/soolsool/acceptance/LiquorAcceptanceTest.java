@@ -9,13 +9,13 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.fixture.RestAuthFixture;
-import com.woowacamp.soolsool.fixture.RestLiquorFixture;
-import com.woowacamp.soolsool.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -48,21 +48,21 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         // given
         String accessToken = RestAuthFixture.로그인_최민족_판매자();
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-                "SOJU", "GYEONGGI_DO", "ON_SALE",
-                "새로", "3000", "브랜드", "/soju-url",
-                100, 12.0, 300,
-                LocalDateTime.now().plusYears(5L));
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "새로", "3000", "브랜드", "/soju-url",
+            100, 12.0, 300,
+            LocalDateTime.now().plusYears(5L));
 
         // when
         ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .body(liquorSaveRequest)
-                .when().post("/liquors")
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .body(liquorSaveRequest)
+            .when().post("/liquors")
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(CREATED.value());
@@ -78,22 +78,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         final Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
 
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
-                "SOJU", "GYEONGGI_DO", "ON_SALE",
-                "안동소주", "3000", "브랜드", "soolsool.png",
-                100, 12.0, 1,
-                LocalDateTime.now().plusYears(10L)
+            "SOJU", "GYEONGGI_DO", "ON_SALE",
+            "안동소주", "3000", "브랜드", "soolsool.png",
+            100, 12.0, 1,
+            LocalDateTime.now().plusYears(10L)
         );
 
         // when
         ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
-                .body(liquorModifyRequest)
-                .when().put("/liquors/{liquorId}", 새로_Id)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+            .body(liquorModifyRequest)
+            .when().put("/liquors/{liquorId}", 새로_Id)
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(OK.value());
@@ -110,13 +110,13 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
-                .when().delete("/liquors/{liquorId}", 새로_Id)
-                .then().log().all()
-                .extract();
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+            .when().delete("/liquors/{liquorId}", 새로_Id)
+            .then().log().all()
+            .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -133,22 +133,22 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         LiquorDetailResponse liquorDetailResponse = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .when().get("/liquors/" + 새로_Id)
-                .then().log().all()
-                .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get("/liquors/" + 새로_Id)
+            .then().log().all()
+            .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(liquorDetailResponse.getName()).isEqualTo("새로"),
-                () -> assertThat(liquorDetailResponse.getPrice()).isEqualTo("3000"),
-                () -> assertThat(liquorDetailResponse.getBrand()).isEqualTo("롯데"),
-                () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
-                () -> assertThat(liquorDetailResponse.getStock()).isEqualTo(100),
-                () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
-                () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300)
+            () -> assertThat(liquorDetailResponse.getName()).isEqualTo("새로"),
+            () -> assertThat(liquorDetailResponse.getPrice()).isEqualTo("3000"),
+            () -> assertThat(liquorDetailResponse.getBrand()).isEqualTo("롯데"),
+            () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
+            () -> assertThat(liquorDetailResponse.getStock()).isEqualTo(100),
+            () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
+            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300)
         );
     }
 
@@ -162,23 +162,23 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         List<LiquorElementResponse> liquors = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .when().get("/liquors")
-                .then().log().all()
-                .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get("/liquors")
+            .then().log().all()
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
-                        .containsExactly("하이트", "새로"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
-                        .containsExactly("4000", "3000"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
-                        .containsExactly("/beer-url", "/soju-url"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                        .containsExactly(200, 100)
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
+                .containsExactly("하이트", "새로"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
+                .containsExactly("4000", "3000"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
+                .containsExactly("/beer-url", "/soju-url"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
+                .containsExactly(200, 100)
         );
     }
 
@@ -192,24 +192,24 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         List<LiquorElementResponse> liquors = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .param("brew", "소주")
-                .when().get("/liquors")
-                .then().log().all()
-                .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .param("brew", "소주")
+            .when().get("/liquors")
+            .then().log().all()
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
-                        .containsExactly("새로"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
-                        .containsExactly("3000"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
-                        .containsExactly("/soju-url"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                        .containsExactly(100)
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
+                .containsExactly("새로"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
+                .containsExactly("3000"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
+                .containsExactly("/soju-url"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
+                .containsExactly(100)
         );
     }
 
@@ -223,25 +223,25 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         List<LiquorElementResponse> liquors = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .param("brew", "소주")
-                .param("region", "경기도")
-                .when().get("/liquors")
-                .then().log().all()
-                .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .param("brew", "소주")
+            .param("region", "경기도")
+            .when().get("/liquors")
+            .then().log().all()
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
-                        .containsExactly("새로"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
-                        .containsExactly("3000"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
-                        .containsExactly("/soju-url"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                        .containsExactly(100)
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
+                .containsExactly("새로"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
+                .containsExactly("3000"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
+                .containsExactly("/soju-url"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
+                .containsExactly(100)
         );
     }
 
@@ -255,26 +255,26 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         List<LiquorElementResponse> liquors = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .param("brew", "ETC")
-                .param("region", "경기도")
-                .param("status", "판매중지")
-                .when().get("/liquors")
-                .then().log().all()
-                .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .param("brew", "ETC")
+            .param("region", "경기도")
+            .param("status", "판매중지")
+            .when().get("/liquors")
+            .then().log().all()
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
-                        .containsExactly("하이트"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
-                        .containsExactly("4000"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
-                        .containsExactly("/beer-url"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                        .containsExactly(200)
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
+                .containsExactly("하이트"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
+                .containsExactly("4000"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
+                .containsExactly("/beer-url"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
+                .containsExactly(200)
         );
     }
 
@@ -289,27 +289,27 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
         // when
         List<LiquorElementResponse> liquors = RestAssured
-                .given().log().all()
-                .contentType(APPLICATION_JSON_VALUE)
-                .accept(APPLICATION_JSON_VALUE)
-                .param("brew", "BERRY")
-                .param("region", "JEOLLABUK_DO")
-                .param("status", "판매중")
-                .param("brand", "우영미")
-                .when().get("/liquors")
-                .then().log().all()
-                .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .param("brew", "BERRY")
+            .param("region", "JEOLLABUK_DO")
+            .param("status", "판매중")
+            .param("brand", "우영미")
+            .when().get("/liquors")
+            .then().log().all()
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
         // then
         assertAll(
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
-                        .containsExactly("얼음딸기주"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
-                        .containsExactly("4500"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
-                        .containsExactly("/strawberry-url"),
-                () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                        .containsExactly(20)
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getName))
+                .containsExactly("얼음딸기주"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getPrice))
+                .containsExactly("4500"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
+                .containsExactly("/strawberry-url"),
+            () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
+                .containsExactly(20)
         );
     }
 }
