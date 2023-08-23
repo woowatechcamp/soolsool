@@ -20,6 +20,7 @@ public class OrderStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
     @Enumerated(EnumType.STRING)

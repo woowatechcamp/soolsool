@@ -35,4 +35,8 @@ public class MemberMileage {
     public MemberMileage charge(final MemberMileage amount) {
         return new MemberMileage(this.mileage.add(amount.getMileage()));
     }
+
+    public MemberMileage subtract(final BigInteger mileageUsage) {
+        return new MemberMileage(this.mileage.subtract(mileageUsage));
+    }
 }
