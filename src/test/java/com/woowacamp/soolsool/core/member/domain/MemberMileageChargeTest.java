@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("멤버 마일리지 충전 단위 테스트")
+@DisplayName("회원 마일리지 충전 단위 테스트")
 class MemberMileageChargeTest {
 
     @Test

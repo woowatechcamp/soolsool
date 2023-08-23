@@ -45,7 +45,7 @@ class MemberServiceTest {
     private MemberService memberService;
 
     @Test
-    @DisplayName("성공 : 멤버 회원 가입 - 구매자")
+    @DisplayName("성공 : 회원 회원 가입 - 구매자")
     void createMemberCustomer() {
         // given
         MemberAddRequest memberAddRequest = new MemberAddRequest(
@@ -92,7 +92,7 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("성공 : 멤버 회원 가입 - 판매자")
+    @DisplayName("성공 : 회원 회원 가입 - 판매자")
     void createMemberVendor() {
         // given
         MemberAddRequest memberAddRequest = new MemberAddRequest(
@@ -139,7 +139,7 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("성공 : 멤버 조회")
+    @DisplayName("성공 : 회원 조회")
     void readMember() {
         // given
         Long memberId = 1L;

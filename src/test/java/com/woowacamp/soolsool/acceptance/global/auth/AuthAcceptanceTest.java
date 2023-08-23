@@ -29,7 +29,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("로그인할 때 멤버가 일치할 시, jwt 토큰을 발급 한다.")
+    @DisplayName("로그인할 때 회원가 일치할 시, jwt 토큰을 발급 한다.")
     void loginSuccessTest() {
         // given
         String email = "kim@email.com";

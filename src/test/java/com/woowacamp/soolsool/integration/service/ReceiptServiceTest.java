@@ -59,7 +59,7 @@ class ReceiptServiceTest {
     }
 
     @Test
-    @DisplayName("멤버가 존재하고, 카트에 주문할 게 없으면, 주문서가 올바르게 생성되지 않는다.")
+    @DisplayName("회원가 존재하고, 카트에 주문할 게 없으면, 주문서가 올바르게 생성되지 않는다.")
     void addReceiptWithNoCartItems() {
         // given
         Long memberId = 1L;
@@ -71,7 +71,7 @@ class ReceiptServiceTest {
     }
 
     @Test
-    @DisplayName("멤버가 존재하지 않으면, 주문서가 올바르게 생성되지 않는다.")
+    @DisplayName("회원가 존재하지 않으면, 주문서가 올바르게 생성되지 않는다.")
     void addReceiptWithNoMemberId() {
         // given
         Long memberId = 999L;
@@ -105,7 +105,7 @@ class ReceiptServiceTest {
     }
 
     @Test
-    @DisplayName("멤버가 다르면, 주문서가 조회되지 않는다.")
+    @DisplayName("회원가 다르면, 주문서가 조회되지 않는다.")
     void receiptDetailWithNoMemberId() {
         // given
         Long memberId = 3L;
