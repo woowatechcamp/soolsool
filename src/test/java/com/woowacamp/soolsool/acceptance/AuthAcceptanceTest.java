@@ -1,8 +1,7 @@
-package com.woowacamp.soolsool.acceptance.global.auth;
+package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
@@ -17,14 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@DisplayName("계정 : 인수 테스트")
+@DisplayName("Auth 인수 테스트")
 class AuthAcceptanceTest extends AcceptanceTest {
 
-    @Override
     @BeforeEach
-    public void setUp() {
-        super.setUp();
-
+    void setUpData() {
         RestMemberFixture.회원가입_김배달_구매자();
     }
 

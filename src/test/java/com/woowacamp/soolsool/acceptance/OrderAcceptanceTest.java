@@ -1,9 +1,8 @@
-package com.woowacamp.soolsool.acceptance.core.order;
+package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
@@ -74,6 +73,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         secondMemberOrder1 = createOrder(2L, 3L);
     }
 
+    // TODO: Fixture
     private String findToken(String email, String password) {
         LoginRequest loginRequest = new LoginRequest(email, password);
 

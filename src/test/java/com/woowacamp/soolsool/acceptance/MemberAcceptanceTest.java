@@ -1,8 +1,7 @@
-package com.woowacamp.soolsool.acceptance.core.member;
+package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
@@ -20,12 +19,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@DisplayName("회원 : 인수 테스트")
+@DisplayName("Member 인수 테스트")
 class MemberAcceptanceTest extends AcceptanceTest {
 
     private static final String EMAIL = "camp@email.com";
     private static final String PASSWORD = "camp";
 
+    // TODO: Fixture
     private String findToken(String email, String password) {
         LoginRequest loginRequest = new LoginRequest(email, password);
 

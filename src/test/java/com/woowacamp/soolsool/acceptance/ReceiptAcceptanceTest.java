@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.acceptance.core.receipt;
+package com.woowacamp.soolsool.acceptance;
 
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,7 +7,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("주문서 : 인수 테스트")
+@DisplayName("Receipt 인수 테스트")
 class ReceiptAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";

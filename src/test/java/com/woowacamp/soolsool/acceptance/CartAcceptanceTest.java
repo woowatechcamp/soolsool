@@ -1,11 +1,10 @@
-package com.woowacamp.soolsool.acceptance.core.cart;
+package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
@@ -22,18 +21,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("장바구니 : 인수 테스트")
-class CartItemAcceptanceTest extends AcceptanceTest {
+@DisplayName("Cart 인수 테스트")
+class CartAcceptanceTest extends AcceptanceTest {
 
     public static final String BEARER = "Bearer ";
 
     Long 새로_Id, 하이트_Id, 얼음딸기주_Id;
 
-    @Override
     @BeforeEach
-    public void setUp() {
-        super.setUp();
-
+    void setUpData() {
         RestMemberFixture.회원가입_김배달_구매자();
         RestMemberFixture.회원가입_최민족_판매자();
 
