@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.integration.service;
+package com.woowacamp.soolsool.core.order.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -10,7 +10,6 @@ import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
-import com.woowacamp.soolsool.core.order.service.OrderService;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
@@ -32,7 +31,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @Import(OrderService.class)
 @DisplayName("OrderService 통합 테스트")
-class OrderServiceTest {
+class OrderServiceIntegrationTest {
 
     @Autowired
     private OrderService orderService;
@@ -60,7 +59,6 @@ class OrderServiceTest {
     void failSaveOrderWhenNotExistsReceipt() {
         // given
 
-
         // when & then
         assertThatThrownBy(() -> orderService.saveOrder(1L, 99999L))
             .isExactlyInstanceOf(SoolSoolException.class)
@@ -71,7 +69,6 @@ class OrderServiceTest {
     @DisplayName("주문 상세내역이 존재하지 않을 경우 SoolSoolException을 던진다.")
     void failOrderDetailWhenNotExistsOrder() {
         // given
-
 
         // when & then
         assertThatThrownBy(() -> orderService.orderDetail(1L, 99999L))
@@ -104,7 +101,6 @@ class OrderServiceTest {
     @DisplayName("주문 상태 변경 시 Order가 존재하지 않을 경우 SoolSoolException을 던진다.")
     void failModifyOrderWhenNotExistsOrder() {
         // given
-
 
         // when & then
         assertThatThrownBy(() -> orderService.modifyOrderStatusCancel(1L, 99999L))

@@ -1,11 +1,10 @@
-package com.woowacamp.soolsool.integration.repository;
+package com.woowacamp.soolsool.core.order.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
-import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
