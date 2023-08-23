@@ -75,7 +75,7 @@ class LiquorServiceIntegrationTest {
     @DisplayName("liquor Id가 존재하지 않을 때, 수정 시 에러를 반환한다.")
     void modifyLiquorTestFailWithNoExistId() {
         // given
-        long LIQUOR_ID = 2L;
+        Long liquorId = 999L;
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
             "BERRY", "GYEONGGI_DO", "ON_SALE",
             "새로2", "3000", "브랜드", "/url",
@@ -83,7 +83,7 @@ class LiquorServiceIntegrationTest {
             LocalDateTime.now().plusYears(10L)
         );
         // when & then
-        assertThatCode(() -> liquorService.modifyLiquor(LIQUOR_ID, liquorModifyRequest))
+        assertThatCode(() -> liquorService.modifyLiquor(liquorId, liquorModifyRequest))
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_LIQUOR_FOUND.getMessage());
     }
