@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.cart.controller;
 
-import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_ADD_SUCCESS;
-import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_DELETED;
-import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_LIST_DELETED;
-import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_LIST_FOUND;
-import static com.woowacamp.soolsool.core.cart.code.CartItemResultCode.CART_ITEM_MODIFY_QUANTITY_SUCCESS;
+import static com.woowacamp.soolsool.core.cart.code.CartResultCode.CART_ITEM_ADD_SUCCESS;
+import static com.woowacamp.soolsool.core.cart.code.CartResultCode.CART_ITEM_DELETED;
+import static com.woowacamp.soolsool.core.cart.code.CartResultCode.CART_ITEM_LIST_DELETED;
+import static com.woowacamp.soolsool.core.cart.code.CartResultCode.CART_ITEM_LIST_FOUND;
+import static com.woowacamp.soolsool.core.cart.code.CartResultCode.CART_ITEM_MODIFY_QUANTITY_SUCCESS;
 
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;

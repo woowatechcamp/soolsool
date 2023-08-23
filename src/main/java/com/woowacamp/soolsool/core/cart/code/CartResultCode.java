@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CartItemResultCode implements ResultCode {
+public enum CartResultCode implements ResultCode {
 
     CART_ITEM_ADD_SUCCESS(CREATED.value(), "C101", "장바구니 상품 등록이 완료되었습니다."),
     CART_ITEM_MODIFY_QUANTITY_SUCCESS(OK.value(), "C102", "장바구니 상품 수량 변경이 완료되었습니다."),
