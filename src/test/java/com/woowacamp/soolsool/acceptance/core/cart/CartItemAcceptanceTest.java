@@ -1,10 +1,11 @@
-package com.woowacamp.soolsool.acceptance;
+package com.woowacamp.soolsool.acceptance.core.cart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
@@ -30,7 +31,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Override
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         super.setUp();
 
         RestMemberFixture.회원가입_김배달_구매자();

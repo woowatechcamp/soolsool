@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.acceptance;
+package com.woowacamp.soolsool.acceptance.core.receipt;
 
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,6 +7,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;

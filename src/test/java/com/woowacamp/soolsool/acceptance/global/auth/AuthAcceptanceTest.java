@@ -1,7 +1,8 @@
-package com.woowacamp.soolsool.acceptance;
+package com.woowacamp.soolsool.acceptance.global.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
@@ -21,7 +22,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @Override
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         super.setUp();
 
         RestMemberFixture.회원가입_김배달_구매자();

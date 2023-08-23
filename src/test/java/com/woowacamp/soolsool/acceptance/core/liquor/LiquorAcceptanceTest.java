@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.acceptance;
+package com.woowacamp.soolsool.acceptance.core.liquor;
 
 import static com.woowacamp.soolsool.core.liquor.code.LiquorResultCode.LIQUOR_CREATED;
 import static com.woowacamp.soolsool.core.liquor.code.LiquorResultCode.LIQUOR_DELETED;
@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.woowacamp.soolsool.acceptance.AcceptanceTest;
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
@@ -36,7 +37,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
 
     @Override
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         super.setUp();
 
         RestMemberFixture.회원가입_최민족_판매자();
