@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.integration.service;
+package com.woowacamp.soolsool.core.cart.service;
 
 import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.INVALID_QUANTITY_SIZE;
 import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_EQUALS_MEMBER;
@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
-import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -24,7 +23,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @Import({CartService.class, LiquorService.class})
 @DisplayName("CartItemService 통합 테스트")
-class CartServiceTest {
+class CartServiceIntegrationTest {
 
     @Autowired
     private CartService cartService;

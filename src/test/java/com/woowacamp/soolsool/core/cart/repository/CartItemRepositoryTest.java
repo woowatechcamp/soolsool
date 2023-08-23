@@ -1,9 +1,8 @@
-package com.woowacamp.soolsool.integration.repository;
+package com.woowacamp.soolsool.core.cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.cart.domain.CartItem;
-import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
