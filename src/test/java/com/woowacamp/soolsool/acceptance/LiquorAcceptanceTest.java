@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("Liquor 인수 테스트")
+@DisplayName("인수 테스트: liquor")
 class LiquorAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";

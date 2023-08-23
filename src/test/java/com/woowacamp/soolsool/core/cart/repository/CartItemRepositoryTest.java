@@ -14,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@DisplayName("CartItemRepository 테스트")
+@DisplayName("통합 테스트: CartItemRepository")
 class CartItemRepositoryTest {
 
     @Autowired

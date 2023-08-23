@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@DisplayName("회원 단위 테스트")
+@DisplayName("단위 테스트: Member")
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 

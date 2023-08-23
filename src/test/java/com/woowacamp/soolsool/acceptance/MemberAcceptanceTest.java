@@ -19,7 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@DisplayName("Member 인수 테스트")
+@DisplayName("인수 테스트: member")
 class MemberAcceptanceTest extends AcceptanceTest {
 
     private static final String EMAIL = "camp@email.com";

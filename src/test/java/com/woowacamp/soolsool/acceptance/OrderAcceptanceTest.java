@@ -38,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("Order 인수 테스트")
+@DisplayName("인수 테스트: order")
 class OrderAcceptanceTest extends AcceptanceTest {
 
     @Autowired

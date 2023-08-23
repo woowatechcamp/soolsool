@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Cart 인수 테스트")
+@DisplayName("인수 테스트: cart")
 class CartAcceptanceTest extends AcceptanceTest {
 
     public static final String BEARER = "Bearer ";

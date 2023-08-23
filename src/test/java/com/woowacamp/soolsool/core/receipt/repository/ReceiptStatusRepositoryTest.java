@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Sql("/receipt-type.sql")
+@DisplayName("통합 테스트: ReceiptStatusRepository")
 class ReceiptStatusRepositoryTest {
 
     @Autowired

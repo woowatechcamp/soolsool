@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("장바구니 단위 테스트")
+@DisplayName("단위 테스트: Cart")
 class CartTest {
 
     private Liquor soju;

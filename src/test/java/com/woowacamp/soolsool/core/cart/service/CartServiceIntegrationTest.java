@@ -22,7 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({CartService.class, LiquorService.class})
-@DisplayName("CartItemService 통합 테스트")
+@DisplayName("통합 테스트: CartItemService")
 class CartServiceIntegrationTest {
 
     @Autowired

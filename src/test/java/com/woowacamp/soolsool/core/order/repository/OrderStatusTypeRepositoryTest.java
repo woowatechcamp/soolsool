@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Sql("/order-type.sql")
-@DisplayName("주문 상태 repository 통합 테스트")
+@DisplayName("통합 테스트: OrderStatusRepository")
 class OrderStatusTypeRepositoryTest {
 
     @Autowired

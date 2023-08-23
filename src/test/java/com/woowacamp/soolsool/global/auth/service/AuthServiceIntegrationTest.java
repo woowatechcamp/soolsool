@@ -16,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({AuthService.class, TokenProvider.class})
-@DisplayName("AuthService 통합 테스트")
+@DisplayName("통합 테스트: AuthService")
 class AuthServiceIntegrationTest {
 
     @Autowired

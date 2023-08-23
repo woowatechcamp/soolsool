@@ -11,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Sql("/member-type.sql")
-@DisplayName("회원 타입 repository 통합 테스트")
+@DisplayName("통합 테스트: MemberRoleRepository")
 class MemberRoleRepositoryTest {
 
     @Autowired

@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Sql("/liquor-type.sql")
-@DisplayName("술 판매 상태 repository 통합 테스트")
+@DisplayName("통합 테스트: LiquorStatusRepository")
 class LiquorStatusTypeRepositoryTest {
 
     @Autowired

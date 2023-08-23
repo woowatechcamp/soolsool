@@ -11,7 +11,7 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("주문서 가격 단위 테스트")
+@DisplayName("단위 테스트: ReceiptPrice")
 class ReceiptPriceTest {
 
     @Test

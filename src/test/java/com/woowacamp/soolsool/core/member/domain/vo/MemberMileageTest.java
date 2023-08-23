@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("회원 마일리지 단위 테스트")
+@DisplayName("단위 테스트: MemberMileage")
 class MemberMileageTest {
 
     @Test
@@ -21,7 +21,7 @@ class MemberMileageTest {
 
         /* when & then */
         assertThatCode(() -> new MemberMileage(mileage))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @Test
@@ -32,8 +32,8 @@ class MemberMileageTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberMileage(mileage))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 마일리지는 0 미만일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 마일리지는 0 미만일 수 없습니다.");
     }
 
     @Test
@@ -44,8 +44,8 @@ class MemberMileageTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberMileage(null))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 마일리지는 null일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 마일리지는 null일 수 없습니다.");
     }
 
     @Test
@@ -58,10 +58,10 @@ class MemberMileageTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
 
     }

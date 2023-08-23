@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import(OrderService.class)
-@DisplayName("OrderService 통합 테스트")
+@DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {
 
     @Autowired

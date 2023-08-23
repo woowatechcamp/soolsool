@@ -10,7 +10,7 @@ import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("주문서 개수 단위 테스트")
+@DisplayName("단위 테스트: ReceiptQuantity")
 class ReceiptQuantityTest {
 
     @Test

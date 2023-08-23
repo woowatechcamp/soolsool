@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Sql({"/member-type.sql", "/member.sql"})
-@DisplayName("회원 repository 통합 테스트")
+@DisplayName("통합 테스트: MemberRepository")
 class MemberRepositoryTest {
 
     @Autowired

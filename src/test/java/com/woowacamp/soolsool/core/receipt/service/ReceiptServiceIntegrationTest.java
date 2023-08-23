@@ -21,7 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({ReceiptService.class, CartService.class, LiquorService.class, ReceiptMapper.class})
-@DisplayName("주문서 service 통합 테스트")
+@DisplayName("통합 테스트: ReceiptService")
 class ReceiptServiceIntegrationTest {
 
     @Autowired

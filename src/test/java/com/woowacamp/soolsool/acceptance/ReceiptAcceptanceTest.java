@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Receipt 인수 테스트")
+@DisplayName("인수 테스트: receipt")
 class ReceiptAcceptanceTest extends AcceptanceTest {
 
     private static final String BEARER = "Bearer ";

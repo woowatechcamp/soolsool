@@ -8,7 +8,7 @@ import com.woowacamp.soolsool.core.order.domain.Order;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("회원 마일리지 사용 단위 테스트")
+@DisplayName("단위 테스트: MemberMileageUsage")
 class MemberMileageUsageTest {
 
     @Test
