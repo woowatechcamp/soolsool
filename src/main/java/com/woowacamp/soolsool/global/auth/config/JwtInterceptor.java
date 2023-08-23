@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.global.auth.config;
 
+import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.global.auth.code.AuthErrorCode;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
@@ -48,7 +49,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     private void checkVendorMethod(final HandlerMethod handlerMethod, final String authority) {
         if (handlerMethod.hasMethodAnnotation(Vendor.class) &&
-            !authority.equals(Vendor.class.getSimpleName().toUpperCase())) {
+            !authority.equals(MemberRoleType.VENDOR.getType())) {
             throw new SoolSoolException(AuthErrorCode.INVALID_AUTHORITY);
         }
     }

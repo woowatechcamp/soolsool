@@ -1,44 +1,40 @@
 package com.woowacamp.soolsool.global.auth.util;
 
-import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.global.auth.code.AuthErrorCode.TOKEN_ERROR;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.woowacamp.soolsool.core.member.domain.Member;
-import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Import(TokenProvider.class)
-@DisplayName("TokenProvider 통합 테스트")
-class TokenProviderIntegrationTest {
+@DisplayName("TokenProvider 단위 테스트")
+class TokenProviderTest {
 
-    @Autowired
-    private TokenProvider tokenProvider;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    private Member member;
+    TokenProvider tokenProvider;
 
     @BeforeEach
-    void setup() {
-        member = memberRepository.findById(3L)
-            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+    void setUp() {
+        tokenProvider = new TokenProvider(
+            "7Z2R7Z2R7KSR6rCE642w66qo64SI66y07Z6Y65Ok7JeI7Ja0Cg==",
+            123456789
+        );
     }
 
     @Test
     @DisplayName("토큰이 정상적으로 추출된다.")
     void validateToken() {
         // given
+        final Member member = mock(Member.class);
+        when(member.getId()).thenReturn(1L);
+        when(member.getRoleName()).thenReturn("구매자");
+
         String token = tokenProvider.createToken(member);
 
         // when & then
