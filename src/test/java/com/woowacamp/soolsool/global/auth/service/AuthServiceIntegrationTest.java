@@ -1,11 +1,10 @@
-package com.woowacamp.soolsool.integration.service;
+package com.woowacamp.soolsool.global.auth.service;
 
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_MATCH_PASSWORD;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
-import com.woowacamp.soolsool.global.auth.service.AuthService;
 import com.woowacamp.soolsool.global.auth.util.TokenProvider;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +15,8 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import({AuthService.class, TokenProvider.class})
-class AuthServiceTest {
+@DisplayName("AuthService 통합 테스트")
+class AuthServiceIntegrationTest {
 
     @Autowired
     private AuthService authService;
