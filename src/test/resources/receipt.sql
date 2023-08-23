@@ -1,7 +1,7 @@
 insert into receipts (id, member_id, receipt_status_id,
                       original_total_price, mileage_usage, purchased_total_price,
                       total_quantity,
-                      created_at, modified_at, expired_date)
+                      created_at, modified_at, expiration_date)
 values (1, 1, 1,
         '100.00', '10.00', '90.00',
         5,
