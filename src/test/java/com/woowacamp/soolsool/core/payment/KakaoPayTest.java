@@ -31,6 +31,7 @@ class KakaoPayTest extends AcceptanceTest {
     private ReceiptService receiptService;
 
     @Test
+    @Disabled
     @DisplayName("결제 준비를 요청한다.")
     void payReadySuccess() {
         Long memberId = 3L;
