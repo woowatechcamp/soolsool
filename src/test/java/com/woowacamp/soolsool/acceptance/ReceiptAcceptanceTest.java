@@ -72,6 +72,7 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .extract();
 
+        // then
         assertThat(createReceiptResponse.statusCode()).isEqualTo(CREATED.value());
     }
 

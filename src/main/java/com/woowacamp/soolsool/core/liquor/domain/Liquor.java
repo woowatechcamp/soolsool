@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
+import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.INVALID_SIZE_STOCK;
 import static com.woowacamp.soolsool.global.code.GlobalErrorCode.NO_CONTENT;
 
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
@@ -205,5 +206,12 @@ public class Liquor extends BaseEntity {
 
     public int getVolume() {
         return this.volume.getVolume();
+    }
+
+    public void decreaseStock(final int quantity) {
+        if (this.stock.getStock() < quantity) {
+            throw new SoolSoolException(INVALID_SIZE_STOCK);
+        }
+        this.stock = new LiquorStock(this.stock.getStock() - quantity);
     }
 }
