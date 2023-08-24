@@ -37,8 +37,7 @@ class LiquorServiceIntegrationTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(5L));
+            12.0, 300);
 
         // when & then
         assertThatCode(() -> liquorService.saveLiquor(liquorSaveRequest))
@@ -96,8 +95,7 @@ class LiquorServiceIntegrationTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(10L));
+            12.0, 300);
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         // when

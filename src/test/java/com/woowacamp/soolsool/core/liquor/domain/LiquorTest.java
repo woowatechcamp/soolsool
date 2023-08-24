@@ -36,7 +36,6 @@ class LiquorTest {
             .price(price)
             .brand(brand)
             .imageUrl(imageUrl)
-            .stock(stock)
             .alcohol(alcohol)
             .volume(volume)
             .build();
@@ -50,7 +49,6 @@ class LiquorTest {
             () -> assertThat(liquor.getPrice()).isEqualTo(price),
             () -> assertThat(liquor.getBrand()).isEqualTo(brand),
             () -> assertThat(liquor.getImageUrl()).isEqualTo(imageUrl),
-            () -> assertThat(liquor.getStock()).isEqualTo(stock),
             () -> assertThat(liquor.getAlcohol()).isEqualTo(alcohol),
             () -> assertThat(liquor.getVolume()).isEqualTo(volume)
         );

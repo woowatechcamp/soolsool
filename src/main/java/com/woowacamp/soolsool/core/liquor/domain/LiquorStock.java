@@ -4,6 +4,7 @@ import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.INVALID_SI
 
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorStockCountConverter;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
+import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "liquor_stocks")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LiquorStock {
+public class LiquorStock extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

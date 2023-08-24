@@ -11,7 +11,6 @@ import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,9 +37,7 @@ class KakaoPayTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(5L)
-        );
+            12.0, 300);
 
         Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
