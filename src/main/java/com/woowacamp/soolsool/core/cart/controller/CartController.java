@@ -38,6 +38,7 @@ public class CartController {
     ) {
         final Long cartItemId = cartService.addCartItem(memberId, cartItemSaveRequest);
 
+        // TODO: DTO로 반환하기 "cartItemId": 1
         return ResponseEntity.ok(ApiResponse.of(CART_ITEM_ADD_SUCCESS, cartItemId));
     }
 

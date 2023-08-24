@@ -6,7 +6,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("술 지역 단위 테스트")
+@DisplayName("단위 테스트: LiquorRegion")
 class LiquorRegionTest {
 
     @Test

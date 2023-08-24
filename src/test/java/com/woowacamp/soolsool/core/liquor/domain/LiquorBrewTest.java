@@ -6,7 +6,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("술 종류 단위 테스트")
+@DisplayName("단위 테스트: LiquorBrew")
 class LiquorBrewTest {
 
     @Test

@@ -12,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-@DisplayName("회원 이메일 단위 테스트")
+@DisplayName("단위 테스트: MemberEmail")
 class MemberEmailTest {
 
     @Test
@@ -23,7 +23,7 @@ class MemberEmailTest {
 
         /* when & then */
         assertThatCode(() -> new MemberEmail(email))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
@@ -35,8 +35,8 @@ class MemberEmailTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberEmail(email))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 이메일은 null이거나 공백일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 이메일은 null이거나 공백일 수 없습니다.");
     }
 
     @Test
@@ -47,8 +47,8 @@ class MemberEmailTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberEmail(email))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 이메일은 255자보다 길 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 이메일은 255자보다 길 수 없습니다.");
     }
 
     @ParameterizedTest
@@ -59,8 +59,8 @@ class MemberEmailTest {
 
         /* when & then */
         assertThatCode(() -> new MemberEmail(email))
-                .isInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 이메일이 표준 이메일 양식에 맞지 않습니다.");
+            .isInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 이메일이 표준 이메일 양식에 맞지 않습니다.");
     }
 
 
@@ -74,10 +74,10 @@ class MemberEmailTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

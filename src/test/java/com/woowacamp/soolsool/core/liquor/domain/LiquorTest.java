@@ -9,7 +9,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("술 단위 테스트")
+@DisplayName("단위 테스트: Liquor")
 class LiquorTest {
 
     @Test

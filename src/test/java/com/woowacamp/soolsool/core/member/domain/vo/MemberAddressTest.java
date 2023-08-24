@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-@DisplayName("회원 주소 단위 테스트")
+@DisplayName("단위 테스트: MemberAddress")
 class MemberAddressTest {
 
     @Test
@@ -22,7 +22,7 @@ class MemberAddressTest {
 
         /* when & then */
         assertThatCode(() -> new MemberAddress(address))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
@@ -34,8 +34,8 @@ class MemberAddressTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberAddress(address))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 주소는 null이거나 공백일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 주소는 null이거나 공백일 수 없습니다.");
     }
 
     @Test
@@ -46,8 +46,8 @@ class MemberAddressTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberAddress(address))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 주소는 100자보다 길 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 주소는 100자보다 길 수 없습니다.");
     }
 
     @Test
@@ -60,10 +60,10 @@ class MemberAddressTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }
