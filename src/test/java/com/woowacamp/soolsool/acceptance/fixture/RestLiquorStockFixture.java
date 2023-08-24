@@ -16,7 +16,7 @@ public abstract class RestLiquorStockFixture {
 
         RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer" + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)
