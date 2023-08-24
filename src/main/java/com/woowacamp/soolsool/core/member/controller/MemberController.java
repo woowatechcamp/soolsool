@@ -46,7 +46,7 @@ public class MemberController {
         final MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_CREATE_SUCCESS, memberFindResponse));
+            .body(ApiResponse.of(MemberResultCode.MEMBER_FIND_SUCCESS, memberFindResponse));
     }
 
     @PatchMapping
