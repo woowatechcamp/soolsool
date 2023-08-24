@@ -67,7 +67,8 @@ public class PayService {
             if (!Objects.equals(liquor.getPrice(), receiptItem.getLiquorOriginalPrice())) {
                 throw new SoolSoolException(NOT_MATCHED_LIQUOR_PRICE);
             }
-            liquor.decreaseStock(receiptItem.getQuantity());
+            // TODO: 재고 관련 설계를 마친 후 리팩토링 필요
+//            liquor.decreaseStock(receiptItem.getQuantity());
         });
 
         validateAccessible(memberId, receipt);
