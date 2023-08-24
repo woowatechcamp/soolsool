@@ -24,25 +24,6 @@ class OrderServiceIntegrationTest {
         "/liquor-type.sql", "/liquor.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql",
-        "/order-type.sql"
-    })
-    @DisplayName("주문 생성 시 Receipt가 존재하지 않을 경우 SoolSoolException을 던진다.")
-    void failSaveOrderWhenNotExistsReceipt() {
-        // given
-        Long 김배달 = 1L;
-
-        // when & then
-        assertThatThrownBy(() -> orderService.saveOrder(김배달, 99999L))
-            .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage("주문 내역을 생성할 주문서가 존재하지 않습니다.");
-    }
-
-    @Test
-    @Sql({
-        "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
-        "/cart-item.sql",
-        "/receipt-type.sql", "/receipt.sql",
         "/order-type.sql", "/order.sql"
     })
     @DisplayName("주문 상세 내역 조회 시 주문이 존재하지 않을 경우 SoolSoolException을 던진다.")

@@ -32,8 +32,6 @@ import org.springframework.http.HttpStatus;
 @DisplayName("인수 테스트: liquor")
 class LiquorAcceptanceTest extends AcceptanceTest {
 
-    private static final String BEARER = "Bearer ";
-
     @BeforeEach
     void setUpData() {
         RestMemberFixture.회원가입_최민족_판매자();

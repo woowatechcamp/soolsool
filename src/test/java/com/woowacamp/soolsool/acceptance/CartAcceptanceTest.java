@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("인수 테스트: cart")
 class CartAcceptanceTest extends AcceptanceTest {
 
-    public static final String BEARER = "Bearer ";
-
     Long 새로_Id, 하이트_Id, 얼음딸기주_Id;
 
     @BeforeEach

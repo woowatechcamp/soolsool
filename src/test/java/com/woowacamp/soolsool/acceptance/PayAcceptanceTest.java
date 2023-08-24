@@ -54,7 +54,7 @@ class PayAcceptanceTest extends AcceptanceTest {
         /* when */
         final PayReadyResponse data = RestAssured
             .given().log().all()
-            .header(AUTHORIZATION, "Bearer " + 김배달_토큰)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
             .body(request)
             .when().post("/pay/ready")
@@ -80,7 +80,7 @@ class PayAcceptanceTest extends AcceptanceTest {
         /* when */
         PaySuccessResponse response = RestAssured
             .given().log().all()
-            .header(AUTHORIZATION, "Bearer " + 김배달_토큰)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
             .param("pg_token", "pgpgpgpg")
             .when().get("/pay/success/{receiptId}", 김배달_주문서)

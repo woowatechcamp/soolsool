@@ -6,7 +6,7 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import io.restassured.RestAssured;
 import org.springframework.http.HttpHeaders;
 
-public abstract class RestLiquorFixture {
+public abstract class RestLiquorFixture extends RestFixture {
 
     public static Long 술_등록_새로_판매중(String accessToken) {
         LiquorSaveRequest request = new LiquorSaveRequest(
@@ -41,7 +41,7 @@ public abstract class RestLiquorFixture {
     private static Long addLiquor(String accessToken, LiquorSaveRequest request) {
         return Long.valueOf(RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)

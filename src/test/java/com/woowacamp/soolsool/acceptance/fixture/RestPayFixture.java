@@ -10,16 +10,14 @@ import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 
-public abstract class RestPayFixture {
-
-    private static final String BEARER = "Bearer ";
+public abstract class RestPayFixture extends RestFixture {
 
     public static void 결제_준비(String accessToken, Long receiptId) {
         PayOrderRequest request = new PayOrderRequest(receiptId);
 
         RestAssured
             .given().log().all()
-            .header(AUTHORIZATION, "Bearer " + accessToken)
+            .header(AUTHORIZATION, BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .body(request)
             .when().post("/pay/ready")

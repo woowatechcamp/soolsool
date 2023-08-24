@@ -97,7 +97,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + token)
             .when().get("/members")
             .then().log().all()
             .extract();
@@ -139,7 +139,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
             .when().patch("/members")
@@ -174,7 +174,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + token)
             .when().delete("/members")
             .then().log().all()
             .extract();
@@ -210,7 +210,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + token)
             .body(memberMileageChargeRequest)
             .when()
             .patch("members/mileage")

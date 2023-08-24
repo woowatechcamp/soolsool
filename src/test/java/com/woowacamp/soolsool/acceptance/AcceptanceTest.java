@@ -14,6 +14,8 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql({"/liquor-type.sql", "/member-type.sql", "/order-type.sql", "/receipt-type.sql"})
 public abstract class AcceptanceTest {
 
+    static final String BEARER = "Bearer ";
+
     @LocalServerPort
     int port;
 

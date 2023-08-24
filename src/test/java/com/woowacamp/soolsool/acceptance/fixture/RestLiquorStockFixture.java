@@ -7,7 +7,7 @@ import io.restassured.RestAssured;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;
 
-public abstract class RestLiquorStockFixture {
+public abstract class RestLiquorStockFixture extends RestFixture {
 
     public static void 술_재고_등록(String accessToken, Long liquorId, int quantity) {
         LiquorStockSaveRequest request = new LiquorStockSaveRequest(
@@ -16,7 +16,7 @@ public abstract class RestLiquorStockFixture {
 
         RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)

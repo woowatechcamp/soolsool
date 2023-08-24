@@ -38,7 +38,7 @@ class LiquorStockAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .header("Authorization", "Bearer " + accessToken)
+            .header("Authorization", BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)

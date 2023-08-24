@@ -6,7 +6,7 @@ import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_S
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
-import com.woowacamp.soolsool.core.payment.service.KakaoPayService;
+import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PayController {
 
-    private final KakaoPayService kakaoPayService;
+    private final PayService payService;
 
     @PostMapping("/ready")
     public ResponseEntity<ApiResponse<PayReadyResponse>> payReady(
@@ -32,7 +32,7 @@ public class PayController {
         @RequestBody final PayOrderRequest payOrderRequest
     ) {
         return ResponseEntity.ok(
-            ApiResponse.of(PAY_READY_SUCCESS, kakaoPayService.payReady(memberId, payOrderRequest)));
+            ApiResponse.of(PAY_READY_SUCCESS, payService.payReady(memberId, payOrderRequest)));
     }
 
     @GetMapping("/success/{receiptId}")
@@ -41,7 +41,7 @@ public class PayController {
         @RequestParam("pg_token") final String pgToken,
         @PathVariable("receiptId") final Long receiptId
     ) {
-        final Long orderId = kakaoPayService.approve(memberId, receiptId, pgToken);
+        final Long orderId = payService.approve(memberId, receiptId, pgToken);
 
         return ResponseEntity.ok(
             ApiResponse.of(PAY_APPROVE_SUCCESS, new PaySuccessResponse(orderId)));

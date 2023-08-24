@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class KakaoPayService {
+public class PayService {
 
     private final ReceiptService receiptService;
     private final MemberService memberService;

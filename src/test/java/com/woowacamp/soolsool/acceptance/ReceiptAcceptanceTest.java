@@ -26,8 +26,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("인수 테스트: receipt")
 class ReceiptAcceptanceTest extends AcceptanceTest {
 
-    private static final String BEARER = "Bearer ";
-
     String 김배달_토큰;
 
     @BeforeEach
