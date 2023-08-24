@@ -28,7 +28,6 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -186,8 +185,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             liquorBrewRepository.findByType(LiquorBrewType.SOJU).get(),
             liquorRegionRepository.findByType(LiquorRegionType.GYEONGSANGNAM_DO).get(),
             "안동 소주", "10000", "10000", "안동", "/soju.jpeg",
-            21.7, 400, 1,
-            LocalDateTime.now().plusYears(5L)
+            21.7, 400, 1
         );
 
         receipt.addReceiptItems(List.of(receiptItem));

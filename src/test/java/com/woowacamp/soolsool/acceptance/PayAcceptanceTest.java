@@ -83,7 +83,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, "Bearer " + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
             .param("pg_token", "pgpgpgpg")
-            .when().get("/success/{receiptId}", 김배달_주문서)
+            .when().get("/pay/success/{receiptId}", 김배달_주문서)
             .then().extract().body().as(new TypeRef<ApiResponse<PaySuccessResponse>>() {
             }).getData();
 

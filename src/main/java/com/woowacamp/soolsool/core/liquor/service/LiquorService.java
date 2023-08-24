@@ -163,4 +163,11 @@ public class LiquorService {
     private Optional<LiquorBrew> findLiquorBrewByType(final LiquorBrewType brewType) {
         return liquorBrewRepository.findByType(brewType);
     }
+
+    @Transactional
+    public void decreaseTotalStock(final Long liquorId, final int quantity) {
+        liquorRepository.findById(liquorId)
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND))
+            .decreaseTotalStock(quantity);
+    }
 }

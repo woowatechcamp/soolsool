@@ -1,12 +1,13 @@
 package com.woowacamp.soolsool.core.liquor.service;
 
-import com.woowacamp.soolsool.core.liquor.domain.LiquorStock;
+import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR_FOUND;
+
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStocks;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorStockSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStockRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,25 +21,23 @@ public class LiquorStockService {
 
     @Transactional
     public Long saveLiquorStock(final LiquorStockSaveRequest request) {
+        final Liquor liquor = liquorRepository.findById(request.getLiquorId())
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
+        liquor.increaseTotalStock(request.getStock());
+
         return liquorStockRepository.save(request.toEntity()).getId();
     }
 
     @Transactional
     public void decreaseLiquorStock(final Long liquorId, int quantity) {
         final LiquorStocks liquorStocks = getLiquorStocks(liquorId);
-
         liquorStocks.decreaseStock(quantity);
 
         // TODO: 비동기로
-        final List<LiquorStock> removed = liquorStocks.stream()
-            .filter(LiquorStock::isOutOfStock)
-            .collect(Collectors.toList());
-
-        liquorStockRepository.deleteAllInBatch(removed);
+        liquorStockRepository.deleteAllInBatch(liquorStocks.getOutOfStocks());
     }
 
     private LiquorStocks getLiquorStocks(final Long liquorId) {
-        return new LiquorStocks(liquorStockRepository
-            .findAllByLiquorIdNotExpired(liquorId));
+        return new LiquorStocks(liquorStockRepository.findAllByLiquorIdNotExpired(liquorId));
     }
 }

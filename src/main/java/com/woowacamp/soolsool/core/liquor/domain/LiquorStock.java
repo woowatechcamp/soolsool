@@ -1,11 +1,8 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
-import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.INVALID_SIZE_STOCK;
-
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorStockCountConverter;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -30,6 +27,7 @@ public class LiquorStock extends BaseEntity {
     private Long id;
 
     @Column(name = "liquor_id", nullable = false)
+    @Getter
     private Long liquorId;
 
     @Column(name = "stock", nullable = false)
@@ -56,9 +54,10 @@ public class LiquorStock extends BaseEntity {
     }
 
     public void decreaseStock(final int quantity) {
-        if (this.stock.getStock() < quantity) {
-            throw new SoolSoolException(INVALID_SIZE_STOCK);
-        }
         this.stock = new LiquorStockCount(this.stock.getStock() - quantity);
+    }
+
+    public boolean isOutOfStock() {
+        return this.stock.isZero();
     }
 }

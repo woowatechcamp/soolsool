@@ -13,7 +13,7 @@ public interface LiquorStockRepository extends JpaRepository<LiquorStock, Long> 
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select ls from LiquorStock ls "
-        + "where ls.liquorId = :liquorId and ls.expiredAt > current_timestamp() "
+        + "where ls.liquorId = :liquorId and ls.expiredAt > now() "
         + "order by ls.expiredAt asc")
     List<LiquorStock> findAllByLiquorIdNotExpired(final Long liquorId);
 }

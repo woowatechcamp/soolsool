@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.payment.infra;
 
-import com.woowacamp.soolsool.core.payment.domain.Payment;
+import com.woowacamp.soolsool.core.payment.dto.response.PayApproveResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import org.springframework.context.annotation.Primary;
@@ -21,7 +21,14 @@ public class FakePayClient implements PayClient {
     }
 
     @Override
-    public Payment payApprove(final Object... args) {
-        return null;
+    public PayApproveResponse payApprove(final Object... args) {
+        return new PayApproveResponse(
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+        );
     }
 }

@@ -46,7 +46,7 @@ class LiquorStocksTest {
     void createFailWithDifferent() {
         /* given */
         LiquorStock 재고1 = mock(LiquorStock.class);
-        when(재고1.get()).thenReturn(1L);
+        when(재고1.getLiquorId()).thenReturn(1L);
         LiquorStock 재고2 = mock(LiquorStock.class);
         when(재고2.getLiquorId()).thenReturn(2L);
         List<LiquorStock> liquorStocks = List.of(재고1, 재고2);

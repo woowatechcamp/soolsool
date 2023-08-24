@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.liquor.domain;
 import com.woowacamp.soolsool.core.liquor.code.LiquorStockErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
@@ -59,5 +60,11 @@ public class LiquorStocks {
         if (totalStock < quantity) {
             throw new SoolSoolException(LiquorStockErrorCode.NOT_ENOUGH_LIQUOR_STOCKS);
         }
+    }
+
+    public List<LiquorStock> getOutOfStocks() {
+        return this.liquorStocks.stream()
+            .filter(LiquorStock::isOutOfStock)
+            .collect(Collectors.toList());
     }
 }

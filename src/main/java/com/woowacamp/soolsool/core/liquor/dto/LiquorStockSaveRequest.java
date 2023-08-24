@@ -16,7 +16,7 @@ public class LiquorStockSaveRequest {
 
     public LiquorStock toEntity() {
         return LiquorStock.builder()
-            .liquor(liquorId)
+            .liquorId(liquorId)
             .stock(new LiquorStockCount(stock))
             .expiredAt(expiredAt)
             .build();

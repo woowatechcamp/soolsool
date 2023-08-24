@@ -41,6 +41,7 @@ import lombok.NonNull;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Liquor extends BaseEntity {
 
+    private static final LiquorStockCount DEFAULT_TOTAL_COUNT = new LiquorStockCount(0);
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -129,6 +130,7 @@ public class Liquor extends BaseEntity {
         this.imageUrl = new LiquorImageUrl(imageUrl);
         this.alcohol = new LiquorAlcohol(alcohol);
         this.volume = new LiquorVolume(volume);
+        this.totalStock = DEFAULT_TOTAL_COUNT;
     }
 
     public void update(
@@ -178,5 +180,13 @@ public class Liquor extends BaseEntity {
 
     public int getVolume() {
         return this.volume.getVolume();
+    }
+
+    public void decreaseTotalStock(final int quantity) {
+        this.totalStock = this.totalStock.decrease(quantity);
+    }
+
+    public void increaseTotalStock(final int stock) {
+        this.totalStock = this.totalStock.increase(stock);
     }
 }
