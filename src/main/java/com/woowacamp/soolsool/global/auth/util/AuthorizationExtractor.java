@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationExtractor {
 
-    private static final String EXTRACT_TYPE = "Bearer";
+    private static final String EXTRACT_TYPE = "Bearer ";
 
     public String extractToken(final HttpServletRequest request) {
         final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
