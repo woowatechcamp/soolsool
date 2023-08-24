@@ -1,7 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +16,6 @@ public class LiquorDetailResponse {
     private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
-    private final LocalDateTime expiredAt;
 
     public static LiquorDetailResponse from(final Liquor liquor) {
         return new LiquorDetailResponse(
@@ -28,8 +26,7 @@ public class LiquorDetailResponse {
             liquor.getImageUrl(),
             liquor.getTotalLiquorStock(),
             liquor.getAlcohol(),
-            liquor.getVolume(),
-            liquor.getFirstLiquorStock().getExpiredAt()
+            liquor.getVolume()
         );
     }
 }
