@@ -2,6 +2,7 @@ package com.woowacamp.soolsool.core.liquor.domain;
 
 import static com.woowacamp.soolsool.global.code.GlobalErrorCode.NO_CONTENT;
 
+import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorBrandConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorImageUrlConverter;
@@ -19,8 +20,11 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -30,6 +34,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -63,6 +68,10 @@ public class Liquor extends BaseEntity {
     @JoinColumn(name = "status_id", nullable = false)
     @Getter
     private LiquorStatus status;
+
+    @OneToMany(mappedBy = "liquor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    private List<LiquorStock> liquorStocks = new ArrayList<>();
 
     @Column(name = "name", nullable = false, length = 100)
     @Convert(converter = LiquorNameConverter.class)
@@ -156,6 +165,21 @@ public class Liquor extends BaseEntity {
 
     public boolean isStopped() {
         return status.getType().equals(LiquorStatusType.STOPPED);
+    }
+
+    public LiquorStock getFirstLiquorStock() {
+        if (this.liquorStocks.isEmpty()) {
+            throw new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_STOCK_FOUND);
+        }
+
+        return this.liquorStocks.get(0);
+    }
+
+    public int getTotalLiquorStock() {
+        return this.liquorStocks.stream()
+            .map(LiquorStock::getStock)
+            .reduce(Integer::sum)
+            .orElse(0);
     }
 
     public String getName() {

@@ -26,10 +26,10 @@ public class LiquorDetailResponse {
             liquor.getPrice().toString(),
             liquor.getBrand(),
             liquor.getImageUrl(),
-            liquor.getStock(),
+            liquor.getTotalLiquorStock(),
             liquor.getAlcohol(),
             liquor.getVolume(),
-            liquor.getExpiredAt()
+            liquor.getFirstLiquorStock().getExpiredAt()
         );
     }
 }

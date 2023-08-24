@@ -152,7 +152,7 @@ public class ReceiptItem extends BaseEntity {
             liquor.getAlcohol(),
             liquor.getVolume(),
             quantity,
-            liquor.getExpiredAt()
+            liquor.getFirstLiquorStock().getExpiredAt()
         );
     }
 

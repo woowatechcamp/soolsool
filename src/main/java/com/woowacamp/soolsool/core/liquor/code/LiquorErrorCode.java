@@ -36,6 +36,7 @@ public enum LiquorErrorCode implements ErrorCode {
 
     NOT_LIQUOR_FOUND(NOT_FOUND.value(), "L115", "술이 존재하지 않습니다."),
 
+    NOT_LIQUOR_STOCK_FOUND(NOT_FOUND.value(), "L116", "술 재고가 존재하지 않습니다."),
     ;
 
     private final int status;

@@ -2,9 +2,8 @@ package com.woowacamp.soolsool.core.liquor.domain;
 
 import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.INVALID_SIZE_STOCK;
 
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorStockConverter;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockVo;
-import com.woowacamp.soolsool.core.liquor.domain.vo.Stock;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorStockCountConverter;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -38,15 +37,19 @@ public class LiquorStock {
     private Liquor liquor;
 
     @Column(name = "stock", nullable = false)
-    @Convert(converter = LiquorStockConverter.class)
-    private LiquorStockVo stock;
+    @Convert(converter = LiquorStockCountConverter.class)
+    private LiquorStockCount stock;
 
     @Column(name = "expired_at", nullable = false)
     @Getter
     private LocalDateTime expiredAt;
 
     @Builder
-    public LiquorStock(final Liquor liquor, final LiquorStockVo stock, final LocalDateTime expiredAt) {
+    public LiquorStock(
+        final Liquor liquor,
+        final LiquorStockCount stock,
+        final LocalDateTime expiredAt
+    ) {
         this.liquor = liquor;
         this.stock = stock;
         this.expiredAt = expiredAt;
@@ -60,6 +63,6 @@ public class LiquorStock {
         if (this.stock.getStock() < quantity) {
             throw new SoolSoolException(INVALID_SIZE_STOCK);
         }
-        this.stock = new LiquorStockVo(this.stock.getStock() - quantity);
+        this.stock = new LiquorStockCount(this.stock.getStock() - quantity);
     }
 }

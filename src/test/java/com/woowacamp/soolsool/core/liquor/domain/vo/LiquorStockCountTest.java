@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("술 재고 단위 테스트")
-class LiquorStockVoTest {
+class LiquorStockCountTest {
 
     @Test
     @DisplayName("술 재고를 정상적으로 생성한다.")
@@ -19,7 +19,7 @@ class LiquorStockVoTest {
         int stock = 777;
 
         /* when & then */
-        assertThatCode(() -> new LiquorStockVo(stock))
+        assertThatCode(() -> new LiquorStockCount(stock))
             .doesNotThrowAnyException();
     }
 
@@ -30,7 +30,7 @@ class LiquorStockVoTest {
         int stock = -1;
 
         /* when & then */
-        assertThatThrownBy(() -> new LiquorStockVo(stock))
+        assertThatThrownBy(() -> new LiquorStockCount(stock))
             .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("술 재고는 0 미만일 수 없습니다.");
     }
@@ -39,9 +39,9 @@ class LiquorStockVoTest {
     @DisplayName("술 재고가 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        LiquorStockVo origin = new LiquorStockVo(777);
-        LiquorStockVo same = new LiquorStockVo(777);
-        LiquorStockVo different = new LiquorStockVo(123);
+        LiquorStockCount origin = new LiquorStockCount(777);
+        LiquorStockCount same = new LiquorStockCount(777);
+        LiquorStockCount different = new LiquorStockCount(123);
 
         /* when & then */
         assertAll(

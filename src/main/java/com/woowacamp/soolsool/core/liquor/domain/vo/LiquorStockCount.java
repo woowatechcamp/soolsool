@@ -7,11 +7,11 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class LiquorStockVo {
+public class LiquorStockCount {
 
     private final int stock;
 
-    public LiquorStockVo(final int stock) {
+    public LiquorStockCount(final int stock) {
         validateIsNotLessThanZero(stock);
 
         this.stock = stock;

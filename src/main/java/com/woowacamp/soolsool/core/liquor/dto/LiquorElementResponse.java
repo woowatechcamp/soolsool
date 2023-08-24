@@ -20,7 +20,7 @@ public class LiquorElementResponse {
             liquor.getName(),
             liquor.getPrice().toString(),
             liquor.getImageUrl(),
-            liquor.getStock()
+            liquor.getFirstLiquorStock().getStock()
         );
     }
 }

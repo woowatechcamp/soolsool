@@ -34,8 +34,7 @@ public class LiquorSaveRequest {
             brew, region,
             status, name,
             price, brand, imageUrl,
-            stock, alcohol, volume,
-            expiredAt
+            alcohol, volume
         );
     }
 }
