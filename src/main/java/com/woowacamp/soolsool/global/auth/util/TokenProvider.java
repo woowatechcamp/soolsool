@@ -35,7 +35,7 @@ public class TokenProvider {
         return Jwts.builder()
             .setSubject(member.getId().toString())
             .setIssuedAt(now)
-            .claim(ROLE_TYPE, member.getRole().getName().toString())
+            .claim(ROLE_TYPE, member.getRoleName())
             .setExpiration(validity)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();
@@ -64,7 +64,10 @@ public class TokenProvider {
 
     public UserDto getUserDto(final String token) {
         final Claims body = parseClaimBody(token);
+
+        // TODO: String이 아닌 MemberRoleType 활용?
         final String authority = (String) body.get(ROLE_TYPE);
+
         return new UserDto(body.getSubject(), authority);
     }
 }

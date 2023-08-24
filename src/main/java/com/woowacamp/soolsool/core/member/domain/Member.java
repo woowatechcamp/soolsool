@@ -113,4 +113,8 @@ public class Member extends BaseEntity {
         }
         this.mileage = this.mileage.subtract(mileageUsage);
     }
+
+    public String getRoleName() {
+        return this.role.getName().getType();
+    }
 }

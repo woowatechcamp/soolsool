@@ -8,16 +8,17 @@ spring:
         format_sql: true
         show_sql: true
     defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data.sql
 
 security:
   jwt:
     token:
       secret-key: ${SOOLSOOL_JWT_SECRET}
       expire-length: 3600000
+
+kakao:
+  admin:
+    key: ${SOOLSOOL_KAKAO_ADMIN_KEY}
+    
 logging:
   level:
     org:
@@ -25,6 +26,3 @@ logging:
         type:
           descriptor:
             sql: trace
-kakao:
-  admin:
-    key: ${SOOLSOOL_KAKAO_ADMIN_KEY}

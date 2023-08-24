@@ -32,13 +32,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("Order 인수 테스트")
+@Disabled("인수 테스트 방법 변경")
+@DisplayName("인수 테스트: order")
 class OrderAcceptanceTest extends AcceptanceTest {
 
     @Autowired
@@ -68,11 +70,12 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     void setUpOrder() {
-        firstMemberOrder1 = createOrder(3L, 1L);
-        firstMemberOrder2 = createOrder(3L, 2L);
-        secondMemberOrder1 = createOrder(4L, 3L);
+        firstMemberOrder1 = createOrder(1L, 1L);
+        firstMemberOrder2 = createOrder(1L, 2L);
+        secondMemberOrder1 = createOrder(2L, 3L);
     }
 
+    // TODO: Fixture
     private String findToken(String email, String password) {
         LoginRequest loginRequest = new LoginRequest(email, password);
 

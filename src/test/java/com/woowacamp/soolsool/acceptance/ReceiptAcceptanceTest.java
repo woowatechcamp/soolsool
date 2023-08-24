@@ -7,67 +7,52 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
-import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
-import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("주문서 : 인수 테스트")
+@DisplayName("인수 테스트: receipt")
 class ReceiptAcceptanceTest extends AcceptanceTest {
 
-    private static final String BEARER_LITERAL = "Bearer ";
+    private static final String BEARER = "Bearer ";
+
+    String 김배달_토큰;
+
+    @BeforeEach
+    void setUpData() {
+        RestMemberFixture.회원가입_김배달_구매자();
+        RestMemberFixture.회원가입_최민족_판매자();
+
+        String 최민족_토큰 = RestAuthFixture.로그인_최민족_판매자();
+        Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(최민족_토큰);
+        Long 얼음딸기주_Id = RestLiquorFixture.술_등록_과일주_전라북도_얼음딸기주_우영미_판매중(최민족_토큰);
+
+        김배달_토큰 = RestAuthFixture.로그인_김배달_구매자();
+        RestCartFixture.장바구니_상품_추가(김배달_토큰, 새로_Id, 1);
+        RestCartFixture.장바구니_상품_추가(김배달_토큰, 얼음딸기주_Id, 3);
+    }
 
     @Test
     @DisplayName("성공 : 주문서를 생성한다.")
     void createReceiptSuccess() {
         // given
-        String customerAccessToken = getCustomerAccessToken();
-        String vendorAccessToken = getVendorAccessToken();
-        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGGI_DO", "ON_SALE",
-            "새로", "3000", "브랜드", "/url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(5L));
-        String location = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, vendorAccessToken)
-            .body(liquorSaveRequest)
-            .when().post("/liquors")
-            .then().log().all()
-            .extract().header("Location");
-        Long liquorId = RestAssured
-            .given().log().all()
-            .accept(APPLICATION_JSON_VALUE)
-            .when().get(location)
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
 
         // when
-        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
-        ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
-            .body(cartItemSaveRequest)
-            .when().post("/cart-items")
-            .then().log().all()
-            .extract();
-
         ExtractableResponse<Response> createReceiptResponse = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .when().post("/receipts")
             .then().log().all()
             .extract();
@@ -80,57 +65,17 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
     @DisplayName("성공: 주문서를 조회한다.")
     void findReceiptSuccess() {
         // given
-        String customerAccessToken = getCustomerAccessToken();
-        String vendorAccessToken = getVendorAccessToken();
-
-        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGGI_DO", "ON_SALE",
-            "새로", "3000", "브랜드", "/url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(5L));
-        String location = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, vendorAccessToken)
-            .body(liquorSaveRequest)
-            .when().post("/liquors")
-            .then().log().all()
-            .extract().header("Location");
-        Long liquorId = RestAssured
-            .given().log().all()
-            .accept(APPLICATION_JSON_VALUE)
-            .when().get(location)
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LiquorDetailResponse.class).getId();
-
-        // when
-        CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(liquorId, 1);
-        ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
-            .body(cartItemSaveRequest)
-            .when().post("/cart-items")
-            .then().log().all()
-            .extract();
-
-        ExtractableResponse<Response> createReceiptResponse = RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
-            .when().post("/receipts")
-            .then().log().all()
-            .extract();
-        Long receiptId = Long.parseLong(createReceiptResponse.header("Location").split("/")[2]);
+        final Long 주문서_Id = RestReceiptFixture.주문서_생성(김배달_토큰);
 
         // when
         ExtractableResponse<Response> detailReceiptResponse = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, customerAccessToken)
-            .when().get("/receipts/{receiptId}", receiptId)
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .when().get("/receipts/{receiptId}", 주문서_Id)
             .then().log().all()
             .extract();
+
         // then
         assertThat(detailReceiptResponse.statusCode()).isEqualTo(OK.value());
 
@@ -138,31 +83,5 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             })
             .getMessage())
             .isEqualTo(RECEIPT_FOUND.getMessage());
-    }
-
-    private String getCustomerAccessToken() {
-        LoginRequest loginRequest = new LoginRequest("woowafriends@naver.com",
-            "woowa");
-
-        return BEARER_LITERAL + RestAssured
-            .given()
-            .contentType(APPLICATION_JSON_VALUE)
-            .body(loginRequest).log().all()
-            .when().post("/auth/login")
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
-    }
-
-    private String getVendorAccessToken() {
-        LoginRequest loginRequest = new LoginRequest("test@email.com",
-            "test_password");
-
-        return BEARER_LITERAL + RestAssured
-            .given()
-            .contentType(APPLICATION_JSON_VALUE)
-            .body(loginRequest).log().all()
-            .when().post("/auth/login")
-            .then().log().all()
-            .extract().jsonPath().getObject("data", LoginResponse.class).getAccessToken();
     }
 }

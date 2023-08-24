@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-@DisplayName("회원 비밀번호 단위 테스트")
+@DisplayName("단위 테스트: MemberPassword")
 class MemberPasswordTest {
 
     @Test
@@ -22,7 +22,7 @@ class MemberPasswordTest {
 
         /* when & then */
         assertThatCode(() -> new MemberPassword(password))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
@@ -34,8 +34,8 @@ class MemberPasswordTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberPassword(password))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 비밀번호는 null이거나 공백일 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 비밀번호는 null이거나 공백일 수 없습니다.");
     }
 
     @Test
@@ -46,8 +46,8 @@ class MemberPasswordTest {
 
         /* when & then */
         assertThatThrownBy(() -> new MemberPassword(password))
-                .isExactlyInstanceOf(SoolSoolException.class)
-                .hasMessage("회원 비밀번호은 60자보다 길 수 없습니다.");
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("회원 비밀번호은 60자보다 길 수 없습니다.");
     }
 
     @Test
@@ -60,10 +60,10 @@ class MemberPasswordTest {
 
         /* when & then */
         assertAll(
-                () -> assertThat(origin).isEqualTo(same),
-                () -> assertThat(origin).hasSameHashCodeAs(same),
-                () -> assertThat(origin).isNotEqualTo(different),
-                () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
+            () -> assertThat(origin).isEqualTo(same),
+            () -> assertThat(origin).hasSameHashCodeAs(same),
+            () -> assertThat(origin).isNotEqualTo(different),
+            () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
     }
 }

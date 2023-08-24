@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@DisplayName("멤버 : 서비스 테스트")
+@DisplayName("단위 테스트: Member")
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
@@ -45,14 +45,14 @@ class MemberServiceTest {
     private MemberService memberService;
 
     @Test
-    @DisplayName("성공 : 멤버 회원 가입 - 구매자")
+    @DisplayName("성공 : 회원 회원 가입 - 구매자")
     void createMemberCustomer() {
         // given
         MemberAddRequest memberAddRequest = new MemberAddRequest(
             "구매자",
             "test@email.com",
             "test_password",
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역"
@@ -92,14 +92,14 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("성공 : 멤버 회원 가입 - 판매자")
+    @DisplayName("성공 : 회원 회원 가입 - 판매자")
     void createMemberVendor() {
         // given
         MemberAddRequest memberAddRequest = new MemberAddRequest(
             "판매자",
             "test@email.com",
             "test_password",
-            "최배달",
+            "최민족",
             "010-1234-5678",
             "0",
             "서울시 잠실역"
@@ -139,7 +139,7 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("성공 : 멤버 조회")
+    @DisplayName("성공 : 회원 조회")
     void readMember() {
         // given
         Long memberId = 1L;
@@ -149,7 +149,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -181,7 +181,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -207,7 +207,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("0")
             .address("서울시 잠실역")
@@ -238,7 +238,7 @@ class MemberServiceTest {
                 .build())
             .email("test@email.com")
             .password("test_password")
-            .name("최배달")
+            .name("최민족")
             .phoneNumber("010-1234-5678")
             .mileage("5000")
             .address("서울시 잠실역")
