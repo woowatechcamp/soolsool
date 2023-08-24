@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("술 가격 단위 테스트")
+@DisplayName("단위 테스트: LiquorPrice")
 class LiquorPriceTest {
 
     @Test

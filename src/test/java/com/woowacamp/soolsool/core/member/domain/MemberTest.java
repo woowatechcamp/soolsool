@@ -7,7 +7,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("회원 단위 테스트")
+@DisplayName("단위 테스트: MemberRole")
 class MemberTest {
 
     @Test

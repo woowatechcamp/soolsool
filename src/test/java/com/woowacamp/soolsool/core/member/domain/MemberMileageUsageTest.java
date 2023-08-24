@@ -5,12 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.order.domain.Order;
-import com.woowacamp.soolsool.core.order.domain.OrderStatus;
-import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("멤버 마일리지 사용 단위 테스트")
+@DisplayName("단위 테스트: MemberMileageUsage")
 class MemberMileageUsageTest {
 
     @Test
