@@ -27,6 +27,11 @@ public class JwtInterceptor implements HandlerInterceptor {
         final HttpServletResponse response,
         final Object handler
     ) {
+
+        if ("OPTIONS".equals(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            return true;
+        }
         final HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         if (handlerMethod.getMethodAnnotation(NoAuth.class) != null) {

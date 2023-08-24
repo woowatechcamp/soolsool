@@ -56,11 +56,11 @@ public class PayService {
     }
 
     @Transactional
-    public Long payApprove(final Long memberId, final String pgToken, final Long receiptId) {
+    public Long payApprove(final String pgToken, final Long receiptId) {
         final Receipt receipt = receiptRepository.findById(receiptId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
         final List<ReceiptItem> receiptItems = receipt.getReceiptItems();
-
+        Long memberId = receipt.getMemberId();
         receiptItems.forEach(receiptItem -> {
             final Liquor liquor = liquorRepository.findLiquorByIdWithLock(receiptItem.getLiquorId())
                 .orElseThrow(() -> new SoolSoolException(NOT_FOUND_LIQUOR));
@@ -70,9 +70,9 @@ public class PayService {
             liquor.decreaseStock(receiptItem.getQuantity());
         });
 
-        validateAccessible(memberId, receipt);
+        validateAccessible(receipt.getMemberId(), receipt);
 
-        final Member member = memberRepository.findByIdWithLock(memberId)
+        final Member member = memberRepository.findByIdWithLock(receipt.getMemberId())
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
         member.decreasePoint(receipt.getMileageUsage());
 
