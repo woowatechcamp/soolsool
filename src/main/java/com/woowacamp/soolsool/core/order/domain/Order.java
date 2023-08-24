@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Table(name = "orders")
@@ -40,21 +41,13 @@ public class Order extends BaseEntity {
 
     @Builder
     public Order(
-        final Long memberId,
-        final OrderStatus orderStatus,
-        final Receipt receipt
+        @NonNull final Long memberId,
+        @NonNull final OrderStatus orderStatus,
+        @NonNull final Receipt receipt
     ) {
         this.memberId = memberId;
         this.status = orderStatus;
         this.receipt = receipt;
-    }
-
-    public static Order of(
-        final Long memberId,
-        final OrderStatus orderStatus,
-        final Receipt receipt
-    ) {
-        return new Order(memberId, orderStatus, receipt);
     }
 
     public void updateStatus(final OrderStatus orderStatus) {

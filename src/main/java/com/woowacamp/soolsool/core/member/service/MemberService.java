@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.member.service;
 
+import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_RECEIPT;
 import static java.util.Arrays.stream;
 
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
@@ -7,6 +8,7 @@ import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
+import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
@@ -97,5 +99,13 @@ public class MemberService {
         final MemberMileageCharge memberMileageCharge =
             memberMileageChargeRequest.toMemberMileageCharge(member);
         memberMileageChargeRepository.save(memberMileageCharge);
+    }
+
+    @Transactional
+    public void subtractMemberMileage(final Long memberId, final MemberMileage mileageUsage) {
+        final Member member = memberRepository.findByIdWithLock(memberId)
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
+
+        member.decreaseMileage(mileageUsage);
     }
 }

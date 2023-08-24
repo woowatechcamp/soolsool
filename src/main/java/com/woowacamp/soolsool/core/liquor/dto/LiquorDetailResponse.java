@@ -24,7 +24,7 @@ public class LiquorDetailResponse {
             liquor.getPrice().toString(),
             liquor.getBrand(),
             liquor.getImageUrl(),
-            liquor.getTotalLiquorStock(),
+            liquor.getTotalStock(),
             liquor.getAlcohol(),
             liquor.getVolume()
         );

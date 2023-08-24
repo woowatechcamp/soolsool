@@ -10,12 +10,9 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,10 +29,8 @@ public class LiquorStock extends BaseEntity {
     @Getter
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "liquor_id", nullable = false)
-    @Getter
-    private Liquor liquor;
+    @Column(name = "liquor_id", nullable = false)
+    private Long liquorId;
 
     @Column(name = "stock", nullable = false)
     @Convert(converter = LiquorStockCountConverter.class)
@@ -47,11 +42,11 @@ public class LiquorStock extends BaseEntity {
 
     @Builder
     public LiquorStock(
-        final Liquor liquor,
+        final Long liquorId,
         final LiquorStockCount stock,
         final LocalDateTime expiredAt
     ) {
-        this.liquor = liquor;
+        this.liquorId = liquorId;
         this.stock = stock;
         this.expiredAt = expiredAt;
     }

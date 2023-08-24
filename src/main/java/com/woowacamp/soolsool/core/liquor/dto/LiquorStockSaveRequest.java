@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
-import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
 import java.time.LocalDateTime;
@@ -15,9 +14,9 @@ public class LiquorStockSaveRequest {
     private final Integer stock;
     private final LocalDateTime expiredAt;
 
-    public LiquorStock toEntity(final Liquor liquor) {
+    public LiquorStock toEntity() {
         return LiquorStock.builder()
-            .liquor(liquor)
+            .liquor(liquorId)
             .stock(new LiquorStockCount(stock))
             .expiredAt(expiredAt)
             .build();

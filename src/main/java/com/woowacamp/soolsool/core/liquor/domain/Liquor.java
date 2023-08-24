@@ -1,13 +1,11 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
-import static com.woowacamp.soolsool.global.code.GlobalErrorCode.NO_CONTENT;
-
-import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorBrandConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorImageUrlConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorNameConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorPriceConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorStockCountConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorVolumeConverter;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorAlcohol;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
@@ -15,16 +13,11 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -34,13 +27,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Table(name = "liquors")
@@ -69,10 +62,6 @@ public class Liquor extends BaseEntity {
     @Getter
     private LiquorStatus status;
 
-    @OneToMany(mappedBy = "liquor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    private List<LiquorStock> liquorStocks = new ArrayList<>();
-
     @Column(name = "name", nullable = false, length = 100)
     @Convert(converter = LiquorNameConverter.class)
     private LiquorName name;
@@ -97,6 +86,10 @@ public class Liquor extends BaseEntity {
     @Convert(converter = LiquorVolumeConverter.class)
     private LiquorVolume volume;
 
+    @Column(name = "total_stock", nullable = false)
+    @Convert(converter = LiquorStockCountConverter.class)
+    private LiquorStockCount totalStock;
+
     @Builder
     public Liquor(
         final LiquorBrew brew,
@@ -116,9 +109,9 @@ public class Liquor extends BaseEntity {
 
     public Liquor(
         final Long id,
-        final LiquorBrew brew,
-        final LiquorRegion region,
-        final LiquorStatus status,
+        @NonNull final LiquorBrew brew,
+        @NonNull final LiquorRegion region,
+        @NonNull final LiquorStatus status,
         final String name,
         final String price,
         final String brand,
@@ -126,8 +119,6 @@ public class Liquor extends BaseEntity {
         final Double alcohol,
         final int volume
     ) {
-        validateIsNotNullableCategory(brew, region, status);
-
         this.id = id;
         this.brew = brew;
         this.region = region;
@@ -138,12 +129,6 @@ public class Liquor extends BaseEntity {
         this.imageUrl = new LiquorImageUrl(imageUrl);
         this.alcohol = new LiquorAlcohol(alcohol);
         this.volume = new LiquorVolume(volume);
-    }
-
-    private void validateIsNotNullableCategory(final Object... objects) {
-        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new SoolSoolException(NO_CONTENT);
-        }
     }
 
     public void update(
@@ -167,19 +152,8 @@ public class Liquor extends BaseEntity {
         return status.getType().equals(LiquorStatusType.STOPPED);
     }
 
-    public LiquorStock getFirstLiquorStock() {
-        if (this.liquorStocks.isEmpty()) {
-            throw new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_STOCK_FOUND);
-        }
-
-        return this.liquorStocks.get(0);
-    }
-
-    public int getTotalLiquorStock() {
-        return this.liquorStocks.stream()
-            .map(LiquorStock::getStock)
-            .reduce(Integer::sum)
-            .orElse(0);
+    public int getTotalStock() {
+        return this.totalStock.getStock();
     }
 
     public String getName() {

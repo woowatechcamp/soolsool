@@ -31,7 +31,7 @@ public enum MemberErrorCode implements ErrorCode {
     MEMBER_NO_ROLE_TYPE(400, "M101", "일치하는 회원 타입이 없습니다."),
     MEMBER_NO_MATCH_PASSWORD(400, "M101", "비밀번호가 일치하지 않습니다"),
     MEMBER_DUPLICATED_EMAIL(400, "M115", "이미 존재하는 이메일 입니다."),
-    ;
+    NOT_ENOUGH_MILEAGE(400, "M116", "마일리지가 부족합니다.");
 
     private final int status;
     private final String code;

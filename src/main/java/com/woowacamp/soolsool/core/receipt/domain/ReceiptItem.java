@@ -17,13 +17,8 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
-import com.woowacamp.soolsool.global.code.GlobalErrorCode;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -38,6 +33,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Table(name = "receipt_items")
@@ -98,16 +94,12 @@ public class ReceiptItem extends BaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity quantity;
 
-    @Column(name = "expired_at", nullable = false)
-    @Getter
-    private LocalDateTime expiredAt;
-
     @Builder
     public ReceiptItem(
         final Receipt receipt,
-        final Long liquorId,
-        final LiquorBrew liquorBrew,
-        final LiquorRegion liquorRegion,
+        @NonNull final Long liquorId,
+        @NonNull final LiquorBrew liquorBrew,
+        @NonNull final LiquorRegion liquorRegion,
         final String liquorName,
         final String liquorOriginalPrice,
         final String liquorPurchasedPrice,
@@ -115,11 +107,8 @@ public class ReceiptItem extends BaseEntity {
         final String liquorImageUrl,
         final Double liquorAlcohol,
         final Integer liquorVolume,
-        final Integer quantity,
-        final LocalDateTime expiredAt
+        final Integer quantity
     ) {
-        validateIsNotNullableCategory(liquorBrew, liquorRegion);
-
         this.receipt = receipt;
         this.liquorId = liquorId;
         this.liquorBrew = liquorBrew;
@@ -132,7 +121,6 @@ public class ReceiptItem extends BaseEntity {
         this.liquorAlcohol = new LiquorAlcohol(liquorAlcohol);
         this.liquorVolume = new LiquorVolume(liquorVolume);
         this.quantity = new ReceiptQuantity(quantity);
-        this.expiredAt = expiredAt;
     }
 
     public static ReceiptItem of( // 생성자로 바꾸기
@@ -151,15 +139,8 @@ public class ReceiptItem extends BaseEntity {
             liquor.getImageUrl(),
             liquor.getAlcohol(),
             liquor.getVolume(),
-            quantity,
-            liquor.getFirstLiquorStock().getExpiredAt()
+            quantity
         );
-    }
-
-    private void validateIsNotNullableCategory(final Object... objects) {
-        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
-        }
     }
 
     public String getLiquorBrew() {

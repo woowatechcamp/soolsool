@@ -76,7 +76,7 @@ public class CartController {
     public ResponseEntity<ApiResponse<Void>> removeCartItemList(
         @LoginUser final Long memberId
     ) {
-        cartService.removeCartItemList(memberId);
+        cartService.removeCartItems(memberId);
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_LIST_DELETED));
     }
 }
