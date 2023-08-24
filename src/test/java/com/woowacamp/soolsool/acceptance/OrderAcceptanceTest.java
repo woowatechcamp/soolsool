@@ -36,6 +36,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         얼음딸기주 = RestLiquorFixture.술_등록_과일주_전라북도_얼음딸기주_우영미_판매중(최민족);
 
         RestLiquorStockFixture.술_재고_등록(최민족, 새로, 100);
+        RestLiquorStockFixture.술_재고_등록(최민족, 얼음딸기주, 200);
     }
 
     @Test
@@ -52,7 +53,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
-            .header(AUTHORIZATION, 김배달)
+            .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
             .when().get("/orders/" + 김배달_주문)
             .then().log().all()
@@ -67,16 +68,15 @@ class OrderAcceptanceTest extends AcceptanceTest {
     void orderList() {
         // given
         String 김배달 = RestAuthFixture.로그인_김배달_구매자();
+
         RestCartFixture.장바구니_상품_추가(김배달, 새로, 1);
         RestCartFixture.장바구니_상품_추가(김배달, 얼음딸기주, 3);
-
         Long 김배달_주문서 = RestReceiptFixture.주문서_생성(김배달);
         RestPayFixture.결제_준비(김배달, 김배달_주문서);
         RestPayFixture.결제_성공(김배달, 김배달_주문서);
 
         RestCartFixture.장바구니_상품_추가(김배달, 새로, 5);
         RestCartFixture.장바구니_상품_추가(김배달, 얼음딸기주, 2);
-
         Long 김배달_주문서2 = RestReceiptFixture.주문서_생성(김배달);
         RestPayFixture.결제_준비(김배달, 김배달_주문서2);
         RestPayFixture.결제_성공(김배달, 김배달_주문서2);
@@ -84,7 +84,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // when
         List<OrderListResponse> data = RestAssured
             .given().log().all()
-            .header(AUTHORIZATION, 김배달)
+            .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
             .when().get("/orders")
             .then().log().all()

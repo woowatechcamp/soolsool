@@ -33,17 +33,12 @@ public class OrderService {
     private final ReceiptRepository receiptRepository;
 
     @Transactional
-    public Long saveOrder(final Long memberId, final Long receiptId) {
-        final Receipt receipt = receiptRepository.findById(receiptId)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_RECEIPT));
-
-        final OrderStatus completedOrderStatus = orderStatusRepository
-            .findByType(COMPLETED)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
+    public Long addOrder(final Long memberId, final Receipt receipt) {
+        final OrderStatus orderStatus = getOrderStatusByType(COMPLETED);
 
         final Order order = Order.builder()
             .memberId(memberId)
-            .orderStatus(completedOrderStatus)
+            .orderStatus(orderStatus)
             .receipt(receipt)
             .build();
 
@@ -87,23 +82,6 @@ public class OrderService {
         }
     }
 
-    // TODO: saveOrder도 있다??
-    public Long addOrder(final Long memberId, final Receipt receipt) {
-        final OrderStatus orderStatus = getOrderStatusByType(COMPLETED);
-        Order.builder()
-            .memberId(memberId)
-            .orderStatus(orderStatus)
-            .receipt(receipt)
-            .build();
-
-        final Order order = Order.builder()
-            .memberId(memberId)
-            .orderStatus(orderStatus)
-            .receipt(receipt)
-            .build();
-
-        return orderRepository.save(order).getId();
-    }
 
     private OrderStatus getOrderStatusByType(final OrderStatusType type) {
         return orderStatusRepository.findByType(type)
