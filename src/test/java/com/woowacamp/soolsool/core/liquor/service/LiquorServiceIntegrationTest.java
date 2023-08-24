@@ -50,7 +50,7 @@ class LiquorServiceIntegrationTest {
     @DisplayName("liquor를 수정한다.")
     void modifyLiquorTest() {
         // given
-        final Liquor target = liquorRepository.findById(1L)
+        Liquor target = liquorRepository.findById(1L)
             .orElseThrow(() -> new IllegalArgumentException("테스트 데이터가 존재하지 않습니다."));
 
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
@@ -87,7 +87,6 @@ class LiquorServiceIntegrationTest {
             .isInstanceOf(SoolSoolException.class)
             .hasMessage(NOT_LIQUOR_FOUND.getMessage());
     }
-
 
     @Test
     @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql", "/liquor.sql"})

@@ -16,5 +16,4 @@ public abstract class RestReceiptFixture {
             .then().log().all()
             .extract().header("Location").split("/")[2]);
     }
-
 }

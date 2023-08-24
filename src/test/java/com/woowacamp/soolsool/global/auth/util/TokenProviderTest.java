@@ -31,7 +31,7 @@ class TokenProviderTest {
     @DisplayName("토큰이 정상적으로 추출된다.")
     void validateToken() {
         // given
-        final Member member = mock(Member.class);
+        Member member = mock(Member.class);
         when(member.getId()).thenReturn(1L);
         when(member.getRoleName()).thenReturn("구매자");
 

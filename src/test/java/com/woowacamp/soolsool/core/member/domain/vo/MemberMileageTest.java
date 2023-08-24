@@ -63,6 +63,5 @@ class MemberMileageTest {
             () -> assertThat(origin).isNotEqualTo(different),
             () -> assertThat(origin).doesNotHaveSameHashCodeAs(different)
         );
-
     }
 }

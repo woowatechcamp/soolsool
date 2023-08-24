@@ -42,12 +42,12 @@ public class JwtInterceptor implements HandlerInterceptor {
         tokenProvider.validateToken(token); // TODO: getUserDto 안으로 이동해도 될 듯
         final String authority = tokenProvider.getUserDto(token).getAuthority();
 
-        checkVendorMethod(handlerMethod, authority);
+        validateVendorMethod(handlerMethod, authority);
 
         return true;
     }
 
-    private void checkVendorMethod(final HandlerMethod handlerMethod, final String authority) {
+    private void validateVendorMethod(final HandlerMethod handlerMethod, final String authority) {
         if (handlerMethod.hasMethodAnnotation(Vendor.class) &&
             !authority.equals(MemberRoleType.VENDOR.getType())) {
             throw new SoolSoolException(AuthErrorCode.INVALID_AUTHORITY);

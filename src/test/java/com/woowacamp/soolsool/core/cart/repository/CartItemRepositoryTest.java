@@ -31,7 +31,7 @@ class CartItemRepositoryTest {
     @DisplayName("CartItem을 저장한다.")
     void createCartItem() {
         // given
-        final Liquor 새로 = liquorRepository.findById(1L)
+        Liquor 새로 = liquorRepository.findById(1L)
             .orElseThrow(() -> new IllegalArgumentException("테스트 데이터가 없습니다."));
 
         CartItem cartItem = CartItem.builder()
