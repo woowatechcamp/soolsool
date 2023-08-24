@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@DisplayName("인수 테스트: member")
+@DisplayName("인수 테스트: /member")
 class MemberAcceptanceTest extends AcceptanceTest {
 
     @Test

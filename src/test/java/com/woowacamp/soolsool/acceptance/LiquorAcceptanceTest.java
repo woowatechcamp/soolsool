@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("인수 테스트: liquor")
+@DisplayName("인수 테스트: /liquor")
 class LiquorAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach

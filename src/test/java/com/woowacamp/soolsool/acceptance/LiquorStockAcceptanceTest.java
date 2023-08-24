@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("인수 테스트: liquor-stock")
+@DisplayName("인수 테스트: /liquor-stocks")
 class LiquorStockAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach

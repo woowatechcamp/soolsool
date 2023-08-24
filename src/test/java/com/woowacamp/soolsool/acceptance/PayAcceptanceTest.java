@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("인수 테스트: pay")
+@DisplayName("인수 테스트: /pay")
 class PayAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach

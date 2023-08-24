@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("인수 테스트: cart")
+@DisplayName("인수 테스트: /cart-items")
 class CartAcceptanceTest extends AcceptanceTest {
 
     Long 새로_Id, 하이트_Id, 얼음딸기주_Id;

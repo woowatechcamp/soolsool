@@ -21,7 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("인수 테스트: order")
+@DisplayName("인수 테스트: /orders")
 class OrderAcceptanceTest extends AcceptanceTest {
 
     Long 새로, 얼음딸기주;
