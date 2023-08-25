@@ -17,3 +17,6 @@ spring:
         show_sql: true
         format_sql: true
 
+logging:
+  slack:
+    webhook-url: ${SOOLSOOL_LOGGING_SLACK_WEBHOOK_URL}
