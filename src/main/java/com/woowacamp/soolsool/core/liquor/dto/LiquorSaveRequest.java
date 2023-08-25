@@ -4,7 +4,6 @@ import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,10 +18,8 @@ public class LiquorSaveRequest {
     private final String price;
     private final String brand;
     private final String imageUrl;
-    private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
-    private final LocalDateTime expiredAt;
 
     public Liquor toEntity(
         final LiquorBrew brew,
@@ -34,8 +31,7 @@ public class LiquorSaveRequest {
             brew, region,
             status, name,
             price, brand, imageUrl,
-            stock, alcohol, volume,
-            expiredAt
+            alcohol, volume
         );
     }
 }

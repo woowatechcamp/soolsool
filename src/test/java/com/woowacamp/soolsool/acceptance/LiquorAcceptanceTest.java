@@ -29,10 +29,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("인수 테스트: liquor")
+@DisplayName("인수 테스트: /liquor")
 class LiquorAcceptanceTest extends AcceptanceTest {
-
-    private static final String BEARER = "Bearer ";
 
     @BeforeEach
     void setUpData() {
@@ -47,8 +45,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "브랜드", "/soju-url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(5L));
+            12.0, 300);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -143,7 +140,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquorDetailResponse.getPrice()).isEqualTo("3000"),
             () -> assertThat(liquorDetailResponse.getBrand()).isEqualTo("롯데"),
             () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
-            () -> assertThat(liquorDetailResponse.getStock()).isEqualTo(100),
+            () -> assertThat(liquorDetailResponse.getStock()).isZero(),
             () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
             () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300)
         );
@@ -175,7 +172,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
                 .containsExactly("/beer-url", "/soju-url"),
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                .containsExactly(200, 100)
+                .containsExactly(0, 0)
         );
     }
 
@@ -206,7 +203,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
                 .containsExactly("/soju-url"),
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                .containsExactly(100)
+                .containsExactly(0)
         );
     }
 
@@ -238,7 +235,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
                 .containsExactly("/soju-url"),
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                .containsExactly(100)
+                .containsExactly(0)
         );
     }
 
@@ -271,7 +268,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
                 .containsExactly("/beer-url"),
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                .containsExactly(200)
+                .containsExactly(0)
         );
     }
 
@@ -306,7 +303,9 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getImageUrl))
                 .containsExactly("/strawberry-url"),
             () -> assertThat(liquors.stream().map(LiquorElementResponse::getStock))
-                .containsExactly(20)
+                .containsExactly(0)
         );
     }
+
+
 }

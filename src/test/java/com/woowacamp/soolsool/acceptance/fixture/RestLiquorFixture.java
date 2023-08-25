@@ -4,17 +4,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import io.restassured.RestAssured;
-import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;
 
-public abstract class RestLiquorFixture {
+public abstract class RestLiquorFixture extends RestFixture {
 
     public static Long 술_등록_새로_판매중(String accessToken) {
         LiquorSaveRequest request = new LiquorSaveRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
             "새로", "3000", "롯데", "/soju-url",
-            100, 12.0, 300,
-            LocalDateTime.now().plusYears(5L)
+            12.0, 300
         );
 
         return addLiquor(accessToken, request);
@@ -24,8 +22,7 @@ public abstract class RestLiquorFixture {
         LiquorSaveRequest request = new LiquorSaveRequest(
             "ETC", "GYEONGGI_DO", "STOPPED",
             "하이트", "4000", "진로", "/beer-url",
-            200, 24.0, 600,
-            LocalDateTime.now().plusYears(5L)
+            24.0, 600
         );
 
         return addLiquor(accessToken, request);
@@ -35,8 +32,7 @@ public abstract class RestLiquorFixture {
         LiquorSaveRequest request = new LiquorSaveRequest(
             "BERRY", "JEOLLABUK_DO", "ON_SALE",
             "얼음딸기주", "4500", "우영미", "/strawberry-url",
-            20, 14.0, 400,
-            LocalDateTime.now().plusYears(5L)
+            14.0, 400
         );
 
         return addLiquor(accessToken, request);
@@ -45,7 +41,7 @@ public abstract class RestLiquorFixture {
     private static Long addLiquor(String accessToken, LiquorSaveRequest request) {
         return Long.valueOf(RestAssured
             .given().log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)

@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.member.domain;
 
+import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.converter.MemberAddressConverter;
 import com.woowacamp.soolsool.core.member.domain.converter.MemberEmailConverter;
 import com.woowacamp.soolsool.core.member.domain.converter.MemberMileageConverter;
@@ -14,6 +15,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberPassword;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberPhoneNumber;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -107,10 +109,11 @@ public class Member extends BaseEntity {
         return mileage.getMileage();
     }
 
-    public void decreasePoint(final BigInteger mileageUsage) {
-        if (mileageUsage.compareTo(this.mileage.getMileage()) > 0) {
-            throw new IllegalArgumentException("마일리지가 부족합니다.");
+    public void decreaseMileage(final MemberMileage mileageUsage) {
+        if (this.mileage.isLessThan(mileageUsage)) {
+            throw new SoolSoolException(MemberErrorCode.NOT_ENOUGH_MILEAGE);
         }
+
         this.mileage = this.mileage.subtract(mileageUsage);
     }
 

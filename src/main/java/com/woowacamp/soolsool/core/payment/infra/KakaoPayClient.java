@@ -2,14 +2,13 @@ package com.woowacamp.soolsool.core.payment.infra;
 
 import com.woowacamp.soolsool.core.payment.code.PayErrorCode;
 import com.woowacamp.soolsool.core.payment.domain.KakaoPayReceipt;
-import com.woowacamp.soolsool.core.payment.dto.PayApproveResponse;
-import com.woowacamp.soolsool.core.payment.dto.response.KakaoPayApproveResponse;
-import com.woowacamp.soolsool.core.payment.dto.response.KakaoPayReadyResponse;
+import com.woowacamp.soolsool.core.payment.dto.response.PayApproveResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
+import com.woowacamp.soolsool.core.payment.infra.dto.response.KakaoPayApproveResponse;
+import com.woowacamp.soolsool.core.payment.infra.dto.response.KakaoPayReadyResponse;
 import com.woowacamp.soolsool.core.payment.repository.KakaoPayReceiptRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import com.woowacamp.soolsool.global.infra.SimplePayService;
 import java.net.URI;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class KakaoPayService implements SimplePayService {
+public class KakaoPayClient implements PayClient {
 
     private static final String HOST = "https://kapi.kakao.com";
     private static final String READY_ENDPOINT = "/v1/payment/ready";
@@ -47,8 +46,8 @@ public class KakaoPayService implements SimplePayService {
 
     @Override
     @Transactional
-    public PayReadyResponse payReady(final Receipt receipt) {
-        HttpHeaders headers = getKakaoPayHeaders();
+    public PayReadyResponse ready(final Receipt receipt) {
+        final HttpHeaders headers = getKakaoPayHeaders();
 
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -106,7 +105,7 @@ public class KakaoPayService implements SimplePayService {
             if (Objects.isNull(kakaoPayApproveResponse)) {
                 throw new SoolSoolException(PayErrorCode.NOT_FOUND_PAY_APPROVE_RESPONSE);
             }
-            return kakaoPayApproveResponse.toApproveResponse();
+            return kakaoPayApproveResponse.toPayApproveResponse();
         } catch (RestClientException e) {
             return null;
         }

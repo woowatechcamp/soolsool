@@ -36,7 +36,11 @@ public class MemberMileage {
         return new MemberMileage(this.mileage.add(amount.getMileage()));
     }
 
-    public MemberMileage subtract(final BigInteger mileageUsage) {
-        return new MemberMileage(this.mileage.subtract(mileageUsage));
+    public MemberMileage subtract(final MemberMileage other) {
+        return new MemberMileage(this.mileage.subtract(other.mileage));
+    }
+
+    public boolean isLessThan(final MemberMileage mileageUsage) {
+        return this.mileage.compareTo(mileageUsage.mileage) < 0;
     }
 }
