@@ -53,10 +53,9 @@ public class LiquorStocks {
 
     private void validateEnoughStocks(final int quantity) {
         final int totalStock = liquorStocks.stream()
-            .map(LiquorStock::getStock)
-            .reduce(Integer::sum)
-            .orElse(0);
-
+            .mapToInt(LiquorStock::getStock)
+            .sum();
+        
         if (totalStock < quantity) {
             throw new SoolSoolException(LiquorStockErrorCode.NOT_ENOUGH_LIQUOR_STOCKS);
         }

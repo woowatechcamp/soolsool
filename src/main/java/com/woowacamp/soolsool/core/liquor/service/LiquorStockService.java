@@ -29,7 +29,7 @@ public class LiquorStockService {
     }
 
     @Transactional
-    public void decreaseLiquorStock(final Long liquorId, int quantity) {
+    public void decreaseLiquorStock(final Long liquorId, final int quantity) {
         final LiquorStocks liquorStocks = getLiquorStocks(liquorId);
         liquorStocks.decreaseStock(quantity);
 

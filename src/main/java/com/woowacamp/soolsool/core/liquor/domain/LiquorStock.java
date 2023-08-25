@@ -54,7 +54,7 @@ public class LiquorStock extends BaseEntity {
     }
 
     public void decreaseStock(final int quantity) {
-        this.stock = new LiquorStockCount(this.stock.getStock() - quantity);
+        this.stock = this.stock.decrease(quantity);
     }
 
     public boolean isOutOfStock() {

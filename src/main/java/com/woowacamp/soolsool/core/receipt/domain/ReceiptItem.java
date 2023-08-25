@@ -37,7 +37,6 @@ import lombok.NonNull;
 
 @Entity
 @Table(name = "receipt_items")
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReceiptItem extends BaseEntity {
 
@@ -100,14 +99,14 @@ public class ReceiptItem extends BaseEntity {
         @NonNull final Long liquorId,
         @NonNull final LiquorBrew liquorBrew,
         @NonNull final LiquorRegion liquorRegion,
-        final String liquorName,
-        final String liquorOriginalPrice,
-        final String liquorPurchasedPrice,
-        final String liquorBrand,
-        final String liquorImageUrl,
-        final Double liquorAlcohol,
-        final Integer liquorVolume,
-        final Integer quantity
+        @NonNull final String liquorName,
+        @NonNull final String liquorOriginalPrice,
+        @NonNull final String liquorPurchasedPrice,
+        @NonNull final String liquorBrand,
+        @NonNull final String liquorImageUrl,
+        @NonNull final Double liquorAlcohol,
+        @NonNull final Integer liquorVolume,
+        @NonNull final Integer quantity
     ) {
         this.receipt = receipt;
         this.liquorId = liquorId;
@@ -127,20 +126,19 @@ public class ReceiptItem extends BaseEntity {
         final Liquor liquor,
         final int quantity
     ) {
-        return new ReceiptItem(
-            null,
-            liquor.getId(),
-            liquor.getBrew(),
-            liquor.getRegion(),
-            liquor.getName(),
-            liquor.getPrice().toString(),
-            liquor.getPrice().toString(),
-            liquor.getBrand(),
-            liquor.getImageUrl(),
-            liquor.getAlcohol(),
-            liquor.getVolume(),
-            quantity
-        );
+        return ReceiptItem.builder()
+            .liquorId(liquor.getId())
+            .liquorBrew(liquor.getBrew())
+            .liquorRegion(liquor.getRegion())
+            .liquorName(liquor.getName())
+            .liquorOriginalPrice(liquor.getPrice().toString())
+            .liquorPurchasedPrice(liquor.getPrice().toString())
+            .liquorBrand(liquor.getBrand())
+            .liquorImageUrl(liquor.getImageUrl())
+            .liquorAlcohol(liquor.getAlcohol())
+            .liquorVolume(liquor.getVolume())
+            .quantity(quantity)
+            .build();
     }
 
     public String getLiquorBrew() {

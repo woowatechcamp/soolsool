@@ -38,7 +38,7 @@ class LiquorStocksTest {
         /* when & then */
         assertThatThrownBy(() -> new LiquorStocks(Collections.emptyList()))
             .isExactlyInstanceOf(SoolSoolException.class)
-            .hasMessage("주류 재고가 비어있습니다.");
+            .hasMessage("주류 재고가 존재하지 않습니다.");
     }
 
     @Test

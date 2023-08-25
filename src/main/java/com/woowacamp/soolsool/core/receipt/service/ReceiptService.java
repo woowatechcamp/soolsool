@@ -70,7 +70,8 @@ public class ReceiptService {
 
     @Transactional(readOnly = true)
     public Receipt getMemberReceipt(final Long memberId, final Long receiptId) {
-        final Receipt receipt = findReceiptById(receiptId);
+        final Receipt receipt = receiptRepository.findById(receiptId)
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
         validateAccessibleReceipt(memberId, receipt);
 
         return receipt;
@@ -80,10 +81,5 @@ public class ReceiptService {
         if (!Objects.equals(memberId, receipt.getMemberId())) {
             throw new SoolSoolException(ACCESS_DENIED_RECEIPT);
         }
-    }
-
-    private Receipt findReceiptById(final Long receiptId) {
-        return receiptRepository.findById(receiptId)
-            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
     }
 }
