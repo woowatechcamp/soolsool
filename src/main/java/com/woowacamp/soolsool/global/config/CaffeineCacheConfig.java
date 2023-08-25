@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.global.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.woowacamp.soolsool.global.dto.CacheType;
+import com.woowacamp.soolsool.global.common.CacheType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,5 +34,4 @@ public class CaffeineCacheConfig {
 
         return cacheManager;
     }
-
 }

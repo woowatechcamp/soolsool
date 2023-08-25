@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.global.dto;
+package com.woowacamp.soolsool.global.common;
 
 import lombok.Getter;
 
