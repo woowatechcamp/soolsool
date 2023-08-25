@@ -1,11 +1,14 @@
 package com.woowacamp.soolsool.core.payment.controller;
 
-import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_APPROVE_SUCCESS;
+import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_CANCEL;
+import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_FAIL;
 import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_SUCCESS;
 
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
+import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
 import com.woowacamp.soolsool.core.payment.service.PayService;
+import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +39,15 @@ public class PayController {
 
     @NoAuth
     @GetMapping("/success/{receiptId}")
-    public void kakaoPaySuccess(
-        final HttpServletResponse response,
-        @RequestParam("pg_token") final String pgToken,
-        @PathVariable("receiptId") final Long receiptId
-    ) throws IOException {
-        final Long orderId = payService.payApprove(pgToken, receiptId);
-        response.sendRedirect("http://localhost:3000/order/complete/" + orderId);
+    public ResponseEntity<ApiResponse<PaySuccessResponse>> kakaoPaySuccess(
+        @LoginUser final Long memberId,
+        @PathVariable("receiptId") final Long receiptId,
+        @RequestParam("pg_token") final String pgToken
+    ) {
+        final Long orderId = payService.approve(memberId, receiptId, pgToken);
+
+        return ResponseEntity.ok(
+            ApiResponse.of(PAY_READY_SUCCESS, new PaySuccessResponse(orderId)));
     }
 
     @NoAuth
@@ -50,7 +55,6 @@ public class PayController {
     public ResponseEntity<ApiResponse<Long>> kakaoPayCancel() {
         return ResponseEntity.ok(ApiResponse.of(PAY_READY_CANCEL, null));
     }
-
 
     @NoAuth
     @GetMapping("/fail/{receiptId}")
