@@ -21,6 +21,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
+import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -39,10 +41,13 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class LiquorService {
 
+    private static final PageRequest TOP_RANK_PAGEABLE = PageRequest.of(0, 5);
+
     private final LiquorRepository liquorRepository;
     private final LiquorStatusRepository liquorStatusRepository;
     private final LiquorRegionRepository liquorRegionRepository;
     private final LiquorBrewRepository liquorBrewRepository;
+    private final ReceiptRepository receiptRepository;
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
@@ -60,7 +65,11 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        return LiquorDetailResponse.from(liquor);
+        final List<Liquor> relatedLiquors = liquorRepository.findAllByIdIn(
+            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE)
+        );
+
+        return LiquorDetailResponse.of(liquor, relatedLiquors);
     }
 
     @Transactional(readOnly = true)
