@@ -9,8 +9,10 @@ import com.woowacamp.soolsool.core.member.service.MemberService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
@@ -31,8 +34,12 @@ public class MemberController {
     @NoAuth
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addMember(
+        final HttpServletRequest httpServletRequest,
         @RequestBody @Valid final MemberAddRequest memberAddRequest
     ) {
+        log.info("{} {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberAddRequest);
+
         memberService.addMember(memberAddRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -41,8 +48,12 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMemberDetails(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         final MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -51,9 +62,14 @@ public class MemberController {
 
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> modifyMember(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, memberModifyRequest);
+
         memberService.modifyMember(memberId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -62,8 +78,12 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeMember(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         memberService.removeMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
@@ -72,9 +92,14 @@ public class MemberController {
 
     @PatchMapping("/mileage")
     public ResponseEntity<ApiResponse<Void>> addMemberMileage(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
-        @RequestBody @Valid MemberMileageChargeRequest memberMileageChargeRequest
+        @RequestBody @Valid final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, memberMileageChargeRequest);
+
         memberService.addMemberMileage(memberId, memberMileageChargeRequest);
 
         return ResponseEntity.status(HttpStatus.OK)

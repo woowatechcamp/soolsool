@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration>
+  <!-- 로그에 색상을 입히기 위한 기본 설정 로드 -->
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <!-- 로그를 저장할 기본 경로 설정 -->
+  <property name="LOG_DIR" value="./logs"/>
+
+  <!-- 콘솔에 남길 로그의 패턴 설정 -->
+  <property name="CONSOLE_LOG_PATTERN"
+    value="[%d{yyyy:MM:dd HH:mm:ss.SSS}] %clr(%-5level) %clr(${PID:-}){magenta} %clr(---){faint} %-25.25thread %clr(%-40.40logger{39}){cyan} %clr(:){faint} %msg%n"/>
+
+  <!-- 파일에 남길 로그의 패턴 설정 -->
+  <property name="FILE_LOG_PATTERN"
+    value="[%d{yyyy:MM:dd HH:mm:ss.SSS}] %-5level ${PID:-} --- %-25.25thread %-40.40logger{39} : %msg%n"/>
+
+  <!-- Slack으로 보낼 ERROR 로그의 패턴 설정 -->
+  <property name="SLACK_ERROR_LOG_PATTERN"
+    value="[%d{yyyy:MM:dd HH:mm:ss.SSS}] `%-5level` ${PID:-} --- %thread `%logger{39}` : %msg%n"/>
+
+  <!-- 콘솔에 남길 로그 설정 -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+    </layout>
+  </appender>
+
+  <!-- 로그 파일 설정 -->
+  <appender name="FILE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 파일 저장 경로 설정 -->
+    <file>${LOG_DIR}/current.log</file>
+    <!-- 특정 레벨 이하의 로그만 저장 -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <!-- 로그 패턴 설정 -->
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+    </encoder>
+    <!-- 파일 생성 방칙 설정 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- 생성될 파일명 -->
+      <fileNamePattern>
+        ${LOG_DIR}/history/history.%d{yyyy-MM-dd}_%i.log
+      </fileNamePattern>
+
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- 파일별 용량 (초과 시 새로운 로그 파일 생성) -->
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+
+      <!-- 로그 파일의 최대 보관 주기. 해당 주기가 경과된 파일은 자동으로 제거-->
+      <maxHistory>14</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Slack 전송용 ERROR 로그 설정 -->
+  <springProperty name="SLACK_WEBHOOK_URL" source="logging.slack.webhook-url"/>
+  <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
+    <webhookUri>${SLACK_WEBHOOK_URL}</webhookUri>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>${SLACK_ERROR_LOG_PATTERN}</Pattern>
+    </layout>
+    <username>EMERGENCY</username>
+    <iconEmoji>:rotating_light:</iconEmoji>
+  </appender>
+
+  <!-- 비동기 알림 전송 설정 -->
+  <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="SLACK"/>
+    <!-- ERROR 레벨의 로그만 전송하도록 설정 -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <!-- level : 관리할 로그의 기본 레벨 설정 -->
+  <root level="INFO">
+    <!-- 콘솔 출력은 dev profile일 경우만 적용 -->
+    <springProfile name="dev">
+      <!-- 위에서 설정한 콘솔 출력용 appender 추가 -->
+      <appender-ref ref="STDOUT"/>
+    </springProfile>
+
+    <!-- 파일 출력은 dev, prod profile일 경우만 적용 -->
+    <springProfile name="dev|prod">
+      <!-- 위에서 설정한 파일 출력용 appender 추가 -->
+      <appender-ref ref="FILE_LOG"/>
+      <!-- 위에서 설정한 Slack 알림용 appender 추가 -->
+      <appender-ref ref="ASYNC_SLACK"/>
+    </springProfile>
+  </root>
+</configuration>
