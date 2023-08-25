@@ -32,7 +32,7 @@ public class PayController {
         @RequestBody final PayOrderRequest payOrderRequest
     ) {
         return ResponseEntity.ok(
-            ApiResponse.of(PAY_READY_SUCCESS, payService.payReady(memberId, payOrderRequest)));
+            ApiResponse.of(PAY_READY_SUCCESS, payService.ready(memberId, payOrderRequest)));
     }
 
     @GetMapping("/success/{receiptId}")

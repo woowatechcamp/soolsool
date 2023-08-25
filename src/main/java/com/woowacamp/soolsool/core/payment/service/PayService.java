@@ -33,7 +33,7 @@ public class PayService {
     private final PayRepository payRepository;
 
     @Transactional
-    public PayReadyResponse payReady(final Long memberId, final PayOrderRequest payOrderRequest) {
+    public PayReadyResponse ready(final Long memberId, final PayOrderRequest payOrderRequest) {
         final Receipt receipt = receiptService
             .getMemberReceipt(memberId, payOrderRequest.getReceiptId());
 
