@@ -15,9 +15,9 @@ public class FakePayClient implements PayClient {
     public PayReadyResponse ready(final Receipt receipt) {
         return new PayReadyResponse(
             "1",
-            "http://지들끼리이야기하는URL",
-            "http://지들끼리이야기하는URL",
-            "http://지들끼리이야기하는URL"
+            "http://pc-url",
+            "http://mobile-url",
+            "http://app-url"
         );
     }
 
