@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.util.StopWatch;
 
 @DataJpaTest
 @DisplayName("통합 테스트: CartItemRepository")
@@ -82,4 +83,21 @@ class CartItemRepositoryTest {
         assertThat(cartItemRepository.findAllByMemberIdOrderByCreatedAtDesc(1L))
             .isEmpty();
     }
+
+    @Test
+    @DisplayName("유저 아이디에 따른 장바구니 아이템 조회 성능 측정")
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql",
+        "/cart-item.sql"
+    })
+    void findAllByMemberId() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        final List<CartItem> allByMemberId = cartItemRepository.findAllByMemberId(1L);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        assertThat(allByMemberId).isNotEmpty();
+    }
+
 }
