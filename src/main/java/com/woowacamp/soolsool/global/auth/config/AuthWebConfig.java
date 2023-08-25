@@ -19,6 +19,7 @@ public class AuthWebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor)
             .addPathPatterns("/**")
             .excludePathPatterns("/auth/login", "/members")
+            .excludePathPatterns("/pay/success/**")
             .excludePathPatterns("/error", "/css/**", "/assets/**", "/js/**", "/*.ico");
     }
 

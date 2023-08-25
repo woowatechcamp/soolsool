@@ -61,7 +61,7 @@ public class ReceiptItem extends BaseEntity {
     @JoinColumn(name = "region_id", nullable = false)
     private LiquorRegion liquorRegion;
 
-    @Column(name = "liquor_name", nullable = false, length = 30)
+    @Column(name = "liquor_name", nullable = false)
     @Convert(converter = LiquorNameConverter.class)
     private LiquorName liquorName;
 

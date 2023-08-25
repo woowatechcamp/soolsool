@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.payment.controller;
 
-import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_APPROVE_SUCCESS;
+import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_CANCEL;
+import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_FAIL;
 import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_SUCCESS;
 
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
@@ -8,6 +9,7 @@ import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
 import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
+import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +44,12 @@ public class PayController {
             ApiResponse.of(PAY_READY_SUCCESS, payService.ready(memberId, payOrderRequest)));
     }
 
+    @NoAuth
     @GetMapping("/success/{receiptId}")
     public ResponseEntity<ApiResponse<PaySuccessResponse>> kakaoPaySuccess(
         @LoginUser final Long memberId,
-        @RequestParam("pg_token") final String pgToken,
-        @PathVariable("receiptId") final Long receiptId
+        @PathVariable("receiptId") final Long receiptId,
+        @RequestParam("pg_token") final String pgToken
     ) {
         log.info("GET {}/success/{} | memberId : {} | pg_token : {}",
             DEFAULT_URL, receiptId, memberId, pgToken);
@@ -54,8 +57,19 @@ public class PayController {
         final Long orderId = payService.approve(memberId, receiptId, pgToken);
 
         return ResponseEntity.ok(
-            ApiResponse.of(PAY_APPROVE_SUCCESS, new PaySuccessResponse(orderId)));
+            ApiResponse.of(PAY_READY_SUCCESS, new PaySuccessResponse(orderId)));
     }
 
-    // TODO: 결제 실패, 취소 시 처리할 컨트롤러 구현하기
+    @NoAuth
+    @GetMapping("/cancel/{receiptId}")
+    public ResponseEntity<ApiResponse<Long>> kakaoPayCancel() {
+        return ResponseEntity.ok(ApiResponse.of(PAY_READY_CANCEL, null));
+    }
+
+    @NoAuth
+    @GetMapping("/fail/{receiptId}")
+    public ResponseEntity<ApiResponse<Long>> kakaoPayFail() {
+        return ResponseEntity.ok(ApiResponse.of(PAY_READY_FAIL, null));
+    }
+
 }
