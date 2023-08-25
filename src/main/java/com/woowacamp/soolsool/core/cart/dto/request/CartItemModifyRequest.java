@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class CartItemModifyRequest {
 
     @NotBlank(message = "수량은 필수 입력 값입니다.")

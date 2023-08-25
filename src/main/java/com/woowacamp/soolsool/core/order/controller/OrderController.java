@@ -7,7 +7,9 @@ import com.woowacamp.soolsool.core.order.service.OrderService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
@@ -25,9 +28,13 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<ApiResponse<OrderDetailResponse>> orderDetail(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long orderId
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         final OrderDetailResponse response = orderService.orderDetail(memberId, orderId);
 
         return ResponseEntity.ok(ApiResponse.of(OrderResultCode.ORDER_DETAIL_SUCCESS, response));
@@ -35,9 +42,13 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<OrderListResponse>>> orderList(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PageableDefault final Pageable pageable
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         final List<OrderListResponse> response = orderService.orderList(memberId, pageable);
 
         return ResponseEntity.ok(ApiResponse.of(OrderResultCode.ORDER_DETAIL_SUCCESS, response));

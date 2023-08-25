@@ -11,3 +11,7 @@ security:
 kakao:
   admin:
     key: ${SOOLSOOL_KAKAO_ADMIN_KEY}
+
+logging:
+  slack:
+    webhook-url: ${SOOLSOOL_LOGGING_SLACK_WEBHOOK_URL}
