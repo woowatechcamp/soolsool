@@ -89,7 +89,7 @@ public class CartService {
     }
 
     @Transactional
-    public void removeCartItemList(final Long memberId) {
+    public void removeCartItems(final Long memberId) {
         cartItemRepository.deleteAllByMemberId(memberId);
     }
 }

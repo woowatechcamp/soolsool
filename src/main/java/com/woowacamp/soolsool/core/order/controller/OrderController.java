@@ -38,8 +38,7 @@ public class OrderController {
         @LoginUser final Long memberId,
         @PageableDefault final Pageable pageable
     ) {
-        final List<OrderListResponse> response = orderService
-            .orderList(memberId, pageable);
+        final List<OrderListResponse> response = orderService.orderList(memberId, pageable);
 
         return ResponseEntity.ok(ApiResponse.of(OrderResultCode.ORDER_DETAIL_SUCCESS, response));
     }

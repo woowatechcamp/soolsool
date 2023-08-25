@@ -18,7 +18,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findOrderById(@Param("orderId") final Long orderId);
 
     @BatchSize(size = 100)
-    @Query("select o from Order o inner join o.receipt r inner join r.receiptItems ri"
+    @Query("select distinct o from Order o inner join o.receipt r inner join r.receiptItems ri"
         + " where o.memberId = :memberId")
     Page<Order> findAllByMemberId(@Param("memberId") final Long memberId, final Pageable pageable);
 }
