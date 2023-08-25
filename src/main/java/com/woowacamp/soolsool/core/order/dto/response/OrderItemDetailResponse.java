@@ -21,15 +21,15 @@ public class OrderItemDetailResponse {
 
     public static OrderItemDetailResponse from(final ReceiptItem receiptItem) {
         return new OrderItemDetailResponse(
-            receiptItem.getLiquorBrew(),
-            receiptItem.getLiquorRegion(),
-            receiptItem.getLiquorName(),
-            receiptItem.getLiquorOriginalPrice().toString(),
-            receiptItem.getLiquorPurchasedPrice().toString(),
-            receiptItem.getLiquorBrand(),
-            receiptItem.getLiquorImageUrl(),
-            receiptItem.getLiquorAlcohol(),
-            receiptItem.getLiquorVolume(),
+            receiptItem.getReceiptItemBrew(),
+            receiptItem.getReceiptItemRegion(),
+            receiptItem.getReceiptItemName(),
+            receiptItem.getReceiptItemOriginalPrice().toString(),
+            receiptItem.getReceiptItemPurchasedPrice().toString(),
+            receiptItem.getReceiptItemBrand(),
+            receiptItem.getReceiptItemImageUrl(),
+            receiptItem.getReceiptItemAlcohol(),
+            receiptItem.getReceiptItemVolume(),
             receiptItem.getQuantity()
         );
     }

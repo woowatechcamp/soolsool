@@ -1,9 +1,9 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
-import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptPriceConverter;
-import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemPriceConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
@@ -47,20 +47,20 @@ public class Receipt extends BaseEntity {
     private ReceiptStatus receiptStatus;
 
     @Column(name = "original_total_price", nullable = false)
-    @Convert(converter = ReceiptPriceConverter.class)
-    private ReceiptPrice originalTotalPrice;
+    @Convert(converter = ReceiptItemPriceConverter.class)
+    private ReceiptItemPrice originalTotalPrice;
 
     @Column(name = "mileage_usage", nullable = false)
-    @Convert(converter = ReceiptPriceConverter.class)
-    private ReceiptPrice mileageUsage;
+    @Convert(converter = ReceiptItemPriceConverter.class)
+    private ReceiptItemPrice mileageUsage;
 
     @Column(name = "purchased_total_price", nullable = false)
-    @Convert(converter = ReceiptPriceConverter.class)
-    private ReceiptPrice purchasedTotalPrice;
+    @Convert(converter = ReceiptItemPriceConverter.class)
+    private ReceiptItemPrice purchasedTotalPrice;
 
     @Column(name = "total_quantity", nullable = false)
-    @Convert(converter = ReceiptQuantityConverter.class)
-    private ReceiptQuantity totalQuantity;
+    @Convert(converter = ReceiptItemQuantityConverter.class)
+    private ReceiptItemQuantity totalQuantity;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expiredDate = LocalDateTime.now().plusDays(30);
@@ -73,10 +73,10 @@ public class Receipt extends BaseEntity {
     public Receipt(
         final Long memberId,
         final ReceiptStatus receiptStatus,
-        final ReceiptPrice originalTotalPrice,
-        final ReceiptPrice mileageUsage,
-        final ReceiptPrice purchasedTotalPrice,
-        final ReceiptQuantity totalQuantity,
+        final ReceiptItemPrice originalTotalPrice,
+        final ReceiptItemPrice mileageUsage,
+        final ReceiptItemPrice purchasedTotalPrice,
+        final ReceiptItemQuantity totalQuantity,
         final List<ReceiptItem> receiptItems
     ) {
         this.memberId = memberId;
