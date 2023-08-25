@@ -15,10 +15,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SoolSoolException.class)
     protected ResponseEntity<ErrorResponse> handleSoolSoolException(final SoolSoolException e) {
-        log.error("message : {}", e.getMessage());
-
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse errorResponse = ErrorResponse.from(errorCode);
+
+        if (isInternalServerError(errorCode)) {
+            log.error("!!! SoolSoolException INTERNAL SERVER ERROR !!! | code : {} | message : {}",
+                errorCode.getCode(), e.getMessage());
+        } else {
+            log.warn("SoolSoolException | code : {} | message : {}",
+                errorCode.getCode(), e.getMessage());
+        }
 
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorCode.getStatus()));
     }
@@ -27,11 +33,27 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleValidationException(
         final MethodArgumentNotValidException exception
     ) {
-        log.error("Validation 에러 : {}", exception.getMessage());
-
         final ErrorCode errorCode = DefaultErrorCode.DEFAULT_VALIDATION_ERROR;
         final ErrorResponse errorResponse = ErrorResponse.from(errorCode);
 
+        log.warn("Validation Error | code : {} | message : {}",
+            errorCode.getCode(), exception.getMessage());
+
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleException(final Exception e) {
+        final ErrorCode errorCode = DefaultErrorCode.UNEXPECTED_ERROR;
+        final ErrorResponse errorResponse = ErrorResponse.from(errorCode);
+
+        log.error("!!! 예상치 못한 예외가 발생했습니다 !!! | code : {} | message : {}",
+            errorCode.getCode(), e.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private boolean isInternalServerError(final ErrorCode errorCode) {
+        return errorCode.getStatus() >= HttpStatus.INTERNAL_SERVER_ERROR.value();
     }
 }

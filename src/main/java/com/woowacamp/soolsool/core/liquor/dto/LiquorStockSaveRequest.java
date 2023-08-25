@@ -5,8 +5,10 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class LiquorStockSaveRequest {
 

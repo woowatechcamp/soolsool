@@ -10,6 +10,7 @@ import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("/pay")
 @RequiredArgsConstructor
 public class PayController {
+
+    private static final String DEFAULT_URL = "/pay";
 
     private final PayService payService;
 
@@ -31,6 +35,9 @@ public class PayController {
         @LoginUser final Long memberId,
         @RequestBody final PayOrderRequest payOrderRequest
     ) {
+        log.info("POST {}/ready | memberId : {} | request : {}",
+            DEFAULT_URL, memberId, payOrderRequest);
+
         return ResponseEntity.ok(
             ApiResponse.of(PAY_READY_SUCCESS, payService.ready(memberId, payOrderRequest)));
     }
@@ -41,9 +48,14 @@ public class PayController {
         @RequestParam("pg_token") final String pgToken,
         @PathVariable("receiptId") final Long receiptId
     ) {
+        log.info("GET {}/success/{} | memberId : {} | pg_token : {}",
+            DEFAULT_URL, receiptId, memberId, pgToken);
+
         final Long orderId = payService.approve(memberId, receiptId, pgToken);
 
         return ResponseEntity.ok(
             ApiResponse.of(PAY_APPROVE_SUCCESS, new PaySuccessResponse(orderId)));
     }
+
+    // TODO: 결제 실패, 취소 시 처리할 컨트롤러 구현하기
 }

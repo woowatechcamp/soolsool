@@ -20,6 +20,7 @@ import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,9 +38,12 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.util.annotation.Nullable;
 
 @RestController
+@Slf4j
 @RequestMapping("/liquors")
 @RequiredArgsConstructor
 public class LiquorController {
+
+    private static final String DEFAULT_URL = "/liquors";
 
     private final LiquorService liquorService;
 
@@ -48,6 +52,9 @@ public class LiquorController {
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
         @RequestBody final LiquorSaveRequest liquorSaveRequest
     ) {
+        log.info("POST {} | request : {}",
+            DEFAULT_URL, liquorSaveRequest);
+
         final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
@@ -59,6 +66,9 @@ public class LiquorController {
     public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(
         @PathVariable final Long liquorId
     ) {
+        log.info("GET {}/{}",
+            DEFAULT_URL, liquorId);
+
         final LiquorDetailResponse response = liquorService.liquorDetail(liquorId);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, response));
@@ -73,6 +83,9 @@ public class LiquorController {
         @RequestParam @Nullable final String brand,
         @PageableDefault final Pageable pageable
     ) {
+        log.info("GET {} | brew : {} | region : {} | status : {} | brand : {} | Pageable : {}",
+            DEFAULT_URL, brew, region, status, brand, pageable);
+
         final PageRequest sortPageable = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
@@ -88,9 +101,12 @@ public class LiquorController {
     @Vendor
     @PutMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> modifyLiquor(
-        @PathVariable Long liquorId,
+        @PathVariable final Long liquorId,
         @RequestBody final LiquorModifyRequest liquorModifyRequest
     ) {
+        log.info("PUT {}/{} | request : {}",
+            DEFAULT_URL, liquorId, liquorModifyRequest);
+
         liquorService.modifyLiquor(liquorId, liquorModifyRequest);
 
         return ResponseEntity.ok(ApiResponse.from(LIQUOR_UPDATED));
@@ -101,6 +117,9 @@ public class LiquorController {
     public ResponseEntity<ApiResponse<Void>> deleteLiquor(
         @PathVariable final Long liquorId
     ) {
+        log.info("DELETE {}/{}",
+            DEFAULT_URL, liquorId);
+
         liquorService.deleteLiquor(liquorId);
 
         return ResponseEntity.ok().body(ApiResponse.from(LIQUOR_DELETED));

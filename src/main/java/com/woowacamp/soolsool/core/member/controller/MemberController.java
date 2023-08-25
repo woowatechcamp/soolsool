@@ -11,6 +11,7 @@ import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,9 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
+
+    private static final String DEFAULT_URL = "/members";
 
     private final MemberService memberService;
 
@@ -33,6 +37,9 @@ public class MemberController {
     public ResponseEntity<ApiResponse<Void>> addMember(
         @RequestBody @Valid final MemberAddRequest memberAddRequest
     ) {
+        log.info("POST {} | request : {}",
+            DEFAULT_URL, memberAddRequest);
+
         memberService.addMember(memberAddRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -43,6 +50,9 @@ public class MemberController {
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMemberDetails(
         @LoginUser final Long memberId
     ) {
+        log.info("GET {} | memberId : {}",
+            DEFAULT_URL, memberId);
+
         final MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -54,6 +64,9 @@ public class MemberController {
         @LoginUser final Long memberId,
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
+        log.info("PATCH {} | memberId : {} | request : {}",
+            DEFAULT_URL, memberId, memberModifyRequest);
+
         memberService.modifyMember(memberId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -64,6 +77,9 @@ public class MemberController {
     public ResponseEntity<ApiResponse<Void>> removeMember(
         @LoginUser final Long memberId
     ) {
+        log.info("DELETE {} | memberId : {}",
+            DEFAULT_URL, memberId);
+
         memberService.removeMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
@@ -73,8 +89,11 @@ public class MemberController {
     @PatchMapping("/mileage")
     public ResponseEntity<ApiResponse<Void>> addMemberMileage(
         @LoginUser final Long memberId,
-        @RequestBody @Valid MemberMileageChargeRequest memberMileageChargeRequest
+        @RequestBody @Valid final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
+        log.info("PATCH {}/mileage | memberId : {} | request : {}",
+            DEFAULT_URL, memberId, memberMileageChargeRequest);
+
         memberService.addMemberMileage(memberId, memberMileageChargeRequest);
 
         return ResponseEntity.status(HttpStatus.OK)

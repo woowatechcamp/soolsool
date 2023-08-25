@@ -14,6 +14,7 @@ import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("/cart-items")
 @RequiredArgsConstructor
 public class CartController {
+
+    private static final String DEFAULT_URL = "/liquors";
 
     private final CartService cartService;
 
@@ -36,6 +40,9 @@ public class CartController {
         @LoginUser final Long memberId,
         @RequestBody final CartItemSaveRequest cartItemSaveRequest
     ) {
+        log.info("POST {} | memberId : {} | request : {}",
+            DEFAULT_URL, memberId, cartItemSaveRequest);
+
         final Long cartItemId = cartService.addCartItem(memberId, cartItemSaveRequest);
 
         // TODO: DTO로 반환하기 "cartItemId": 1
@@ -48,6 +55,9 @@ public class CartController {
         @PathVariable final Long cartItemId,
         @RequestBody final CartItemModifyRequest cartItemModifyRequest
     ) {
+        log.info("PATCH {}/{} | memberId : {} | request : {}",
+            DEFAULT_URL, cartItemId, memberId, cartItemModifyRequest);
+
         cartService.modifyCartItemQuantity(memberId, cartItemId, cartItemModifyRequest);
 
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_MODIFY_QUANTITY_SUCCESS));
@@ -57,6 +67,9 @@ public class CartController {
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> cartItemList(
         @LoginUser final Long memberId
     ) {
+        log.info("GET {} | memberId : {}",
+            DEFAULT_URL, memberId);
+
         final List<CartItemResponse> cartItemResponses = cartService.cartItemList(memberId);
 
         return ResponseEntity.ok(ApiResponse.of(CART_ITEM_LIST_FOUND, cartItemResponses));
@@ -67,6 +80,9 @@ public class CartController {
         @LoginUser final Long memberId,
         @PathVariable final Long cartItemId
     ) {
+        log.info("DELETE {}/{} | memberId : {}",
+            DEFAULT_URL, cartItemId, memberId);
+
         cartService.removeCartItem(memberId, cartItemId);
 
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_DELETED));
@@ -76,7 +92,11 @@ public class CartController {
     public ResponseEntity<ApiResponse<Void>> removeCartItemList(
         @LoginUser final Long memberId
     ) {
+        log.info("DELETE {} | memberId : {}",
+            DEFAULT_URL, memberId);
+
         cartService.removeCartItems(memberId);
+
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_LIST_DELETED));
     }
 }
