@@ -64,9 +64,9 @@ class PayAcceptanceTest extends AcceptanceTest {
 
         /* then */
         assertThat(data.getTid()).isEqualTo("1");
-        assertThat(data.getNextRedirectPcUrl()).isEqualTo("http://지들끼리이야기하는URL");
-        assertThat(data.getNextRedirectMobileUrl()).isEqualTo("http://지들끼리이야기하는URL");
-        assertThat(data.getNextRedirectAppUrl()).isEqualTo("http://지들끼리이야기하는URL");
+        assertThat(data.getNextRedirectPcUrl()).isEqualTo("http://pc-url");
+        assertThat(data.getNextRedirectMobileUrl()).isEqualTo("http://mobile-url");
+        assertThat(data.getNextRedirectAppUrl()).isEqualTo("http://app-url");
     }
 
     @Test
