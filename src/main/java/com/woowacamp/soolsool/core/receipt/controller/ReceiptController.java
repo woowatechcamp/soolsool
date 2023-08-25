@@ -24,13 +24,13 @@ public class ReceiptController {
     private final ReceiptService receiptService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> addReceipt(
+    public ResponseEntity<ApiResponse<Long>> addReceipt(
         @LoginUser final Long memberId
     ) {
         final Long receiptId = receiptService.addReceipt(memberId);
 
         return ResponseEntity.created(URI.create("/receipts/" + receiptId))
-            .body(ApiResponse.from(RECEIPT_ADD_SUCCESS));
+            .body(ApiResponse.of(RECEIPT_ADD_SUCCESS, receiptId));
     }
 
     @GetMapping("/{receiptId}")
