@@ -7,9 +7,9 @@ import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemBrewConve
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemImageUrlConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemNameConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemPriceConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemRegionConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemVolumeConverter;
-import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemAlcohol;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrand;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrew;
@@ -92,7 +92,7 @@ public class ReceiptItem extends BaseEntity {
     private ReceiptItemVolume liquorVolume;
 
     @Column(name = "quantity", nullable = false)
-    @Convert(converter = ReceiptQuantityConverter.class)
+    @Convert(converter = ReceiptItemQuantityConverter.class)
     private ReceiptItemQuantity quantity;
 
     @Builder

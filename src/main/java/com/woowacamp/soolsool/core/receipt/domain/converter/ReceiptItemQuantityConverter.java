@@ -5,7 +5,8 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class ReceiptQuantityConverter implements AttributeConverter<ReceiptItemQuantity, Integer> {
+public class ReceiptItemQuantityConverter
+    implements AttributeConverter<ReceiptItemQuantity, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(final ReceiptItemQuantity quantity) {

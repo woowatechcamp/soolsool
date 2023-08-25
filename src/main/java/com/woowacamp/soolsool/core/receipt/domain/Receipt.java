@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemPriceConverter;
-import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
@@ -59,7 +59,7 @@ public class Receipt extends BaseEntity {
     private ReceiptItemPrice purchasedTotalPrice;
 
     @Column(name = "total_quantity", nullable = false)
-    @Convert(converter = ReceiptQuantityConverter.class)
+    @Convert(converter = ReceiptItemQuantityConverter.class)
     private ReceiptItemQuantity totalQuantity;
 
     @Column(name = "expiration_date", nullable = false)
