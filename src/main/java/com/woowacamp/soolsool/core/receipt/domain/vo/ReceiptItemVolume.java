@@ -1,6 +1,6 @@
-package com.woowacamp.soolsool.core.receipt.domain;
+package com.woowacamp.soolsool.core.receipt.domain.vo;
 
-import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
+import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class ReceiptItemVolume {
 
     private void validateIsNotLessThanZero(final int volume) {
         if (volume < 0) {
-            throw new SoolSoolException(LiquorErrorCode.INVALID_SIZE_VOLUME);
+            throw new SoolSoolException(ReceiptErrorCode.INVALID_SIZE_VOLUME);
         }
     }
 }

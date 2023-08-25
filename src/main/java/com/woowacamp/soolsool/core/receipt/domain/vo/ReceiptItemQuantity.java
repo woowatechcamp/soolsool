@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.domain.vo;
 
+
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.INVALID_QUANTITY_SIZE;
 
 import com.woowacamp.soolsool.global.exception.SoolSoolException;

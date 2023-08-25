@@ -10,9 +10,15 @@ import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemPriceConv
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemRegionConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemVolumeConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemAlcohol;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrand;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrew;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemImageUrl;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemName;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemRegion;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;

@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.domain.converter;
 
-import com.woowacamp.soolsool.core.receipt.domain.ReceiptItemPrice;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
 import java.math.BigInteger;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

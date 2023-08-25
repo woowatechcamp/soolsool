@@ -1,6 +1,6 @@
-package com.woowacamp.soolsool.core.receipt.domain;
+package com.woowacamp.soolsool.core.receipt.domain.vo;
 
-import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
+import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,13 +23,13 @@ public class ReceiptItemBrand {
 
     private void validateIsValidLength(final String brand) {
         if (brand.length() > MAX_LENGTH) {
-            throw new SoolSoolException(LiquorErrorCode.INVALID_LENGTH_BRAND);
+            throw new SoolSoolException(ReceiptErrorCode.INVALID_LENGTH_BRAND);
         }
     }
 
     private void validateIsNotNullOrEmpty(final String brand) {
         if (!StringUtils.hasText(brand)) {
-            throw new SoolSoolException(LiquorErrorCode.NO_CONTENT_BRAND);
+            throw new SoolSoolException(ReceiptErrorCode.NO_CONTENT_BRAND);
         }
     }
 }

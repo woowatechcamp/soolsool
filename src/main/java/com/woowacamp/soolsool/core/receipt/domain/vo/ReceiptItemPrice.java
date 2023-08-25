@@ -1,8 +1,7 @@
-package com.woowacamp.soolsool.core.receipt.domain;
+package com.woowacamp.soolsool.core.receipt.domain.vo;
 
-import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.INVALID_SIZE_PRICE;
-import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NO_CONTENT_PRICE;
 
+import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.Objects;
@@ -28,13 +27,17 @@ public class ReceiptItemPrice {
 
     private void validateIsValidSize(final BigInteger price) {
         if (price.compareTo(BigInteger.ZERO) < 0) {
-            throw new SoolSoolException(INVALID_SIZE_PRICE);
+            throw new SoolSoolException(ReceiptErrorCode.INVALID_SIZE_PRICE);
         }
     }
 
     private void validateIsNotNull(final BigInteger price) {
         if (Objects.isNull(price)) {
-            throw new SoolSoolException(NO_CONTENT_PRICE);
+            throw new SoolSoolException(ReceiptErrorCode.NO_CONTENT_PRICE);
         }
+    }
+
+    public ReceiptItemPrice subtract(final ReceiptItemPrice mileageUsage) {
+        return new ReceiptItemPrice(this.price.subtract(mileageUsage.price));
     }
 }

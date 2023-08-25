@@ -1,6 +1,6 @@
-package com.woowacamp.soolsool.core.receipt.domain;
+package com.woowacamp.soolsool.core.receipt.domain.vo;
 
-import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
+import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,13 +23,13 @@ public class ReceiptItemImageUrl {
 
     private void validateIsValidLength(final String imageUrl) {
         if (imageUrl.length() > MAX_LENGTH) {
-            throw new SoolSoolException(LiquorErrorCode.INVALID_LENGTH_IMAGE_URL);
+            throw new SoolSoolException(ReceiptErrorCode.INVALID_LENGTH_IMAGE_URL);
         }
     }
 
     private void validateIsNotNullOrEmpty(final String imageUrl) {
         if (!StringUtils.hasText(imageUrl)) {
-            throw new SoolSoolException(LiquorErrorCode.NO_CONTENT_IMAGE_URL);
+            throw new SoolSoolException(ReceiptErrorCode.NO_CONTENT_IMAGE_URL);
         }
     }
 }
