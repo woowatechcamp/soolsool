@@ -1,5 +1,11 @@
 package com.woowacamp.soolsool.core.payment.infra;
 
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.woowacamp.soolsool.core.payment.code.PayErrorCode;
 import com.woowacamp.soolsool.core.payment.domain.KakaoPayReceipt;
 import com.woowacamp.soolsool.core.payment.dto.response.PayApproveResponse;
@@ -15,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,9 +35,8 @@ public class KakaoPayClient implements PayClient {
     private static final String HOST = "https://kapi.kakao.com";
     private static final String READY_ENDPOINT = "/v1/payment/ready";
     private static final String APPROVE_ENDPOINT = "/v1/payment/approve";
-    // TODO: 가맹점 번호, 어드민 키 주입하기
     private static final String CID = "TC0ONETIME";
-    private static final String DEFAULT_URL = "http://localhost:8080";
+    private static final String DEFAULT_URL = "http://localhost:3000";
     private static final String APPROVE_URL = "/pay/success";
     private static final String CANCEL_URL = "/pay/cancel";
     private static final String FAIL_URL = "/pay/fail";
@@ -113,9 +117,9 @@ public class KakaoPayClient implements PayClient {
 
     private HttpHeaders getKakaoPayHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + adminKey);
-        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
-        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+        headers.add(AUTHORIZATION, "KakaoAK " + adminKey);
+        headers.add(ACCEPT, APPLICATION_JSON_VALUE);
+        headers.add(CONTENT_TYPE, APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         return headers;
     }
 }
