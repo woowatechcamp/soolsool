@@ -1,21 +1,9 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
-import com.woowacamp.soolsool.core.liquor.domain.ReceiptItemBrew;
-import com.woowacamp.soolsool.core.liquor.domain.ReceiptItemRegion;
-import com.woowacamp.soolsool.core.liquor.domain.converter.ReceiptItemAlcoholConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.ReceiptItemBrandConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.ReceiptItemImageUrlConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.ReceiptItemNameConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.ReceiptItemPriceConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.ReceiptItemVolumeConverter;
-import com.woowacamp.soolsool.core.liquor.domain.vo.ReceiptItemAlcohol;
-import com.woowacamp.soolsool.core.liquor.domain.vo.ReceiptItemBrand;
-import com.woowacamp.soolsool.core.liquor.domain.vo.ReceiptItemImageUrl;
-import com.woowacamp.soolsool.core.liquor.domain.vo.ReceiptItemName;
-import com.woowacamp.soolsool.core.liquor.domain.vo.ReceiptItemPrice;
-import com.woowacamp.soolsool.core.liquor.domain.vo.ReceiptItemVolume;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrew;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemRegion;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;
