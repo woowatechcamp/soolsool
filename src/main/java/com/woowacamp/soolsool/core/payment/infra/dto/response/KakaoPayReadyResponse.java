@@ -1,5 +1,6 @@
-package com.woowacamp.soolsool.core.payment.dto.response;
+package com.woowacamp.soolsool.core.payment.infra.dto.response;
 
+import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

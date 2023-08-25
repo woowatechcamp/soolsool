@@ -24,8 +24,6 @@ public enum OrderErrorCode implements ErrorCode {
     INVALID_PRICE_SIZE(400, "O109", "주문 가격은 0 이하일 수 없습니다."),
     NO_PRICE_CONTENT(400, "O110", "주문 가격은 null일 수 없습니다."),
 
-    NOT_EXISTS_RECEIPT(500, "O109", "주문 내역을 생성할 주문서가 존재하지 않습니다."),
-
     ACCESS_DENIED_ORDER(403, "O110", "본인의 주문 내역만 조회할 수 있습니다."),
 
     NOT_EXISTS_ORDER(404, "O111", "주문 내역이 존재하지 않습니다."),

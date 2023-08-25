@@ -19,7 +19,6 @@ public class ReceiptItemResponse {
     private final String imageUrl;
     private final Double alcohol;
     private final Integer volume;
-    private final String expirationDate;
 
     public static ReceiptItemResponse from(final ReceiptItem receiptItem) {
         return new ReceiptItemResponse(
@@ -33,8 +32,7 @@ public class ReceiptItemResponse {
             receiptItem.getLiquorBrand(),
             receiptItem.getLiquorImageUrl(),
             receiptItem.getLiquorAlcohol(),
-            receiptItem.getLiquorVolume(),
-            receiptItem.getExpiredAt().toString()
+            receiptItem.getLiquorVolume()
         );
     }
 }

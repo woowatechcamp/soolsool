@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.payment.dto.response;
+package com.woowacamp.soolsool.core.payment.infra.dto.response;
 
 import lombok.Data;
 

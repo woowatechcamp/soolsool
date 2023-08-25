@@ -137,6 +137,13 @@ public class LiquorService {
         liquorRepository.delete(liquor);
     }
 
+    @Transactional
+    public void decreaseTotalStock(final Long liquorId, final int quantity) {
+        liquorRepository.findById(liquorId)
+            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND))
+            .decreaseTotalStock(quantity);
+    }
+
     private LiquorStatus getLiquorStatusByName(final String name) {
         return findLiquorStatusByType(LiquorStatusType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_FOUND));

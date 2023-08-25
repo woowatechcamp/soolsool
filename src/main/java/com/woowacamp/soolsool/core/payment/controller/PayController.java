@@ -5,8 +5,9 @@ import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_S
 
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
+import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
 import com.woowacamp.soolsool.core.payment.service.PayService;
-import com.woowacamp.soolsool.global.auth.dto.NoAuth;
+import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,29 +26,24 @@ public class PayController {
 
     private final PayService payService;
 
-    @NoAuth
     @PostMapping("/ready")
     public ResponseEntity<ApiResponse<PayReadyResponse>> payReady(
+        @LoginUser final Long memberId,
         @RequestBody final PayOrderRequest payOrderRequest
     ) {
-        Long memberId = 1L;
-        return ResponseEntity
-            .ok(ApiResponse.of(PAY_READY_SUCCESS, payService.payReady(memberId, payOrderRequest)));
+        return ResponseEntity.ok(
+            ApiResponse.of(PAY_READY_SUCCESS, payService.ready(memberId, payOrderRequest)));
     }
 
-    @PostMapping("/approve")
-    public ResponseEntity<ApiResponse<Void>> payApprove() {
-        return null;
-    }
-
-    @NoAuth
     @GetMapping("/success/{receiptId}")
-    public ResponseEntity<ApiResponse<Long>> kakaoPaySuccess(
+    public ResponseEntity<ApiResponse<PaySuccessResponse>> kakaoPaySuccess(
+        @LoginUser final Long memberId,
         @RequestParam("pg_token") final String pgToken,
         @PathVariable("receiptId") final Long receiptId
     ) {
-        Long memberId = 1L;
-        final Long orderId = payService.payApprove(memberId, pgToken, receiptId);
-        return ResponseEntity.ok(ApiResponse.of(PAY_APPROVE_SUCCESS, orderId));
+        final Long orderId = payService.approve(memberId, receiptId, pgToken);
+
+        return ResponseEntity.ok(
+            ApiResponse.of(PAY_APPROVE_SUCCESS, new PaySuccessResponse(orderId)));
     }
 }
