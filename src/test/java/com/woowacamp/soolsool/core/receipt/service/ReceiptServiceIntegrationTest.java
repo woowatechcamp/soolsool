@@ -14,6 +14,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({ReceiptService.class, CartService.class, LiquorService.class,
-    ReceiptMapper.class, LiquorBrewCache.class, LiquorStatusCache.class, LiquorRegionCache.class})
+    ReceiptMapper.class, LiquorBrewCache.class, LiquorStatusCache.class,
+    LiquorRegionCache.class, ReceiptStatusCache.class})
 @DisplayName("통합 테스트: ReceiptService")
 class ReceiptServiceIntegrationTest {
 
