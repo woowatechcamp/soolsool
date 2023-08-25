@@ -1,22 +1,24 @@
 package com.woowacamp.soolsool.core.receipt.domain;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorAlcoholConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorBrandConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorImageUrlConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorNameConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorPriceConverter;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorVolumeConverter;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorAlcohol;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
-import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemAlcoholConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemBrandConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemBrewConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemImageUrlConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemNameConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemPriceConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemRegionConverter;
+import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemVolumeConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemAlcohol;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrand;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemBrew;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemImageUrl;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemName;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemRegion;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemVolume;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;
@@ -53,52 +55,52 @@ public class ReceiptItem extends BaseEntity {
     @Column(name = "liquor_id", nullable = false)
     private Long liquorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brew_id", nullable = false)
-    private LiquorBrew liquorBrew;
+    @Column(name = "liquor_brew", nullable = false)
+    @Convert(converter = ReceiptItemBrewConverter.class)
+    private ReceiptItemBrew liquorBrew;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id", nullable = false)
-    private LiquorRegion liquorRegion;
+    @Column(name = "liquor_region", nullable = false)
+    @Convert(converter = ReceiptItemRegionConverter.class)
+    private ReceiptItemRegion liquorRegion;
 
     @Column(name = "liquor_name", nullable = false)
-    @Convert(converter = LiquorNameConverter.class)
-    private LiquorName liquorName;
+    @Convert(converter = ReceiptItemNameConverter.class)
+    private ReceiptItemName liquorName;
 
     @Column(name = "liquor_original_price", nullable = false, length = 255)
-    @Convert(converter = LiquorPriceConverter.class)
-    private LiquorPrice liquorOriginalPrice;
+    @Convert(converter = ReceiptItemPriceConverter.class)
+    private ReceiptItemPrice liquorOriginalPrice;
 
     @Column(name = "liquor_purchased_price", nullable = false, length = 255)
-    @Convert(converter = LiquorPriceConverter.class)
-    private LiquorPrice liquorPurchasedPrice;
+    @Convert(converter = ReceiptItemPriceConverter.class)
+    private ReceiptItemPrice liquorPurchasedPrice;
 
     @Column(name = "liquor_brand", nullable = false, length = 20)
-    @Convert(converter = LiquorBrandConverter.class)
-    private LiquorBrand liquorBrand;
+    @Convert(converter = ReceiptItemBrandConverter.class)
+    private ReceiptItemBrand liquorBrand;
 
     @Column(name = "liquor_image_url", nullable = false, length = 255)
-    @Convert(converter = LiquorImageUrlConverter.class)
-    private LiquorImageUrl liquorImageUrl;
+    @Convert(converter = ReceiptItemImageUrlConverter.class)
+    private ReceiptItemImageUrl liquorImageUrl;
 
     @Column(name = "liquor_alcohol", nullable = false)
-    @Convert(converter = LiquorAlcoholConverter.class)
-    private LiquorAlcohol liquorAlcohol;
+    @Convert(converter = ReceiptItemAlcoholConverter.class)
+    private ReceiptItemAlcohol liquorAlcohol;
 
     @Column(name = "liquor_volume", nullable = false)
-    @Convert(converter = LiquorVolumeConverter.class)
-    private LiquorVolume liquorVolume;
+    @Convert(converter = ReceiptItemVolumeConverter.class)
+    private ReceiptItemVolume liquorVolume;
 
     @Column(name = "quantity", nullable = false)
-    @Convert(converter = ReceiptQuantityConverter.class)
-    private ReceiptQuantity quantity;
+    @Convert(converter = ReceiptItemQuantityConverter.class)
+    private ReceiptItemQuantity quantity;
 
     @Builder
     public ReceiptItem(
         final Receipt receipt,
         @NonNull final Long liquorId,
-        @NonNull final LiquorBrew liquorBrew,
-        @NonNull final LiquorRegion liquorRegion,
+        @NonNull final String liquorBrew,
+        @NonNull final String liquorRegion,
         @NonNull final String liquorName,
         @NonNull final String liquorOriginalPrice,
         @NonNull final String liquorPurchasedPrice,
@@ -110,16 +112,16 @@ public class ReceiptItem extends BaseEntity {
     ) {
         this.receipt = receipt;
         this.liquorId = liquorId;
-        this.liquorBrew = liquorBrew;
-        this.liquorRegion = liquorRegion;
-        this.liquorName = new LiquorName(liquorName);
-        this.liquorOriginalPrice = new LiquorPrice(new BigInteger(liquorOriginalPrice));
-        this.liquorPurchasedPrice = new LiquorPrice(new BigInteger(liquorPurchasedPrice));
-        this.liquorBrand = new LiquorBrand(liquorBrand);
-        this.liquorImageUrl = new LiquorImageUrl(liquorImageUrl);
-        this.liquorAlcohol = new LiquorAlcohol(liquorAlcohol);
-        this.liquorVolume = new LiquorVolume(liquorVolume);
-        this.quantity = new ReceiptQuantity(quantity);
+        this.liquorBrew = new ReceiptItemBrew(liquorBrew);
+        this.liquorRegion = new ReceiptItemRegion(liquorRegion);
+        this.liquorName = new ReceiptItemName(liquorName);
+        this.liquorOriginalPrice = new ReceiptItemPrice(new BigInteger(liquorOriginalPrice));
+        this.liquorPurchasedPrice = new ReceiptItemPrice(new BigInteger(liquorPurchasedPrice));
+        this.liquorBrand = new ReceiptItemBrand(liquorBrand);
+        this.liquorImageUrl = new ReceiptItemImageUrl(liquorImageUrl);
+        this.liquorAlcohol = new ReceiptItemAlcohol(liquorAlcohol);
+        this.liquorVolume = new ReceiptItemVolume(liquorVolume);
+        this.quantity = new ReceiptItemQuantity(quantity);
     }
 
     public static ReceiptItem of( // 생성자로 바꾸기
@@ -128,8 +130,8 @@ public class ReceiptItem extends BaseEntity {
     ) {
         return ReceiptItem.builder()
             .liquorId(liquor.getId())
-            .liquorBrew(liquor.getBrew())
-            .liquorRegion(liquor.getRegion())
+            .liquorBrew(liquor.getBrew().getType().getName())
+            .liquorRegion(liquor.getRegion().getType().getName())
             .liquorName(liquor.getName())
             .liquorOriginalPrice(liquor.getPrice().toString())
             .liquorPurchasedPrice(liquor.getPrice().toString())
@@ -141,39 +143,39 @@ public class ReceiptItem extends BaseEntity {
             .build();
     }
 
-    public String getLiquorBrew() {
-        return liquorBrew.getType().toString();
+    public String getReceiptItemBrew() {
+        return liquorBrew.getBrew();
     }
 
-    public String getLiquorRegion() {
-        return liquorRegion.getType().toString();
+    public String getReceiptItemRegion() {
+        return liquorRegion.getRegion();
     }
 
-    public String getLiquorName() {
+    public String getReceiptItemName() {
         return liquorName.getName();
     }
 
-    public BigInteger getLiquorOriginalPrice() {
+    public BigInteger getReceiptItemOriginalPrice() {
         return liquorOriginalPrice.getPrice();
     }
 
-    public BigInteger getLiquorPurchasedPrice() {
+    public BigInteger getReceiptItemPurchasedPrice() {
         return liquorPurchasedPrice.getPrice();
     }
 
-    public String getLiquorBrand() {
+    public String getReceiptItemBrand() {
         return liquorBrand.getBrand();
     }
 
-    public String getLiquorImageUrl() {
+    public String getReceiptItemImageUrl() {
         return liquorImageUrl.getImageUrl();
     }
 
-    public Double getLiquorAlcohol() {
+    public Double getReceiptItemAlcohol() {
         return liquorAlcohol.getAlcohol();
     }
 
-    public Integer getLiquorVolume() {
+    public Integer getReceiptItemVolume() {
         return liquorVolume.getVolume();
     }
 
