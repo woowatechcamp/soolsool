@@ -16,7 +16,7 @@ import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberRoleRepository memberRoleRepository;
+    private final MemberRoleCache memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
 
     @Transactional
@@ -57,7 +57,10 @@ public class MemberService {
             .filter(type -> Objects.equals(type.getType(), memberRequestRoleType))
             .findFirst()
             .orElse(MemberRoleType.CUSTOMER);
-
+        
+        if (memberRoleType == null) {
+            throw new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE);
+        }
         return memberRoleRepository.findByName(memberRoleType)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE));
     }

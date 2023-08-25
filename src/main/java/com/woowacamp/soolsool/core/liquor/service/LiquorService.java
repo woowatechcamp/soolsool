@@ -17,10 +17,10 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +40,10 @@ import org.springframework.util.StringUtils;
 public class LiquorService {
 
     private final LiquorRepository liquorRepository;
-    private final LiquorStatusRepository liquorStatusRepository;
-    private final LiquorRegionRepository liquorRegionRepository;
-    private final LiquorBrewRepository liquorBrewRepository;
+    private final LiquorBrewCache liquorBrewRepository;
+    private final LiquorStatusCache liquorStatusRepository;
+    private final LiquorRegionCache liquorRegionCache;
+
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
@@ -159,15 +160,24 @@ public class LiquorService {
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_FOUND));
     }
 
-    private Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
+    public Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
+        if (statusType == null) {
+            return Optional.empty();
+        }
         return liquorStatusRepository.findByType(statusType);
     }
 
     private Optional<LiquorRegion> findLiquorRegionByType(final LiquorRegionType regionType) {
-        return liquorRegionRepository.findByType(regionType);
+        if (regionType == null) {
+            return Optional.empty();
+        }
+        return liquorRegionCache.findByType(regionType);
     }
 
     private Optional<LiquorBrew> findLiquorBrewByType(final LiquorBrewType brewType) {
+        if (brewType == null) {
+            return Optional.empty();
+        }
         return liquorBrewRepository.findByType(brewType);
     }
 }

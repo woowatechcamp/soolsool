@@ -11,9 +11,8 @@ import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
-import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
+import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
 import java.util.Objects;
@@ -29,8 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderStatusRepository orderStatusRepository;
-    private final ReceiptRepository receiptRepository;
+    private final OrderStatusCache orderStatusRepository;
 
     @Transactional
     public Long addOrder(final Long memberId, final Receipt receipt) {

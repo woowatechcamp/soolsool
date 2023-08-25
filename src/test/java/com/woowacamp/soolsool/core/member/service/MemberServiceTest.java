@@ -18,7 +18,7 @@ import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @Mock
-    private MemberRoleRepository memberRoleRepository;
+    private MemberRoleCache memberRoleRepository;
 
     @Mock
     private MemberMileageChargeRepository memberMileageChargeRepository;
