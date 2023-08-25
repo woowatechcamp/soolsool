@@ -9,7 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import java.util.List;
 
-public abstract class RestCartFixture {
+public abstract class RestCartFixture extends RestFixture {
 
     public static Long 장바구니_상품_추가(String 토큰, Long 상품_Id, Integer 상품_개수) {
         CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(상품_Id, 상품_개수);
@@ -17,7 +17,7 @@ public abstract class RestCartFixture {
         return RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, "Bearer " + 토큰)
+            .header(AUTHORIZATION, BEARER + 토큰)
             .body(cartItemSaveRequest)
             .when().post("/cart-items")
             .then().log().all()
@@ -28,7 +28,7 @@ public abstract class RestCartFixture {
         return RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
-            .header(AUTHORIZATION, "Bearer " + 토큰)
+            .header(AUTHORIZATION, BEARER + 토큰)
             .when().get("/cart-items/")
             .then().log().all()
             .extract().jsonPath().getObject("data", new TypeRef<>() {

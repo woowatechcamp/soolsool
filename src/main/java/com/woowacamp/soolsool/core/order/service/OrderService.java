@@ -1,5 +1,9 @@
 package com.woowacamp.soolsool.core.order.service;
 
+import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.CANCELED;
+import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.COMPLETED;
+import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_ORDER_STATUS;
+
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
@@ -29,15 +33,14 @@ public class OrderService {
     private final ReceiptRepository receiptRepository;
 
     @Transactional
-    public Long saveOrder(final Long memberId, final Long receiptId) {
-        final Receipt receipt = receiptRepository.findById(receiptId)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_RECEIPT));
+    public Long addOrder(final Long memberId, final Receipt receipt) {
+        final OrderStatus orderStatus = getOrderStatusByType(COMPLETED);
 
-        final OrderStatus completedOrderStatus = orderStatusRepository
-            .findByType(OrderStatusType.COMPLETED)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
-
-        final Order order = Order.of(memberId, completedOrderStatus, receipt);
+        final Order order = Order.builder()
+            .memberId(memberId)
+            .orderStatus(orderStatus)
+            .receipt(receipt)
+            .build();
 
         return orderRepository.save(order).getId();
     }
@@ -68,8 +71,7 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        final OrderStatus cancelOrderStatus = orderStatusRepository.findByType(OrderStatusType.CANCELED)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
+        final OrderStatus cancelOrderStatus = getOrderStatusByType(CANCELED);
 
         order.updateStatus(cancelOrderStatus);
     }
@@ -78,5 +80,11 @@ public class OrderService {
         if (!Objects.equals(memberId, order.getMemberId())) {
             throw new SoolSoolException(OrderErrorCode.ACCESS_DENIED_ORDER);
         }
+    }
+
+
+    private OrderStatus getOrderStatusByType(final OrderStatusType type) {
+        return orderStatusRepository.findByType(type)
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_ORDER_STATUS));
     }
 }

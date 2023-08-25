@@ -17,13 +17,8 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
-import com.woowacamp.soolsool.global.code.GlobalErrorCode;
 import com.woowacamp.soolsool.global.common.BaseEntity;
-import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -38,10 +33,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Table(name = "receipt_items")
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReceiptItem extends BaseEntity {
 
@@ -98,28 +93,21 @@ public class ReceiptItem extends BaseEntity {
     @Convert(converter = ReceiptQuantityConverter.class)
     private ReceiptQuantity quantity;
 
-    @Column(name = "expired_at", nullable = false)
-    @Getter
-    private LocalDateTime expiredAt;
-
     @Builder
     public ReceiptItem(
         final Receipt receipt,
-        final Long liquorId,
-        final LiquorBrew liquorBrew,
-        final LiquorRegion liquorRegion,
-        final String liquorName,
-        final String liquorOriginalPrice,
-        final String liquorPurchasedPrice,
-        final String liquorBrand,
-        final String liquorImageUrl,
-        final Double liquorAlcohol,
-        final Integer liquorVolume,
-        final Integer quantity,
-        final LocalDateTime expiredAt
+        @NonNull final Long liquorId,
+        @NonNull final LiquorBrew liquorBrew,
+        @NonNull final LiquorRegion liquorRegion,
+        @NonNull final String liquorName,
+        @NonNull final String liquorOriginalPrice,
+        @NonNull final String liquorPurchasedPrice,
+        @NonNull final String liquorBrand,
+        @NonNull final String liquorImageUrl,
+        @NonNull final Double liquorAlcohol,
+        @NonNull final Integer liquorVolume,
+        @NonNull final Integer quantity
     ) {
-        validateIsNotNullableCategory(liquorBrew, liquorRegion);
-
         this.receipt = receipt;
         this.liquorId = liquorId;
         this.liquorBrew = liquorBrew;
@@ -132,34 +120,25 @@ public class ReceiptItem extends BaseEntity {
         this.liquorAlcohol = new LiquorAlcohol(liquorAlcohol);
         this.liquorVolume = new LiquorVolume(liquorVolume);
         this.quantity = new ReceiptQuantity(quantity);
-        this.expiredAt = expiredAt;
     }
 
     public static ReceiptItem of( // 생성자로 바꾸기
         final Liquor liquor,
         final int quantity
     ) {
-        return new ReceiptItem(
-            null,
-            liquor.getId(),
-            liquor.getBrew(),
-            liquor.getRegion(),
-            liquor.getName(),
-            liquor.getPrice().toString(),
-            liquor.getPrice().toString(),
-            liquor.getBrand(),
-            liquor.getImageUrl(),
-            liquor.getAlcohol(),
-            liquor.getVolume(),
-            quantity,
-            liquor.getExpiredAt()
-        );
-    }
-
-    private void validateIsNotNullableCategory(final Object... objects) {
-        if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new SoolSoolException(GlobalErrorCode.NO_CONTENT);
-        }
+        return ReceiptItem.builder()
+            .liquorId(liquor.getId())
+            .liquorBrew(liquor.getBrew())
+            .liquorRegion(liquor.getRegion())
+            .liquorName(liquor.getName())
+            .liquorOriginalPrice(liquor.getPrice().toString())
+            .liquorPurchasedPrice(liquor.getPrice().toString())
+            .liquorBrand(liquor.getBrand())
+            .liquorImageUrl(liquor.getImageUrl())
+            .liquorAlcohol(liquor.getAlcohol())
+            .liquorVolume(liquor.getVolume())
+            .quantity(quantity)
+            .build();
     }
 
     public String getLiquorBrew() {

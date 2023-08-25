@@ -30,7 +30,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql"
     })
@@ -47,7 +47,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql"
     })
@@ -65,11 +65,11 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql"
     })
-    @DisplayName("회원가 존재하지 않으면, 주문서를 생성할 수 없다.")
+    @DisplayName("회원이 존재하지 않으면, 주문서를 생성할 수 없다.")
     void addReceiptWithNoMemberId() {
         // given
         Long memberId = 999L;
@@ -83,7 +83,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql"
     })
@@ -102,7 +102,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql"
     })
@@ -121,7 +121,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql"
     })
@@ -140,7 +140,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql"
     })
@@ -161,7 +161,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql"
     })
@@ -181,7 +181,7 @@ class ReceiptServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql",
         "/receipt-type.sql", "/receipt.sql"
     })

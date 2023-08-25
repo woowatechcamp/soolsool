@@ -50,7 +50,7 @@ class CartItemRepositoryTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql",
         "/cart-item.sql"
     })
     @DisplayName("유저 아이디에 따른 장바구니 모두 조회")

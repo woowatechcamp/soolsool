@@ -2,9 +2,12 @@ package com.woowacamp.soolsool.core.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
 
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.order.domain.Order;
+import com.woowacamp.soolsool.core.order.domain.OrderStatus;
+import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,9 +36,13 @@ class MemberMileageUsageTest {
             .address(address)
             .role(role)
             .build();
+        OrderStatus orderStatus = mock(OrderStatus.class);
+        Receipt receipt = mock(Receipt.class);
 
         Order order = Order.builder()
             .memberId(1L)
+            .orderStatus(orderStatus)
+            .receipt(receipt)
             .build();
 
         // when

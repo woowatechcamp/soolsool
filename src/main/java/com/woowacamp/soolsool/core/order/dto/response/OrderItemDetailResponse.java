@@ -1,7 +1,6 @@
 package com.woowacamp.soolsool.core.order.dto.response;
 
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,9 +18,8 @@ public class OrderItemDetailResponse {
     private final Double liquorAlcohol;
     private final Integer volume;
     private final Integer quantity;
-    private final LocalDateTime expiredAt;
 
-    public static OrderItemDetailResponse from(final ReceiptItem receiptItem){
+    public static OrderItemDetailResponse from(final ReceiptItem receiptItem) {
         return new OrderItemDetailResponse(
             receiptItem.getLiquorBrew(),
             receiptItem.getLiquorRegion(),
@@ -32,8 +30,7 @@ public class OrderItemDetailResponse {
             receiptItem.getLiquorImageUrl(),
             receiptItem.getLiquorAlcohol(),
             receiptItem.getLiquorVolume(),
-            receiptItem.getQuantity(),
-            receiptItem.getExpiredAt()
+            receiptItem.getQuantity()
         );
     }
 }

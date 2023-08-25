@@ -1,6 +1,8 @@
 package com.woowacamp.soolsool.core.receipt.service;
 
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.ACCESS_DENIED_RECEIPT;
+import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_RECEIPT;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
 
@@ -66,4 +68,18 @@ public class ReceiptService {
         receipt.updateStatus(type);
     }
 
+    @Transactional(readOnly = true)
+    public Receipt getMemberReceipt(final Long memberId, final Long receiptId) {
+        final Receipt receipt = receiptRepository.findById(receiptId)
+            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
+        validateAccessibleReceipt(memberId, receipt);
+
+        return receipt;
+    }
+
+    private void validateAccessibleReceipt(final Long memberId, final Receipt receipt) {
+        if (!Objects.equals(memberId, receipt.getMemberId())) {
+            throw new SoolSoolException(ACCESS_DENIED_RECEIPT);
+        }
+    }
 }
