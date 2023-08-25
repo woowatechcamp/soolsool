@@ -9,6 +9,7 @@ import com.woowacamp.soolsool.core.member.service.MemberService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,17 +29,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private static final String DEFAULT_URL = "/members";
-
     private final MemberService memberService;
 
     @NoAuth
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addMember(
+        final HttpServletRequest httpServletRequest,
         @RequestBody @Valid final MemberAddRequest memberAddRequest
     ) {
-        log.info("POST {} | request : {}",
-            DEFAULT_URL, memberAddRequest);
+        log.info("{} {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberAddRequest);
 
         memberService.addMember(memberAddRequest);
 
@@ -48,10 +48,11 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<MemberFindResponse>> findMemberDetails(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("GET {} | memberId : {}",
-            DEFAULT_URL, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         final MemberFindResponse memberFindResponse = memberService.findMember(memberId);
 
@@ -61,11 +62,13 @@ public class MemberController {
 
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> modifyMember(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
-        log.info("PATCH {} | memberId : {} | request : {}",
-            DEFAULT_URL, memberId, memberModifyRequest);
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, memberModifyRequest);
 
         memberService.modifyMember(memberId, memberModifyRequest);
 
@@ -75,10 +78,11 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeMember(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("DELETE {} | memberId : {}",
-            DEFAULT_URL, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         memberService.removeMember(memberId);
 
@@ -88,11 +92,13 @@ public class MemberController {
 
     @PatchMapping("/mileage")
     public ResponseEntity<ApiResponse<Void>> addMemberMileage(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody @Valid final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        log.info("PATCH {}/mileage | memberId : {} | request : {}",
-            DEFAULT_URL, memberId, memberMileageChargeRequest);
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, memberMileageChargeRequest);
 
         memberService.addMemberMileage(memberId, memberMileageChargeRequest);
 

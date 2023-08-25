@@ -13,6 +13,7 @@ import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +32,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CartController {
 
-    private static final String DEFAULT_URL = "/liquors";
-
     private final CartService cartService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> addCartItem(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody final CartItemSaveRequest cartItemSaveRequest
     ) {
-        log.info("POST {} | memberId : {} | request : {}",
-            DEFAULT_URL, memberId, cartItemSaveRequest);
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, cartItemSaveRequest);
 
         final Long cartItemId = cartService.addCartItem(memberId, cartItemSaveRequest);
 
@@ -51,12 +52,14 @@ public class CartController {
 
     @PatchMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> modifyCartItemQuantity(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long cartItemId,
         @RequestBody final CartItemModifyRequest cartItemModifyRequest
     ) {
-        log.info("PATCH {}/{} | memberId : {} | request : {}",
-            DEFAULT_URL, cartItemId, memberId, cartItemModifyRequest);
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, cartItemModifyRequest);
 
         cartService.modifyCartItemQuantity(memberId, cartItemId, cartItemModifyRequest);
 
@@ -65,10 +68,11 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> cartItemList(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("GET {} | memberId : {}",
-            DEFAULT_URL, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         final List<CartItemResponse> cartItemResponses = cartService.cartItemList(memberId);
 
@@ -77,11 +81,12 @@ public class CartController {
 
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> removeCartItem(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long cartItemId
     ) {
-        log.info("DELETE {}/{} | memberId : {}",
-            DEFAULT_URL, cartItemId, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         cartService.removeCartItem(memberId, cartItemId);
 
@@ -90,10 +95,11 @@ public class CartController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeCartItemList(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("DELETE {} | memberId : {}",
-            DEFAULT_URL, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         cartService.removeCartItems(memberId);
 

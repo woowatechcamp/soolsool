@@ -8,6 +8,7 @@ import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/receipts")
 public class ReceiptController {
 
-    private static final String DEFAULT_URL = "/receipts";
-
     private final ReceiptService receiptService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> addReceipt(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("POST {} | memberId : {}",
-            DEFAULT_URL, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         final Long receiptId = receiptService.addReceipt(memberId);
 
@@ -42,11 +42,12 @@ public class ReceiptController {
 
     @GetMapping("/{receiptId}")
     public ResponseEntity<ApiResponse<ReceiptResponse>> receiptDetails(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long receiptId
     ) {
-        log.info("GET {}/{} | memberId : {}",
-            DEFAULT_URL, receiptId, memberId);
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         final ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
 

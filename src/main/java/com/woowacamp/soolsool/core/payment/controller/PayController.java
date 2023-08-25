@@ -11,6 +11,7 @@ import com.woowacamp.soolsool.core.payment.service.PayService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +29,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PayController {
 
-    private static final String DEFAULT_URL = "/pay";
-
     private final PayService payService;
 
     @PostMapping("/ready")
     public ResponseEntity<ApiResponse<PayReadyResponse>> payReady(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody final PayOrderRequest payOrderRequest
     ) {
-        log.info("POST {}/ready | memberId : {} | request : {}",
-            DEFAULT_URL, memberId, payOrderRequest);
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, payOrderRequest);
 
         return ResponseEntity.ok(
             ApiResponse.of(PAY_READY_SUCCESS, payService.ready(memberId, payOrderRequest)));
@@ -47,12 +48,13 @@ public class PayController {
     @NoAuth
     @GetMapping("/success/{receiptId}")
     public ResponseEntity<ApiResponse<PaySuccessResponse>> kakaoPaySuccess(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable("receiptId") final Long receiptId,
         @RequestParam("pg_token") final String pgToken
     ) {
-        log.info("GET {}/success/{} | memberId : {} | pg_token : {}",
-            DEFAULT_URL, receiptId, memberId, pgToken);
+        log.info("{} {} | memberId : {} | pg_token : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId, pgToken);
 
         final Long orderId = payService.approve(memberId, receiptId, pgToken);
 
@@ -62,13 +64,25 @@ public class PayController {
 
     @NoAuth
     @GetMapping("/cancel/{receiptId}")
-    public ResponseEntity<ApiResponse<Long>> kakaoPayCancel() {
+    public ResponseEntity<ApiResponse<Long>> kakaoPayCancel(
+        final HttpServletRequest httpServletRequest,
+        @LoginUser final Long memberId
+    ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         return ResponseEntity.ok(ApiResponse.of(PAY_READY_CANCEL, null));
     }
 
     @NoAuth
     @GetMapping("/fail/{receiptId}")
-    public ResponseEntity<ApiResponse<Long>> kakaoPayFail() {
+    public ResponseEntity<ApiResponse<Long>> kakaoPayFail(
+        final HttpServletRequest httpServletRequest,
+        @LoginUser final Long memberId
+    ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         return ResponseEntity.ok(ApiResponse.of(PAY_READY_FAIL, null));
     }
 

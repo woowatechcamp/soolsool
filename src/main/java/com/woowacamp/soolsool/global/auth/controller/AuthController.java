@@ -6,6 +6,7 @@ import com.woowacamp.soolsool.global.auth.dto.LoginRequest;
 import com.woowacamp.soolsool.global.auth.dto.LoginResponse;
 import com.woowacamp.soolsool.global.auth.service.AuthService;
 import com.woowacamp.soolsool.global.common.ApiResponse;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private static final String DEFAULT_URL = "/auth";
-
     private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
+        final HttpServletRequest httpServletRequest,
         @RequestBody final LoginRequest loginRequest
     ) {
-        log.info("POST {}/login | request : {}",
-            DEFAULT_URL, loginRequest);
+        log.info("{} {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), loginRequest);
 
         final LoginResponse token = authService.createToken(loginRequest);
 

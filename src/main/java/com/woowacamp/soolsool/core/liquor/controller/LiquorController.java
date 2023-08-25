@@ -19,6 +19,7 @@ import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -43,17 +44,16 @@ import reactor.util.annotation.Nullable;
 @RequiredArgsConstructor
 public class LiquorController {
 
-    private static final String DEFAULT_URL = "/liquors";
-
     private final LiquorService liquorService;
 
     @Vendor
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
+        final HttpServletRequest httpServletRequest,
         @RequestBody final LiquorSaveRequest liquorSaveRequest
     ) {
-        log.info("POST {} | request : {}",
-            DEFAULT_URL, liquorSaveRequest);
+        log.info("{} {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), liquorSaveRequest);
 
         final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
@@ -64,10 +64,11 @@ public class LiquorController {
     @NoAuth
     @GetMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(
+        final HttpServletRequest httpServletRequest,
         @PathVariable final Long liquorId
     ) {
-        log.info("GET {}/{}",
-            DEFAULT_URL, liquorId);
+        log.info("{} {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath());
 
         final LiquorDetailResponse response = liquorService.liquorDetail(liquorId);
 
@@ -77,14 +78,16 @@ public class LiquorController {
     @NoAuth
     @GetMapping
     public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorList(
+        final HttpServletRequest httpServletRequest,
         @RequestParam @Nullable final LiquorBrewType brew,
         @RequestParam @Nullable final LiquorRegionType region,
         @RequestParam @Nullable final LiquorStatusType status,
         @RequestParam @Nullable final String brand,
         @PageableDefault final Pageable pageable
     ) {
-        log.info("GET {} | brew : {} | region : {} | status : {} | brand : {} | Pageable : {}",
-            DEFAULT_URL, brew, region, status, brand, pageable);
+        log.info("{} {} | brew : {} | region : {} | status : {} | brand : {} | Pageable : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            brew, region, status, brand, pageable);
 
         final PageRequest sortPageable = PageRequest.of(
             pageable.getPageNumber(),
@@ -101,11 +104,13 @@ public class LiquorController {
     @Vendor
     @PutMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> modifyLiquor(
+        final HttpServletRequest httpServletRequest,
         @PathVariable final Long liquorId,
         @RequestBody final LiquorModifyRequest liquorModifyRequest
     ) {
-        log.info("PUT {}/{} | request : {}",
-            DEFAULT_URL, liquorId, liquorModifyRequest);
+        log.info("{} {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            liquorModifyRequest);
 
         liquorService.modifyLiquor(liquorId, liquorModifyRequest);
 
@@ -115,10 +120,11 @@ public class LiquorController {
     @Vendor
     @DeleteMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> deleteLiquor(
+        final HttpServletRequest httpServletRequest,
         @PathVariable final Long liquorId
     ) {
-        log.info("DELETE {}/{}",
-            DEFAULT_URL, liquorId);
+        log.info("{} {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath());
 
         liquorService.deleteLiquor(liquorId);
 
