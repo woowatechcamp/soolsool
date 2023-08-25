@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface LiquorRepository extends JpaRepository<Liquor, Long> {
 
     @Query("select ri.liquorId"
-        + " from ReceiptItem ri"
+        + " from Order o inner join ReceiptItem ri on o.receipt = ri.receipt"
         + " where ri.receipt.id in (select sub_ri.receipt.id"
         + "                         from ReceiptItem sub_ri"
         + "                         where sub_ri.liquorId = :liquorId)"
