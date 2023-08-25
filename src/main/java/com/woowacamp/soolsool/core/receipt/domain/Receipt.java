@@ -2,8 +2,8 @@ package com.woowacamp.soolsool.core.receipt.domain;
 
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptPriceConverter;
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptQuantityConverter;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
@@ -60,7 +60,7 @@ public class Receipt extends BaseEntity {
 
     @Column(name = "total_quantity", nullable = false)
     @Convert(converter = ReceiptQuantityConverter.class)
-    private ReceiptQuantity totalQuantity;
+    private ReceiptItemQuantity totalQuantity;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expiredDate = LocalDateTime.now().plusDays(30);
@@ -76,7 +76,7 @@ public class Receipt extends BaseEntity {
         final ReceiptPrice originalTotalPrice,
         final ReceiptPrice mileageUsage,
         final ReceiptPrice purchasedTotalPrice,
-        final ReceiptQuantity totalQuantity,
+        final ReceiptItemQuantity totalQuantity,
         final List<ReceiptItem> receiptItems
     ) {
         this.memberId = memberId;

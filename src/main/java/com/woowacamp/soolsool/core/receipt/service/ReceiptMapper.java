@@ -9,8 +9,8 @@ import com.woowacamp.soolsool.core.cart.domain.CartItem;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptPrice;
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -42,7 +42,7 @@ public class ReceiptMapper {
             .originalTotalPrice(totalPrice)
             .mileageUsage(mileageUsage)
             .purchasedTotalPrice(totalPrice.subtract(mileageUsage))
-            .totalQuantity(new ReceiptQuantity(cart.getCartItemSize()))
+            .totalQuantity(new ReceiptItemQuantity(cart.getCartItemSize()))
             .receiptItems(mapToReceiptItems(cart))
             .build();
     }

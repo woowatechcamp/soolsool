@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("단위 테스트: ReceiptQuantity")
-class ReceiptQuantityTest {
+@DisplayName("단위 테스트: ReceiptItemQuantity")
+class ReceiptItemQuantityTest {
 
     @Test
     @DisplayName("주문서 개수를 정상적으로 생성한다.")
@@ -20,7 +20,7 @@ class ReceiptQuantityTest {
         int stock = 777;
 
         /* when & then */
-        assertThatCode(() -> new ReceiptQuantity(stock))
+        assertThatCode(() -> new ReceiptItemQuantity(stock))
             .doesNotThrowAnyException();
     }
 
@@ -31,7 +31,7 @@ class ReceiptQuantityTest {
         int stock = -1;
 
         /* when & then */
-        assertThatThrownBy(() -> new ReceiptQuantity(stock))
+        assertThatThrownBy(() -> new ReceiptItemQuantity(stock))
             .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("주문서 개수는 0 미만일 수 없습니다.");
     }
@@ -40,9 +40,9 @@ class ReceiptQuantityTest {
     @DisplayName("주문서 개수가 동일하면 동일한 객체이다.")
     void equalsAndHashCode() {
         /* given */
-        ReceiptQuantity origin = new ReceiptQuantity(777);
-        ReceiptQuantity same = new ReceiptQuantity(777);
-        ReceiptQuantity different = new ReceiptQuantity(123);
+        ReceiptItemQuantity origin = new ReceiptItemQuantity(777);
+        ReceiptItemQuantity same = new ReceiptItemQuantity(777);
+        ReceiptItemQuantity different = new ReceiptItemQuantity(123);
 
         /* when & then */
         assertAll(

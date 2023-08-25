@@ -8,11 +8,11 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class ReceiptQuantity {
+public class ReceiptItemQuantity {
 
     private final int quantity;
 
-    public ReceiptQuantity(final int quantity) {
+    public ReceiptItemQuantity(final int quantity) {
         validateIsNotLessThanZero(quantity);
 
         this.quantity = quantity;

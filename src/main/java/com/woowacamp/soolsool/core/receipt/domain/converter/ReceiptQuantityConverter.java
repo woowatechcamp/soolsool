@@ -1,19 +1,19 @@
 package com.woowacamp.soolsool.core.receipt.domain.converter;
 
-import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class ReceiptQuantityConverter implements AttributeConverter<ReceiptQuantity, Integer> {
+public class ReceiptQuantityConverter implements AttributeConverter<ReceiptItemQuantity, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(final ReceiptQuantity quantity) {
+    public Integer convertToDatabaseColumn(final ReceiptItemQuantity quantity) {
         return quantity.getQuantity();
     }
 
     @Override
-    public ReceiptQuantity convertToEntityAttribute(final Integer dbData) {
-        return new ReceiptQuantity(dbData);
+    public ReceiptItemQuantity convertToEntityAttribute(final Integer dbData) {
+        return new ReceiptItemQuantity(dbData);
     }
 }
