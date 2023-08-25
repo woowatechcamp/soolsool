@@ -1,8 +1,7 @@
 package com.woowacamp.soolsool.core.receipt.domain.vo;
 
-import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.INVALID_PRICE_SIZE;
-import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NO_CONTENT_PRICE;
 
+import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.Objects;
@@ -11,30 +10,34 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class ReceiptPrice {
+public class ReceiptItemPrice {
 
     private final BigInteger price;
 
-    public ReceiptPrice(final BigInteger price) {
+    public ReceiptItemPrice(final BigInteger price) {
         validateIsNotNull(price);
         validateIsValidSize(price);
 
         this.price = price;
     }
 
+    public static ReceiptItemPrice from(final String price) {
+        return new ReceiptItemPrice(new BigInteger(price));
+    }
+
     private void validateIsValidSize(final BigInteger price) {
         if (price.compareTo(BigInteger.ZERO) < 0) {
-            throw new SoolSoolException(INVALID_PRICE_SIZE);
+            throw new SoolSoolException(ReceiptErrorCode.INVALID_SIZE_PRICE);
         }
     }
 
     private void validateIsNotNull(final BigInteger price) {
         if (Objects.isNull(price)) {
-            throw new SoolSoolException(NO_CONTENT_PRICE);
+            throw new SoolSoolException(ReceiptErrorCode.NO_CONTENT_PRICE);
         }
     }
 
-    public ReceiptPrice subtract(final ReceiptPrice mileageUsage) {
-        return new ReceiptPrice(this.price.subtract(mileageUsage.price));
+    public ReceiptItemPrice subtract(final ReceiptItemPrice mileageUsage) {
+        return new ReceiptItemPrice(this.price.subtract(mileageUsage.price));
     }
 }
