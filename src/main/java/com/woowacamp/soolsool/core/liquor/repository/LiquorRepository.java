@@ -18,6 +18,7 @@ public interface LiquorRepository extends JpaRepository<Liquor, Long> {
         + " where ri.receipt.id in (select sub_ri.receipt.id"
         + "                         from ReceiptItem sub_ri"
         + "                         where sub_ri.liquorId = :liquorId)"
+        + "       and o.status.id = 1"
         + "       and ri.liquorId != :liquorId"
         + " group by ri.liquorId"
         + " order by count(ri.liquorId) desc")

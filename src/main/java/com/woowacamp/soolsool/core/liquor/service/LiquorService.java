@@ -21,7 +21,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,6 @@ public class LiquorService {
     private final LiquorStatusRepository liquorStatusRepository;
     private final LiquorRegionRepository liquorRegionRepository;
     private final LiquorBrewRepository liquorBrewRepository;
-    private final ReceiptRepository receiptRepository;
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
