@@ -28,4 +28,8 @@ public class LiquorCtrClick {
             throw new SoolSoolException(LiquorCtrErrorCode.INVALID_SIZE_CLICK);
         }
     }
+
+    public LiquorCtrClick increaseOne() {
+        return new LiquorCtrClick(this.click + 1);
+    }
 }

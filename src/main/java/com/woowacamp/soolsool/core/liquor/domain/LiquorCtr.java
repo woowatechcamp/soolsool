@@ -2,11 +2,13 @@ package com.woowacamp.soolsool.core.liquor.domain;
 
 import static javax.persistence.GenerationType.AUTO;
 
+import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrClickConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrImpressionConverter;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -41,5 +43,23 @@ public class LiquorCtr extends BaseEntity {
     @Builder
     public LiquorCtr(@NonNull final Long liquorId) {
         this.liquorId = liquorId;
+        this.impression = new LiquorCtrImpression(0L);
+        this.click = new LiquorCtrClick(0L);
+    }
+
+    public void increaseImpressionOne() {
+        this.impression = impression.increaseOne();
+    }
+
+    public void increaseClickOne() {
+        this.click = click.increaseOne();
+    }
+
+    public double getCtr() {
+        if (impression.getImpression() == 0) {
+            throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
+        }
+
+        return (double) click.getClick() / impression.getImpression();
     }
 }

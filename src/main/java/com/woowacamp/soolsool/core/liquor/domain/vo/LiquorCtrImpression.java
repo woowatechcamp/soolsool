@@ -28,4 +28,8 @@ public class LiquorCtrImpression {
             throw new SoolSoolException(LiquorCtrErrorCode.INVALID_SIZE_IMPRESSION);
         }
     }
+
+    public LiquorCtrImpression increaseOne() {
+        return new LiquorCtrImpression(this.impression + 1);
+    }
 }

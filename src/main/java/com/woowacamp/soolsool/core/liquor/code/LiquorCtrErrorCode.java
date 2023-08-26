@@ -15,7 +15,7 @@ public enum LiquorCtrErrorCode implements ErrorCode {
 
     NO_CONTENT_CLICK(INTERNAL_SERVER_ERROR.value(), "LC003", "클릭수는 null일 수 없습니다."),
     INVALID_SIZE_CLICK(INTERNAL_SERVER_ERROR.value(), "LC004", "클릭수는 음수일 수 없습니다."),
-    ;
+    DIVIDE_BY_ZERO_IMPRESSION(INTERNAL_SERVER_ERROR.value(), "LC005", "노출수가 0일 때 클릭률을 구할 수 없습니다.");
 
     private final int status;
     private final String code;

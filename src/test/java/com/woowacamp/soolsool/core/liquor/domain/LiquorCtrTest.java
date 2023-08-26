@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.DisplayName;
@@ -28,5 +29,20 @@ class LiquorCtrTest {
         /* when & then */
         assertThatCode(() -> LiquorCtr.builder().build())
             .isExactlyInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    @DisplayName("클릭률을 구한다")
+    void getCtr() {
+        /* given */
+        LiquorCtr liquorCtr = LiquorCtr.builder()
+            .liquorId(1L)
+            .build();
+        liquorCtr.increaseImpressionOne();
+        liquorCtr.increaseImpressionOne();
+        liquorCtr.increaseClickOne();
+
+        /* when & then */
+        assertThat(liquorCtr.getCtr()).isEqualTo(0.5);
     }
 }
