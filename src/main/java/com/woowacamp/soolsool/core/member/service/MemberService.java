@@ -57,10 +57,7 @@ public class MemberService {
             .filter(type -> Objects.equals(type.getType(), memberRequestRoleType))
             .findFirst()
             .orElse(MemberRoleType.CUSTOMER);
-        
-        if (memberRoleType == null) {
-            throw new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE);
-        }
+
         return memberRoleRepository.findByName(memberRoleType)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE));
     }

@@ -17,5 +17,4 @@ public class ReceiptStatusCache {
     public Optional<ReceiptStatus> findByType(final ReceiptStatusType receiptStatusType) {
         return receiptStatusRepository.findByType(receiptStatusType);
     }
-
 }

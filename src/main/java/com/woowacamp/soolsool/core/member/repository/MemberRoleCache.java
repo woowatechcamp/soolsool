@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class MemberRoleCache {
 
     private final MemberRoleRepository memberRoleRepository;

@@ -24,6 +24,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
@@ -168,21 +169,21 @@ public class LiquorService {
     }
 
     public Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
-        if (statusType == null) {
+        if (Objects.isNull(statusType)) {
             return Optional.empty();
         }
         return liquorStatusRepository.findByType(statusType);
     }
 
     private Optional<LiquorRegion> findLiquorRegionByType(final LiquorRegionType regionType) {
-        if (regionType == null) {
+        if (Objects.isNull(regionType)) {
             return Optional.empty();
         }
         return liquorRegionCache.findByType(regionType);
     }
 
     private Optional<LiquorBrew> findLiquorBrewByType(final LiquorBrewType brewType) {
-        if (brewType == null) {
+        if (Objects.isNull(brewType)) {
             return Optional.empty();
         }
         return liquorBrewRepository.findByType(brewType);
