@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
-public class LiquorCtrDetailResponse {
+public class LiquorCtrResponse {
 
     private final double ctr;
 
     @JsonCreator
-    public LiquorCtrDetailResponse(final double ctr) {
+    public LiquorCtrResponse(final double ctr) {
         this.ctr = ctr;
     }
 }

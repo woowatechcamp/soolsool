@@ -40,12 +40,12 @@ class LiquorCtrAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .param("liquorId", 1L)
+            .param("liquorId", 새로)
             .when().get("/liquor-ctr")
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorCtrDetailResponse.class);
 
         /* then */
-        assertThat(response.getRate()).isEqualTo(0.33);
+        assertThat(response.getCtr()).isEqualTo(0.33);
     }
 }
