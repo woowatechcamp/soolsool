@@ -30,7 +30,7 @@ class OrderRepositoryTest {
 
 
         /* when */
-        final Optional<Double> ratio = orderRepository.findOrderRatioByLiquorId(1L);
+        Optional<Double> ratio = orderRepository.findOrderRatioByLiquorId(1L);
 
         /* then */
         assertThat(ratio).isPresent().contains(0.5);

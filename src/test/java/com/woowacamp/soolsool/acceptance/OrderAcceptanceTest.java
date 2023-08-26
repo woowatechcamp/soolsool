@@ -110,7 +110,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         RestReceiptFixture.주문서_생성(김배달);
 
         /* when */
-        final OrderRatioResponse response = RestAssured
+        OrderRatioResponse response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
