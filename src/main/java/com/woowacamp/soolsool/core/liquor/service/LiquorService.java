@@ -65,9 +65,8 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        final List<Liquor> relatedLiquors = liquorRepository.findAllByIdIn(
-            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE)
-        );
+        final List<Liquor> relatedLiquors =
+            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
         return LiquorDetailResponse.of(liquor, relatedLiquors);
     }

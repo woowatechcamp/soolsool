@@ -7,27 +7,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LiquorRepository extends JpaRepository<Liquor, Long> {
 
-    @Query("select ri.liquorId"
-        + " from Order o inner join ReceiptItem ri on o.receipt = ri.receipt"
+    @Query("select liq"
+        + " from Order o"
+        + "      inner join ReceiptItem ri on o.receipt = ri.receipt"
+        + "      inner join Liquor liq on ri.liquorId = liq.id"
         + " where ri.receipt.id in (select sub_ri.receipt.id"
         + "                         from ReceiptItem sub_ri"
         + "                         where sub_ri.liquorId = :liquorId)"
-        + "       and o.status.id = 1"
+        + "       and o.status.id = (select os.id"
+        + "                          from OrderStatus os"
+        + "                          where os.type = 'COMPLETED')"
         + "       and ri.liquorId != :liquorId"
         + " group by ri.liquorId"
         + " order by count(ri.liquorId) desc")
-    List<Long> findLiquorsPurchasedTogether(
-        @Param("liquorId") final Long liquorId,
+    List<Liquor> findLiquorsPurchasedTogether(
+        final Long liquorId,
         final Pageable pageableForLimit
     );
-
-    List<Liquor> findAllByIdIn(final List<Long> liquorIds);
 
     Page<Liquor> findAll(final Specification<Liquor> conditions, final Pageable pageable);
 }
