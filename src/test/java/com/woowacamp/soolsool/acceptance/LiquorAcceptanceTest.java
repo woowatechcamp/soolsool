@@ -10,8 +10,12 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestCartFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
+import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
@@ -23,6 +27,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +40,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUpData() {
         RestMemberFixture.회원가입_최민족_판매자();
+        RestMemberFixture.회원가입_김배달_구매자();
     }
 
     @Test
@@ -69,7 +75,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     void modifyLiquorTest() {
         // given
         String accessToken = RestAuthFixture.로그인_최민족_판매자();
-        final Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
+        Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
 
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
             "SOJU", "GYEONGGI_DO", "ON_SALE",
@@ -100,7 +106,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     void removeLiquorTest() {
         // given
         String accessToken = RestAuthFixture.로그인_최민족_판매자();
-        final Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
+        Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
 
         // when
         ExtractableResponse<Response> response = RestAssured
@@ -122,15 +128,15 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 상세정보를 조회할 수 있다")
     void liquorDetail() {
         // given
-        final String accessToken = RestAuthFixture.로그인_최민족_판매자();
-        final Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
+        String accessToken = RestAuthFixture.로그인_최민족_판매자();
+        Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(accessToken);
 
         // when
         LiquorDetailResponse liquorDetailResponse = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/liquors/" + 새로_Id)
+            .when().get("/liquors/{liquorId}", 새로_Id)
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
 
@@ -142,7 +148,51 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
             () -> assertThat(liquorDetailResponse.getStock()).isZero(),
             () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
-            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300)
+            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300),
+            () -> assertThat(liquorDetailResponse.getRelatedLiquors()).isEmpty()
+        );
+    }
+
+    @Test
+    @DisplayName("술 상세정보를 연관된 상품과 함께 조회할 수 있다")
+    void liquorDetailWithRelatedLiquors() {
+        // given
+        String vendorAccessToken = RestAuthFixture.로그인_최민족_판매자();
+        Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(vendorAccessToken);
+        RestLiquorStockFixture.술_재고_등록(vendorAccessToken, 새로_Id, 100);
+        Long 얼음딸기주_Id = RestLiquorFixture.술_등록_과일주_전라북도_얼음딸기주_우영미_판매중(vendorAccessToken);
+        RestLiquorStockFixture.술_재고_등록(vendorAccessToken, 얼음딸기주_Id, 100);
+
+        String customerAccessToken = RestAuthFixture.로그인_김배달_구매자();
+        RestCartFixture.장바구니_상품_추가(customerAccessToken, 새로_Id, 1);
+        RestCartFixture.장바구니_상품_추가(customerAccessToken, 얼음딸기주_Id, 1);
+        Long 주문서_Id = RestReceiptFixture.주문서_생성(customerAccessToken);
+        RestPayFixture.결제_준비(customerAccessToken, 주문서_Id);
+        RestPayFixture.결제_성공(customerAccessToken, 주문서_Id);
+
+        // when
+        LiquorDetailResponse liquorDetailResponse = RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get("/liquors/{liquorId}", 새로_Id)
+            .then().log().all()
+            .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
+
+        List<Long> relatedLiquorIds = liquorDetailResponse.getRelatedLiquors().stream()
+            .map(LiquorElementResponse::getId)
+            .collect(Collectors.toList());
+
+        // then
+        assertAll(
+            () -> assertThat(liquorDetailResponse.getName()).isEqualTo("새로"),
+            () -> assertThat(liquorDetailResponse.getPrice()).isEqualTo("3000"),
+            () -> assertThat(liquorDetailResponse.getBrand()).isEqualTo("롯데"),
+            () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
+            () -> assertThat(liquorDetailResponse.getStock()).isEqualTo(99),
+            () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
+            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300),
+            () -> assertThat(relatedLiquorIds).containsExactlyInAnyOrder(얼음딸기주_Id)
         );
     }
 
@@ -150,7 +200,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 목록을 최신순으로 조회할 수 있다")
     void liquorList() {
         // given
-        final String accessToken = RestAuthFixture.로그인_최민족_판매자();
+        String accessToken = RestAuthFixture.로그인_최민족_판매자();
         RestLiquorFixture.술_등록_새로_판매중(accessToken);
         RestLiquorFixture.술_등록_ETC_경기도_하이트_진로_판매중지(accessToken);
 
@@ -180,7 +230,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 목록을 술 종류로 검색할 수 있다")
     void liquorListByLiquorType() {
         // given
-        final String accessToken = RestAuthFixture.로그인_최민족_판매자();
+        String accessToken = RestAuthFixture.로그인_최민족_판매자();
         RestLiquorFixture.술_등록_새로_판매중(accessToken);
         RestLiquorFixture.술_등록_ETC_경기도_하이트_진로_판매중지(accessToken);
 
@@ -211,7 +261,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 목록을 술 종류와 지역으로 검색할 수 있다")
     void liquorListByLiquorRegion() {
         // given
-        final String accessToken = RestAuthFixture.로그인_최민족_판매자();
+        String accessToken = RestAuthFixture.로그인_최민족_판매자();
         RestLiquorFixture.술_등록_새로_판매중(accessToken);
         RestLiquorFixture.술_등록_ETC_경기도_하이트_진로_판매중지(accessToken);
 
@@ -243,7 +293,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 목록을 술 종류, 지역, 판매 상태로 검색할 수 있다")
     void liquorListByLiquor_BrewRegionStatus() {
         // given
-        final String accessToken = RestAuthFixture.로그인_최민족_판매자();
+        String accessToken = RestAuthFixture.로그인_최민족_판매자();
         RestLiquorFixture.술_등록_새로_판매중(accessToken);
         RestLiquorFixture.술_등록_ETC_경기도_하이트_진로_판매중지(accessToken);
 
@@ -276,7 +326,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
     @DisplayName("술 목록을 술 종류, 지역, 판매 상태, 브랜드로 검색할 수 있다")
     void liquorListByLiquor_BrewRegionStatusBrand() {
         // given
-        final String accessToken = RestAuthFixture.로그인_최민족_판매자();
+        String accessToken = RestAuthFixture.로그인_최민족_판매자();
         RestLiquorFixture.술_등록_새로_판매중(accessToken);
         RestLiquorFixture.술_등록_ETC_경기도_하이트_진로_판매중지(accessToken);
         RestLiquorFixture.술_등록_과일주_전라북도_얼음딸기주_우영미_판매중(accessToken);
@@ -306,6 +356,4 @@ class LiquorAcceptanceTest extends AcceptanceTest {
                 .containsExactly(0)
         );
     }
-
-
 }
