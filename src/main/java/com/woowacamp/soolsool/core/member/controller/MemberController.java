@@ -4,7 +4,7 @@ import com.woowacamp.soolsool.core.member.code.MemberResultCode;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
-import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.service.MemberService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
@@ -47,17 +47,17 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<MemberFindResponse>> findMemberDetails(
+    public ResponseEntity<ApiResponse<MemberDetailResponse>> findMemberDetails(
         final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
         log.info("{} {} | memberId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
-        final MemberFindResponse memberFindResponse = memberService.findMember(memberId);
+        final MemberDetailResponse memberDetailResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse.of(MemberResultCode.MEMBER_FIND_SUCCESS, memberFindResponse));
+            .body(ApiResponse.of(MemberResultCode.MEMBER_FIND_SUCCESS, memberDetailResponse));
     }
 
     @PatchMapping

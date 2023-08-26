@@ -13,7 +13,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
-import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
@@ -63,11 +63,11 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberFindResponse findMember(final Long memberId) {
+    public MemberDetailResponse findMember(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
-        return MemberFindResponse.from(member);
+        return MemberDetailResponse.from(member);
     }
 
     @Transactional

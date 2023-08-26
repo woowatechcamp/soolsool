@@ -8,7 +8,7 @@ import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
-import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -66,9 +66,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        MemberFindResponse memberFindResponse = response.jsonPath()
-            .getObject("data", MemberFindResponse.class);
-        assertThat(memberFindResponse.getName()).isEqualTo("김배달");
+        MemberDetailResponse memberDetailResponse = response.jsonPath()
+            .getObject("data", MemberDetailResponse.class);
+        assertThat(memberDetailResponse.getName()).isEqualTo("김배달");
     }
 
     @Test
