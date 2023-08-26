@@ -13,7 +13,6 @@ import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final int PERCENTAGE_BIAS = 100;
+
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
-    private final ReceiptRepository receiptRepository;
 
     @Transactional
     public Long addOrder(final Long memberId, final Receipt receipt) {
@@ -76,12 +76,17 @@ public class OrderService {
         order.updateStatus(cancelOrderStatus);
     }
 
+    @Transactional(readOnly = true)
+    public Double getOrderRatioByLiquorId(final Long liquorId) {
+        return orderRepository.findOrderRatioByLiquorId(liquorId)
+            .orElse(0.0) * PERCENTAGE_BIAS;
+    }
+
     private void validateAccessible(final Long memberId, final Order order) {
         if (!Objects.equals(memberId, order.getMemberId())) {
             throw new SoolSoolException(OrderErrorCode.ACCESS_DENIED_ORDER);
         }
     }
-
 
     private OrderStatus getOrderStatusByType(final OrderStatusType type) {
         return orderStatusRepository.findByType(type)
