@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.liquor.controller;
 
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrResultCode;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorCtrResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorCtrDetailResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorCtrService;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
@@ -21,12 +21,12 @@ public class LiquorCtrController {
 
     @NoAuth
     @GetMapping
-    public ResponseEntity<ApiResponse<LiquorCtrResponse>> findLiquorCtr(
+    public ResponseEntity<ApiResponse<LiquorCtrDetailResponse>> findLiquorCtr(
         @RequestParam final Long liquorId
     ) {
         return ResponseEntity.ok(
             ApiResponse.of(LiquorCtrResultCode.FIND_LQUOR_CTR_SUCCESS,
-                new LiquorCtrResponse(liquorCtrService.getLiquorCtrByLiquorId(liquorId)))
+                new LiquorCtrDetailResponse(liquorCtrService.getLiquorCtrByLiquorId(liquorId)))
         );
     }
 }
