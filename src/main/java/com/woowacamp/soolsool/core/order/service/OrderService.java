@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final int PERCENTAGE_BIAS = 100;
+
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
     private final PaymentInfoRepository paymentInfoRepository;
@@ -77,6 +79,12 @@ public class OrderService {
         final OrderStatus cancelOrderStatus = getOrderStatusByType(CANCELED);
 
         order.updateStatus(cancelOrderStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public Double getOrderRatioByLiquorId(final Long liquorId) {
+        return orderRepository.findOrderRatioByLiquorId(liquorId)
+            .orElse(0.0) * PERCENTAGE_BIAS;
     }
 
     private void validateAccessible(final Long memberId, final Order order) {
