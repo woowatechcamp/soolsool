@@ -109,12 +109,12 @@ public class Member extends BaseEntity {
         return mileage.getMileage();
     }
 
-    public void decreaseMileage(final MemberMileage mileageUsage) {
-        if (this.mileage.isLessThan(mileageUsage)) {
+    public void decreaseMileage(final BigInteger mileageUsage) {
+        if (this.mileage.isLessThan(new MemberMileage(mileageUsage))) {
             throw new SoolSoolException(MemberErrorCode.NOT_ENOUGH_MILEAGE);
         }
 
-        this.mileage = this.mileage.subtract(mileageUsage);
+        this.mileage = this.mileage.subtract(new MemberMileage(mileageUsage));
     }
 
     public String getRoleName() {

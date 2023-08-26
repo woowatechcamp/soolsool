@@ -33,7 +33,7 @@ public class OrderService {
     private final OrderStatusRepository orderStatusRepository;
 
     @Transactional
-    public Long addOrder(final Long memberId, final Receipt receipt) {
+    public Order addOrder(final Long memberId, final Receipt receipt) {
         final OrderStatus orderStatus = getOrderStatusByType(COMPLETED);
 
         final Order order = Order.builder()
@@ -42,7 +42,7 @@ public class OrderService {
             .receipt(receipt)
             .build();
 
-        return orderRepository.save(order).getId();
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)

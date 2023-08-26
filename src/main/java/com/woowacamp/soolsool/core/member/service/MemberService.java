@@ -6,18 +6,21 @@ import static java.util.Arrays.stream;
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
+import com.woowacamp.soolsool.core.member.domain.MemberMileageUsage;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberMileageUsageRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberRoleRepository memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
+    private final MemberMileageUsageRepository memberMileageUsageRepository;
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
@@ -102,10 +106,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void subtractMemberMileage(final Long memberId, final MemberMileage mileageUsage) {
+    public void subtractMemberMileage(
+        final Long memberId,
+        final Order order,
+        final BigInteger mileageUsage
+    ) {
         final Member member = memberRepository.findByIdWithLock(memberId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
 
         member.decreaseMileage(mileageUsage);
+        memberMileageUsageRepository.save(new MemberMileageUsage(member, order, mileageUsage));
     }
 }

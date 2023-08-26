@@ -8,6 +8,7 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
+import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +50,7 @@ class MemberMileageUsageTest {
         MemberMileageUsage memberMileageUsage = MemberMileageUsage.builder()
             .member(member)
             .order(order)
-            .amount(usage)
+            .amount(new BigInteger(usage))
             .build();
 
         // then
