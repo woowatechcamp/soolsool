@@ -9,7 +9,6 @@ import com.woowacamp.soolsool.core.order.service.OrderService;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.infra.PayClient;
-import com.woowacamp.soolsool.core.payment.repository.PayRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
@@ -29,8 +28,6 @@ public class PayService {
     private final LiquorService liquorService;
 
     private final PayClient payClient;
-
-    private final PayRepository payRepository;
 
     @Transactional
     public PayReadyResponse ready(final Long memberId, final PayOrderRequest payOrderRequest) {
@@ -56,7 +53,7 @@ public class PayService {
 
         cartService.removeCartItems(memberId);
 
-        payRepository.save(payClient.payApprove(receipt, pgToken).toPayment());
+        orderService.addPaymentInfo(payClient.payApprove(receipt, pgToken).toEntity(orderId));
 
         return orderId;
     }

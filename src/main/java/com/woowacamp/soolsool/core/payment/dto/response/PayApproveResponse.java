@@ -1,7 +1,6 @@
 package com.woowacamp.soolsool.core.payment.dto.response;
 
-import com.woowacamp.soolsool.core.payment.domain.Payment;
-import com.woowacamp.soolsool.core.payment.infra.dto.response.KakaoPayCardInfo;
+import com.woowacamp.soolsool.core.order.domain.PaymentInfo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -22,32 +21,15 @@ public class PayApproveResponse {
         this(paymentMethodType, null, null, null, null, null);
     }
 
-    public Payment toPayment() {
-        return new Payment(
+    public PaymentInfo toEntity(final Long orderId) {
+        return new PaymentInfo(
+            orderId,
             paymentMethodType,
             purchaseCorp,
             bin,
             installMonth,
             approvedId,
             cardMid
-        );
-    }
-
-    public static PayApproveResponse of(
-        final String paymentMethodType,
-        final KakaoPayCardInfo cardInfo
-    ) {
-        if (paymentMethodType.equals(MONEY)) {
-            return new PayApproveResponse(paymentMethodType);
-        }
-
-        return new PayApproveResponse(
-            paymentMethodType,
-            cardInfo.getPurchase_corp(),
-            cardInfo.getBin(),
-            cardInfo.getInstall_month(),
-            cardInfo.getApproved_id(),
-            cardInfo.getCard_mid()
         );
     }
 }

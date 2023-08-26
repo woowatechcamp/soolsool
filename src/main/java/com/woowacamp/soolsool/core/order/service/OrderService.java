@@ -2,18 +2,18 @@ package com.woowacamp.soolsool.core.order.service;
 
 import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.CANCELED;
 import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.COMPLETED;
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_ORDER_STATUS;
 
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
+import com.woowacamp.soolsool.core.order.domain.PaymentInfo;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
+import com.woowacamp.soolsool.core.order.repository.PaymentInfoRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
-    private final ReceiptRepository receiptRepository;
+    private final PaymentInfoRepository paymentInfoRepository;
 
     @Transactional
     public Long addOrder(final Long memberId, final Receipt receipt) {
@@ -52,7 +52,10 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        return OrderDetailResponse.from(order);
+        final PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoByOrderId(orderId)
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_PAYMENT_INFO));
+
+        return OrderDetailResponse.of(order, paymentInfo);
     }
 
     @Transactional(readOnly = true)
@@ -82,9 +85,13 @@ public class OrderService {
         }
     }
 
-
     private OrderStatus getOrderStatusByType(final OrderStatusType type) {
         return orderStatusRepository.findByType(type)
-            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_ORDER_STATUS));
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
+    }
+
+    @Transactional
+    public Long addPaymentInfo(final PaymentInfo paymentInfo) {
+        return paymentInfoRepository.save(paymentInfo).getId();
     }
 }
