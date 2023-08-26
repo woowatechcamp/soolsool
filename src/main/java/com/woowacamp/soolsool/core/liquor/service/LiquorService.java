@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,8 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 public class LiquorService {
+
+    private static final PageRequest TOP_RANK_PAGEABLE = PageRequest.of(0, 5);
 
     private final LiquorRepository liquorRepository;
     private final LiquorStatusRepository liquorStatusRepository;
@@ -60,7 +63,11 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        return LiquorDetailResponse.from(liquor);
+        final List<Liquor> relatedLiquors = liquorRepository.findAllByIdIn(
+            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE)
+        );
+
+        return LiquorDetailResponse.of(liquor, relatedLiquors);
     }
 
     @Transactional(readOnly = true)
