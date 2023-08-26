@@ -44,8 +44,8 @@ public class LiquorService {
     private static final PageRequest TOP_RANK_PAGEABLE = PageRequest.of(0, 5);
 
     private final LiquorRepository liquorRepository;
-    private final LiquorBrewCache liquorBrewRepository;
-    private final LiquorStatusCache liquorStatusRepository;
+    private final LiquorBrewCache liquorBrewCache;
+    private final LiquorStatusCache liquorStatusCache;
     private final LiquorRegionCache liquorRegionCache;
 
 
@@ -65,9 +65,8 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        final List<Liquor> relatedLiquors = liquorRepository.findAllByIdIn(
-            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE)
-        );
+        final List<Liquor> relatedLiquors =
+            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
         return LiquorDetailResponse.of(liquor, relatedLiquors);
     }
@@ -172,7 +171,7 @@ public class LiquorService {
         if (Objects.isNull(statusType)) {
             return Optional.empty();
         }
-        return liquorStatusRepository.findByType(statusType);
+        return liquorStatusCache.findByType(statusType);
     }
 
     private Optional<LiquorRegion> findLiquorRegionByType(final LiquorRegionType regionType) {
@@ -186,6 +185,6 @@ public class LiquorService {
         if (Objects.isNull(brewType)) {
             return Optional.empty();
         }
-        return liquorBrewRepository.findByType(brewType);
+        return liquorBrewCache.findByType(brewType);
     }
 }
