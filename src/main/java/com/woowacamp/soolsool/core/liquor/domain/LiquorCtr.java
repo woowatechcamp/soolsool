@@ -2,8 +2,13 @@ package com.woowacamp.soolsool.core.liquor.domain;
 
 import static javax.persistence.GenerationType.AUTO;
 
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrClickConverter;
+import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrImpressionConverter;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,10 +31,12 @@ public class LiquorCtr extends BaseEntity {
     private Long liquorId;
 
     @Column(name = "impression", nullable = false)
-    private Long impression;
+    @Convert(converter = LiquorCtrImpressionConverter.class)
+    private LiquorCtrImpression impression;
 
     @Column(name = "click", nullable = false)
-    private Long click;
+    @Convert(converter = LiquorCtrClickConverter.class)
+    private LiquorCtrClick click;
 
     @Builder
     public LiquorCtr(@NonNull final Long liquorId) {
