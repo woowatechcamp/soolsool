@@ -5,10 +5,12 @@ import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.COMPLE
 
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.Order;
+import com.woowacamp.soolsool.core.order.domain.OrderPaymentInfo;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
+import com.woowacamp.soolsool.core.order.repository.OrderPaymentInfoRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
@@ -30,6 +32,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
+    private final OrderPaymentInfoRepository orderPaymentInfoRepository;
 
     @Transactional
     public Order addOrder(final Long memberId, final Receipt receipt) {
@@ -51,7 +54,10 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        return OrderDetailResponse.from(order);
+        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository.findPaymentInfoByOrderId(orderId)
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_PAYMENT_INFO));
+
+        return OrderDetailResponse.of(order, orderPaymentInfo);
     }
 
     @Transactional(readOnly = true)
@@ -89,6 +95,11 @@ public class OrderService {
 
     private OrderStatus getOrderStatusByType(final OrderStatusType type) {
         return orderStatusRepository.findByType(type)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_FOUND_ORDER_STATUS));
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
+    }
+
+    @Transactional
+    public Long addPaymentInfo(final OrderPaymentInfo orderPaymentInfo) {
+        return orderPaymentInfoRepository.save(orderPaymentInfo).getId();
     }
 }
