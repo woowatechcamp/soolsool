@@ -5,6 +5,7 @@ import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_ROLE_TYPE;
 import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.NOT_FOUND_RECEIPT;
 
+import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
 import com.woowacamp.soolsool.core.member.domain.MemberMileageUsage;
@@ -18,7 +19,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageUsageRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
@@ -36,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberRoleRepository memberRoleRepository;
+    private final MemberRoleCache memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
     private final MemberMileageUsageRepository memberMileageUsageRepository;
 
@@ -87,7 +88,7 @@ public class MemberService {
     @Transactional
     public void removeMember(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         memberRepository.delete(member);
     }

@@ -12,7 +12,7 @@ import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.repository.OrderPaymentInfoRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
-import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
+import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
@@ -31,8 +31,8 @@ public class OrderService {
     private static final int PERCENTAGE_BIAS = 100;
 
     private final OrderRepository orderRepository;
-    private final OrderStatusRepository orderStatusRepository;
     private final OrderPaymentInfoRepository orderPaymentInfoRepository;
+    private final OrderStatusCache orderStatusRepository;
 
     @Transactional
     public Order addOrder(final Long memberId, final Receipt receipt) {
