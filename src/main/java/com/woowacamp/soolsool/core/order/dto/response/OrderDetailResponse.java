@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.order.dto.response;
 
 import com.woowacamp.soolsool.core.order.domain.Order;
+import com.woowacamp.soolsool.core.order.domain.OrderPaymentInfo;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +21,9 @@ public class OrderDetailResponse {
     private final Integer totalQuantity;
     private final LocalDateTime createdAt;
     private final List<OrderItemDetailResponse> orderItems;
+    private final OrderPaymentInfoResponse paymentInfo;
 
-    public static OrderDetailResponse from(final Order order) {
+    public static OrderDetailResponse of(final Order order, final OrderPaymentInfo orderPaymentInfo) {
         final Receipt receipt = order.getReceipt();
 
         final List<OrderItemDetailResponse> receiptItems = receipt.getReceiptItems().stream()
@@ -36,7 +38,8 @@ public class OrderDetailResponse {
             receipt.getPurchasedTotalPrice().toString(),
             receipt.getTotalQuantity(),
             order.getCreatedAt(),
-            receiptItems
+            receiptItems,
+            OrderPaymentInfoResponse.from(orderPaymentInfo)
         );
     }
 }

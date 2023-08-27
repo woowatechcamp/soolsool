@@ -48,10 +48,10 @@ public class MemberMileageUsage extends BaseEntity {
     public MemberMileageUsage(
         final Member member,
         final Order order,
-        final String amount
+        final BigInteger amount
     ) {
         this.member = member;
         this.order = order;
-        this.amount = new MemberMileage(new BigInteger(amount));
+        this.amount = new MemberMileage(amount);
     }
 }

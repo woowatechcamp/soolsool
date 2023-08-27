@@ -12,7 +12,7 @@ import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusRepository;
+import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ReceiptMapper {
 
     private static final BigInteger MILEAGE_USAGE_PERCENT = BigInteger.valueOf(10L);
 
-    private final ReceiptStatusRepository receiptStatusRepository;
+    private final ReceiptStatusCache receiptStatusRepository;
 
     public Receipt mapFrom(final Cart cart, final BigInteger mileage) {
         if (cart.isEmpty()) {

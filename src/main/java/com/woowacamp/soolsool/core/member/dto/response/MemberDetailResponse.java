@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberFindResponse {
+public class MemberDetailResponse {
 
     private final String roleName;
     private final String email;
@@ -14,7 +14,7 @@ public class MemberFindResponse {
     private final String address;
 
     @Builder
-    public MemberFindResponse(
+    public MemberDetailResponse(
         final String roleName,
         final String email,
         final String name,
@@ -28,8 +28,8 @@ public class MemberFindResponse {
         this.address = address;
     }
 
-    public static MemberFindResponse from(final Member member) {
-        return MemberFindResponse.builder()
+    public static MemberDetailResponse from(final Member member) {
+        return MemberDetailResponse.builder()
             .roleName(member.getRole().getName().getType())
             .email(member.getEmail().getEmail())
             .name(member.getName().getName())

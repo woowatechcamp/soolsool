@@ -8,10 +8,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KakaoPayApproveResponse {
 
+    private static final String MONEY = "MONEY";
+
     private final String paymentMethodType;
     private final KakaoPayCardInfo cardInfo;
 
     public PayApproveResponse toPayApproveResponse() {
-        return PayApproveResponse.of(paymentMethodType, cardInfo);
+        if (paymentMethodType.equals(MONEY)) {
+            return new PayApproveResponse(paymentMethodType);
+        }
+
+        return new PayApproveResponse(
+            paymentMethodType,
+            cardInfo.getPurchase_corp(),
+            cardInfo.getBin(),
+            cardInfo.getInstall_month(),
+            cardInfo.getApproved_id(),
+            cardInfo.getCard_mid()
+        );
     }
 }

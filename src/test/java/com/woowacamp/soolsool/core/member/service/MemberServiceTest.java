@@ -15,10 +15,10 @@ import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
-import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @Mock
-    private MemberRoleRepository memberRoleRepository;
+    private MemberRoleCache memberRoleRepository;
 
     @Mock
     private MemberMileageChargeRepository memberMileageChargeRepository;
@@ -154,15 +154,15 @@ class MemberServiceTest {
             .mileage("0")
             .address("서울시 잠실역")
             .build();
-        MemberFindResponse expectedMemberFindResponse = MemberFindResponse.from(member);
+        MemberDetailResponse expectedMemberDetailResponse = MemberDetailResponse.from(member);
 
         // when
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        MemberFindResponse memberFindResponse = memberService.findMember(memberId);
+        MemberDetailResponse memberDetailResponse = memberService.findMember(memberId);
 
         // then
-        assertThat(memberFindResponse).usingRecursiveComparison()
-            .isEqualTo(expectedMemberFindResponse);
+        assertThat(memberDetailResponse).usingRecursiveComparison()
+            .isEqualTo(expectedMemberDetailResponse);
     }
 
     @Test
