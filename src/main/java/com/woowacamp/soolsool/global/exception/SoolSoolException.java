@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class SoolSoolException extends RuntimeException {
 
-    private final ErrorCode errorCode;
+    private final transient ErrorCode errorCode;
 
     public SoolSoolException(final ErrorCode errorCode) {
         this.errorCode = errorCode;
