@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
 import java.util.List;
@@ -38,8 +39,10 @@ public class LiquorQueryDslRepository {
                 eqRegion(condition.getLiquorRegion()),
                 eqBrew(condition.getLiquorBrew()),
                 eqStatus(condition.getLiquorStatus()),
+                eqBrand(condition.getBrand()),
                 cursorId(cursorId)
             )
+            .orderBy(liquor.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
     }
@@ -63,6 +66,13 @@ public class LiquorQueryDslRepository {
             return null;
         }
         return liquor.status.eq(liquorStatus.get());
+    }
+
+    private BooleanExpression eqBrand(final String brand) {
+        if (brand == null) {
+            return null;
+        }
+        return liquor.brand.eq(new LiquorBrand(brand));
     }
 
     private BooleanExpression cursorId(final Long cursorId) {

@@ -16,4 +16,11 @@ public class PageLiquorResponse {
         final List<LiquorElementResponse> liquors) {
         return new PageLiquorResponse(hasNext, nextCursorId, liquors);
     }
+
+    public static PageLiquorResponse of(
+        final boolean hasNext,
+        final List<LiquorElementResponse> liquors
+    ) {
+        return new PageLiquorResponse(hasNext, null, liquors);
+    }
 }

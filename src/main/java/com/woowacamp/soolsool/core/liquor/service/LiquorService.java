@@ -9,7 +9,6 @@ import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
@@ -25,18 +24,14 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -82,46 +77,22 @@ public class LiquorService {
         final Pageable pageable,
         final Long cursorId
     ) {
-        final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition(
-            findLiquorRegionByType(regionType),
-            findLiquorBrewByType(brewType),
-            findLiquorStatusByType(statusType),
-            brand);
+        final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition
+            (
+                findLiquorRegionByType(regionType),
+                findLiquorBrewByType(brewType),
+                findLiquorStatusByType(statusType),
+                brand
+            );
 
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
             .getList(liquorSearchCondition, pageable, cursorId);
 
         if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, null, liquors);
+            return PageLiquorResponse.of(false, liquors);
         }
 
         return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
-    }
-
-    private Specification<Liquor> searchWith(
-        final Optional<LiquorBrew> brew,
-        final Optional<LiquorRegion> region,
-        final Optional<LiquorStatus> status,
-        final String brand
-    ) {
-        return ((root, query, criteriaBuilder) -> {
-            final List<Predicate> predicates = new ArrayList<>();
-
-            brew.ifPresent(liquorBrew -> predicates
-                .add(criteriaBuilder.equal(root.get("brew"), liquorBrew)));
-
-            region.ifPresent(liquorRegion -> predicates
-                .add(criteriaBuilder.equal(root.get("region"), liquorRegion)));
-
-            status.ifPresent(liquorStatus -> predicates
-                .add(criteriaBuilder.equal(root.get("status"), liquorStatus)));
-
-            if (StringUtils.hasText(brand)) {
-                predicates.add(criteriaBuilder.equal(root.get("brand"), new LiquorBrand(brand)));
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        });
     }
 
     @Transactional

@@ -78,10 +78,10 @@ public class LiquorController {
     @GetMapping
     public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorList(
         final HttpServletRequest httpServletRequest,
-        @RequestParam @Nullable final LiquorBrewType brew,
-        @RequestParam @Nullable final LiquorRegionType region,
-        @RequestParam @Nullable final LiquorStatusType status,
-        @RequestParam @Nullable final String brand,
+        @RequestParam("brew") @Nullable final LiquorBrewType brew,
+        @RequestParam("region") @Nullable final LiquorRegionType region,
+        @RequestParam("status") @Nullable final LiquorStatusType status,
+        @RequestParam("brand") @Nullable final String brand,
         @RequestParam @Nullable final Long cursorId,
         @PageableDefault final Pageable pageable
     ) {
