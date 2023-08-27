@@ -41,7 +41,10 @@ public enum ReceiptErrorCode implements ErrorCode {
     NOT_RECEIPT_FOUND(NOT_FOUND.value(), "R115", "주문서가 존재하지 않습니다."),
     NOT_EQUALS_MEMBER(BAD_REQUEST.value(), "R116", "다른 사용자의 주문서를 가지고 있습니다."),
 
-    NOT_RECEIPT_TYPE_FOUND(NOT_FOUND.value(), "R117", "주문서 상태가 존재하지 않습니다.");
+    NOT_RECEIPT_TYPE_FOUND(NOT_FOUND.value(), "R117", "주문서 상태가 존재하지 않습니다."),
+
+    MEMBER_NO_INFORMATION(400, "R118", "회원 정보를 찾을 수 없습니다."),
+    ;
 
     private final int status;
     private final String code;
