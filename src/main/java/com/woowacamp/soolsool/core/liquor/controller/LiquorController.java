@@ -10,15 +10,14 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,12 +76,13 @@ public class LiquorController {
 
     @NoAuth
     @GetMapping
-    public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorList(
+    public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorList(
         final HttpServletRequest httpServletRequest,
         @RequestParam @Nullable final LiquorBrewType brew,
         @RequestParam @Nullable final LiquorRegionType region,
         @RequestParam @Nullable final LiquorStatusType status,
         @RequestParam @Nullable final String brand,
+        @RequestParam @Nullable final Long cursorId,
         @PageableDefault final Pageable pageable
     ) {
         log.info("{} {} | brew : {} | region : {} | status : {} | brand : {} | Pageable : {}",
@@ -95,8 +95,8 @@ public class LiquorController {
             Sort.by("createdAt").descending()
         );
 
-        final List<LiquorElementResponse> response = liquorService
-            .liquorList(brew, region, status, brand, sortPageable);
+        final PageLiquorResponse response = liquorService
+            .liquorList(brew, region, status, brand, sortPageable, cursorId);
 
         return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }

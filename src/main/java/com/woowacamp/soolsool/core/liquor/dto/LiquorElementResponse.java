@@ -14,6 +14,14 @@ public class LiquorElementResponse {
     private final String imageUrl;
     private final Integer stock;
 
+    public LiquorElementResponse(final Liquor liquor) {
+        this.id = liquor.getId();
+        this.name = liquor.getName();
+        this.price = liquor.getPrice().toString();
+        this.imageUrl = liquor.getImageUrl();
+        this.stock = liquor.getTotalStock();
+    }
+
     public static LiquorElementResponse from(final Liquor liquor) {
         return new LiquorElementResponse(
             liquor.getId(),
