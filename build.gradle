@@ -41,6 +41,14 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
+
+    // querydsl
+    implementation "com.querydsl:querydsl-jpa"
+    implementation "com.querydsl:querydsl-core"
+    implementation "com.querydsl:querydsl-collections"
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') {
@@ -53,4 +61,18 @@ sonar {
         property "sonar.organization", "woowatechcamp"
         property "sonar.host.url", "https://sonarcloud.io"
     }
+}
+
+def generated = 'src/main/generated'
+
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+clean {
+    delete file(generated)
 }
