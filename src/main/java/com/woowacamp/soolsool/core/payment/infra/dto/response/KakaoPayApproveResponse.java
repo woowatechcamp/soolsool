@@ -10,11 +10,24 @@ import lombok.RequiredArgsConstructor;
 public class KakaoPayApproveResponse {
 
     @JsonProperty("payment_method_type")
+    private static final String MONEY = "MONEY";
+
     private final String paymentMethodType;
     @JsonProperty("card_info")
     private final KakaoPayCardInfo cardInfo;
 
     public PayApproveResponse toPayApproveResponse() {
-        return PayApproveResponse.of(paymentMethodType, cardInfo);
+        if (paymentMethodType.equals(MONEY)) {
+            return new PayApproveResponse(paymentMethodType);
+        }
+
+        return new PayApproveResponse(
+            paymentMethodType,
+            cardInfo.getPurchase_corp(),
+            cardInfo.getBin(),
+            cardInfo.getInstall_month(),
+            cardInfo.getApproved_id(),
+            cardInfo.getCard_mid()
+        );
     }
 }
