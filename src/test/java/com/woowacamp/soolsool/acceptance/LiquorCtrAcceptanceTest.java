@@ -34,9 +34,8 @@ class LiquorCtrAcceptanceTest extends AcceptanceTest {
         RestLiquorFixture.술_목록_조회();
         RestLiquorFixture.술_상세_조회(새로);
 
-
         /* when */
-        final LiquorCtrDetailResponse response = RestAssured
+        LiquorCtrDetailResponse response = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
