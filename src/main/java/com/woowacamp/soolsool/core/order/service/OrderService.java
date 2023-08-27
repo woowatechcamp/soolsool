@@ -6,13 +6,13 @@ import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.COMPLE
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.OrderStatus;
-import com.woowacamp.soolsool.core.order.domain.PaymentInfo;
+import com.woowacamp.soolsool.core.order.domain.OrderPaymentInfo;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
-import com.woowacamp.soolsool.core.order.repository.PaymentInfoRepository;
+import com.woowacamp.soolsool.core.order.repository.OrderPaymentInfoRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
@@ -32,7 +32,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
-    private final PaymentInfoRepository paymentInfoRepository;
+    private final OrderPaymentInfoRepository orderPaymentInfoRepository;
 
     @Transactional
     public Long addOrder(final Long memberId, final Receipt receipt) {
@@ -54,10 +54,10 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        final PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoByOrderId(orderId)
+        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository.findPaymentInfoByOrderId(orderId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_PAYMENT_INFO));
 
-        return OrderDetailResponse.of(order, paymentInfo);
+        return OrderDetailResponse.of(order, orderPaymentInfo);
     }
 
     @Transactional(readOnly = true)
@@ -99,7 +99,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long addPaymentInfo(final PaymentInfo paymentInfo) {
-        return paymentInfoRepository.save(paymentInfo).getId();
+    public Long addPaymentInfo(final OrderPaymentInfo orderPaymentInfo) {
+        return orderPaymentInfoRepository.save(orderPaymentInfo).getId();
     }
 }

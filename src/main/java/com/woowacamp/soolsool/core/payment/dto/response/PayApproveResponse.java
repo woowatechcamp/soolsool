@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.payment.dto.response;
 
-import com.woowacamp.soolsool.core.order.domain.PaymentInfo;
+import com.woowacamp.soolsool.core.order.domain.OrderPaymentInfo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +21,8 @@ public class PayApproveResponse {
         this(paymentMethodType, null, null, null, null, null);
     }
 
-    public PaymentInfo toEntity(final Long orderId) {
-        return new PaymentInfo(
+    public OrderPaymentInfo toEntity(final Long orderId) {
+        return new OrderPaymentInfo(
             orderId,
             paymentMethodType,
             purchaseCorp,

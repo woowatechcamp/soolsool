@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -11,16 +12,15 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
+import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
 @DisplayName("인수 테스트: /orders")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -52,16 +52,22 @@ class OrderAcceptanceTest extends AcceptanceTest {
         Long 김배달_주문 = RestPayFixture.결제_성공(김배달, 김배달_주문서);
 
         // when
-        ExtractableResponse<Response> response = RestAssured
+        OrderDetailResponse response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
             .when().get("/orders/" + 김배달_주문)
             .then().log().all()
-            .extract();
+            .extract().jsonPath().getObject("data", OrderDetailResponse.class);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertAll(
+            () -> assertThat(response.getOrderId()).isEqualTo(김배달_주문),
+            () -> assertThat(response.getOrderStatus())
+                .isEqualTo(OrderStatusType.COMPLETED.getStatus()),
+            () -> assertThat(response.getTotalQuantity()).isEqualTo(2),
+            () -> assertThat(response.getPaymentInfo()).isNotNull()
+        );
     }
 
     @Test

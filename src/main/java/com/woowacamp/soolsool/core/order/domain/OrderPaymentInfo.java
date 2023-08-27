@@ -16,7 +16,7 @@ import lombok.NonNull;
 @Table(name = "payment_info")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PaymentInfo {
+public class OrderPaymentInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,7 +44,7 @@ public class PaymentInfo {
     private String cardMid; // 카드사 가맹점번호
 
     @Builder
-    public PaymentInfo(
+    public OrderPaymentInfo(
         @NonNull final Long orderId,
         @NonNull final String paymentMethodType,
         final String purchaseCorp,
