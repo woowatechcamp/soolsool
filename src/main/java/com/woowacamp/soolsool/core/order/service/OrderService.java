@@ -2,7 +2,6 @@ package com.woowacamp.soolsool.core.order.service;
 
 import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.CANCELED;
 import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.COMPLETED;
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_ORDER_STATUS;
 
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.Order;
@@ -33,7 +32,7 @@ public class OrderService {
     private final OrderStatusRepository orderStatusRepository;
 
     @Transactional
-    public Long addOrder(final Long memberId, final Receipt receipt) {
+    public Order addOrder(final Long memberId, final Receipt receipt) {
         final OrderStatus orderStatus = getOrderStatusByType(COMPLETED);
 
         final Order order = Order.builder()
@@ -42,7 +41,7 @@ public class OrderService {
             .receipt(receipt)
             .build();
 
-        return orderRepository.save(order).getId();
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
@@ -90,6 +89,6 @@ public class OrderService {
 
     private OrderStatus getOrderStatusByType(final OrderStatusType type) {
         return orderStatusRepository.findByType(type)
-            .orElseThrow(() -> new SoolSoolException(NOT_FOUND_ORDER_STATUS));
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_FOUND_ORDER_STATUS));
     }
 }
