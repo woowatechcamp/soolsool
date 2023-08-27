@@ -1,8 +1,8 @@
 package com.woowacamp.soolsool.core.receipt.service;
 
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.ACCESS_DENIED_RECEIPT;
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_RECEIPT;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.ACCESS_DENIED_RECEIPT;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_FOUND_RECEIPT;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
 
 import com.woowacamp.soolsool.core.cart.domain.Cart;

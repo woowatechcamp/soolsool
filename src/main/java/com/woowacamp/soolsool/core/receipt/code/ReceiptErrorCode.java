@@ -26,7 +26,6 @@ public enum ReceiptErrorCode implements ErrorCode {
     INVALID_LENGTH_REGION(400, "R105", "주문서 술 지역은 20자보다 길 수 없습니다."),
     NO_CONTENT_REGION(400, "R106", "주문서 술 지역은 null이거나 공백일 수 없습니다."),
 
-
     INVALID_SIZE_ALCOHOL(400, "R107", "주문서 술 도수는 0 이상 실수여야 합니다."),
 
     INVALID_SIZE_PRICE(400, "R108", "주문서 술 가격은 0 미만일 수 없습니다."),
@@ -44,6 +43,9 @@ public enum ReceiptErrorCode implements ErrorCode {
     NOT_RECEIPT_TYPE_FOUND(NOT_FOUND.value(), "R117", "주문서 상태가 존재하지 않습니다."),
 
     MEMBER_NO_INFORMATION(400, "R118", "회원 정보를 찾을 수 없습니다."),
+
+    ACCESS_DENIED_RECEIPT(403, "R119", "본인의 주문서 내역만 조회할 수 있습니다."),
+    NOT_FOUND_RECEIPT(404, "P002", "회원의 주문 내역을 찾을 수 없습니다."),
     ;
 
     private final int status;
