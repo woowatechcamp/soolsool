@@ -49,12 +49,11 @@ public class PayService {
 
         final Order order = orderService.addOrder(memberId, receipt);
 
-        memberService
-            .subtractMemberMileage(memberId, order, receipt.getMileageUsage());
+        memberService.subtractMemberMileage(memberId, order, receipt.getMileageUsage());
 
         cartService.removeCartItems(memberId);
 
-        orderService.addPaymentInfo(payClient.payApprove(receipt, pgToken).toEntity(orderId));
+        orderService.addPaymentInfo(payClient.payApprove(receipt, pgToken).toEntity(order.getId()));
 
         return order;
     }
