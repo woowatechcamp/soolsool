@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -11,15 +12,15 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
+import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
+import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
 @DisplayName("인수 테스트: /orders")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -51,16 +52,22 @@ class OrderAcceptanceTest extends AcceptanceTest {
         Long 김배달_주문 = RestPayFixture.결제_성공(김배달, 김배달_주문서);
 
         // when
-        ExtractableResponse<Response> response = RestAssured
+        OrderDetailResponse response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
             .when().get("/orders/" + 김배달_주문)
             .then().log().all()
-            .extract();
+            .extract().jsonPath().getObject("data", OrderDetailResponse.class);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertAll(
+            () -> assertThat(response.getOrderId()).isEqualTo(김배달_주문),
+            () -> assertThat(response.getOrderStatus())
+                .isEqualTo(OrderStatusType.COMPLETED.getStatus()),
+            () -> assertThat(response.getTotalQuantity()).isEqualTo(2),
+            () -> assertThat(response.getPaymentInfo()).isNotNull()
+        );
     }
 
     @Test
@@ -92,5 +99,33 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(data).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("특정 술의 주문율을 조회한다.")
+    void getOrderRatioByLiquorId() {
+        // given
+        String 김배달 = RestAuthFixture.로그인_김배달_구매자();
+
+        RestCartFixture.장바구니_상품_추가(김배달, 새로, 1);
+        Long 김배달_주문서 = RestReceiptFixture.주문서_생성(김배달);
+        RestPayFixture.결제_준비(김배달, 김배달_주문서);
+        RestPayFixture.결제_성공(김배달, 김배달_주문서);
+
+        RestCartFixture.장바구니_상품_추가(김배달, 새로, 5);
+        RestReceiptFixture.주문서_생성(김배달);
+
+        /* when */
+        OrderRatioResponse response = RestAssured
+            .given().log().all()
+            .header(AUTHORIZATION, BEARER + 김배달)
+            .contentType(APPLICATION_JSON_VALUE)
+            .param("liquorId", 새로)
+            .when().get("/orders/ratio")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", OrderRatioResponse.class);
+
+        /* then */
+        assertThat(response.getRatio()).isEqualTo(50.0);
     }
 }

@@ -4,6 +4,7 @@ import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_C
 import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_FAIL;
 import static com.woowacamp.soolsool.core.payment.code.PayResultCode.PAY_READY_SUCCESS;
 
+import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
@@ -56,10 +57,10 @@ public class PayController {
         log.info("{} {} | memberId : {} | pg_token : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId, pgToken);
 
-        final Long orderId = payService.approve(memberId, receiptId, pgToken);
+        final Order order = payService.approve(memberId, receiptId, pgToken);
 
         return ResponseEntity.ok(
-            ApiResponse.of(PAY_READY_SUCCESS, new PaySuccessResponse(orderId)));
+            ApiResponse.of(PAY_READY_SUCCESS, new PaySuccessResponse(order.getId())));
     }
 
     @NoAuth

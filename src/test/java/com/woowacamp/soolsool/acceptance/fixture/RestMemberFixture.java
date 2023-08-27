@@ -1,10 +1,13 @@
 package com.woowacamp.soolsool.acceptance.fixture;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import io.restassured.RestAssured;
 import org.springframework.http.MediaType;
 
-public abstract class RestMemberFixture {
+public abstract class RestMemberFixture extends RestFixture {
 
     public static void 회원가입_김배달_구매자() {
         MemberAddRequest memberAddRequest = new MemberAddRequest(
@@ -13,7 +16,7 @@ public abstract class RestMemberFixture {
             "baedal",
             "김배달",
             "010-0000-0000",
-            "0",
+            "10000",
             "잠실역");
 
         RestAssured
@@ -42,5 +45,14 @@ public abstract class RestMemberFixture {
             .when().post("/members")
             .then().log().all()
             .extract();
+    }
+
+    public static MemberDetailResponse 회원_정보_조회(String token) {
+        return RestAssured
+            .given().log().all()
+            .header(AUTHORIZATION, BEARER + token)
+            .when().get("/members")
+            .then().log().all()
+            .extract().jsonPath().getObject("data", MemberDetailResponse.class);
     }
 }

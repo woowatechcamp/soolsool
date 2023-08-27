@@ -11,6 +11,7 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
@@ -89,5 +90,8 @@ class PayAcceptanceTest extends AcceptanceTest {
 
         /* then */
         assertThat(response.getOrderId()).isNotNull();
+
+        MemberDetailResponse memberDetailResponse = RestMemberFixture.회원_정보_조회(김배달_토큰);
+        assertThat(memberDetailResponse.getMileage()).isEqualTo("9000");
     }
 }
