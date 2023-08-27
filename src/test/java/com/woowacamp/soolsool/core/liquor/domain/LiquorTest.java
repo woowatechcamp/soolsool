@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorInfo;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
+import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +22,7 @@ class LiquorTest {
         LiquorRegion region = new LiquorRegion(LiquorRegionType.GYEONGGI_DO);
         LiquorStatus status = new LiquorStatus(LiquorStatusType.ON_SALE);
         String name = "마싯는 소주";
-        String price = "10000";
+        BigInteger price = new BigInteger("10000");
         String brand = "우아한";
         String imageUrl = "soju.png";
         int stock = 77;
@@ -32,12 +34,16 @@ class LiquorTest {
             .brew(brew)
             .region(region)
             .status(status)
-            .name(name)
-            .price(price)
-            .brand(brand)
-            .imageUrl(imageUrl)
-            .alcohol(alcohol)
-            .volume(volume)
+            .liquorInfo(
+                LiquorInfo.builder()
+                    .name(name)
+                    .price(price)
+                    .brand(brand)
+                    .imageUrl(imageUrl)
+                    .alcohol(alcohol)
+                    .volume(volume)
+                    .build()
+            )
             .build();
 
         /* then */

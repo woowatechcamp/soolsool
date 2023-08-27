@@ -2,14 +2,10 @@ package com.woowacamp.soolsool.core.cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
-import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,22 +21,11 @@ class CartTest {
 
     @BeforeEach
     void setUpLiquor() {
-        LiquorBrew sojuBrew = new LiquorBrew(LiquorBrewType.SOJU);
-        LiquorBrew etcBrew = new LiquorBrew(LiquorBrewType.ETC);
-        LiquorRegion gyeongSangNamDoRegion = new LiquorRegion(LiquorRegionType.GYEONGSANGNAM_DO);
-        LiquorStatus onSaleStatus = new LiquorStatus(LiquorStatusType.ON_SALE);
-        LiquorStatus stoppedStatus = new LiquorStatus(LiquorStatusType.STOPPED);
+        soju = mock(Liquor.class);
+        beer = mock(Liquor.class);
 
-        soju = new Liquor(
-            1L, sojuBrew, gyeongSangNamDoRegion, onSaleStatus,
-            "안동 소주", "12000", "안동", "/soju.jpg",
-            21.7, 400
-        );
-        beer = new Liquor(
-            2L, etcBrew, gyeongSangNamDoRegion, stoppedStatus,
-            "맥주", "5000", "OB", "/beer.jpg",
-            5.7, 500
-        );
+        when(soju.getId()).thenReturn(1L);
+        when(beer.getId()).thenReturn(2L);
     }
 
     @Test
@@ -97,7 +82,6 @@ class CartTest {
         // given
         CartItem cartItem = new CartItem(1L, soju, 1);
         CartItem sameCartItem = new CartItem(1L, soju, 1);
-
         List<CartItem> cartItems = new ArrayList<>(List.of(cartItem));
 
         Cart cart = new Cart(1L, cartItems);
@@ -114,22 +98,11 @@ class CartTest {
         // given
         Cart cart = new Cart(1L, List.of());
 
-        Liquor stoppedLiquor = Liquor.builder()
-            .brew(new LiquorBrew(LiquorBrewType.SOJU))
-            .region(new LiquorRegion(LiquorRegionType.GYEONGSANGNAM_DO))
-            .status(new LiquorStatus(LiquorStatusType.STOPPED))
-            .name("안동 소주")
-            .price("12000")
-            .brand("안동")
-            .imageUrl("/soju.jpg")
-            .alcohol(21.7)
-            .volume(400)
-            .build();
-
-        CartItem cartItem = new CartItem(1L, stoppedLiquor, 1);
+        CartItem stoppedCartItem = mock(CartItem.class);
+        when(stoppedCartItem.hasStoppedLiquor()).thenReturn(true);
 
         // when & then
-        assertThatThrownBy(() -> cart.addCartItem(cartItem))
+        assertThatThrownBy(() -> cart.addCartItem(stoppedCartItem))
             .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("판매가 중지된 상품은 추가할 수 없습니다.");
     }

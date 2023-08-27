@@ -11,6 +11,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ class LiquorServiceIntegrationTest {
 
     @Autowired
     LiquorRepository liquorRepository;
+
+    @Autowired
+    EntityManager entityManager;
 
     @Test
     @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql"})

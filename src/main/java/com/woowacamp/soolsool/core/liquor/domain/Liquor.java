@@ -10,6 +10,7 @@ import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorVolumeConverter
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorAlcohol;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorImageUrl;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorInfo;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorName;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
@@ -93,43 +94,20 @@ public class Liquor extends BaseEntity {
 
     @Builder
     public Liquor(
-        final LiquorBrew brew,
-        final LiquorRegion region,
-        final LiquorStatus status,
-        final String name,
-        final String price,
-        final String brand,
-        final String imageUrl,
-        final Double alcohol,
-        final int volume
-    ) {
-        this(null, brew, region, status,
-            name, price, brand, imageUrl,
-            alcohol, volume);
-    }
-
-    public Liquor(
-        final Long id,
         @NonNull final LiquorBrew brew,
         @NonNull final LiquorRegion region,
         @NonNull final LiquorStatus status,
-        final String name,
-        final String price,
-        final String brand,
-        final String imageUrl,
-        final Double alcohol,
-        final int volume
+        @NonNull final LiquorInfo liquorInfo
     ) {
-        this.id = id;
         this.brew = brew;
         this.region = region;
         this.status = status;
-        this.name = new LiquorName(name);
-        this.price = new LiquorPrice(new BigInteger(price));
-        this.brand = new LiquorBrand(brand);
-        this.imageUrl = new LiquorImageUrl(imageUrl);
-        this.alcohol = new LiquorAlcohol(alcohol);
-        this.volume = new LiquorVolume(volume);
+        this.name = liquorInfo.getName();
+        this.price = liquorInfo.getPrice();
+        this.brand = liquorInfo.getBrand();
+        this.imageUrl = liquorInfo.getImageUrl();
+        this.alcohol = liquorInfo.getAlcohol();
+        this.volume = liquorInfo.getVolume();
         this.totalStock = DEFAULT_TOTAL_COUNT;
     }
 

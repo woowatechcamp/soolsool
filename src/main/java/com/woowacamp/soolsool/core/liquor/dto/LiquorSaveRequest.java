@@ -4,6 +4,8 @@ import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorInfo;
+import java.math.BigInteger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -28,12 +30,18 @@ public class LiquorSaveRequest {
         final LiquorRegion region,
         final LiquorStatus status
     ) {
-
         return new Liquor(
-            brew, region,
-            status, name,
-            price, brand, imageUrl,
-            alcohol, volume
+            brew,
+            region,
+            status,
+            toLiquorInfo()
+        );
+    }
+
+    private LiquorInfo toLiquorInfo() {
+        return new LiquorInfo(
+            name, new BigInteger(price), brand,
+            imageUrl, alcohol, volume
         );
     }
 }
