@@ -33,6 +33,24 @@ class CartServiceIntegrationTest {
         "/member-type.sql", "/member.sql",
         "/liquor-type.sql", "/liquor.sql",
     })
+    @DisplayName("장바구니 상품을 추가한다.")
+    void addCartItem() throws Exception {
+        /* given */
+        Long 김배달 = 1L;
+        Long 새로 = 1L;
+        Integer 수량 = 100;
+        CartItemSaveRequest request = new CartItemSaveRequest(새로, 수량);
+
+        /* when & then */
+        assertThatCode(() -> cartService.addCartItem(김배달, request))
+            .doesNotThrowAnyException();
+    }
+
+    @Test
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql",
+    })
     @DisplayName("존재하지 않는 술을 장바구니 상품으로 추가할 경우 예외를 던진다.")
     void saveNotExistsLiquorByCartItem() {
         // given
