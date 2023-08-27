@@ -5,14 +5,14 @@ import static com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType.COMPLE
 
 import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.domain.Order;
-import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.order.domain.OrderPaymentInfo;
+import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
+import com.woowacamp.soolsool.core.order.repository.OrderPaymentInfoRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusRepository;
-import com.woowacamp.soolsool.core.order.repository.OrderPaymentInfoRepository;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
@@ -35,7 +35,7 @@ public class OrderService {
     private final OrderPaymentInfoRepository orderPaymentInfoRepository;
 
     @Transactional
-    public Long addOrder(final Long memberId, final Receipt receipt) {
+    public Order addOrder(final Long memberId, final Receipt receipt) {
         final OrderStatus orderStatus = getOrderStatusByType(COMPLETED);
 
         final Order order = Order.builder()
@@ -44,7 +44,7 @@ public class OrderService {
             .receipt(receipt)
             .build();
 
-        return orderRepository.save(order).getId();
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)

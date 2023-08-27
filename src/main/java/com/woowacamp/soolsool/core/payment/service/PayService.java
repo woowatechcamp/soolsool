@@ -3,8 +3,8 @@ package com.woowacamp.soolsool.core.payment.service;
 import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.core.liquor.service.LiquorStockService;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.service.MemberService;
+import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.service.OrderService;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
@@ -38,7 +38,7 @@ public class PayService {
     }
 
     @Transactional
-    public Long approve(final Long memberId, final Long receiptId, final String pgToken) {
+    public Order approve(final Long memberId, final Long receiptId, final String pgToken) {
         final Receipt receipt = receiptService.getMemberReceipt(memberId, receiptId);
 
         for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
@@ -47,14 +47,15 @@ public class PayService {
             liquorService.decreaseTotalStock(receiptItem.getLiquorId(), receiptItem.getQuantity());
         }
 
-        memberService.subtractMemberMileage(memberId, new MemberMileage(receipt.getMileageUsage()));
+        final Order order = orderService.addOrder(memberId, receipt);
 
-        final Long orderId = orderService.addOrder(memberId, receipt);
+        memberService
+            .subtractMemberMileage(memberId, order, receipt.getMileageUsage());
 
         cartService.removeCartItems(memberId);
 
         orderService.addPaymentInfo(payClient.payApprove(receipt, pgToken).toEntity(orderId));
 
-        return orderId;
+        return order;
     }
 }
