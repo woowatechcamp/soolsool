@@ -4,6 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
+import com.woowacamp.soolsool.core.cart.dto.response.CartAddResponse;
 import com.woowacamp.soolsool.core.cart.dto.response.CartItemResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -21,7 +22,8 @@ public abstract class RestCartFixture extends RestFixture {
             .body(cartItemSaveRequest)
             .when().post("/cart-items")
             .then().log().all()
-            .extract().jsonPath().getObject("data", Long.class);
+            .extract().jsonPath().getObject("data", CartAddResponse.class)
+            .getCartItemId();
     }
 
     public static List<CartItemResponse> 장바구니_모두_조회(String 토큰) {

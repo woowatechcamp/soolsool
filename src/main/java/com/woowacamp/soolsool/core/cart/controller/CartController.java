@@ -8,6 +8,7 @@ import static com.woowacamp.soolsool.core.cart.code.CartResultCode.CART_ITEM_MOD
 
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
+import com.woowacamp.soolsool.core.cart.dto.response.CartAddResponse;
 import com.woowacamp.soolsool.core.cart.dto.response.CartItemResponse;
 import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
@@ -32,14 +33,14 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Long>> addCartItem(
+    public ResponseEntity<ApiResponse<CartAddResponse>> addCartItem(
         @LoginUser final Long memberId,
         @RequestBody final CartItemSaveRequest cartItemSaveRequest
     ) {
         final Long cartItemId = cartService.addCartItem(memberId, cartItemSaveRequest);
 
-        // TODO: DTO로 반환하기 "cartItemId": 1
-        return ResponseEntity.ok(ApiResponse.of(CART_ITEM_ADD_SUCCESS, cartItemId));
+        return ResponseEntity.ok(
+            ApiResponse.of(CART_ITEM_ADD_SUCCESS, new CartAddResponse(cartItemId)));
     }
 
     @PatchMapping("/{cartItemId}")
