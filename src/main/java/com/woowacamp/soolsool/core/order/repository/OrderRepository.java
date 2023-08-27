@@ -21,4 +21,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select distinct o from Order o inner join o.receipt r inner join r.receiptItems ri"
         + " where o.memberId = :memberId")
     Page<Order> findAllByMemberId(@Param("memberId") final Long memberId, final Pageable pageable);
+
+    @Query(value = "select cast(count(o.id) as double) / nullif((select count(sub_ri.id) "
+        + "                                                      from receipt_items sub_ri "
+        + "                                                      where sub_ri.liquor_id = :liquorId"
+        + "                                                      ), 0) "
+        + "from orders o inner join receipt_items ri on o.receipt_id = ri.receipt_id "
+        + "where ri.liquor_id = :liquorId"
+        + "      and o.order_status_id = (select os.id from order_status os where os.name = 'COMPLETED')",
+        nativeQuery = true
+    )
+    Optional<Double> findOrderRatioByLiquorId(final Long liquorId);
 }

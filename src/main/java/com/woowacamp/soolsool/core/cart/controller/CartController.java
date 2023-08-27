@@ -14,7 +14,9 @@ import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("/cart-items")
 @RequiredArgsConstructor
 public class CartController {
@@ -34,9 +37,14 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<CartAddResponse>> addCartItem(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody final CartItemSaveRequest cartItemSaveRequest
     ) {
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, cartItemSaveRequest);
+
         final Long cartItemId = cartService.addCartItem(memberId, cartItemSaveRequest);
 
         return ResponseEntity.ok(
@@ -45,10 +53,15 @@ public class CartController {
 
     @PatchMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> modifyCartItemQuantity(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long cartItemId,
         @RequestBody final CartItemModifyRequest cartItemModifyRequest
     ) {
+        log.info("{} {} | memberId : {} | request : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
+            memberId, cartItemModifyRequest);
+
         cartService.modifyCartItemQuantity(memberId, cartItemId, cartItemModifyRequest);
 
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_MODIFY_QUANTITY_SUCCESS));
@@ -56,8 +69,12 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> cartItemList(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         final List<CartItemResponse> cartItemResponses = cartService.cartItemList(memberId);
 
         return ResponseEntity.ok(ApiResponse.of(CART_ITEM_LIST_FOUND, cartItemResponses));
@@ -65,9 +82,13 @@ public class CartController {
 
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> removeCartItem(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long cartItemId
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         cartService.removeCartItem(memberId, cartItemId);
 
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_DELETED));
@@ -75,9 +96,14 @@ public class CartController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeCartItemList(
+        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
+        log.info("{} {} | memberId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+
         cartService.removeCartItems(memberId);
+
         return ResponseEntity.ok(ApiResponse.from(CART_ITEM_LIST_DELETED));
     }
 }

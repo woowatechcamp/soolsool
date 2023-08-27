@@ -1,5 +1,6 @@
 package com.woowacamp.soolsool.core.receipt.domain.vo;
 
+
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.INVALID_QUANTITY_SIZE;
 
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -8,11 +9,11 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class ReceiptQuantity {
+public class ReceiptItemQuantity {
 
     private final int quantity;
 
-    public ReceiptQuantity(final int quantity) {
+    public ReceiptItemQuantity(final int quantity) {
         validateIsNotLessThanZero(quantity);
 
         this.quantity = quantity;

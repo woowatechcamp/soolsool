@@ -8,8 +8,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class MemberAddRequest {
 
