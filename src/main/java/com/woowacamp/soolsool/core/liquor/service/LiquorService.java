@@ -17,7 +17,10 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
@@ -26,10 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -47,6 +48,7 @@ public class LiquorService {
     private final LiquorBrewCache liquorBrewCache;
     private final LiquorStatusCache liquorStatusCache;
     private final LiquorRegionCache liquorRegionCache;
+    private final LiquorQueryDslRepository liquorQueryDslRepository;
 
 
     @Transactional
@@ -72,25 +74,28 @@ public class LiquorService {
     }
 
     @Transactional(readOnly = true)
-    public List<LiquorElementResponse> liquorList(
+    public PageLiquorResponse liquorList(
         final LiquorBrewType brewType,
         final LiquorRegionType regionType,
         final LiquorStatusType statusType,
         final String brand,
-        final Pageable pageable
+        final Pageable pageable,
+        final Long cursorId
     ) {
-        final Specification<Liquor> conditions = searchWith(
-            findLiquorBrewByType(brewType),
+        final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition(
             findLiquorRegionByType(regionType),
+            findLiquorBrewByType(brewType),
             findLiquorStatusByType(statusType),
-            brand
-        );
+            brand);
 
-        final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
+        final List<LiquorElementResponse> liquors = liquorQueryDslRepository
+            .getList(liquorSearchCondition, pageable, cursorId);
 
-        return liquors.getContent().stream()
-            .map(LiquorElementResponse::from)
-            .collect(Collectors.toList());
+        if (liquors.size() < pageable.getPageSize()) {
+            return PageLiquorResponse.of(false, null, liquors);
+        }
+
+        return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
     }
 
     private Specification<Liquor> searchWith(

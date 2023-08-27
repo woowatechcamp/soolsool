@@ -20,6 +20,7 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -211,7 +212,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .accept(APPLICATION_JSON_VALUE)
             .when().get("/liquors")
             .then().log().all()
-            .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -242,7 +243,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("brew", "소주")
             .when().get("/liquors")
             .then().log().all()
-            .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -274,7 +275,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("region", "경기도")
             .when().get("/liquors")
             .then().log().all()
-            .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -307,7 +308,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("status", "판매중지")
             .when().get("/liquors")
             .then().log().all()
-            .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -342,7 +343,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("brand", "우영미")
             .when().get("/liquors")
             .then().log().all()
-            .extract().jsonPath().getList("data", LiquorElementResponse.class);
+            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
         // then
         assertAll(
