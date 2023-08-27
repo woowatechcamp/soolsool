@@ -58,9 +58,9 @@ public class CartController {
         @PathVariable final Long cartItemId,
         @RequestBody final CartItemModifyRequest cartItemModifyRequest
     ) {
-        log.info("{} {} | memberId : {} | request : {}",
+        log.info("{} {} | memberId: {} | cartItemId: {} | request : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
-            memberId, cartItemModifyRequest);
+            memberId, cartItemId, cartItemModifyRequest);
 
         cartService.modifyCartItemQuantity(memberId, cartItemId, cartItemModifyRequest);
 
@@ -72,7 +72,7 @@ public class CartController {
         final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("{} {} | memberId : {}",
+        log.info("{} {} | memberId: {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
         final List<CartItemResponse> cartItemResponses = cartService.cartItemList(memberId);
@@ -86,8 +86,9 @@ public class CartController {
         @LoginUser final Long memberId,
         @PathVariable final Long cartItemId
     ) {
-        log.info("{} {} | memberId : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
+        log.info("{} {} | memberId: {} | cartItemId: {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId,
+            cartItemId);
 
         cartService.removeCartItem(memberId, cartItemId);
 
