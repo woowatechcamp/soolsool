@@ -15,4 +15,13 @@ public class LiquorSearchCondition {
     private final Optional<LiquorBrew> liquorBrew;
     private final Optional<LiquorStatus> liquorStatus;
     private final String brand;
+
+    public static LiquorSearchCondition nullObject() {
+        return new LiquorSearchCondition(
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            null
+        );
+    }
 }
