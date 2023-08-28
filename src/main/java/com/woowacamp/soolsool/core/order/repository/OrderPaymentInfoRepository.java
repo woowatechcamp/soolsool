@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderPaymentInfoRepository extends JpaRepository<OrderPaymentInfo, Long> {
 
-    @Query("select p from OrderPaymentInfo p inner join Order o on p.orderId = o.id")
+    @Query("select p from OrderPaymentInfo p inner join Order o on p.orderId = o.id and o.id = :orderId")
     Optional<OrderPaymentInfo> findPaymentInfoByOrderId(final Long orderId);
 }
