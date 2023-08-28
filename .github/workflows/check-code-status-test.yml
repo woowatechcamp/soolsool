@@ -12,7 +12,6 @@ jobs:
       - uses: shogo82148/actions-setup-redis@v1
         with:
           redis-version: '6.x'
-      - run: redis-cli ping
 
       - name: Set environment variables to runner
         run: |
@@ -24,7 +23,7 @@ jobs:
 
       - name: Set environment variables to runner
         run: |
-          echo SOOLSOOL_REDIS_HOST=${{ secrets.SOOLSOOL_REDIS_HOST }} >> $GITHUB_ENV
+          echo SOOLSOOL_REDIS_HOST=localhost >> $GITHUB_ENV
 
       - name: Set environment variables to runner
         run: |
