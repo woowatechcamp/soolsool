@@ -7,6 +7,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        default_batch_fetch_size: 100
     defer-datasource-initialization: true
 
 security:
@@ -18,7 +19,7 @@ security:
 kakao:
   admin:
     key: ${SOOLSOOL_KAKAO_ADMIN_KEY}
-    
+
 logging:
   level:
     org:
