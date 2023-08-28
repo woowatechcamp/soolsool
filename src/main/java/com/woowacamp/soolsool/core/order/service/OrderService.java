@@ -72,11 +72,11 @@ public class OrderService {
             .findAllByMemberId(memberId, pageable, cursorId);
 
         if (orders.size() < pageable.getPageSize()) {
-            return PageOrderListResponse.of(false, orders);
+            return PageOrderListResponse.of(false, null, orders);
         }
+        
         return PageOrderListResponse.of(
-            true, orders.get(orders.size() - 1).getOrderId(), orders
-        );
+            true, orders.get(orders.size() - 1).getOrderId(), orders);
     }
 
     @Transactional
