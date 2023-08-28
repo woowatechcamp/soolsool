@@ -12,6 +12,7 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
@@ -140,10 +141,10 @@ class OrderAcceptanceTest extends AcceptanceTest {
         RestCartFixture.장바구니_상품_추가(김배달, 새로, 1);
         Long 김배달_주문서 = RestReceiptFixture.주문서_생성(김배달);
         RestPayFixture.결제_준비(김배달, 김배달_주문서);
-        final Long 주문번호 = RestPayFixture.결제_성공(김배달, 김배달_주문서);
+        Long 주문번호 = RestPayFixture.결제_성공(김배달, 김배달_주문서);
 
         /* when */
-        final ExtractableResponse<Response> response = RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
@@ -153,5 +154,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         /* then */
         assertThat(response.statusCode()).isEqualTo(200);
+
+        MemberDetailResponse detailResponse = RestMemberFixture.회원_정보_조회(김배달);
+        assertThat(detailResponse.getMileage()).isEqualTo("10000");
     }
 }

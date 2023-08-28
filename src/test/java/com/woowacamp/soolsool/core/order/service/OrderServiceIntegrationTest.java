@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({OrderService.class, OrderStatusCache.class})
+@Import({OrderService.class, OrderStatusCache.class, OrderMemberService.class})
 @DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {
 
@@ -116,9 +116,6 @@ class OrderServiceIntegrationTest {
 
         /* when */
         Order order = orderService.cancelOrder(김배달, 김배달_주문);
-        orderService.cancelOrder(김배달, 김배달_주문);
-        orderService.cancelOrder(김배달, 김배달_주문);
-        orderService.cancelOrder(김배달, 김배달_주문);
 
         /* then */
         assertThat(order.getStatus().getType()).isEqualTo(OrderStatusType.CANCELED);

@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.order.controller;
 
 import com.woowacamp.soolsool.core.order.code.OrderResultCode;
+import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,5 +72,19 @@ public class OrderController {
 
         return ResponseEntity.ok(ApiResponse
             .of(OrderResultCode.ORDER_RATIO_SUCCESS, new OrderRatioResponse(ratio)));
+    }
+
+    @PatchMapping("/cancel/{orderId}")
+    public ResponseEntity<ApiResponse<Order>> cancelOrder(
+        final HttpServletRequest httpServletRequest,
+        @LoginUser final Long memberId,
+        @PathVariable final Long orderId
+    ) {
+        log.info("{} {} | memberId : {} | orderId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId, orderId);
+
+        final Order order = orderService.cancelOrder(memberId, orderId);
+
+        return ResponseEntity.ok(ApiResponse.of(OrderResultCode.ORDER_CANCEL_SUCCESS, order));
     }
 }

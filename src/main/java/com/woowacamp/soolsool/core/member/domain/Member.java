@@ -101,6 +101,10 @@ public class Member extends BaseEntity {
         this.mileage = this.mileage.charge(new MemberMileage(new BigInteger(amount)));
     }
 
+    public void updateMileage2(final BigInteger mileage) {
+        this.mileage = this.mileage.charge(new MemberMileage(mileage));
+    }
+
     public boolean matchPassword(final String password) {
         return this.password.matchPassword(password);
     }

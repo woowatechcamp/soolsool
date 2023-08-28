@@ -33,6 +33,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderPaymentInfoRepository orderPaymentInfoRepository;
     private final OrderStatusCache orderStatusRepository;
+    private final OrderMemberService orderMemberService;
 
     @Transactional
     public Order addOrder(final Long memberId, final Receipt receipt) {
@@ -81,6 +82,7 @@ public class OrderService {
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
 
         order.updateStatus(cancelOrderStatus);
+        orderMemberService.refundMileage(memberId, order.getMileageUsage());
 
         return order;
     }
