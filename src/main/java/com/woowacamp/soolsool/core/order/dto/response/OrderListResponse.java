@@ -39,4 +39,19 @@ public class OrderListResponse {
             receiptItems
         );
     }
+
+    public OrderListResponse(final Order order) {
+        final Receipt receipt = order.getReceipt();
+        final List<OrderItemListResponse> receiptItems = receipt.getReceiptItems().stream()
+            .map(OrderItemListResponse::from)
+            .collect(Collectors.toUnmodifiableList());
+        this.orderId = order.getId();
+        this.orderStatus = order.getStatus().getType().getStatus();
+        this.originalTotalPrice = receipt.getOriginalTotalPrice().toString();
+        this.mileageUsage = receipt.getMileageUsage().toString();
+        this.purchasedTotalPrice = receipt.getPurchasedTotalPrice().toString();
+        this.totalQuantity = receipt.getTotalQuantity();
+        this.createdAt = order.getCreatedAt();
+        this.orderItems = receiptItems;
+    }
 }

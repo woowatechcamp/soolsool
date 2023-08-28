@@ -10,16 +10,16 @@ import com.woowacamp.soolsool.core.order.domain.OrderStatus;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
+import com.woowacamp.soolsool.core.order.dto.response.PageOrderListResponse;
 import com.woowacamp.soolsool.core.order.repository.OrderPaymentInfoRepository;
+import com.woowacamp.soolsool.core.order.repository.OrderQueryRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +33,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderPaymentInfoRepository orderPaymentInfoRepository;
     private final OrderStatusCache orderStatusRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
     public Order addOrder(final Long memberId, final Receipt receipt) {
@@ -54,19 +55,30 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository.findPaymentInfoByOrderId(orderId)
+        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository.findPaymentInfoByOrderId(
+                orderId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_PAYMENT_INFO));
 
         return OrderDetailResponse.of(order, orderPaymentInfo);
     }
 
     @Transactional(readOnly = true)
-    public List<OrderListResponse> orderList(final Long memberId, final Pageable pageable) {
-        final Page<Order> orders = orderRepository.findAllByMemberId(memberId, pageable);
+    public PageOrderListResponse orderList(
+        final Long memberId,
+        final Pageable pageable,
+        final Long cursorId
+    ) {
+        final List<OrderListResponse> orders = orderQueryRepository.findAllByMemberId(memberId,
+            pageable,
+            cursorId);
 
-        return orders.getContent().stream()
-            .map(OrderListResponse::from)
-            .collect(Collectors.toUnmodifiableList());
+        if (orders.size() < pageable.getPageSize()) {
+            return PageOrderListResponse.of(false, orders);
+        }
+        return PageOrderListResponse.of(
+            true, orders.get(orders.size() - 1).getOrderId(),
+            orders
+        );
     }
 
     @Transactional
