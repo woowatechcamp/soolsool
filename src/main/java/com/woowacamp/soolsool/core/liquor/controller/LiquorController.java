@@ -75,6 +75,26 @@ public class LiquorController {
     }
 
     @NoAuth
+    @GetMapping("/first")
+    public ResponseEntity<ApiResponse<PageLiquorResponse>> getLiquorFirstList(
+        final HttpServletRequest httpServletRequest,
+        @PageableDefault final Pageable pageable
+    ) {
+        log.info("{} {} |  Pageable : {}", httpServletRequest.getMethod(),
+            httpServletRequest.getServletPath(), pageable);
+
+        final PageRequest sortPageable = PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            Sort.by("createdAt").descending()
+        );
+
+        final PageLiquorResponse response = liquorService.getFirstPage(sortPageable);
+
+        return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
+    }
+
+    @NoAuth
     @GetMapping
     public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorList(
         final HttpServletRequest httpServletRequest,

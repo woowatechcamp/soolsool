@@ -13,6 +13,7 @@ public enum CacheType {
     MEMBER_ROLE("memberRole", 10, 100),
     ORDER_STATUS("orderStatus", 10, 100),
     RECEIPT_STATUS("receiptStatus", 10, 100),
+    LIQUOR_FIRST("liquorsFirstPage", 5, 100),
     ;
 
     private final String cacheName;

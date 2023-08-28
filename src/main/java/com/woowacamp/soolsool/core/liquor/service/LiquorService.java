@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,26 @@ public class LiquorService {
             return PageLiquorResponse.of(false, liquors);
         }
 
+        return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(value = "liquorsFirstPage")
+    public PageLiquorResponse getFirstPage(final Pageable pageable) {
+        final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition
+            (
+                findLiquorRegionByType(null),
+                findLiquorBrewByType(null),
+                findLiquorStatusByType(null),
+                null
+            );
+
+        final List<LiquorElementResponse> liquors = liquorQueryDslRepository
+            .getList(liquorSearchCondition, pageable, null);
+        
+        if (liquors.size() < pageable.getPageSize()) {
+            return PageLiquorResponse.of(false, liquors);
+        }
         return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
     }
 
