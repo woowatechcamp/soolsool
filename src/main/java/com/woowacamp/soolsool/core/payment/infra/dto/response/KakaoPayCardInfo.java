@@ -1,19 +1,24 @@
 package com.woowacamp.soolsool.core.payment.infra.dto.response;
 
-import lombok.Data;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@Getter
+@RequiredArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class KakaoPayCardInfo {
 
-    private String purchase_corp;
-    private String issuer_corp;
-    private String kakaopay_purchase_corp;
-    private String kakaopay_issuer_corp;
-    private String bin;
-    private String card_type;
-    private String install_month;
-    private String approved_id;
-    private String card_mid;
-    private String interest_free_install;
-    private String card_item_code;
+    private final String purchaseCorp;
+    private final String issuerCorp;
+    private final String kakaoPayPurchaseCorp;
+    private final String kakaoPayPurchaseCorpCode;
+    private final String bin;
+    private final String cardType;
+    private final String installMonth;
+    private final String approvedId;
+    private final String cardMid;
+    private final String interestFreeInstall;
+    private final String cardItemCode;
 }
