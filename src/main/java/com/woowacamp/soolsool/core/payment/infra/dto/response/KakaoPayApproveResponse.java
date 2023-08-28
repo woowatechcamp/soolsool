@@ -13,6 +13,7 @@ public class KakaoPayApproveResponse {
     private static final String MONEY = "MONEY";
 
     private final String paymentMethodType;
+    
     @JsonProperty("card_info")
     private final KakaoPayCardInfo cardInfo;
 
