@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LiquorCtrRepository extends JpaRepository<LiquorCtr, Long> {
 
-    Optional<LiquorCtr> findByLiquorId(Long liquorId);
+    Optional<LiquorCtr> findByLiquorId(final Long liquorId);
 
-    List<LiquorCtr> findAllByLiquorIdIn(List<Long> liquorIds);
+    List<LiquorCtr> findAllByLiquorIdIn(final List<Long> liquorIds);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select lc from LiquorCtr lc where lc.liquorId = :liquorId")
@@ -22,5 +22,5 @@ public interface LiquorCtrRepository extends JpaRepository<LiquorCtr, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select lc from LiquorCtr lc where lc.liquorId in :liquorIds")
-    List<LiquorCtr> findAllByLiquorIdInWithPessimisticWriteLock(List<Long> liquorIds);
+    List<LiquorCtr> findAllByLiquorIdInWithPessimisticWriteLock(final List<Long> liquorIds);
 }
