@@ -1,7 +1,6 @@
 package com.woowacamp.soolsool.core.order.controller;
 
 import com.woowacamp.soolsool.core.order.code.OrderResultCode;
-import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
@@ -75,7 +74,7 @@ public class OrderController {
     }
 
     @PatchMapping("/cancel/{orderId}")
-    public ResponseEntity<ApiResponse<Order>> cancelOrder(
+    public ResponseEntity<ApiResponse<Void>> cancelOrder(
         final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long orderId
@@ -83,8 +82,8 @@ public class OrderController {
         log.info("{} {} | memberId : {} | orderId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId, orderId);
 
-        final Order order = orderService.cancelOrder(memberId, orderId);
+        orderService.cancelOrder(memberId, orderId);
 
-        return ResponseEntity.ok(ApiResponse.of(OrderResultCode.ORDER_CANCEL_SUCCESS, order));
+        return ResponseEntity.ok(ApiResponse.from(OrderResultCode.ORDER_CANCEL_SUCCESS));
     }
 }
