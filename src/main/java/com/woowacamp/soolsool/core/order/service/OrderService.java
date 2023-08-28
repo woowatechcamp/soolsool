@@ -54,7 +54,8 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository.findPaymentInfoByOrderId(orderId)
+        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository
+            .findPaymentInfoByOrderId(orderId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_PAYMENT_INFO));
 
         return OrderDetailResponse.of(order, orderPaymentInfo);
@@ -70,15 +71,18 @@ public class OrderService {
     }
 
     @Transactional
-    public void modifyOrderStatusCancel(final Long memberId, final Long orderId) {
+    public Order cancelOrder(final Long memberId, final Long orderId) {
         final Order order = orderRepository.findOrderById(orderId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER));
 
         validateAccessible(memberId, order);
 
-        final OrderStatus cancelOrderStatus = getOrderStatusByType(CANCELED);
+        final OrderStatus cancelOrderStatus = orderStatusRepository.findByType(CANCELED)
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
 
         order.updateStatus(cancelOrderStatus);
+
+        return order;
     }
 
     @Transactional(readOnly = true)
