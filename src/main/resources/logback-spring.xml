@@ -80,13 +80,13 @@
   <!-- level : 관리할 로그의 기본 레벨 설정 -->
   <root level="INFO">
     <!-- 콘솔 출력은 dev profile일 경우만 적용 -->
-    <springProfile name="dev">
+    <springProfile name="dev|dev-h2">
       <!-- 위에서 설정한 콘솔 출력용 appender 추가 -->
       <appender-ref ref="STDOUT"/>
     </springProfile>
 
     <!-- 파일 출력은 dev, prod profile일 경우만 적용 -->
-    <springProfile name="dev|prod">
+    <springProfile name="dev|dev-h2|prod">
       <!-- 위에서 설정한 파일 출력용 appender 추가 -->
       <appender-ref ref="FILE_LOG"/>
       <!-- 위에서 설정한 Slack 알림용 appender 추가 -->

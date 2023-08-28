@@ -49,4 +49,24 @@ public abstract class RestLiquorFixture extends RestFixture {
             .then().log().all()
             .extract().header("Location").split("/")[2]);
     }
+
+    public static void 술_목록_조회() {
+        RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get("/liquors")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    public static void 술_상세_조회(Long liquorId) {
+        RestAssured
+            .given().log().all()
+            .contentType(APPLICATION_JSON_VALUE)
+            .accept(APPLICATION_JSON_VALUE)
+            .when().get("/liquors/{liquorId}", liquorId)
+            .then().log().all()
+            .statusCode(200);
+    }
 }

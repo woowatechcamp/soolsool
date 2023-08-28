@@ -5,8 +5,10 @@ import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR
 import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR_REGION_FOUND;
 import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR_STATUS_FOUND;
 
+import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorCtr;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
@@ -18,6 +20,7 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
@@ -43,11 +46,12 @@ public class LiquorService {
 
     private static final PageRequest TOP_RANK_PAGEABLE = PageRequest.of(0, 5);
 
-    private final LiquorRepository liquorRepository;
     private final LiquorBrewCache liquorBrewCache;
     private final LiquorStatusCache liquorStatusCache;
     private final LiquorRegionCache liquorRegionCache;
 
+    private final LiquorRepository liquorRepository;
+    private final LiquorCtrRepository liquorCtrRepository;
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
@@ -55,12 +59,15 @@ public class LiquorService {
         final LiquorRegion liquorRegion = getLiquorRegionByName(request.getRegion());
         final LiquorStatus liquorStatus = getLiquorStatusByName(request.getStatus());
 
-        final Liquor liquor = request.toEntity(liquorBrew, liquorRegion, liquorStatus);
+        final Liquor liquor = liquorRepository
+            .save(request.toEntity(liquorBrew, liquorRegion, liquorStatus));
 
-        return liquorRepository.save(liquor).getId();
+        liquorCtrRepository.save(new LiquorCtr(liquor.getId()));
+
+        return liquor.getId();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public LiquorDetailResponse liquorDetail(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
@@ -68,10 +75,14 @@ public class LiquorService {
         final List<Liquor> relatedLiquors =
             liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
+        liquorCtrRepository.findByLiquorIdWithPessimisticWriteLock(liquorId)
+            .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_CTR_FOUND))
+            .increaseClickOne();
+
         return LiquorDetailResponse.of(liquor, relatedLiquors);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<LiquorElementResponse> liquorList(
         final LiquorBrewType brewType,
         final LiquorRegionType regionType,
@@ -79,36 +90,33 @@ public class LiquorService {
         final String brand,
         final Pageable pageable
     ) {
-        final Specification<Liquor> conditions = searchWith(
-            findLiquorBrewByType(brewType),
-            findLiquorRegionByType(regionType),
-            findLiquorStatusByType(statusType),
-            brand
-        );
+        final Specification<Liquor> conditions =
+            searchWith(brewType, regionType, statusType, brand);
 
         final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
 
-        return liquors.getContent().stream()
-            .map(LiquorElementResponse::from)
-            .collect(Collectors.toList());
+        liquorCtrRepository.findAllByLiquorIdInWithPessimisticWriteLock(extractLiquorIds(liquors))
+            .forEach(LiquorCtr::increaseImpressionOne);
+
+        return LiquorElementResponse.from(liquors);
     }
 
     private Specification<Liquor> searchWith(
-        final Optional<LiquorBrew> brew,
-        final Optional<LiquorRegion> region,
-        final Optional<LiquorStatus> status,
+        final LiquorBrewType brewType,
+        final LiquorRegionType regionType,
+        final LiquorStatusType statusType,
         final String brand
     ) {
         return ((root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
-            brew.ifPresent(liquorBrew -> predicates
+            findLiquorBrewByType(brewType).ifPresent(liquorBrew -> predicates
                 .add(criteriaBuilder.equal(root.get("brew"), liquorBrew)));
 
-            region.ifPresent(liquorRegion -> predicates
+            findLiquorRegionByType(regionType).ifPresent(liquorRegion -> predicates
                 .add(criteriaBuilder.equal(root.get("region"), liquorRegion)));
 
-            status.ifPresent(liquorStatus -> predicates
+            findLiquorStatusByType(statusType).ifPresent(liquorStatus -> predicates
                 .add(criteriaBuilder.equal(root.get("status"), liquorStatus)));
 
             if (StringUtils.hasText(brand)) {
@@ -117,6 +125,12 @@ public class LiquorService {
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
+    }
+
+    private List<Long> extractLiquorIds(final Page<Liquor> liquors) {
+        return liquors.getContent().stream()
+            .map(Liquor::getId)
+            .collect(Collectors.toList());
     }
 
     @Transactional
