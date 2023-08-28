@@ -29,7 +29,8 @@ public class OrderQueryRepository {
                 )
             )
             .from(order)
-            .join(order.receipt)
+            .join(order.status).fetchJoin()
+            .join(order.receipt).fetchJoin()
             .where(
                 order.memberId.eq(memberId),
                 cursorId(cursorId)

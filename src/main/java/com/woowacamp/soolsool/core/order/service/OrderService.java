@@ -55,8 +55,8 @@ public class OrderService {
 
         validateAccessible(memberId, order);
 
-        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository.findPaymentInfoByOrderId(
-                orderId)
+        final OrderPaymentInfo orderPaymentInfo = orderPaymentInfoRepository
+            .findPaymentInfoByOrderId(orderId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_PAYMENT_INFO));
 
         return OrderDetailResponse.of(order, orderPaymentInfo);
@@ -68,16 +68,14 @@ public class OrderService {
         final Pageable pageable,
         final Long cursorId
     ) {
-        final List<OrderListResponse> orders = orderQueryRepository.findAllByMemberId(memberId,
-            pageable,
-            cursorId);
+        final List<OrderListResponse> orders = orderQueryRepository
+            .findAllByMemberId(memberId, pageable, cursorId);
 
         if (orders.size() < pageable.getPageSize()) {
             return PageOrderListResponse.of(false, orders);
         }
         return PageOrderListResponse.of(
-            true, orders.get(orders.size() - 1).getOrderId(),
-            orders
+            true, orders.get(orders.size() - 1).getOrderId(), orders
         );
     }
 
