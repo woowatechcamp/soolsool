@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.order.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.woowacamp.soolsool.core.member.domain.OrderMemberServiceImpl;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({OrderService.class, OrderStatusCache.class, OrderMemberService.class})
+@Import({OrderService.class, OrderStatusCache.class, OrderMemberServiceImpl.class})
 @DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {
 
