@@ -14,6 +14,7 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -45,6 +46,17 @@ public class LiquorQueryDslRepository {
             .orderBy(liquor.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
+    }
+
+    @Cacheable(value = "liquorsFirstPage")
+    public List<LiquorElementResponse> getCachedList(
+        final Pageable pageable
+    ) {
+        return getList(
+            LiquorSearchCondition.nullObject(),
+            pageable,
+            null
+        );
     }
 
     private BooleanExpression eqRegion(final Optional<LiquorRegion> liquorRegion) {
