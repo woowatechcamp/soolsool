@@ -3,20 +3,21 @@ package com.woowacamp.soolsool.core.payment.infra.dto.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.woowacamp.soolsool.core.payment.dto.response.PayApproveResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 // TODO : final
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
 public class KakaoPayApproveResponse {
 
     private static final String MONEY = "MONEY";
 
-    private final String paymentMethodType;
-
-    private final KakaoPayCardInfo cardInfo;
+    private String paymentMethodType;
+    private KakaoPayCardInfo cardInfo;
 
     public PayApproveResponse toPayApproveResponse() {
         if (paymentMethodType.equals(MONEY)) {

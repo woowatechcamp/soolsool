@@ -16,6 +16,7 @@ import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
+import com.woowacamp.soolsool.core.order.dto.response.PageOrderListResponse;
 import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +96,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .when().get("/orders")
             .then().log().all()
-            .extract().jsonPath().getList("data", OrderListResponse.class);
+            .extract().jsonPath().getObject("data", PageOrderListResponse.class)
+            .getOrderListResponses();
 
         // then
         assertThat(data).hasSize(2);

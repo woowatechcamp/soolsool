@@ -32,7 +32,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderPaymentInfoRepository orderPaymentInfoRepository;
-    private final OrderStatusCache orderStatusRepository;
+    private final OrderStatusCache orderStatusCache;
     private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
@@ -106,7 +106,7 @@ public class OrderService {
     }
 
     private OrderStatus getOrderStatusByType(final OrderStatusType type) {
-        return orderStatusRepository.findByType(type)
+        return orderStatusCache.findByType(type)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
     }
 
