@@ -23,4 +23,4 @@ logging:
     webhook-url: ${SOOLSOOL_LOGGING_SLACK_WEBHOOK_URL}
 
 redis:
-  host: redis://127.0.0.1:6379
+  host: ${SOOLSOOL_REDIS_HOST}

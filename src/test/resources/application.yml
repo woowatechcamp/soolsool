@@ -28,4 +28,4 @@ logging:
             sql: trace
 
 redis:
-  host: redis://localhost:6379
+  host: ${SOOLSOOL_REDIS_HOST}
