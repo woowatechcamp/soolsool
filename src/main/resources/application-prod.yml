@@ -16,6 +16,9 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+  redis:
+    host: ${SOOLSOOL_REDIS_HOST}
+    port: ${SOOLSOOL_REDIS_PORT}
 
 logging:
   slack:
