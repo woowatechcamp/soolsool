@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev-h2
+    active: dev
 
 management:
   endpoints:
