@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,6 +52,7 @@ public class LiquorService {
 
     private final LiquorCtrRepository liquorCtrRepository;
 
+    @CacheEvict(value = "liquorsFirstPage")
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
         final LiquorBrew liquorBrew = getLiquorBrewBrewByName(request.getBrew());
@@ -104,31 +105,28 @@ public class LiquorService {
         liquorCtrRepository.findAllByLiquorIdInWithPessimisticWriteLock(extractLiquorIds(liquors))
             .forEach(LiquorCtr::increaseImpressionOne);
 
-        if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, liquors);
-        }
-
-        return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
+        return getPageLiquorResponse(pageable, liquors);
     }
 
-    // TODO : 캐쉬 해줄 때 클릭률 다시 개선해야 함 (아직 클릭률 올려주는 로직 안함)
-    @Transactional(readOnly = true)
-    @Cacheable(value = "liquorsFirstPage")
+    @Transactional
     public PageLiquorResponse getFirstPage(final Pageable pageable) {
-        final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition
-            (
-                findLiquorRegionByType(null),
-                findLiquorBrewByType(null),
-                findLiquorStatusByType(null),
-                null
-            );
-
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
-            .getList(liquorSearchCondition, pageable, null);
+            .getCachedList(pageable);
 
+        liquorCtrRepository.findAllByLiquorIdInWithPessimisticWriteLock(extractLiquorIds(liquors))
+            .forEach(LiquorCtr::increaseImpressionOne);
+
+        return getPageLiquorResponse(pageable, liquors);
+    }
+
+    private PageLiquorResponse getPageLiquorResponse(
+        final Pageable pageable,
+        final List<LiquorElementResponse> liquors
+    ) {
         if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, liquors);
+            return PageLiquorResponse.of(false, null, liquors);
         }
+
         return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
     }
 
@@ -138,6 +136,7 @@ public class LiquorService {
             .collect(Collectors.toList());
     }
 
+    @CacheEvict(value = "liquorsFirstPage")
     @Transactional
     public void modifyLiquor(final Long liquorId, final LiquorModifyRequest liquorModifyRequest) {
         final Liquor liquor = liquorRepository.findById(liquorId)
@@ -156,6 +155,7 @@ public class LiquorService {
         );
     }
 
+    @CacheEvict(value = "liquorsFirstPage")
     @Transactional
     public void deleteLiquor(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
@@ -164,6 +164,8 @@ public class LiquorService {
         liquorRepository.delete(liquor);
     }
 
+
+    @CacheEvict(value = "liquorsFirstPage")
     @Transactional
     public void decreaseTotalStock(final Long liquorId, final int quantity) {
         liquorRepository.findById(liquorId)
@@ -186,7 +188,7 @@ public class LiquorService {
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_FOUND));
     }
 
-    public Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
+    private Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
         if (Objects.isNull(statusType)) {
             return Optional.empty();
         }
