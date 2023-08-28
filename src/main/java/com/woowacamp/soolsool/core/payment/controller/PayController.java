@@ -67,24 +67,29 @@ public class PayController {
     @GetMapping("/cancel/{receiptId}")
     public ResponseEntity<ApiResponse<Long>> kakaoPayCancel(
         final HttpServletRequest httpServletRequest,
-        @LoginUser final Long memberId
+        @LoginUser final Long memberId,
+        @PathVariable final Long receiptId
     ) {
         log.info("{} {} | memberId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
-        return ResponseEntity.ok(ApiResponse.of(PAY_READY_CANCEL, null));
+        payService.modifyReceiptStatusToCancel(memberId, receiptId);
+
+        return ResponseEntity.ok(ApiResponse.from(PAY_READY_CANCEL));
     }
 
     @NoAuth
     @GetMapping("/fail/{receiptId}")
     public ResponseEntity<ApiResponse<Long>> kakaoPayFail(
         final HttpServletRequest httpServletRequest,
-        @LoginUser final Long memberId
+        @LoginUser final Long memberId,
+        @PathVariable final Long receiptId
     ) {
         log.info("{} {} | memberId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
-        return ResponseEntity.ok(ApiResponse.of(PAY_READY_FAIL, null));
-    }
+        payService.modifyReceiptStatusToCancel(memberId, receiptId);
 
+        return ResponseEntity.ok(ApiResponse.from(PAY_READY_FAIL));
+    }
 }

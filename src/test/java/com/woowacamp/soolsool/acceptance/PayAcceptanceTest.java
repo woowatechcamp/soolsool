@@ -15,6 +15,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -93,5 +94,49 @@ class PayAcceptanceTest extends AcceptanceTest {
 
         MemberDetailResponse memberDetailResponse = RestMemberFixture.회원_정보_조회(김배달_토큰);
         assertThat(memberDetailResponse.getMileage()).isEqualTo("9000");
+    }
+
+    @Test
+    @DisplayName("결제를 취소한다.")
+    void cancel() {
+        /* given */
+        String 김배달_토큰 = RestAuthFixture.로그인_김배달_구매자();
+        Long 김배달_주문서 = RestReceiptFixture.주문서_생성(김배달_토큰);
+        RestPayFixture.결제_준비(김배달_토큰, 김배달_주문서);
+
+        /* when */
+        RestAssured
+            .given().log().all()
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .contentType(APPLICATION_JSON_VALUE)
+            .when().get("/pay/cancel/{receiptId}", 김배달_주문서)
+            .then();
+
+        /* then */
+        ReceiptResponse 주문서_조회 = RestReceiptFixture.주문서_조회(김배달_토큰, 김배달_주문서);
+
+        assertThat(주문서_조회.getReceiptStatus()).isEqualTo("CANCELED");
+    }
+
+    @Test
+    @DisplayName("결제를 실패한다.")
+    void fail() {
+        /* given */
+        String 김배달_토큰 = RestAuthFixture.로그인_김배달_구매자();
+        Long 김배달_주문서 = RestReceiptFixture.주문서_생성(김배달_토큰);
+        RestPayFixture.결제_준비(김배달_토큰, 김배달_주문서);
+
+        /* when */
+        RestAssured
+            .given().log().all()
+            .header(AUTHORIZATION, BEARER + 김배달_토큰)
+            .contentType(APPLICATION_JSON_VALUE)
+            .when().get("/pay/fail/{receiptId}", 김배달_주문서)
+            .then();
+
+        /* then */
+        ReceiptResponse 주문서_조회 = RestReceiptFixture.주문서_조회(김배달_토큰, 김배달_주문서);
+
+        assertThat(주문서_조회.getReceiptStatus()).isEqualTo("CANCELED");
     }
 }
