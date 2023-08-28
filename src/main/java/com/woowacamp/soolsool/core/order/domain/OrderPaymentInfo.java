@@ -1,5 +1,6 @@
-package com.woowacamp.soolsool.core.payment.domain;
+package com.woowacamp.soolsool.core.order.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,25 +13,39 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Entity
-@Table(name = "payments")
+@Table(name = "payment_info")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Payment {
+public class OrderPaymentInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // TODO: enum, 원시값 포장 등
+    @Column(name = "order_id", nullable = false)
+    private Long orderId;
+
+    @Column(name = "payment_method_type")
     private String paymentMethodType; // 결제 수단 ( 현금 or 카드 )
+
+    @Column(name = "purchase_corp")
     private String purchaseCorp; // 매입 카드사 한글명 (우리카드, 비씨카드)
+
+    @Column(name = "bin")
     private String bin; // 카드 BIN
+
+    @Column(name = "install_month")
     private String installMonth; // 할부 개월 수
+
+    @Column(name = "approved_id")
     private String approvedId; // 카드사 승인번호
+
+    @Column(name = "card_mid")
     private String cardMid; // 카드사 가맹점번호
 
     @Builder
-    public Payment(
+    public OrderPaymentInfo(
+        @NonNull final Long orderId,
         @NonNull final String paymentMethodType,
         final String purchaseCorp,
         final String bin,
@@ -38,6 +53,7 @@ public class Payment {
         final String approvedId,
         final String cardMid
     ) {
+        this.orderId = orderId;
         this.paymentMethodType = paymentMethodType;
         this.purchaseCorp = purchaseCorp;
         this.bin = bin;

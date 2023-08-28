@@ -1,15 +1,15 @@
 package com.woowacamp.soolsool.core.receipt.service;
 
-import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.ACCESS_DENIED_RECEIPT;
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_RECEIPT;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.ACCESS_DENIED_RECEIPT;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_EQUALS_MEMBER;
+import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_FOUND_RECEIPT;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode.NOT_RECEIPT_FOUND;
 
 import com.woowacamp.soolsool.core.cart.domain.Cart;
 import com.woowacamp.soolsool.core.cart.repository.CartItemRepository;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
+import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
@@ -32,7 +32,7 @@ public class ReceiptService {
     @Transactional
     public Long addReceipt(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(ReceiptErrorCode.MEMBER_NO_INFORMATION));
 
         final Cart cart =
             new Cart(memberId, cartItemRepository.findAllByMemberId(memberId));

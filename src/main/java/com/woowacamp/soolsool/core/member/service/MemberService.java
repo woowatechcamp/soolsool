@@ -1,23 +1,29 @@
 package com.woowacamp.soolsool.core.member.service;
 
-import static com.woowacamp.soolsool.core.payment.code.PayErrorCode.NOT_FOUND_RECEIPT;
-import static java.util.Arrays.stream;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_DUPLICATED_EMAIL;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_INFORMATION;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.MEMBER_NO_ROLE_TYPE;
+import static com.woowacamp.soolsool.core.member.code.MemberErrorCode.NOT_FOUND_RECEIPT;
 
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.domain.Member;
 import com.woowacamp.soolsool.core.member.domain.MemberMileageCharge;
+import com.woowacamp.soolsool.core.member.domain.MemberMileageUsage;
 import com.woowacamp.soolsool.core.member.domain.MemberRole;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberEmail;
-import com.woowacamp.soolsool.core.member.domain.vo.MemberMileage;
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
 import com.woowacamp.soolsool.core.member.dto.request.MemberAddRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest;
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
-import com.woowacamp.soolsool.core.member.dto.response.MemberFindResponse;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberMileageUsageRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
+import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
+import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberRoleRepository memberRoleRepository;
+    private final MemberRoleCache memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
+    private final MemberMileageUsageRepository memberMileageUsageRepository;
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
@@ -48,32 +55,32 @@ public class MemberService {
             .findByEmail(new MemberEmail(email));
 
         if (duplicatedEmil.isPresent()) {
-            throw new SoolSoolException(MemberErrorCode.MEMBER_DUPLICATED_EMAIL);
+            throw new SoolSoolException(MEMBER_DUPLICATED_EMAIL);
         }
     }
 
     private MemberRole getMemberRole(final String memberRequestRoleType) {
-        final MemberRoleType memberRoleType = stream(MemberRoleType.values())
+        final MemberRoleType memberRoleType = Arrays.stream(MemberRoleType.values())
             .filter(type -> Objects.equals(type.getType(), memberRequestRoleType))
             .findFirst()
             .orElse(MemberRoleType.CUSTOMER);
 
         return memberRoleRepository.findByName(memberRoleType)
-            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_ROLE_TYPE));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_ROLE_TYPE));
     }
 
     @Transactional(readOnly = true)
-    public MemberFindResponse findMember(final Long memberId) {
+    public MemberDetailResponse findMember(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
 
-        return MemberFindResponse.from(member);
+        return MemberDetailResponse.from(member);
     }
 
     @Transactional
     public void modifyMember(final Long memberId, final MemberModifyRequest memberModifyRequest) {
         final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
 
         member.update(memberModifyRequest);
     }
@@ -92,7 +99,7 @@ public class MemberService {
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
         final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
+            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
 
         member.updateMileage(memberMileageChargeRequest.getAmount());
 
@@ -102,10 +109,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void subtractMemberMileage(final Long memberId, final MemberMileage mileageUsage) {
+    public void subtractMemberMileage(
+        final Long memberId,
+        final Order order,
+        final BigInteger mileageUsage
+    ) {
         final Member member = memberRepository.findByIdWithLock(memberId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
 
         member.decreaseMileage(mileageUsage);
+        memberMileageUsageRepository.save(new MemberMileageUsage(member, order, mileageUsage));
     }
 }
