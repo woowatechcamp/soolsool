@@ -46,13 +46,12 @@ public class LiquorService {
 
     private static final PageRequest TOP_RANK_PAGEABLE = PageRequest.of(0, 5);
 
-    private final LiquorRepository liquorRepository;
     private final LiquorBrewCache liquorBrewCache;
     private final LiquorStatusCache liquorStatusCache;
     private final LiquorRegionCache liquorRegionCache;
 
+    private final LiquorRepository liquorRepository;
     private final LiquorCtrRepository liquorCtrRepository;
-
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
@@ -76,10 +75,9 @@ public class LiquorService {
         final List<Liquor> relatedLiquors =
             liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
-        final LiquorCtr liquorCtr = liquorCtrRepository.findByLiquorId(liquorId)
-            .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_CTR_FOUND));
-
-        liquorCtr.increaseClickOne();
+        liquorCtrRepository.findByLiquorIdWithPessimisticWriteLock(liquorId)
+            .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_CTR_FOUND))
+            .increaseClickOne();
 
         return LiquorDetailResponse.of(liquor, relatedLiquors);
     }
@@ -101,16 +99,10 @@ public class LiquorService {
 
         final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
 
-        final List<Long> liquorIds = liquors.getContent().stream()
-            .map(Liquor::getId)
-            .collect(Collectors.toList());
-
-        liquorCtrRepository.findAllByLiquorIdIn(liquorIds)
+        liquorCtrRepository.findAllByLiquorIdInWithPessimisticWriteLock(extractLiquorIds(liquors))
             .forEach(LiquorCtr::increaseImpressionOne);
 
-        return liquors.getContent().stream()
-            .map(LiquorElementResponse::from)
-            .collect(Collectors.toList());
+        return LiquorElementResponse.from(liquors);
     }
 
     private Specification<Liquor> searchWith(
@@ -137,6 +129,12 @@ public class LiquorService {
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
+    }
+
+    private List<Long> extractLiquorIds(final Page<Liquor> liquors) {
+        return liquors.getContent().stream()
+            .map(Liquor::getId)
+            .collect(Collectors.toList());
     }
 
     @Transactional
