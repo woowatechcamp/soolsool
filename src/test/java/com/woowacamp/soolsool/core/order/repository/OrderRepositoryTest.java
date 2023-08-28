@@ -35,4 +35,15 @@ class OrderRepositoryTest {
         /* then */
         assertThat(ratio).isPresent().contains(0.5);
     }
+
+    @Test
+    @DisplayName("회원 번호와 주문 번호로 주문을 찾는다.")
+    void findByIdAndMemberId() throws Exception {
+        /* given */
+
+
+        /* when & then */
+        assertThat(orderRepository.findByIdAndMemberId(1L, 1L))
+            .isPresent();
+    }
 }

@@ -32,4 +32,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         nativeQuery = true
     )
     Optional<Double> findOrderRatioByLiquorId(final Long liquorId);
+
+    Optional<Order> findByIdAndMemberId(final Long orderId, final Long memberId);
 }
