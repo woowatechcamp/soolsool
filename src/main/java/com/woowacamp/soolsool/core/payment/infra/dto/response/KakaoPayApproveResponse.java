@@ -6,6 +6,7 @@ import com.woowacamp.soolsool.core.payment.dto.response.PayApproveResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// TODO : final
 @Getter
 @RequiredArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)

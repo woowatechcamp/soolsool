@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// TODO : final
 @Getter
 @RequiredArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)

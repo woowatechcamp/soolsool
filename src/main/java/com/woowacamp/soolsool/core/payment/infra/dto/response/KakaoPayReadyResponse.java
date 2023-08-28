@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import lombok.Getter;
 
+// TODO : final
 @Getter
 @JsonNaming(SnakeCaseStrategy.class)
 public class KakaoPayReadyResponse {

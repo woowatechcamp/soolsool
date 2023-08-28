@@ -65,12 +65,12 @@ class LiquorRepositoryTest {
         entityManager.persist(liquor);
 
         // when
-        final List<LiquorElementResponse> 최지원짱 = liquorQueryDslRepository
+        final List<LiquorElementResponse> 커서첫번째 = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(Optional.of(region), Optional.of(brew),
-                    Optional.of(status), "우영미"),
+                    Optional.of(status), brand),
                 Pageable.ofSize(10), null);
         // then
-        assertThat(최지원짱).hasSize(1);
+        assertThat(커서첫번째).hasSize(1);
     }
 
     @Test
@@ -104,12 +104,16 @@ class LiquorRepositoryTest {
         entityManager.persist(liquor);
 
         // when
-        final List<LiquorElementResponse> 최지원짱 = liquorQueryDslRepository
-            .getList(new LiquorSearchCondition(Optional.of(region), Optional.of(brew),
-                    Optional.of(status), "우영미"),
-                Pageable.ofSize(10), 1L);
+        List<LiquorElementResponse> 커서두번째 = liquorQueryDslRepository
+            .getList(
+                new LiquorSearchCondition(
+                    Optional.of(region), Optional.of(brew),
+                    Optional.of(status), brand
+                ),
+                Pageable.ofSize(10), 1L
+            );
 
         // then
-        assertThat(최지원짱).isEmpty();
+        assertThat(커서두번째).isEmpty();
     }
 }
