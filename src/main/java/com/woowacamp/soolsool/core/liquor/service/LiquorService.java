@@ -90,12 +90,8 @@ public class LiquorService {
         final String brand,
         final Pageable pageable
     ) {
-        final Specification<Liquor> conditions = searchWith(
-            findLiquorBrewByType(brewType),
-            findLiquorRegionByType(regionType),
-            findLiquorStatusByType(statusType),
-            brand
-        );
+        final Specification<Liquor> conditions =
+            searchWith(brewType, regionType, statusType, brand);
 
         final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
 
@@ -106,21 +102,21 @@ public class LiquorService {
     }
 
     private Specification<Liquor> searchWith(
-        final Optional<LiquorBrew> brew,
-        final Optional<LiquorRegion> region,
-        final Optional<LiquorStatus> status,
+        final LiquorBrewType brewType,
+        final LiquorRegionType regionType,
+        final LiquorStatusType statusType,
         final String brand
     ) {
         return ((root, query, criteriaBuilder) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
-            brew.ifPresent(liquorBrew -> predicates
+            findLiquorBrewByType(brewType).ifPresent(liquorBrew -> predicates
                 .add(criteriaBuilder.equal(root.get("brew"), liquorBrew)));
 
-            region.ifPresent(liquorRegion -> predicates
+            findLiquorRegionByType(regionType).ifPresent(liquorRegion -> predicates
                 .add(criteriaBuilder.equal(root.get("region"), liquorRegion)));
 
-            status.ifPresent(liquorStatus -> predicates
+            findLiquorStatusByType(statusType).ifPresent(liquorStatus -> predicates
                 .add(criteriaBuilder.equal(root.get("status"), liquorStatus)));
 
             if (StringUtils.hasText(brand)) {
