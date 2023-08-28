@@ -8,6 +8,9 @@ spring:
         format_sql: true
         show_sql: true
     defer-datasource-initialization: true
+  redis:
+    host: ${SOOLSOOL_REDIS_HOST}
+    port: ${SOOLSOOL_REDIS_PORT}
 
 security:
   jwt:
@@ -26,6 +29,3 @@ logging:
         type:
           descriptor:
             sql: trace
-
-redis:
-  host: ${SOOLSOOL_REDIS_HOST}

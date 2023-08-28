@@ -10,10 +10,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
-    private final String redisHost;
+    private final String host;
+    private final String port;
 
-    public RedissonConfig(@Value("${redis.host}") final String redisHost) {
-        this.redisHost = redisHost;
+    public RedissonConfig(
+        @Value("${spring.redis.host}") final String host,
+        @Value("${spring.redis.port}") final String port
+    ) {
+        this.host = host;
+        this.port = port;
     }
 
     @Bean
@@ -21,7 +26,7 @@ public class RedissonConfig {
         final Config config = new Config();
         config
             .useSingleServer()
-            .setAddress(redisHost);
+            .setAddress("redis://" + host + ":" + port);
 
         return Redisson.create(config);
     }
