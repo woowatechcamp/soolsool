@@ -16,10 +16,3 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-  redis:
-    host: ${SOOLSOOL_REDIS_HOST}
-    port: ${SOOLSOOL_REDIS_PORT}
-
-logging:
-  slack:
-    webhook-url: ${SOOLSOOL_LOGGING_SLACK_WEBHOOK_URL}
