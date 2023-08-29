@@ -1,7 +1,8 @@
 spring:
   profiles:
     active: dev
-
+  servlet:
+    context-path: /api
   redis:
     host: ${SOOLSOOL_REDIS_HOST}
     port: ${SOOLSOOL_REDIS_PORT}
