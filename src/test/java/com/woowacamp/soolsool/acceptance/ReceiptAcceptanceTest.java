@@ -67,7 +67,7 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
     @DisplayName("성공: 주문서를 조회한다.")
     void findReceiptSuccess() {
         // given
-        final Long 주문서_Id = RestReceiptFixture.주문서_생성(김배달_토큰);
+        Long 주문서_Id = RestReceiptFixture.주문서_생성(김배달_토큰);
 
         // when
         ExtractableResponse<Response> detailReceiptResponse = RestAssured
