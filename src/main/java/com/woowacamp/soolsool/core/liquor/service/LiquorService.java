@@ -127,7 +127,9 @@ public class LiquorService {
             return PageLiquorResponse.of(false, liquors);
         }
 
-        return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);
+        final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
+
+        return PageLiquorResponse.of(true, lastReadLiquorId, liquors);
     }
 
     private List<Long> extractLiquorIds(final List<LiquorElementResponse> liquors) {

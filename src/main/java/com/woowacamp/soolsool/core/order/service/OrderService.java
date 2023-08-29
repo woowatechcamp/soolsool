@@ -75,8 +75,9 @@ public class OrderService {
             return PageOrderListResponse.of(false, orders);
         }
 
-        return PageOrderListResponse.of(
-            true, orders.get(orders.size() - 1).getOrderId(), orders);
+        final Long lastReadOrderId = orders.get(orders.size() - 1).getOrderId();
+        
+        return PageOrderListResponse.of(true, lastReadOrderId, orders);
     }
 
     @Transactional
