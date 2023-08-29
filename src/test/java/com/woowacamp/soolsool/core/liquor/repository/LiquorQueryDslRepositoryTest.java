@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.acceptance;
+package com.woowacamp.soolsool.core.liquor.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,10 +11,6 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +52,7 @@ class LiquorQueryDslRepositoryTest {
             .getList(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), null
             );
-        
+
         // then
         assertThat(커서첫번째).hasSize(1);
     }
