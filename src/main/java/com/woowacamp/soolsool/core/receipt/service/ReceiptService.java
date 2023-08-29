@@ -13,9 +13,9 @@ import com.woowacamp.soolsool.core.receipt.code.ReceiptErrorCode;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
-import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
-import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusRepository;
+import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ReceiptService {
 
     private final ReceiptMapper receiptMapper;
     private final ReceiptRepository receiptRepository;
-    private final ReceiptStatusRepository receiptStatusRepository;
+    private final ReceiptStatusCache receiptStatusCache;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
 
@@ -44,7 +44,7 @@ public class ReceiptService {
     }
 
     @Transactional(readOnly = true)
-    public ReceiptResponse findReceipt(final Long memberId, final Long receiptId) {
+    public ReceiptDetailResponse findReceipt(final Long memberId, final Long receiptId) {
         final Receipt receipt = receiptRepository.findById(receiptId)
             .orElseThrow(() -> new SoolSoolException(NOT_RECEIPT_FOUND));
 
@@ -52,7 +52,7 @@ public class ReceiptService {
             throw new SoolSoolException(NOT_EQUALS_MEMBER);
         }
 
-        return ReceiptResponse.from(receipt);
+        return ReceiptDetailResponse.from(receipt);
     }
 
     @Transactional
@@ -63,7 +63,7 @@ public class ReceiptService {
     ) {
         final Receipt receipt = receiptRepository.findById(receiptId)
             .orElseThrow(() -> new SoolSoolException(NOT_RECEIPT_FOUND));
-        final ReceiptStatus receiptStatus = receiptStatusRepository.findByType(receiptStatusType)
+        final ReceiptStatus receiptStatus = receiptStatusCache.findByType(receiptStatusType)
             .orElseThrow(() -> new SoolSoolException(ReceiptErrorCode.NOT_RECEIPT_TYPE_FOUND));
 
         if (!Objects.equals(receipt.getMemberId(), memberId)) {

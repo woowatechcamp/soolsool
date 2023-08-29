@@ -73,7 +73,7 @@ public class PayController {
         log.info("{} {} | memberId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
-        payService.modifyReceiptStatusToCancel(memberId, receiptId);
+        payService.cancelReceipt(memberId, receiptId);
 
         return ResponseEntity.ok(ApiResponse.from(PAY_READY_CANCEL));
     }
@@ -88,7 +88,7 @@ public class PayController {
         log.info("{} {} | memberId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
-        payService.modifyReceiptStatusToCancel(memberId, receiptId);
+        payService.cancelReceipt(memberId, receiptId);
 
         return ResponseEntity.ok(ApiResponse.from(PAY_READY_FAIL));
     }

@@ -15,7 +15,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.dto.response.PaySuccessResponse;
-import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -113,7 +113,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .then();
 
         /* then */
-        ReceiptResponse 주문서_조회 = RestReceiptFixture.주문서_조회(김배달_토큰, 김배달_주문서);
+        ReceiptDetailResponse 주문서_조회 = RestReceiptFixture.주문서_조회(김배달_토큰, 김배달_주문서);
 
         assertThat(주문서_조회.getReceiptStatus()).isEqualTo("CANCELED");
     }
@@ -135,7 +135,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .then();
 
         /* then */
-        ReceiptResponse 주문서_조회 = RestReceiptFixture.주문서_조회(김배달_토큰, 김배달_주문서);
+        ReceiptDetailResponse 주문서_조회 = RestReceiptFixture.주문서_조회(김배달_토큰, 김배달_주문서);
 
         assertThat(주문서_조회.getReceiptStatus()).isEqualTo("CANCELED");
     }

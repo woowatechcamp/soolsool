@@ -60,7 +60,7 @@ public class PayService {
     }
 
     @Transactional
-    public void modifyReceiptStatusToCancel(final Long memberId, final Long receiptId) {
+    public void cancelReceipt(final Long memberId, final Long receiptId) {
         receiptService.modifyReceiptStatus(memberId, receiptId, ReceiptStatusType.CANCELED);
     }
 }

@@ -13,7 +13,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
-import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
@@ -100,7 +100,7 @@ class ReceiptServiceIntegrationTest {
         Long 김배달_주문서 = 1L;
 
         // when
-        ReceiptResponse receipt = receiptService.findReceipt(김배달, 김배달_주문서);
+        ReceiptDetailResponse receipt = receiptService.findReceipt(김배달, 김배달_주문서);
         // then
         assertThat(receipt).extracting("id").isEqualTo(김배달_주문서);
     }
@@ -160,7 +160,7 @@ class ReceiptServiceIntegrationTest {
         receiptService.modifyReceiptStatus(김배달, 김배달_주문서, COMPLETED);
 
         // then
-        ReceiptResponse receipt = receiptService.findReceipt(김배달, 김배달_주문서);
+        ReceiptDetailResponse receipt = receiptService.findReceipt(김배달, 김배달_주문서);
         assertThat(receipt.getReceiptStatus()).isEqualTo("COMPLETED");
     }
 
