@@ -11,6 +11,7 @@ import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.infra.PayClient;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,10 @@ public class PayService {
         orderService.addPaymentInfo(payClient.payApprove(receipt, pgToken).toEntity(order.getId()));
 
         return order;
+    }
+
+    @Transactional
+    public void cancelReceipt(final Long memberId, final Long receiptId) {
+        receiptService.modifyReceiptStatus(memberId, receiptId, ReceiptStatusType.CANCELED);
     }
 }

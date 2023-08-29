@@ -1,4 +1,6 @@
 spring:
+  servlet:
+    context-path: /api
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -9,6 +11,9 @@ spring:
         show_sql: true
         default_batch_fetch_size: 100
     defer-datasource-initialization: true
+  redis:
+    host: ${SOOLSOOL_REDIS_HOST}
+    port: ${SOOLSOOL_REDIS_PORT}
 
 security:
   jwt:
