@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,21 +20,12 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @NoAuth
-    @PutMapping("/sales")
+    @GetMapping()
     @Scheduled(cron = "0 0 0 * * *")
     public ResponseEntity<ApiResponse<Void>> updateStatisticsSales() {
-        log.info("updateStatisticsSales 자동 통계 집계 쿼리 실행");
-        statisticsService.updateStatisticsSales();
+        log.info("/statistics | 자동 통계 집계 쿼리 실행");
 
-        return ResponseEntity.ok().build();
-    }
-
-    @NoAuth
-    @PostMapping("/ctr")
-    @Scheduled(cron = "0 0 0 * * *")
-    public ResponseEntity<ApiResponse<Void>> updateStatisticsCtr() {
-        log.info("updateStatisticsCtr 자동 통계 집계 쿼리 실행");
-        statisticsService.updateStatisticsCtr();
+        statisticsService.updateStatistics();
 
         return ResponseEntity.ok().build();
     }

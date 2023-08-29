@@ -33,5 +33,27 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Statisti
         final LocalDate startDate,
         final LocalDate endDate
     );
-    
+
+    @Modifying
+    @Query(value = "INSERT INTO statistics (year, month, week, day, liquor_id, impression, click) "
+        +
+        "SELECT YEAR(:date) as year, " +
+        "       MONTH(:date) as month, " +
+        "       WEEK(:date) as week, " +
+        "       DAY(:date) as day, " +
+        "       s.liquor_id as liquor_id, " +
+        "       (lc.impression - s.sum_impression) as day_impression, " +
+        "       (lc.click - s.sum_click) as day_click " +
+        "FROM liquor_ctrs lc " +
+        "JOIN ( " +
+        "    SELECT liquor_id, SUM(impression) AS sum_impression, SUM(click) AS sum_click " +
+        "    FROM statistics " +
+        "    WHERE year < YEAR(:date) " +
+        "    OR (year = YEAR(:date) AND month < MONTH(:date))" +
+        "    OR (year = YEAR(:date) AND month = MONTH(:date) AND day < DAY(:date))" +
+        "    GROUP BY liquor_id " +
+        ") s ON lc.liquor_id = s.liquor_id " +
+        "ON DUPLICATE KEY UPDATE impression = (lc.impression - s.sum_impression), " +
+        "                        click = (lc.click - s.sum_click)", nativeQuery = true)
+    void updateStatisticsCtr(final LocalDate date);
 }
