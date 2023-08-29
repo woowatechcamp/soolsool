@@ -33,5 +33,7 @@ public class ReceiptRedisRepository {
         final RMapCache<Long, Long> receiptCache = redissonClient.getMapCache(RECEIPT_EXPIRED_KEY);
 
         receiptCache.put(receiptId, memberId, minutes, TimeUnit.MINUTES);
+
+        log.info("Complete save Member {}'s Receipt {} to Redis", memberId, receiptCache);
     }
 }
