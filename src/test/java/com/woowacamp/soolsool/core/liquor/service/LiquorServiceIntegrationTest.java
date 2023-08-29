@@ -38,7 +38,9 @@ class LiquorServiceIntegrationTest {
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"
+        "/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql",
+        "/receipt-type.sql", "/receipt.sql",
+        "/order-type.sql", "/order.sql"
     })
     @DisplayName("상품 상세 정보를 조회한다.")
     void liquorDetail() throws Exception {
@@ -58,7 +60,7 @@ class LiquorServiceIntegrationTest {
             () -> assertThat(response.getAlcohol()).isEqualTo(12.0),
             () -> assertThat(response.getVolume()).isEqualTo(300),
             () -> assertThat(response.getStock()).isEqualTo(100),
-            () -> assertThat(response.getRelatedLiquors()).hasSize(0)
+            () -> assertThat(response.getRelatedLiquors()).hasSize(1)
         );
     }
 
