@@ -24,6 +24,6 @@ public class PageOrderListResponse {
         final boolean hasNext,
         final List<OrderListResponse> orderListResponses
     ) {
-        return PageOrderListResponse.of(hasNext, null, orderListResponses);
+        return new PageOrderListResponse(hasNext, null, orderListResponses);
     }
 }
