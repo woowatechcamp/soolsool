@@ -39,8 +39,8 @@ public class MemberMileageCharge extends BaseEntity {
     private MemberMileage amount;
 
     @Builder
-    public MemberMileageCharge(final Member member, final String amount) {
+    public MemberMileageCharge(final Member member, final BigInteger amount) {
         this.member = member;
-        this.amount = new MemberMileage(new BigInteger(amount));
+        this.amount = new MemberMileage(amount);
     }
 }

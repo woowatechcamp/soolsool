@@ -20,6 +20,6 @@ public class OrderMemberServiceImpl implements OrderMemberService {
         final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_MEMBER));
 
-        member.updateMileage2(mileage);
+        member.updateMileage(mileage);
     }
 }
