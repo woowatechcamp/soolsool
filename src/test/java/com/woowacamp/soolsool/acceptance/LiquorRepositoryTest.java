@@ -16,7 +16,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +53,10 @@ class LiquorRepositoryTest {
 
         // when
         final List<LiquorElementResponse> 커서첫번째 = liquorQueryDslRepository
-            .getList(new LiquorSearchCondition(Optional.of(region), Optional.of(brew),
-                    Optional.of(status), brand),
-                Pageable.ofSize(10), null);
+            .getList(new LiquorSearchCondition(region, brew, status, brand),
+                Pageable.ofSize(10), null
+            );
+        
         // then
         assertThat(커서첫번째).hasSize(1);
     }
@@ -72,11 +72,7 @@ class LiquorRepositoryTest {
 
         // when
         List<LiquorElementResponse> 커서두번째 = liquorQueryDslRepository
-            .getList(
-                new LiquorSearchCondition(
-                    Optional.of(region), Optional.of(brew),
-                    Optional.of(status), brand
-                ),
+            .getList(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), 1L
             );
 

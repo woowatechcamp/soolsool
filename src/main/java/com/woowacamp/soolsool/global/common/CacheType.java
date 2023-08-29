@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CacheType {
-    
+
     LIQUOR_STATUS("liquorStatus", 60 * 60 * 24, 100),
     LIQUOR_BREW("liquorBrew", 60 * 60 * 24, 100),
     LIQUOR_REGION("liquorRegion", 60 * 60 * 24, 100),
@@ -17,6 +17,6 @@ public enum CacheType {
     ;
 
     private final String cacheName;
-    private final int expireAfterWrite;
+    private final int expiredSecondAfterWrite;
     private final int maximumSize;
 }
