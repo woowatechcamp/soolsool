@@ -24,10 +24,10 @@ public class Statistics {
     @Column(name = "brew_type")
     private String brewType;
 
-    @Column(name = "impression")
+    @Column(name = "impression", columnDefinition = "decimal(19,2) default 0.0")
     private BigInteger impression;
 
-    @Column(name = "click")
+    @Column(name = "click", columnDefinition = "int default 0.0")
     private BigInteger click;
 
     @Column(name = "sale_quantity")
