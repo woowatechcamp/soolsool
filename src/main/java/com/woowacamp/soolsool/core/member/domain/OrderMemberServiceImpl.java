@@ -17,7 +17,7 @@ public class OrderMemberServiceImpl implements OrderMemberService {
 
     @Transactional
     public void refundMileage(final Long memberId, final BigInteger mileage) {
-        final Member member = memberRepository.findById(memberId)
+        final Member member = memberRepository.findByIdWithLock(memberId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_MEMBER));
 
         member.updateMileage(mileage);
