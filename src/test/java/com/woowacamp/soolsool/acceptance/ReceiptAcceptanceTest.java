@@ -13,7 +13,7 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
-import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -81,7 +81,7 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(detailReceiptResponse.statusCode()).isEqualTo(OK.value());
 
-        assertThat(detailReceiptResponse.body().as(new TypeRef<ApiResponse<ReceiptResponse>>() {
+        assertThat(detailReceiptResponse.body().as(new TypeRef<ApiResponse<ReceiptDetailResponse>>() {
             })
             .getMessage())
             .isEqualTo(RECEIPT_FOUND.getMessage());
