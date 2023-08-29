@@ -25,6 +25,8 @@ public class RedissonConfig {
     public RedissonClient getRedissonConfig() {
         final Config config = new Config();
         config
+            .setMinCleanUpDelay(0)
+            .setMaxCleanUpDelay(0)
             .useSingleServer()
             .setAddress("redis://" + host + ":" + port);
 
