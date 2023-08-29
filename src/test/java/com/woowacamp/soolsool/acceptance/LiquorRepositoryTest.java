@@ -30,7 +30,7 @@ import org.springframework.test.context.jdbc.Sql;
     "/member-type.sql", "/member.sql",
     "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql", "/liquor-ctr.sql",
 })
-class LiquorRepositoryTest {
+class LiquorQueryDslRepositoryTest {
 
     @Autowired
     private LiquorQueryDslRepository liquorQueryDslRepository;
