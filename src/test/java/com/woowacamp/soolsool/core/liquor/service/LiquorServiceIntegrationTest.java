@@ -43,10 +43,10 @@ class LiquorServiceIntegrationTest {
     @DisplayName("상품 상세 정보를 조회한다.")
     void liquorDetail() throws Exception {
         /* given */
-        final Long 새로 = 1L;
+        Long 새로 = 1L;
 
         /* when */
-        final LiquorDetailResponse response = liquorService.liquorDetail(새로);
+        LiquorDetailResponse response = liquorService.liquorDetail(새로);
 
 
         /* then */
