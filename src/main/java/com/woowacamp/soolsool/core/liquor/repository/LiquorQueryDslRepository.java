@@ -12,7 +12,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -59,25 +59,25 @@ public class LiquorQueryDslRepository {
         );
     }
 
-    private BooleanExpression eqRegion(final Optional<LiquorRegion> liquorRegion) {
-        if (liquorRegion.isEmpty()) {
+    private BooleanExpression eqRegion(final LiquorRegion liquorRegion) {
+        if (Objects.isNull(liquorRegion)) {
             return null;
         }
-        return liquor.region.eq(liquorRegion.get());
+        return liquor.region.eq(liquorRegion);
     }
 
-    private BooleanExpression eqBrew(final Optional<LiquorBrew> liquorBrew) {
-        if (liquorBrew.isEmpty()) {
+    private BooleanExpression eqBrew(final LiquorBrew liquorBrew) {
+        if (Objects.isNull(liquorBrew)) {
             return null;
         }
-        return liquor.brew.eq(liquorBrew.get());
+        return liquor.brew.eq(liquorBrew);
     }
 
-    private BooleanExpression eqStatus(final Optional<LiquorStatus> liquorStatus) {
-        if (liquorStatus.isEmpty()) {
+    private BooleanExpression eqStatus(final LiquorStatus liquorStatus) {
+        if (Objects.isNull(liquorStatus)) {
             return null;
         }
-        return liquor.status.eq(liquorStatus.get());
+        return liquor.status.eq(liquorStatus);
     }
 
     private BooleanExpression eqBrand(final String brand) {

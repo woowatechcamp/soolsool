@@ -93,9 +93,9 @@ public class LiquorService {
     ) {
         final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition
             (
-                findLiquorRegionByType(regionType),
-                findLiquorBrewByType(brewType),
-                findLiquorStatusByType(statusType),
+                findLiquorRegionByType(regionType).orElse(null),
+                findLiquorBrewByType(brewType).orElse(null),
+                findLiquorStatusByType(statusType).orElse(null),
                 brand
             );
 
