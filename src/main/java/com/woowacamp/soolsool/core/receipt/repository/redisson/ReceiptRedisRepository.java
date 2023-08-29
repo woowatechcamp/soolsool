@@ -34,6 +34,6 @@ public class ReceiptRedisRepository {
 
         receiptCache.put(receiptId, memberId, minutes, TimeUnit.MINUTES);
 
-        log.info("Complete save Member {}'s Receipt {} to Redis", memberId, receiptCache);
+        log.info("Complete to save Member {}'s Receipt {} to Redis", memberId, receiptCache);
     }
 }

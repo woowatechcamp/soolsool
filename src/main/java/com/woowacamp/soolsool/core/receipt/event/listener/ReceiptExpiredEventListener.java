@@ -19,10 +19,10 @@ public class ReceiptExpiredEventListener {
     @Async
     @EventListener
     public void expiredListener(final ReceiptExpiredEvent event) {
-        log.info("Member {}'s Receipt {} Expired", event.getMemberId(), event.getReceiptId());
-
         receiptService.modifyReceiptStatus(
             event.getMemberId(), event.getReceiptId(), ReceiptStatusType.EXPIRED
         );
+
+        log.info("Member {}'s Receipt {} Expired", event.getMemberId(), event.getReceiptId());
     }
 }
