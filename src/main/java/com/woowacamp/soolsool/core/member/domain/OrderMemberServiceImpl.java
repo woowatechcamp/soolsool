@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.member.domain;
 
+import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.order.code.OrderErrorCode;
 import com.woowacamp.soolsool.core.order.service.OrderMemberService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.math.BigInteger;
@@ -18,7 +18,7 @@ public class OrderMemberServiceImpl implements OrderMemberService {
     @Transactional
     public void refundMileage(final Long memberId, final BigInteger mileage) {
         final Member member = memberRepository.findByIdWithLock(memberId)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_MEMBER));
+            .orElseThrow(() -> new SoolSoolException(MemberErrorCode.MEMBER_NO_INFORMATION));
 
         member.updateMileage(mileage);
     }

@@ -30,8 +30,6 @@ public enum OrderErrorCode implements ErrorCode {
 
     NOT_EXISTS_ORDER_STATUS(500, "O112", "결제 상태가 존재하지 않습니다."),
     NOT_EXISTS_PAYMENT_INFO(500, "O113", "결제 정보가 존재하지 않습니다."),
-
-    NOT_EXISTS_MEMBER(404, "O114", "회원이 존재하지 않습니다."),
     ;
 
     private final int status;
