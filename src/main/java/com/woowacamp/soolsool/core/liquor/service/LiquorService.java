@@ -124,7 +124,7 @@ public class LiquorService {
         final List<LiquorElementResponse> liquors
     ) {
         if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, null, liquors);
+            return PageLiquorResponse.of(false, liquors);
         }
 
         return PageLiquorResponse.of(true, liquors.get(liquors.size() - 1).getId(), liquors);

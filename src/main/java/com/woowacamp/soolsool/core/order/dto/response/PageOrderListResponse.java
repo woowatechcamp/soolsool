@@ -19,4 +19,11 @@ public class PageOrderListResponse {
     ) {
         return new PageOrderListResponse(hasNext, cursorId, orderListResponses);
     }
+
+    public static PageOrderListResponse of(
+        final boolean hasNext,
+        final List<OrderListResponse> orderListResponses
+    ) {
+        return PageOrderListResponse.of(hasNext, null, orderListResponses);
+    }
 }
