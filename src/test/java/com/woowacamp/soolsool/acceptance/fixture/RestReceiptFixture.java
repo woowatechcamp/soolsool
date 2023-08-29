@@ -13,7 +13,7 @@ public abstract class RestReceiptFixture extends RestFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 토큰)
-            .when().post("/receipts")
+            .when().post("/api/receipts")
             .then().log().all()
             .extract().header("Location").split("/")[2]);
     }
@@ -23,7 +23,7 @@ public abstract class RestReceiptFixture extends RestFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 토큰)
-            .when().get("/receipts/{receiptId}", 주문서)
+            .when().get("/api/receipts/{receiptId}", 주문서)
             .then().log().all()
             .extract().jsonPath().getObject("data", ReceiptDetailResponse.class);
     }

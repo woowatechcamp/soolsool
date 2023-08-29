@@ -55,7 +55,7 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().post("/receipts")
+            .when().post("/api/receipts")
             .then().log().all()
             .extract();
 
@@ -74,16 +74,17 @@ class ReceiptAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().get("/receipts/{receiptId}", 주문서_Id)
+            .when().get("/api/receipts/{receiptId}", 주문서_Id)
             .then().log().all()
             .extract();
 
         // then
         assertThat(detailReceiptResponse.statusCode()).isEqualTo(OK.value());
 
-        assertThat(detailReceiptResponse.body().as(new TypeRef<ApiResponse<ReceiptDetailResponse>>() {
-            })
-            .getMessage())
+        assertThat(
+            detailReceiptResponse.body().as(new TypeRef<ApiResponse<ReceiptDetailResponse>>() {
+                })
+                .getMessage())
             .isEqualTo(RECEIPT_FOUND.getMessage());
     }
 }

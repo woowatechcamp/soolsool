@@ -85,7 +85,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
             .param("pg_token", "pgpgpgpg")
-            .when().get("/pay/success/{receiptId}", 김배달_주문서)
+            .when().get("/api/pay/success/{receiptId}", 김배달_주문서)
             .then().extract().body().as(new TypeRef<ApiResponse<PaySuccessResponse>>() {
             }).getData();
 
@@ -109,7 +109,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
-            .when().get("/pay/cancel/{receiptId}", 김배달_주문서)
+            .when().get("/api/pay/cancel/{receiptId}", 김배달_주문서)
             .then();
 
         /* then */
@@ -131,7 +131,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
-            .when().get("/pay/fail/{receiptId}", 김배달_주문서)
+            .when().get("/api/pay/fail/{receiptId}", 김배달_주문서)
             .then();
 
         /* then */

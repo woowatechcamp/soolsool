@@ -20,7 +20,7 @@ public abstract class RestPayFixture extends RestFixture {
             .header(AUTHORIZATION, BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .body(request)
-            .when().post("/pay/ready")
+            .when().post("/api/pay/ready")
             .then().extract().body().as(new TypeRef<ApiResponse<PayReadyResponse>>() {
             });
     }
@@ -31,7 +31,7 @@ public abstract class RestPayFixture extends RestFixture {
             .header(AUTHORIZATION, BEARER + accessToken)
             .contentType(APPLICATION_JSON_VALUE)
             .param("pg_token", "pgpgpgpg")
-            .when().get("/pay/success/{receiptId}", receiptId)
+            .when().get("/api/pay/success/{receiptId}", receiptId)
             .then().extract().body().as(new TypeRef<ApiResponse<PaySuccessResponse>>() {
             }).getData().getOrderId();
     }

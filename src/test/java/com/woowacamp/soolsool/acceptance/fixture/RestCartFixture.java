@@ -19,7 +19,7 @@ public abstract class RestCartFixture extends RestFixture {
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 토큰)
             .body(cartItemSaveRequest)
-            .when().post("/cart-items")
+            .when().post("/api/cart-items")
             .then().log().all()
             .extract().jsonPath().getObject("data", Long.class);
     }
@@ -29,7 +29,7 @@ public abstract class RestCartFixture extends RestFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 토큰)
-            .when().get("/cart-items/")
+            .when().get("/api/cart-items/")
             .then().log().all()
             .extract().jsonPath().getObject("data", new TypeRef<>() {
             });

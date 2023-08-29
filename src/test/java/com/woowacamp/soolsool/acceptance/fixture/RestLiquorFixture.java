@@ -45,7 +45,7 @@ public abstract class RestLiquorFixture extends RestFixture {
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)
-            .when().post("/liquors")
+            .when().post("/api/liquors")
             .then().log().all()
             .extract().header("Location").split("/")[2]);
     }
@@ -55,7 +55,7 @@ public abstract class RestLiquorFixture extends RestFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/liquors")
+            .when().get("/api/liquors")
             .then().log().all()
             .statusCode(200);
     }
@@ -65,7 +65,7 @@ public abstract class RestLiquorFixture extends RestFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/liquors/{liquorId}", liquorId)
+            .when().get("/api/liquors/{liquorId}", liquorId)
             .then().log().all()
             .statusCode(200);
     }
