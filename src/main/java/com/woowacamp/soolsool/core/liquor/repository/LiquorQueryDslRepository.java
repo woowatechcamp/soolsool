@@ -14,10 +14,12 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class LiquorQueryDslRepository {
@@ -52,6 +54,7 @@ public class LiquorQueryDslRepository {
     public List<LiquorElementResponse> getCachedList(
         final Pageable pageable
     ) {
+        log.info("LiquorQueryDslRepository getCachedList");
         return getList(
             LiquorSearchCondition.nullObject(),
             pageable,

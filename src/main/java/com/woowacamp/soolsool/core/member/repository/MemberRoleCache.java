@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class MemberRoleCache {
 
@@ -17,7 +17,7 @@ public class MemberRoleCache {
 
     @Cacheable(value = "memberRole", key = "#name")
     public Optional<MemberRole> findByName(final MemberRoleType name) {
-        log.info("MemberRoleCache findByName");
+        log.info("MemberRoleCache {}", name);
         return memberRoleRepository.findByName(name);
     }
 }
