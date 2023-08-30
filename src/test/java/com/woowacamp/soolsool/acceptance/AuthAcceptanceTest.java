@@ -37,7 +37,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
             .given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(loginRequest).log().all()
-            .when().post("/auth/login")
+            .when().post("/api/auth/login")
             .then().log().all()
             .extract();
 

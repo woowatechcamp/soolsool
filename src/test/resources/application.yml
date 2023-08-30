@@ -1,6 +1,4 @@
 spring:
-  servlet:
-    context-path: /api
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -32,3 +30,6 @@ logging:
         type:
           descriptor:
             sql: trace
+server:
+  servlet:
+    context-path: /api

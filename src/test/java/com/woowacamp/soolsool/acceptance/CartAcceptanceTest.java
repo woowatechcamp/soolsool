@@ -50,7 +50,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .body(cartItemSaveRequest)
-            .when().post("/cart-items")
+            .when().post("/api/cart-items")
             .then().log().all()
             .extract();
 
@@ -71,7 +71,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().get("/cart-items/")
+            .when().get("/api/cart-items/")
             .then().log().all()
             .extract();
 
@@ -98,7 +98,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .body(modifyRequest)
-            .when().patch("/cart-items/{cartItemId}", 장바구니_새로_Id)
+            .when().patch("/api/cart-items/{cartItemId}", 장바구니_새로_Id)
             .then().log().all()
             .extract();
 
@@ -118,7 +118,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().delete("/cart-items/{cartItemId}", 장바구니_새로_Id)
+            .when().delete("/api/cart-items/{cartItemId}", 장바구니_새로_Id)
             .then().log().all()
             .extract();
 
@@ -140,7 +140,7 @@ class CartAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().delete("/cart-items/")
+            .when().delete("/api/cart-items/")
             .then().log().all()
             .extract();
 

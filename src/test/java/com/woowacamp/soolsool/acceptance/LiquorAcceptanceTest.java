@@ -61,7 +61,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(liquorSaveRequest)
-            .when().post("/liquors")
+            .when().post("/api/liquors")
             .then().log().all()
             .extract();
 
@@ -92,7 +92,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .accept(APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
             .body(liquorModifyRequest)
-            .when().put("/liquors/{liquorId}", 새로_Id)
+            .when().put("/api/liquors/{liquorId}", 새로_Id)
             .then().log().all()
             .extract();
 
@@ -115,7 +115,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
-            .when().delete("/liquors/{liquorId}", 새로_Id)
+            .when().delete("/api/liquors/{liquorId}", 새로_Id)
             .then().log().all()
             .extract();
 
@@ -137,7 +137,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/liquors/{liquorId}", 새로_Id)
+            .when().get("/api/liquors/{liquorId}", 새로_Id)
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
 
@@ -176,7 +176,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/liquors/{liquorId}", 새로_Id)
+            .when().get("/api/liquors/{liquorId}", 새로_Id)
             .then().log().all()
             .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
 
@@ -210,7 +210,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/liquors")
+            .when().get("/api/liquors")
             .then().log().all()
             .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
@@ -241,7 +241,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .param("brew", "소주")
-            .when().get("/liquors")
+            .when().get("/api/liquors")
             .then().log().all()
             .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
@@ -273,7 +273,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .accept(APPLICATION_JSON_VALUE)
             .param("brew", "소주")
             .param("region", "경기도")
-            .when().get("/liquors")
+            .when().get("/api/liquors")
             .then().log().all()
             .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
@@ -306,7 +306,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("brew", "ETC")
             .param("region", "경기도")
             .param("status", "판매중지")
-            .when().get("/liquors")
+            .when().get("/api/liquors")
             .then().log().all()
             .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 
@@ -341,7 +341,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("region", "JEOLLABUK_DO")
             .param("status", "판매중")
             .param("brand", "우영미")
-            .when().get("/liquors")
+            .when().get("/api/liquors")
             .then().log().all()
             .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
 

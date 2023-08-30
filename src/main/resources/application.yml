@@ -1,8 +1,6 @@
 spring:
   profiles:
     active: dev
-  servlet:
-    context-path: /api
   redis:
     host: ${SOOLSOOL_REDIS_HOST}
     port: ${SOOLSOOL_REDIS_PORT}
@@ -30,3 +28,6 @@ kakao:
 logging:
   slack:
     webhook-url: ${SOOLSOOL_LOGGING_SLACK_WEBHOOK_URL}
+server:
+  servlet:
+    context-path: /api
