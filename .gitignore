@@ -38,3 +38,6 @@ out/
 
 ### Log Directory ###
 logs/
+
+### QueryDsl
+/src/main/generated/

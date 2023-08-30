@@ -6,6 +6,10 @@ spring:
   redis:
     host: ${SOOLSOOL_REDIS_HOST}
     port: ${SOOLSOOL_REDIS_PORT}
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
 
 management:
   endpoints:

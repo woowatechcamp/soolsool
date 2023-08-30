@@ -2,7 +2,9 @@ package com.woowacamp.soolsool.core.order.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.woowacamp.soolsool.core.order.repository.OrderQueryRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
+import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({OrderService.class, OrderStatusCache.class})
+@Import({OrderService.class, OrderStatusCache.class, OrderQueryRepository.class,
+    QuerydslConfig.class})
 @DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {
 
