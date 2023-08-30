@@ -17,4 +17,8 @@ public class RedisLiquorCtr {
     public RedisLiquorCtr increaseClick() {
         return new RedisLiquorCtr(impression, click + 1);
     }
+
+    public RedisLiquorCtr synchronizedWithDatabase(final Long impression, final Long click) {
+        return new RedisLiquorCtr(this.impression + impression, this.click + click);
+    }
 }

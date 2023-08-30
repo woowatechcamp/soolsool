@@ -1,39 +1,65 @@
 package com.woowacamp.soolsool.core.liquor.repository.redisson;
 
+import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
+import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
 import java.util.concurrent.TimeUnit;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
+import org.redisson.api.map.event.EntryExpiredListener;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class LiquorCtrRedisRepository {
 
     private static final String LIQUOR_CTR_KEY = "LIQUOR_CTR";
     private static final long LOCK_WAIT_TIME = 3L;
     private static final long LOCK_LEASE_TIME = 3L;
+    private static final long LIQUOR_CTR_TTL = 5L;
 
     private final RedissonClient redissonClient;
 
-    public void save(
-        final Long liquorId,
-        final LiquorCtrImpression impression,
-        final LiquorCtrClick click
+    public LiquorCtrRedisRepository(
+        final RedissonClient redissonClient,
+        final ApplicationEventPublisher publisher
     ) {
+        redissonClient.getMapCache(LIQUOR_CTR_KEY)
+            .addListener((EntryExpiredListener<Long, RedisLiquorCtr>) event ->
+                publisher.publishEvent(new LiquorCtrExpiredEvent(
+                    event.getKey(),
+                    new LiquorCtrImpression(event.getValue().getImpression()),
+                    new LiquorCtrClick(event.getValue().getClick()))
+                )
+            );
+
+        this.redissonClient = redissonClient;
+    }
+
+    public double getCtr(final Long liquorId) {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr =
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-        liquorCtr.put(liquorId, new RedisLiquorCtr(impression.getImpression(), click.getClick()));
+        validateExistsCtr(liquorId, liquorCtr);
+
+        final Long click = liquorCtr.get(liquorId).getClick();
+        final Long impression = liquorCtr.get(liquorId).getImpression();
+
+        if (impression == 0) {
+            throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
+        }
+
+        final double ratio = (double) click / impression;
+
+        return Math.round(ratio * 100) / 100.0;
     }
 
     public LiquorCtrImpression findImpressionByLiquorId(final Long liquorId) {
@@ -63,12 +89,14 @@ public class LiquorCtrRedisRepository {
             final RMapCache<Long, RedisLiquorCtr> liquorCtr =
                 redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-            validateExistsCtr(liquorId, liquorCtr);
+            initLiquorCtrIfAbsent(liquorCtr, liquorId);
 
             final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
 
             liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
         } catch (final InterruptedException e) {
+            log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
+
             Thread.currentThread().interrupt();
 
             throw new SoolSoolException(LiquorErrorCode.INTERRUPTED_THREAD);
@@ -86,18 +114,48 @@ public class LiquorCtrRedisRepository {
             final RMapCache<Long, RedisLiquorCtr> liquorCtr =
                 redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-            validateExistsCtr(liquorId, liquorCtr);
+            initLiquorCtrIfAbsent(liquorCtr, liquorId);
 
             final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
 
             liquorCtr.replace(liquorId, redisLiquorCtr.increaseClick());
         } catch (final InterruptedException e) {
+            log.error("클릭수 갱신에 실패했습니다. | liquorId : {}", liquorId);
+
             Thread.currentThread().interrupt();
 
             throw new SoolSoolException(LiquorErrorCode.INTERRUPTED_THREAD);
         } finally {
             rLock.unlock();
         }
+    }
+
+    public void synchronizedWithDatabase(
+        final Long liquorId,
+        final LiquorCtrImpression impression,
+        final LiquorCtrClick click
+    ) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
+            redissonClient.getMapCache(LIQUOR_CTR_KEY);
+
+        initLiquorCtrIfAbsent(liquorCtr, liquorId);
+
+        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.get(liquorId)
+            .synchronizedWithDatabase(impression.getImpression(), click.getClick());
+
+        liquorCtr.replace(liquorId, synchronizedLiquorCtr);
+    }
+
+    private void initLiquorCtrIfAbsent(
+        final RMapCache<Long, RedisLiquorCtr> liquorCtr,
+        final Long liquorId
+    ) {
+        liquorCtr.putIfAbsent(
+            liquorId,
+            new RedisLiquorCtr(0L, 0L),
+            LIQUOR_CTR_TTL,
+            TimeUnit.MINUTES
+        );
     }
 
     private void validateExistsCtr(
