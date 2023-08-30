@@ -9,6 +9,10 @@ spring:
       hibernate:
         default_batch_fetch_size: 100
 
+  redis:
+    host: ${SOOLSOOL_REDIS_HOST}
+    port: ${SOOLSOOL_REDIS_PORT}
+
 management:
   endpoints:
     web:

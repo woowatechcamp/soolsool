@@ -12,12 +12,15 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
+import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
 import com.woowacamp.soolsool.core.order.dto.response.PageOrderListResponse;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -129,5 +132,32 @@ class OrderAcceptanceTest extends AcceptanceTest {
 
         /* then */
         assertThat(response.getRatio()).isEqualTo(50.0);
+    }
+
+    @Test
+    @DisplayName("특정 주문을 취소한다.")
+    void cancelOrder() throws Exception {
+        /* given */
+        String 김배달 = RestAuthFixture.로그인_김배달_구매자();
+
+        RestCartFixture.장바구니_상품_추가(김배달, 새로, 1);
+        Long 김배달_주문서 = RestReceiptFixture.주문서_생성(김배달);
+        RestPayFixture.결제_준비(김배달, 김배달_주문서);
+        Long 주문번호 = RestPayFixture.결제_성공(김배달, 김배달_주문서);
+
+        /* when */
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header(AUTHORIZATION, BEARER + 김배달)
+            .contentType(APPLICATION_JSON_VALUE)
+            .when().patch("/api/orders/cancel/{orderId}", 주문번호)
+            .then().log().all()
+            .extract();
+
+        /* then */
+        assertThat(response.statusCode()).isEqualTo(200);
+
+        MemberDetailResponse detailResponse = RestMemberFixture.회원_정보_조회(김배달);
+        assertThat(detailResponse.getMileage()).isEqualTo("10000");
     }
 }

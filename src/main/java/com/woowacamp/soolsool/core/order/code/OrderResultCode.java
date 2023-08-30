@@ -13,6 +13,7 @@ public enum OrderResultCode implements ResultCode {
     ORDER_DETAIL_SUCCESS(OK.value(), "O101", "주문 상세내역 조회가 완료되었습니다."),
     ORDER_LIST_SUCCESS(OK.value(), "O102", "주문내역 목록 조회가 완료되었습니다."),
     ORDER_RATIO_SUCCESS(OK.value(), "O103", "주문율 조회가 완료되었습니다."),
+    ORDER_CANCEL_SUCCESS(OK.value(), "O104", "주문 취소가 완료되었습니다."),
     ;
 
     private final int status;

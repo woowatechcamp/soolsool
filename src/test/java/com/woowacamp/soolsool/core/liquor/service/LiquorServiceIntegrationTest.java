@@ -3,8 +3,10 @@ package com.woowacamp.soolsool.core.liquor.service;
 import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
@@ -35,6 +37,35 @@ class LiquorServiceIntegrationTest {
 
     @Autowired
     LiquorRepository liquorRepository;
+
+    @Test
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql",
+        "/receipt-type.sql", "/receipt.sql",
+        "/order-type.sql", "/order.sql"
+    })
+    @DisplayName("상품 상세 정보를 조회한다.")
+    void liquorDetail() throws Exception {
+        /* given */
+        Long 새로 = 1L;
+
+        /* when */
+        LiquorDetailResponse response = liquorService.liquorDetail(새로);
+
+
+        /* then */
+        assertAll(
+            () -> assertThat(response.getId()).isEqualTo(1L),
+            () -> assertThat(response.getName()).isEqualTo("새로"),
+            () -> assertThat(response.getBrand()).isEqualTo("롯데"),
+            () -> assertThat(response.getImageUrl()).isEqualTo("/soju-url"),
+            () -> assertThat(response.getAlcohol()).isEqualTo(12.0),
+            () -> assertThat(response.getVolume()).isEqualTo(300),
+            () -> assertThat(response.getStock()).isEqualTo(100),
+            () -> assertThat(response.getRelatedLiquors()).hasSize(1)
+        );
+    }
 
     @Test
     @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql"})

@@ -12,6 +12,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -123,7 +124,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         RestMemberFixture.회원가입_김배달_구매자();
         String 김배달_토큰 = RestAuthFixture.로그인_김배달_구매자();
 
-        MemberMileageChargeRequest request = new MemberMileageChargeRequest("5000");
+        BigInteger amount = new BigInteger("10000");
+        MemberMileageChargeRequest request = new MemberMileageChargeRequest(amount);
 
         // when
         final ExtractableResponse<Response> response = RestAssured

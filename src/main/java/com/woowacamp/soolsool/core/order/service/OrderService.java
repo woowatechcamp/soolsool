@@ -33,6 +33,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderPaymentInfoRepository orderPaymentInfoRepository;
     private final OrderStatusCache orderStatusCache;
+    private final OrderMemberService orderMemberService;
     private final OrderQueryRepository orderQueryRepository;
 
     @Transactional
@@ -76,20 +77,24 @@ public class OrderService {
         }
 
         final Long lastReadOrderId = orders.get(orders.size() - 1).getOrderId();
-        
+
         return PageOrderListResponse.of(true, lastReadOrderId, orders);
     }
 
     @Transactional
-    public void modifyOrderStatusCancel(final Long memberId, final Long orderId) {
+    public Order cancelOrder(final Long memberId, final Long orderId) {
         final Order order = orderRepository.findOrderById(orderId)
             .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER));
 
         validateAccessible(memberId, order);
 
-        final OrderStatus cancelOrderStatus = getOrderStatusByType(CANCELED);
+        final OrderStatus cancelOrderStatus = orderStatusCache.findByType(CANCELED)
+            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
 
         order.updateStatus(cancelOrderStatus);
+        orderMemberService.refundMileage(memberId, order.getMileageUsage());
+
+        return order;
     }
 
     @Transactional(readOnly = true)

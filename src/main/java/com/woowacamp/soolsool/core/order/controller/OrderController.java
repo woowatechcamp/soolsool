@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,5 +71,19 @@ public class OrderController {
 
         return ResponseEntity.ok(ApiResponse
             .of(OrderResultCode.ORDER_RATIO_SUCCESS, new OrderRatioResponse(ratio)));
+    }
+
+    @PatchMapping("/cancel/{orderId}")
+    public ResponseEntity<ApiResponse<Void>> cancelOrder(
+        final HttpServletRequest httpServletRequest,
+        @LoginUser final Long memberId,
+        @PathVariable final Long orderId
+    ) {
+        log.info("{} {} | memberId : {} | orderId : {}",
+            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId, orderId);
+
+        orderService.cancelOrder(memberId, orderId);
+
+        return ResponseEntity.ok(ApiResponse.from(OrderResultCode.ORDER_CANCEL_SUCCESS));
     }
 }

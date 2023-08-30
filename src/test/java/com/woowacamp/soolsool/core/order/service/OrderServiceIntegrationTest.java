@@ -1,7 +1,11 @@
 package com.woowacamp.soolsool.core.order.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.woowacamp.soolsool.core.member.domain.OrderMemberServiceImpl;
+import com.woowacamp.soolsool.core.order.domain.Order;
+import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.repository.OrderQueryRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
@@ -14,8 +18,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({OrderService.class, OrderStatusCache.class, OrderQueryRepository.class,
-    QuerydslConfig.class})
+@Import(
+    {OrderService.class, OrderStatusCache.class, OrderMemberServiceImpl.class,
+    OrderQueryRepository.class,
+    QuerydslConfig.class}
+)
 @DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {
 
@@ -75,7 +82,7 @@ class OrderServiceIntegrationTest {
         Long 김배달 = 1L;
 
         // when & then
-        assertThatThrownBy(() -> orderService.modifyOrderStatusCancel(김배달, 99999L))
+        assertThatThrownBy(() -> orderService.cancelOrder(김배달, 99999L))
             .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("주문 내역이 존재하지 않습니다.");
     }
@@ -95,8 +102,29 @@ class OrderServiceIntegrationTest {
         Long 김배달_주문 = 1L;
 
         // when & then
-        assertThatThrownBy(() -> orderService.modifyOrderStatusCancel(최민족, 김배달_주문))
+        assertThatThrownBy(() -> orderService.cancelOrder(최민족, 김배달_주문))
             .isExactlyInstanceOf(SoolSoolException.class)
             .hasMessage("본인의 주문 내역만 조회할 수 있습니다.");
+    }
+
+    @Test
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql",
+        "/cart-item.sql",
+        "/receipt-type.sql", "/receipt.sql",
+        "/order-type.sql", "/order.sql"
+    })
+    @DisplayName("주문을 취소한다.")
+    void cancelOrder() throws Exception {
+        /* given */
+        Long 김배달 = 1L;
+        Long 김배달_주문 = 1L;
+
+        /* when */
+        Order order = orderService.cancelOrder(김배달, 김배달_주문);
+
+        /* then */
+        assertThat(order.getStatus().getType()).isEqualTo(OrderStatusType.CANCELED);
     }
 }
