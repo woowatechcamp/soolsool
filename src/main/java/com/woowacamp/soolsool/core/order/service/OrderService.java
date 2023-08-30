@@ -18,11 +18,12 @@ import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
-import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final long LOCK_WAIT_TIME = 3L;
+    private static final long LOCK_LEASE_TIME = 3L;
     private static final int PERCENTAGE_BIAS = 100;
 
     private final OrderRepository orderRepository;
@@ -39,7 +42,7 @@ public class OrderService {
     private final OrderMemberService orderMemberService;
     private final OrderQueryRepository orderQueryRepository;
 
-    private final RedissonLocker redissonLocker;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public Order addOrder(final Long memberId, final Receipt receipt) {
@@ -88,12 +91,12 @@ public class OrderService {
 
     @Transactional
     public Order cancelOrder(final Long memberId, final Long orderId) {
-        final RLock memberLock = redissonLocker.getLock(LockType.MEMBER, memberId);
-        final RLock orderLock = redissonLocker.getLock(LockType.ORDER, orderId);
+        final RLock memberLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
+        final RLock orderLock = redissonClient.getLock(LockType.ORDER.getPrefix() + orderId);
 
         try {
-            redissonLocker.tryLock(memberLock);
-            redissonLocker.tryLock(orderLock);
+            memberLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            orderLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
             final Order order = orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER));
@@ -112,8 +115,14 @@ public class OrderService {
 
             throw new SoolSoolException(OrderErrorCode.INTERRUPTED_THREAD);
         } finally {
-            redissonLocker.unlock(orderLock);
-            redissonLocker.unlock(memberLock);
+            unlock(orderLock);
+            unlock(memberLock);
+        }
+    }
+
+    private void unlock(final RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+            rLock.unlock();
         }
     }
 

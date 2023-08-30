@@ -28,16 +28,15 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
-import com.woowacamp.soolsool.global.infra.RedissonLocker;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
-import org.springframework.data.domain.Page;
+import org.redisson.api.RedissonClient;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +48,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LiquorService {
 
+    private static final long LOCK_WAIT_TIME = 3L;
+    private static final long LOCK_LEASE_TIME = 3L;
     private static final PageRequest TOP_RANK_PAGEABLE = PageRequest.of(0, 5);
 
     private final LiquorRepository liquorRepository;
@@ -59,7 +60,7 @@ public class LiquorService {
 
     private final LiquorCtrRepository liquorCtrRepository;
 
-    private final RedissonLocker redissonLocker;
+    private final RedissonClient redissonClient;
 
     @CacheEvict(value = "liquorsFirstPage")
     @Transactional
@@ -84,10 +85,10 @@ public class LiquorService {
         final List<Liquor> relatedLiquors =
             liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
-        final RLock rLock = redissonLocker.getLock(LockType.LIQUOR_CTR, liquorId);
+        final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
 
         try {
-            redissonLocker.tryLock(rLock);
+            rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
             liquorCtrRepository.findByLiquorId(liquorId)
                 .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_CTR_FOUND))
@@ -97,7 +98,7 @@ public class LiquorService {
 
             Thread.currentThread().interrupt();
         } finally {
-            redissonLocker.unlock(rLock);
+            unlock(rLock);
         }
 
         return LiquorDetailResponse.of(liquor, relatedLiquors);
@@ -122,11 +123,14 @@ public class LiquorService {
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
             .getList(liquorSearchCondition, pageable, cursorId);
 
-        final List<RLock> rLocks = redissonLocker.getLockAll(
-            LockType.LIQUOR_CTR, extractLiquorIds(liquors));
+        final List<RLock> rLocks = extractLiquorIds(liquors).stream()
+            .map(liquorId -> redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId))
+            .collect(Collectors.toList());
 
         try {
-            redissonLocker.tryLockAll(rLocks);
+            for (RLock rLock : rLocks) {
+                rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            }
 
             liquorCtrRepository.findAllByLiquorIdIn(extractLiquorIds(liquors))
                 .forEach(LiquorCtr::increaseImpressionOne);
@@ -138,7 +142,7 @@ public class LiquorService {
 
             Thread.currentThread().interrupt();
         } finally {
-            redissonLocker.unlockAll(rLocks);
+            rLocks.forEach(this::unlock);
         }
 
         return getPageLiquorResponse(pageable, liquors);
@@ -149,11 +153,14 @@ public class LiquorService {
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
             .getCachedList(pageable);
 
-        final List<RLock> rLocks = redissonLocker.getLockAll(
-            LockType.LIQUOR_CTR, extractLiquorIds(liquors));
+        final List<RLock> rLocks = extractLiquorIds(liquors).stream()
+            .map(liquorId -> redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId))
+            .collect(Collectors.toList());
 
         try {
-            redissonLocker.tryLockAll(rLocks);
+            for (RLock rLock : rLocks) {
+                rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            }
 
             liquorCtrRepository.findAllByLiquorIdIn(extractLiquorIds(liquors))
                 .forEach(LiquorCtr::increaseImpressionOne);
@@ -162,10 +169,16 @@ public class LiquorService {
 
             Thread.currentThread().interrupt();
         } finally {
-            redissonLocker.unlockAll(rLocks);
+            rLocks.forEach(this::unlock);
         }
 
         return getPageLiquorResponse(pageable, liquors);
+    }
+
+    private void unlock(final RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+            rLock.unlock();
+        }
     }
 
     private PageLiquorResponse getPageLiquorResponse(

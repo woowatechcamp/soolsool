@@ -23,14 +23,15 @@ import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
-import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +40,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private static final long LOCK_WAIT_TIME = 3L;
+    private static final long LOCK_LEASE_TIME = 3L;
+
     private final MemberRepository memberRepository;
     private final MemberRoleCache memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
     private final MemberMileageUsageRepository memberMileageUsageRepository;
 
-    private final RedissonLocker redissonLocker;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
@@ -103,10 +107,10 @@ public class MemberService {
         final Long memberId,
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        final RLock rLock = redissonLocker.getLock(LockType.MEMBER, memberId);
+        final RLock rLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
 
         try {
-            redissonLocker.tryLock(rLock);
+            rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
             final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
@@ -122,7 +126,13 @@ public class MemberService {
 
             throw new SoolSoolException(MemberErrorCode.INTERRUPTED_THREAD);
         } finally {
-            redissonLocker.unlock(rLock);
+            unlock(rLock);
+        }
+    }
+
+    private void unlock(final RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+            rLock.unlock();
         }
     }
 

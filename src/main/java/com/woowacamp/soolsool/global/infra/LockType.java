@@ -13,5 +13,5 @@ public enum LockType {
     ORDER("ORDER:"),
     ;
 
-    private final String key;
+    private final String prefix;
 }

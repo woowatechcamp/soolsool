@@ -35,7 +35,6 @@ public class LiquorStockService {
         );
         liquorStocks.decreaseStock(quantity);
 
-        // TODO: 비동기로
         liquorStockRepository.deleteAllInBatch(liquorStocks.getOutOfStocks());
     }
 }
