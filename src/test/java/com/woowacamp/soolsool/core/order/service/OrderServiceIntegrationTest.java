@@ -11,7 +11,6 @@ import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import org.springframework.test.context.jdbc.Sql;
     {OrderService.class, OrderStatusCache.class, OrderMemberServiceImpl.class,
     OrderQueryRepository.class,
     QuerydslConfig.class,
-    RedissonConfig.class, RedissonLocker.class}
+    RedissonConfig.class}
 )
 @DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {

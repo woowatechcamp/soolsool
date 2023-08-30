@@ -17,7 +17,6 @@ import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,7 +31,7 @@ import org.springframework.test.context.jdbc.Sql;
     LiquorStatusCache.class, LiquorRegionCache.class, LiquorQueryDslRepository.class,
     LiquorStatusCache.class, LiquorRegionCache.class,
     QuerydslConfig.class,
-    RedissonConfig.class, RedissonLocker.class})
+    RedissonConfig.class})
 @DisplayName("통합 테스트: CartItemService")
 class CartServiceIntegrationTest {
 
