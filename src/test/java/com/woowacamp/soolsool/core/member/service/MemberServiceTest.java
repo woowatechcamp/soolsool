@@ -19,6 +19,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ class MemberServiceTest {
 
     @Mock
     private MemberMileageChargeRepository memberMileageChargeRepository;
+
+    @Mock
+    private RedissonLocker redissonLocker;
 
     @InjectMocks
     private MemberService memberService;

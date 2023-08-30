@@ -15,6 +15,8 @@ public enum PayErrorCode implements ErrorCode {
     NOT_FOUND_PAY_APPROVE_RESPONSE(404, "P002", "페이 결제 승인 내역을 찾을 수 없습니다."),
     NOT_FOUND_PAY_READY_RESPONSE(404, "P006", "페이 결제 준비 내역을 찾을 수 없습니다."),
     NOT_MATCHED_LIQUOR_PRICE(400, "P007", "주문한 술의 가격이 일치하지 않습니다."),
+
+    INTERRUPTED_THREAD(500, "M118", "예상치 못한 예외가 발생했습니다."),
     ;
 
     private final int status;

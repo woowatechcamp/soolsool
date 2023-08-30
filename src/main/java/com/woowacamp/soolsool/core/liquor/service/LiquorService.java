@@ -25,6 +25,8 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.LockType;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +34,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LiquorService {
 
@@ -52,6 +57,8 @@ public class LiquorService {
 
     private final LiquorRepository liquorRepository;
     private final LiquorCtrRepository liquorCtrRepository;
+
+    private final RedissonLocker redissonLocker;
 
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
@@ -71,13 +78,24 @@ public class LiquorService {
     public LiquorDetailResponse liquorDetail(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
-
         final List<Liquor> relatedLiquors =
             liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
-        liquorCtrRepository.findByLiquorIdWithPessimisticWriteLock(liquorId)
-            .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_CTR_FOUND))
-            .increaseClickOne();
+        final RLock rLock = redissonLocker.getLock(LockType.LIQUOR_CTR, liquorId);
+
+        try {
+            redissonLocker.tryLock(rLock);
+
+            liquorCtrRepository.findByLiquorId(liquorId)
+                .orElseThrow(() -> new SoolSoolException(LiquorErrorCode.NOT_LIQUOR_CTR_FOUND))
+                .increaseClickOne();
+        } catch (final InterruptedException e) {
+            log.error("클릭수 갱신에 실패했습니다. | liquorId : {}", liquorId);
+
+            Thread.currentThread().interrupt();
+        } finally {
+            redissonLocker.unlock(rLock);
+        }
 
         return LiquorDetailResponse.of(liquor, relatedLiquors);
     }
@@ -95,8 +113,26 @@ public class LiquorService {
 
         final Page<Liquor> liquors = liquorRepository.findAll(conditions, pageable);
 
-        liquorCtrRepository.findAllByLiquorIdInWithPessimisticWriteLock(extractLiquorIds(liquors))
-            .forEach(LiquorCtr::increaseImpressionOne);
+        final List<RLock> rLocks = redissonLocker.getLockAll(
+            LockType.LIQUOR_CTR,
+            liquors.getContent().stream().map(Liquor::getId).collect(Collectors.toList())
+        );
+
+        try {
+            redissonLocker.tryLockAll(rLocks);
+
+            liquorCtrRepository.findAllByLiquorIdIn(extractLiquorIds(liquors))
+                .forEach(LiquorCtr::increaseImpressionOne);
+        } catch (final InterruptedException e) {
+            log.error("노출수 갱신에 실패했습니다. | Brew : {} | Region : {} | Status : {} | Brand : {}"
+                    + " | Pageable : {} | {}",
+                brewType.getName(), regionType.getName(), statusType.getStatus(), brand,
+                pageable.toString(), e.getMessage());
+
+            Thread.currentThread().interrupt();
+        } finally {
+            redissonLocker.unlockAll(rLocks);
+        }
 
         return LiquorElementResponse.from(liquors);
     }

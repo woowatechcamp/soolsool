@@ -13,7 +13,10 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
+import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
+import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +28,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({CartService.class, LiquorService.class, LiquorBrewCache.class,
-    LiquorStatusCache.class, LiquorRegionCache.class})
+    LiquorStatusCache.class, LiquorRegionCache.class,
+    RedissonConfig.class, RedissonLocker.class})
 @DisplayName("통합 테스트: CartItemService")
 class CartServiceIntegrationTest {
 

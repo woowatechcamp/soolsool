@@ -11,7 +11,10 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
+import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
+import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +26,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({LiquorService.class, LiquorBrewCache.class, LiquorStatusCache.class,
-    LiquorRegionCache.class})
+    LiquorRegionCache.class,
+    RedissonConfig.class, ReceiptRedisRepository.class, RedissonLocker.class})
 @DisplayName("통합 테스트: LiquorService")
 class LiquorServiceIntegrationTest {
 

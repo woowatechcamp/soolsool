@@ -18,6 +18,7 @@ import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RedissonClient;
@@ -30,7 +31,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({ReceiptService.class, CartService.class, LiquorService.class,
     ReceiptMapper.class, LiquorBrewCache.class, LiquorStatusCache.class,
     LiquorRegionCache.class, ReceiptStatusCache.class,
-    RedissonConfig.class, ReceiptRedisRepository.class})
+    RedissonConfig.class, ReceiptRedisRepository.class, RedissonLocker.class})
 @DisplayName("통합 테스트: ReceiptService")
 class ReceiptServiceIntegrationTest {
 

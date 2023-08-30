@@ -6,6 +6,7 @@ import com.woowacamp.soolsool.core.liquor.service.LiquorStockService;
 import com.woowacamp.soolsool.core.member.service.MemberService;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.core.order.service.OrderService;
+import com.woowacamp.soolsool.core.payment.code.PayErrorCode;
 import com.woowacamp.soolsool.core.payment.dto.request.PayOrderRequest;
 import com.woowacamp.soolsool.core.payment.dto.response.PayReadyResponse;
 import com.woowacamp.soolsool.core.payment.infra.PayClient;
@@ -13,7 +14,13 @@ import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
+import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.LockType;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +37,8 @@ public class PayService {
 
     private final PayClient payClient;
 
+    private final RedissonLocker redissonLocker;
+
     @Transactional
     public PayReadyResponse ready(final Long memberId, final PayOrderRequest payOrderRequest) {
         final Receipt receipt = receiptService
@@ -42,21 +51,45 @@ public class PayService {
     public Order approve(final Long memberId, final Long receiptId, final String pgToken) {
         final Receipt receipt = receiptService.getMemberReceipt(memberId, receiptId);
 
-        for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
-            liquorStockService.decreaseLiquorStock(receiptItem.getLiquorId(),
-                receiptItem.getQuantity());
-            liquorService.decreaseTotalStock(receiptItem.getLiquorId(), receiptItem.getQuantity());
+        receiptService.modifyReceiptStatus(memberId, receiptId, ReceiptStatusType.COMPLETED);
+
+        final RLock memberLock = redissonLocker.getLock(LockType.MEMBER, memberId);
+        final List<RLock> liquorLocks = redissonLocker.getLockAll(
+            LockType.LIQUOR_STOCK,
+            receipt.getReceiptItems().stream()
+                .map(ReceiptItem::getLiquorId)
+                .collect(Collectors.toList())
+        );
+
+        try {
+            redissonLocker.tryLock(memberLock);
+            redissonLocker.tryLockAll(liquorLocks);
+
+            for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
+                liquorStockService.decreaseLiquorStock(receiptItem.getLiquorId(),
+                    receiptItem.getQuantity());
+                liquorService.decreaseTotalStock(receiptItem.getLiquorId(),
+                    receiptItem.getQuantity());
+            }
+
+            final Order order = orderService.addOrder(memberId, receipt);
+
+            memberService.subtractMemberMileage(memberId, order, receipt.getMileageUsage());
+
+            cartService.removeCartItems(memberId);
+
+            orderService.addPaymentInfo(
+                payClient.payApprove(receipt, pgToken).toEntity(order.getId()));
+
+            return order;
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+
+            throw new SoolSoolException(PayErrorCode.INTERRUPTED_THREAD);
+        } finally {
+            redissonLocker.unlockAll(liquorLocks);
+            redissonLocker.unlock(memberLock);
         }
-
-        final Order order = orderService.addOrder(memberId, receipt);
-
-        memberService.subtractMemberMileage(memberId, order, receipt.getMileageUsage());
-
-        cartService.removeCartItems(memberId);
-
-        orderService.addPaymentInfo(payClient.payApprove(receipt, pgToken).toEntity(order.getId()));
-
-        return order;
     }
 
     @Transactional

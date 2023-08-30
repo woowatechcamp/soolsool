@@ -22,12 +22,15 @@ import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.LockType;
+import com.woowacamp.soolsool.global.infra.RedissonLocker;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,8 @@ public class MemberService {
     private final MemberRoleCache memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
     private final MemberMileageUsageRepository memberMileageUsageRepository;
+
+    private final RedissonLocker redissonLocker;
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
@@ -98,14 +103,28 @@ public class MemberService {
         final Long memberId,
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+        // TODO: 결제 취소에서 마일리지를 환불할 때 사용할 경우 Lock 시점을 결제 서비스로 옮겨야 함
+        final RLock rLock = redissonLocker.getLock(LockType.MEMBER, memberId);
 
-        member.updateMileage(memberMileageChargeRequest.getAmount());
+        try {
+            redissonLocker.tryLock(rLock);
 
-        final MemberMileageCharge memberMileageCharge =
-            memberMileageChargeRequest.toMemberMileageCharge(member);
-        memberMileageChargeRepository.save(memberMileageCharge);
+            final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+
+            member.updateMileage(memberMileageChargeRequest.getAmount());
+
+            final MemberMileageCharge memberMileageCharge =
+                memberMileageChargeRequest.toMemberMileageCharge(member);
+
+            memberMileageChargeRepository.save(memberMileageCharge);
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+
+            throw new SoolSoolException(MemberErrorCode.INTERRUPTED_THREAD);
+        } finally {
+            redissonLocker.unlock(rLock);
+        }
     }
 
     @Transactional
@@ -114,10 +133,11 @@ public class MemberService {
         final Order order,
         final BigInteger mileageUsage
     ) {
-        final Member member = memberRepository.findByIdWithLock(memberId)
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
 
         member.decreaseMileage(mileageUsage);
+
         memberMileageUsageRepository.save(new MemberMileageUsage(member, order, mileageUsage));
     }
 }

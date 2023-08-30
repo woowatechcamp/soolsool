@@ -34,6 +34,8 @@ public enum MemberErrorCode implements ErrorCode {
     NOT_ENOUGH_MILEAGE(400, "M116", "마일리지가 부족합니다."),
 
     NOT_FOUND_RECEIPT(404, "M117", "회원의 주문 내역을 찾을 수 없습니다."),
+
+    INTERRUPTED_THREAD(500, "M118", "예상치 못한 예외가 발생했습니다."),
     ;
 
     private final int status;
