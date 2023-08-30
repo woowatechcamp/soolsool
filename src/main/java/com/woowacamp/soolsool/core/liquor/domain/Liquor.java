@@ -43,7 +43,7 @@ public class Liquor extends BaseEntity {
 
     private static final LiquorStockCount DEFAULT_TOTAL_COUNT = new LiquorStockCount(0);
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Getter
     private Long id;

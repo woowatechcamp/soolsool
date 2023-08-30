@@ -126,7 +126,7 @@ class LiquorServiceIntegrationTest {
     }
 
     @Test
-    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql", "/liquor.sql"})
+    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql"})
     @DisplayName("liquor를 삭제한다.")
     void deleteLiquorTest() {
         // given

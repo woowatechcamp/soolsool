@@ -32,7 +32,7 @@ import lombok.NoArgsConstructor;
 public class Receipt extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Getter
     private Long id;

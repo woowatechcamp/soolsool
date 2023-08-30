@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class LiquorStock extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
 
