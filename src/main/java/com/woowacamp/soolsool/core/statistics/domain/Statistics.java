@@ -17,14 +17,15 @@ import javax.persistence.Convert;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "statistics")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@RequiredArgsConstructor
 public class Statistics {
 
     @EmbeddedId
@@ -42,15 +43,15 @@ public class Statistics {
     @Convert(converter = ImpressionConverter.class)
     private Impression impression;
 
-    @Column(name = "click", columnDefinition = "int default 0.0")
+    @Column(name = "click", columnDefinition = "decimal(19,2) default 0.0")
     @Convert(converter = ClickConverter.class)
     private Click click;
 
-    @Column(name = "sale_quantity")
+    @Column(name = "sale_quantity", columnDefinition = "decimal(19,2) default 0.0")
     @Convert(converter = SaleQuantityConverter.class)
     private SaleQuantity saleQuantity;
 
-    @Column(name = "sale_price")
+    @Column(name = "sale_price", columnDefinition = "decimal(19,2) default 0.0")
     @Convert(converter = SalePriceConveter.class)
     private SalePrice salePrice;
 
