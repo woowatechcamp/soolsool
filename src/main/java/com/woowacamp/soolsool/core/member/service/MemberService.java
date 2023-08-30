@@ -64,7 +64,7 @@ public class MemberService {
             .filter(type -> Objects.equals(type.getType(), memberRequestRoleType))
             .findFirst()
             .orElse(MemberRoleType.CUSTOMER);
-
+        log.info("memberRoleType : {}", memberRoleType);
         return memberRoleRepository.findByName(memberRoleType)
             .orElseThrow(() -> new SoolSoolException(MEMBER_NO_ROLE_TYPE));
     }
