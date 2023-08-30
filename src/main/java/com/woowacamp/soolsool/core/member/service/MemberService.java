@@ -19,7 +19,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberMileageUsageRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
-import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
+import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
@@ -44,7 +44,7 @@ public class MemberService {
     private static final long LOCK_LEASE_TIME = 3L;
 
     private final MemberRepository memberRepository;
-    private final MemberRoleCache memberRoleRepository;
+    private final MemberRoleRepository memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
     private final MemberMileageUsageRepository memberMileageUsageRepository;
 
@@ -73,7 +73,7 @@ public class MemberService {
             .filter(type -> Objects.equals(type.getType(), memberRequestRoleType))
             .findFirst()
             .orElse(MemberRoleType.CUSTOMER);
-
+        log.info("memberRoleType : {}", memberRoleType);
         return memberRoleRepository.findByName(memberRoleType)
             .orElseThrow(() -> new SoolSoolException(MEMBER_NO_ROLE_TYPE));
     }

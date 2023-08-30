@@ -77,7 +77,7 @@ public class LiquorQueryDslRepository {
         if (Objects.isNull(liquorStatus)) {
             return null;
         }
-        return liquor.status.eq(liquorStatus);
+        return liquor.status.type.eq(liquorStatus.getType());
     }
 
     private BooleanExpression eqBrand(final String brand) {
