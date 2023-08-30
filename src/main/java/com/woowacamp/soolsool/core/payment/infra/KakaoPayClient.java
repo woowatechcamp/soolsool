@@ -37,7 +37,7 @@ public class KakaoPayClient implements PayClient {
     private static final String READY_ENDPOINT = "/v1/payment/ready";
     private static final String APPROVE_ENDPOINT = "/v1/payment/approve";
     private static final String CID = "TC0ONETIME";
-    private static final String DEFAULT_URL = "http://localhost:3000";
+    private static final String DEFAULT_URL = "http://soolsool.shop";
     private static final String APPROVE_URL = "/pay/success";
     private static final String CANCEL_URL = "/pay/cancel";
     private static final String FAIL_URL = "/pay/fail";
