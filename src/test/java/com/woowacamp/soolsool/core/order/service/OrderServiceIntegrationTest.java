@@ -9,6 +9,7 @@ import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.repository.OrderQueryRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
+import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,8 @@ import org.springframework.test.context.jdbc.Sql;
 @Import(
     {OrderService.class, OrderStatusCache.class, OrderMemberServiceImpl.class,
     OrderQueryRepository.class,
-    QuerydslConfig.class}
+    QuerydslConfig.class,
+    RedissonConfig.class}
 )
 @DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {

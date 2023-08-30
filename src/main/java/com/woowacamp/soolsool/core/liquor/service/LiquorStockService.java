@@ -30,14 +30,11 @@ public class LiquorStockService {
 
     @Transactional
     public void decreaseLiquorStock(final Long liquorId, final int quantity) {
-        final LiquorStocks liquorStocks = getLiquorStocks(liquorId);
+        final LiquorStocks liquorStocks = new LiquorStocks(
+            liquorStockRepository.findAllByLiquorIdNotExpired(liquorId)
+        );
         liquorStocks.decreaseStock(quantity);
 
-        // TODO: 비동기로
         liquorStockRepository.deleteAllInBatch(liquorStocks.getOutOfStocks());
-    }
-
-    private LiquorStocks getLiquorStocks(final Long liquorId) {
-        return new LiquorStocks(liquorStockRepository.findAllByLiquorIdNotExpired(liquorId));
     }
 }

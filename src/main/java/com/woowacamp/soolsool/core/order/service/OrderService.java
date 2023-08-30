@@ -17,9 +17,13 @@ import com.woowacamp.soolsool.core.order.repository.OrderRepository;
 import com.woowacamp.soolsool.core.order.repository.OrderStatusCache;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.LockType;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final long LOCK_WAIT_TIME = 3L;
+    private static final long LOCK_LEASE_TIME = 3L;
     private static final int PERCENTAGE_BIAS = 100;
 
     private final OrderRepository orderRepository;
@@ -35,6 +41,8 @@ public class OrderService {
     private final OrderStatusCache orderStatusCache;
     private final OrderMemberService orderMemberService;
     private final OrderQueryRepository orderQueryRepository;
+
+    private final RedissonClient redissonClient;
 
     @Transactional
     public Order addOrder(final Long memberId, final Receipt receipt) {
@@ -83,18 +91,39 @@ public class OrderService {
 
     @Transactional
     public Order cancelOrder(final Long memberId, final Long orderId) {
-        final Order order = orderRepository.findOrderById(orderId)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER));
+        final RLock memberLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
+        final RLock orderLock = redissonClient.getLock(LockType.ORDER.getPrefix() + orderId);
 
-        validateAccessible(memberId, order);
+        try {
+            memberLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            orderLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-        final OrderStatus cancelOrderStatus = orderStatusCache.findByType(CANCELED)
-            .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
+            final Order order = orderRepository.findOrderById(orderId)
+                .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER));
 
-        order.updateStatus(cancelOrderStatus);
-        orderMemberService.refundMileage(memberId, order.getMileageUsage());
+            validateAccessible(memberId, order);
 
-        return order;
+            final OrderStatus cancelOrderStatus = orderStatusCache.findByType(CANCELED)
+                .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER_STATUS));
+
+            order.updateStatus(cancelOrderStatus);
+            orderMemberService.refundMileage(memberId, order.getMileageUsage());
+
+            return order;
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+
+            throw new SoolSoolException(OrderErrorCode.INTERRUPTED_THREAD);
+        } finally {
+            unlock(orderLock);
+            unlock(memberLock);
+        }
+    }
+
+    private void unlock(final RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+            rLock.unlock();
+        }
     }
 
     @Transactional(readOnly = true)

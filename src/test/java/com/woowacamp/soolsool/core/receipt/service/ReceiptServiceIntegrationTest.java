@@ -31,8 +31,8 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({ReceiptService.class, CartService.class, LiquorService.class,
     ReceiptMapper.class, LiquorBrewCache.class, LiquorStatusCache.class,
     LiquorRegionCache.class, ReceiptStatusCache.class,
-    RedissonConfig.class, ReceiptRedisRepository.class,
-    LiquorQueryDslRepository.class, QuerydslConfig.class})
+    LiquorQueryDslRepository.class, QuerydslConfig.class,
+    RedissonConfig.class, ReceiptRedisRepository.class})
 @DisplayName("통합 테스트: ReceiptService")
 class ReceiptServiceIntegrationTest {
 

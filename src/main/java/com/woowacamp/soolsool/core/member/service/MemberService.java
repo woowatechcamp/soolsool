@@ -22,12 +22,16 @@ import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleRepository;
 import com.woowacamp.soolsool.core.order.domain.Order;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
+import com.woowacamp.soolsool.global.infra.LockType;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +40,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private static final long LOCK_WAIT_TIME = 3L;
+    private static final long LOCK_LEASE_TIME = 3L;
+
     private final MemberRepository memberRepository;
     private final MemberRoleRepository memberRoleRepository;
     private final MemberMileageChargeRepository memberMileageChargeRepository;
     private final MemberMileageUsageRepository memberMileageUsageRepository;
+
+    private final RedissonClient redissonClient;
 
     @Transactional
     public void addMember(final MemberAddRequest memberAddRequest) {
@@ -98,14 +107,33 @@ public class MemberService {
         final Long memberId,
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        final Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+        final RLock rLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
 
-        member.updateMileage(memberMileageChargeRequest.getAmount());
+        try {
+            rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-        final MemberMileageCharge memberMileageCharge =
-            memberMileageChargeRequest.toMemberMileageCharge(member);
-        memberMileageChargeRepository.save(memberMileageCharge);
+            final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new SoolSoolException(MEMBER_NO_INFORMATION));
+
+            member.updateMileage(memberMileageChargeRequest.getAmount());
+
+            final MemberMileageCharge memberMileageCharge =
+                memberMileageChargeRequest.toMemberMileageCharge(member);
+
+            memberMileageChargeRepository.save(memberMileageCharge);
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+
+            throw new SoolSoolException(MemberErrorCode.INTERRUPTED_THREAD);
+        } finally {
+            unlock(rLock);
+        }
+    }
+
+    private void unlock(final RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+            rLock.unlock();
+        }
     }
 
     @Transactional
@@ -114,10 +142,11 @@ public class MemberService {
         final Order order,
         final BigInteger mileageUsage
     ) {
-        final Member member = memberRepository.findByIdWithLock(memberId)
+        final Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new SoolSoolException(NOT_FOUND_RECEIPT));
 
         member.decreaseMileage(mileageUsage);
+
         memberMileageUsageRepository.save(new MemberMileageUsage(member, order, mileageUsage));
     }
 }
