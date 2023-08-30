@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CacheType {
 
-    LIQUOR_STATUS("liquorStatus", 60 * 60 * 24, 100),
-    LIQUOR_BREW("liquorBrew", 60 * 60 * 24, 100),
-    LIQUOR_REGION("liquorRegion", 60 * 60 * 24, 100),
-    MEMBER_ROLE("memberRole", 60 * 60 * 24, 100),
-    ORDER_STATUS("orderStatus", 10, 100),
-    RECEIPT_STATUS("receiptStatus", 10, 100),
-    LIQUOR_FIRST("liquorsFirstPage", 10, 200),
+    LIQUOR_STATUS("liquorStatus", 1, 100),
+    LIQUOR_BREW("liquorBrew", 1, 100),
+    LIQUOR_REGION("liquorRegion", 1, 100),
+    MEMBER_ROLE("memberRole", 1, 100),
+    ORDER_STATUS("orderStatus", 1, 100),
+    RECEIPT_STATUS("receiptStatus", 1, 100),
+    LIQUOR_FIRST("liquorsFirstPage", 1, 200),
     ;
 
     private final String cacheName;
