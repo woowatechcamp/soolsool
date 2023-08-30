@@ -26,7 +26,7 @@ public class StatisticsService {
         updateStatisticsCtr(dateNow);
     }
 
-    public void updateStatisticsSales(final LocalDate dateNow) {
+    private void updateStatisticsSales(final LocalDate dateNow) {
         LocalDate startDate = dateNow.minusDays(SALES_UPDATE_DURATION);
 
         StopWatch stopWatch = new StopWatch();
@@ -38,7 +38,7 @@ public class StatisticsService {
         log.info("판매량, 판매금액 자동 통계 집계 쿼리 실행 걸린 총 시간 : {}", totalTimeSeconds);
     }
 
-    public void updateStatisticsCtr(final LocalDate dateNow) {
+    private void updateStatisticsCtr(final LocalDate dateNow) {
         LocalDate startDate = dateNow.minusDays(CTR_UPDATE_DURATION);
 
         StopWatch stopWatch = new StopWatch();
