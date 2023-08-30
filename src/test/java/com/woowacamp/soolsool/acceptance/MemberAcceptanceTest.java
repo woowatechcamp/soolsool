@@ -41,7 +41,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .log().all()
             .when()
-            .post("/members")
+            .post("/api/members")
             .then()
             .log().all()
             .extract();
@@ -61,7 +61,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().get("/members")
+            .when().get("/api/members")
             .then().log().all()
             .extract();
 
@@ -90,7 +90,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
-            .when().patch("/members")
+            .when().patch("/api/members")
             .then().log().all()
             .extract();
 
@@ -109,7 +109,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().delete("/members")
+            .when().delete("/api/members")
             .then().log().all()
             .extract();
 
@@ -134,7 +134,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .body(request)
             .when()
-            .patch("/members/mileage")
+            .patch("/api/members/mileage")
             .then().log().all()
             .extract();
 

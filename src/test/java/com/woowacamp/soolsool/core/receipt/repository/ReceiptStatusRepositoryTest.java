@@ -34,5 +34,4 @@ class ReceiptStatusRepositoryTest {
         /* then */
         assertThat(receiptStatus).isPresent();
     }
-
 }

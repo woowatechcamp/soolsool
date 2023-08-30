@@ -23,7 +23,7 @@ public abstract class RestMemberFixture extends RestFixture {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
-            .when().post("/members")
+            .when().post("/api/members")
             .then().log().all()
             .extract();
     }
@@ -42,7 +42,7 @@ public abstract class RestMemberFixture extends RestFixture {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(memberAddRequest)
-            .when().post("/members")
+            .when().post("/api/members")
             .then().log().all()
             .extract();
     }
@@ -51,7 +51,7 @@ public abstract class RestMemberFixture extends RestFixture {
         return RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + token)
-            .when().get("/members")
+            .when().get("/api/members")
             .then().log().all()
             .extract().jsonPath().getObject("data", MemberDetailResponse.class);
     }

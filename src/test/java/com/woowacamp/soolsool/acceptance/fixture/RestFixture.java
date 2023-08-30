@@ -4,3 +4,4 @@ public abstract class RestFixture {
 
     static final String BEARER = "Bearer ";
 }
+

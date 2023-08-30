@@ -17,6 +17,7 @@ import com.woowacamp.soolsool.core.order.domain.vo.OrderStatusType;
 import com.woowacamp.soolsool.core.order.dto.response.OrderDetailResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderListResponse;
 import com.woowacamp.soolsool.core.order.dto.response.OrderRatioResponse;
+import com.woowacamp.soolsool.core.order.dto.response.PageOrderListResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -59,7 +60,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
-            .when().get("/orders/" + 김배달_주문)
+            .when().get("/api/orders/" + 김배달_주문)
             .then().log().all()
             .extract().jsonPath().getObject("data", OrderDetailResponse.class);
 
@@ -96,9 +97,10 @@ class OrderAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
-            .when().get("/orders")
+            .when().get("/api/orders")
             .then().log().all()
-            .extract().jsonPath().getList("data", OrderListResponse.class);
+            .extract().jsonPath().getObject("data", PageOrderListResponse.class)
+            .getOrderListResponses();
 
         // then
         assertThat(data).hasSize(2);
@@ -124,7 +126,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
             .param("liquorId", 새로)
-            .when().get("/orders/ratio")
+            .when().get("/api/orders/ratio")
             .then().log().all()
             .extract().jsonPath().getObject("data", OrderRatioResponse.class);
 
@@ -148,7 +150,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달)
             .contentType(APPLICATION_JSON_VALUE)
-            .when().patch("/orders/cancel/{orderId}", 주문번호)
+            .when().patch("/api/orders/cancel/{orderId}", 주문번호)
             .then().log().all()
             .extract();
 

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ReceiptResponse {
+public class ReceiptDetailResponse {
 
     private final Long id;
     private final Long memberId;
@@ -19,14 +19,14 @@ public class ReceiptResponse {
     private final int totalQuantity;
     private final List<ReceiptItemResponse> receiptItemResponse;
 
-    public static ReceiptResponse from(final Receipt receipt) {
+    public static ReceiptDetailResponse from(final Receipt receipt) {
         final List<ReceiptItemResponse> items = receipt
             .getReceiptItems()
             .stream()
             .map(ReceiptItemResponse::from)
             .collect(Collectors.toList());
 
-        return new ReceiptResponse(
+        return new ReceiptDetailResponse(
             receipt.getId(),
             receipt.getMemberId(),
             receipt.getReceiptStatus(),

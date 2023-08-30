@@ -3,7 +3,7 @@ package com.woowacamp.soolsool.core.receipt.controller;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_ADD_SUCCESS;
 import static com.woowacamp.soolsool.core.receipt.code.ReceiptResultCode.RECEIPT_FOUND;
 
-import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptResponse;
+import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.common.ApiResponse;
@@ -41,7 +41,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/{receiptId}")
-    public ResponseEntity<ApiResponse<ReceiptResponse>> receiptDetails(
+    public ResponseEntity<ApiResponse<ReceiptDetailResponse>> receiptDetails(
         final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @PathVariable final Long receiptId
@@ -49,7 +49,7 @@ public class ReceiptController {
         log.info("{} {} | memberId : {}",
             httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
 
-        final ReceiptResponse receipt = receiptService.findReceipt(memberId, receiptId);
+        final ReceiptDetailResponse receipt = receiptService.findReceipt(memberId, receiptId);
 
         return ResponseEntity.ok(ApiResponse.of(RECEIPT_FOUND, receipt));
     }
