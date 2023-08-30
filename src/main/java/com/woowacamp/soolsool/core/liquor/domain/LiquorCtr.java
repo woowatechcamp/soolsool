@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.liquor.domain;
 
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrClickConverter;
@@ -26,7 +26,7 @@ import lombok.NonNull;
 public class LiquorCtr extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(name = "liquor_id", nullable = false)

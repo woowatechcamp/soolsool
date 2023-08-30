@@ -19,7 +19,7 @@ import lombok.NonNull;
 public class OrderPaymentInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "order_id", nullable = false)
