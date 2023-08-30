@@ -97,8 +97,8 @@ public class Member extends BaseEntity {
         this.address = new MemberAddress(memberModifyRequest.getAddress());
     }
 
-    public void updateMileage(final String amount) {
-        this.mileage = this.mileage.charge(new MemberMileage(new BigInteger(amount)));
+    public void updateMileage(final BigInteger mileage) {
+        this.mileage = this.mileage.charge(new MemberMileage(mileage));
     }
 
     public boolean matchPassword(final String password) {

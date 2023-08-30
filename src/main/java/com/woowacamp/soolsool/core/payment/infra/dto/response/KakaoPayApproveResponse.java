@@ -1,21 +1,23 @@
 package com.woowacamp.soolsool.core.payment.infra.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.woowacamp.soolsool.core.payment.dto.response.PayApproveResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
+// TODO : final
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class KakaoPayApproveResponse {
 
-    @JsonProperty("payment_method_type")
     private static final String MONEY = "MONEY";
 
-    private final String paymentMethodType;
-    
-    @JsonProperty("card_info")
-    private final KakaoPayCardInfo cardInfo;
+    private String paymentMethodType;
+    private KakaoPayCardInfo cardInfo;
 
     public PayApproveResponse toPayApproveResponse() {
         if (paymentMethodType.equals(MONEY)) {
@@ -24,11 +26,11 @@ public class KakaoPayApproveResponse {
 
         return new PayApproveResponse(
             paymentMethodType,
-            cardInfo.getPurchase_corp(),
+            cardInfo.getPurchaseCorp(),
             cardInfo.getBin(),
-            cardInfo.getInstall_month(),
-            cardInfo.getApproved_id(),
-            cardInfo.getCard_mid()
+            cardInfo.getInstallMonth(),
+            cardInfo.getApprovedId(),
+            cardInfo.getCardMid()
         );
     }
 }

@@ -103,7 +103,6 @@ public class MemberService {
         final Long memberId,
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        // TODO: 결제 취소에서 마일리지를 환불할 때 사용할 경우 Lock 시점을 결제 서비스로 옮겨야 함
         final RLock rLock = redissonLocker.getLock(LockType.MEMBER, memberId);
 
         try {

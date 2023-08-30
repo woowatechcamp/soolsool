@@ -42,7 +42,7 @@ class LiquorStockAcceptanceTest extends AcceptanceTest {
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
             .body(request)
-            .when().put("/liquor-stocks")
+            .when().put("/api/liquor-stocks")
             .then().log().all()
             .extract();
 

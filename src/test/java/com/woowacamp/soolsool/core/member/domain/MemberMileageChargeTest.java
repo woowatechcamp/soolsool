@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.member.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.core.member.domain.vo.MemberRoleType;
+import java.math.BigInteger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class MemberMileageChargeTest {
             .address(address)
             .role(role)
             .build();
-        String charge = "100000";
+        BigInteger charge = new BigInteger("100000");
 
         // when
         MemberMileageCharge memberMileageCharge = MemberMileageCharge.builder()

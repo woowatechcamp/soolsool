@@ -19,7 +19,7 @@ public abstract class RestAuthFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .body(loginRequest)
-            .when().post("/auth/login")
+            .when().post("/api/auth/login")
             .then().log().all()
             .extract();
 
@@ -37,7 +37,7 @@ public abstract class RestAuthFixture {
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .body(request)
-            .when().post("/auth/login")
+            .when().post("/api/auth/login")
             .then().log().all()
             .extract();
 

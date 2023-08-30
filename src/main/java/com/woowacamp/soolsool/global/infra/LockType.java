@@ -10,6 +10,7 @@ public enum LockType {
     MEMBER("MEMBER:"),
     LIQUOR_CTR("LIQUOR_CTR:"),
     LIQUOR_STOCK("LIQUOR_STOCK:"),
+    ORDER("ORDER:"),
     ;
 
     private final String key;

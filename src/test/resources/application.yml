@@ -7,6 +7,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        default_batch_fetch_size: 100
     defer-datasource-initialization: true
   redis:
     host: ${SOOLSOOL_REDIS_HOST}
@@ -21,7 +22,7 @@ security:
 kakao:
   admin:
     key: ${SOOLSOOL_KAKAO_ADMIN_KEY}
-    
+
 logging:
   level:
     org:
@@ -29,3 +30,6 @@ logging:
         type:
           descriptor:
             sql: trace
+server:
+  servlet:
+    context-path: /api

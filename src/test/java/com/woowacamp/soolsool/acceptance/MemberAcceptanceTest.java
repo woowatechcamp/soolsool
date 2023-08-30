@@ -12,6 +12,7 @@ import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .body(memberAddRequest)
             .log().all()
             .when()
-            .post("/members")
+            .post("/api/members")
             .then()
             .log().all()
             .extract();
@@ -60,7 +61,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().get("/members")
+            .when().get("/api/members")
             .then().log().all()
             .extract();
 
@@ -89,7 +90,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(modifyRequest)
-            .when().patch("/members")
+            .when().patch("/api/members")
             .then().log().all()
             .extract();
 
@@ -108,7 +109,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
-            .when().delete("/members")
+            .when().delete("/api/members")
             .then().log().all()
             .extract();
 
@@ -123,7 +124,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         RestMemberFixture.회원가입_김배달_구매자();
         String 김배달_토큰 = RestAuthFixture.로그인_김배달_구매자();
 
-        MemberMileageChargeRequest request = new MemberMileageChargeRequest("5000");
+        BigInteger amount = new BigInteger("10000");
+        MemberMileageChargeRequest request = new MemberMileageChargeRequest(amount);
 
         // when
         final ExtractableResponse<Response> response = RestAssured
@@ -132,7 +134,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .body(request)
             .when()
-            .patch("members/mileage")
+            .patch("/api/members/mileage")
             .then().log().all()
             .extract();
 

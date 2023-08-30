@@ -20,6 +20,7 @@ import com.woowacamp.soolsool.core.member.repository.MemberMileageChargeReposito
 import com.woowacamp.soolsool.core.member.repository.MemberRepository;
 import com.woowacamp.soolsool.core.member.repository.MemberRoleCache;
 import com.woowacamp.soolsool.global.infra.RedissonLocker;
+import java.math.BigInteger;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -231,10 +232,9 @@ class MemberServiceTest {
     @DisplayName("성공 : 마일리지 충전")
     void chargeMemberMileage() {
         // given
-        String amount = "10000";
-        MemberMileageChargeRequest memberMileageChargeRequest = new MemberMileageChargeRequest(
-            amount
-        );
+        BigInteger amount = new BigInteger("10000");
+        MemberMileageChargeRequest memberMileageChargeRequest =
+            new MemberMileageChargeRequest(amount);
 
         Member member = Member.builder()
             .role(MemberRole.builder()

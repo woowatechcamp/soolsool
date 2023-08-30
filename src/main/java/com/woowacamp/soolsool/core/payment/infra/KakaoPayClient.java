@@ -67,6 +67,7 @@ public class KakaoPayClient implements PayClient {
 
     private MultiValueMap<String, String> getKakaoPayReadyBody(final Receipt receipt) {
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("cid", CID);
         params.add("partner_order_id", receipt.getId().toString());
         params.add("partner_user_id", receipt.getMemberId().toString());
         params.add("item_name", generateItemName(receipt.getReceiptItems()));

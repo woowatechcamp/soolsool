@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
 
   redis:
     host: ${SOOLSOOL_REDIS_HOST}
@@ -25,3 +29,6 @@ kakao:
 logging:
   slack:
     webhook-url: ${SOOLSOOL_LOGGING_SLACK_WEBHOOK_URL}
+server:
+  servlet:
+    context-path: /api

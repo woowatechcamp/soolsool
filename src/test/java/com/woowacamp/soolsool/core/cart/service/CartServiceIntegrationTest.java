@@ -10,10 +10,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
-import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
+import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.RedissonLocker;
@@ -28,7 +29,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Import({CartService.class, LiquorService.class, LiquorBrewCache.class,
+    LiquorStatusCache.class, LiquorRegionCache.class, LiquorQueryDslRepository.class,
     LiquorStatusCache.class, LiquorRegionCache.class,
+    QuerydslConfig.class,
     RedissonConfig.class, RedissonLocker.class})
 @DisplayName("통합 테스트: CartItemService")
 class CartServiceIntegrationTest {

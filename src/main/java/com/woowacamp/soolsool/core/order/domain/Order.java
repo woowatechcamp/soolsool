@@ -2,6 +2,7 @@ package com.woowacamp.soolsool.core.order.domain;
 
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.global.common.BaseEntity;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,5 +53,9 @@ public class Order extends BaseEntity {
 
     public void updateStatus(final OrderStatus orderStatus) {
         this.status = orderStatus;
+    }
+
+    public BigInteger getMileageUsage() {
+        return this.receipt.getMileageUsage();
     }
 }
