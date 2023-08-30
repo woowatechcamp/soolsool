@@ -59,7 +59,7 @@ class PayAcceptanceTest extends AcceptanceTest {
             .header(AUTHORIZATION, BEARER + 김배달_토큰)
             .contentType(APPLICATION_JSON_VALUE)
             .body(request)
-            .when().post("/pay/ready")
+            .when().post("/api/pay/ready")
             .then().extract().body().as(new TypeRef<ApiResponse<PayReadyResponse>>() {
             })
             .getData();
