@@ -59,8 +59,10 @@ public class PayService {
 
         final RLock memberLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
         final List<RLock> liquorLocks = receipt.getReceiptItems().stream()
-            .map(receiptItem -> redissonClient.getLock(
-                LockType.LIQUOR_STOCK.getPrefix() + receiptItem.getLiquorId()))
+            .map(ReceiptItem::getLiquorId)
+            .sorted()
+            .map(liquorId -> redissonClient.getLock(
+                LockType.LIQUOR_STOCK.getPrefix() + liquorId))
             .collect(Collectors.toList());
 
         try {

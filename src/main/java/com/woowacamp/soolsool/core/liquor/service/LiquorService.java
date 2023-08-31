@@ -103,6 +103,7 @@ public class LiquorService {
 
         liquors.stream()
             .map(LiquorElementResponse::getId)
+            .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
         return getPageLiquorResponse(pageable, liquors);
@@ -115,6 +116,7 @@ public class LiquorService {
 
         liquors.stream()
             .map(LiquorElementResponse::getId)
+            .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
         return getPageLiquorResponse(pageable, liquors);
