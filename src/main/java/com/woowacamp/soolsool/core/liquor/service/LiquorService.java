@@ -113,6 +113,10 @@ public class LiquorService {
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
             .getCachedList(pageable);
 
+        liquors.stream()
+            .map(LiquorElementResponse::getId)
+            .forEach(liquorCtrRedisRepository::increaseImpression);
+
         return getPageLiquorResponse(pageable, liquors);
     }
 
