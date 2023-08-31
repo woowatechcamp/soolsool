@@ -148,7 +148,12 @@ public class LiquorCtrRedisRepository {
                 .synchronizedWithDatabase(impression.getImpression(), click.getClick());
         }
 
-        liquorCtr.replace(liquorId, synchronizedLiquorCtr);
+        if (!liquorCtr.containsKey(liquorId)) {
+            liquorCtr.put(
+                liquorId,
+                new RedisLiquorCtr(0L, 0L), LIQUOR_CTR_TTL, TimeUnit.MINUTES
+            );
+        }
     }
 
     private void initLiquorCtrIfAbsent(
