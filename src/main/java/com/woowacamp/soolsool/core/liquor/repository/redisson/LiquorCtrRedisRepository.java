@@ -8,6 +8,7 @@ import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -140,8 +141,12 @@ public class LiquorCtrRedisRepository {
 
         initLiquorCtrIfAbsent(liquorCtr, liquorId);
 
-        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.get(liquorId)
-            .synchronizedWithDatabase(impression.getImpression(), click.getClick());
+        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.get(liquorId);
+
+        if (!Objects.isNull(synchronizedLiquorCtr)) {
+            synchronizedLiquorCtr
+                .synchronizedWithDatabase(impression.getImpression(), click.getClick());
+        }
 
         liquorCtr.replace(liquorId, synchronizedLiquorCtr);
     }
