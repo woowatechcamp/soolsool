@@ -47,8 +47,8 @@ public class GlobalExceptionHandler {
         final ErrorCode errorCode = DefaultErrorCode.UNEXPECTED_ERROR;
         final ErrorResponse errorResponse = ErrorResponse.from(errorCode);
 
-        log.error("!!! 예상치 못한 예외가 발생했습니다 !!! | code : {} | message : {}",
-            errorCode.getCode(), e.getMessage());
+        log.error("!!! 예상치 못한 예외가 발생했습니다 !!! | code : {} | message : {} | log : {}",
+            errorCode.getCode(), e.getMessage(), e.getStackTrace());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
