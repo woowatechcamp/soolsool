@@ -102,7 +102,8 @@ public class LiquorService {
             .getList(liquorSearchCondition, pageable, cursorId);
 
         liquors.stream()
-            .map(LiquorElementResponse::getId)
+            .mapToLong(LiquorElementResponse::getId)
+            .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
         return getPageLiquorResponse(pageable, liquors);
@@ -114,7 +115,8 @@ public class LiquorService {
             .getCachedList(pageable);
 
         liquors.stream()
-            .map(LiquorElementResponse::getId)
+            .mapToLong(LiquorElementResponse::getId)
+            .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
         return getPageLiquorResponse(pageable, liquors);
