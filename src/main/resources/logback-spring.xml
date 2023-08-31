@@ -71,9 +71,9 @@
   <!-- 비동기 알림 전송 설정 -->
   <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
     <appender-ref ref="SLACK"/>
-    <!-- ERROR 레벨의 로그만 전송하도록 설정 -->
+    <!-- WARN 레벨 이하의 로그만 전송하도록 설정 -->
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>ERROR</level>
+      <level>WARN</level>
     </filter>
   </appender>
 
