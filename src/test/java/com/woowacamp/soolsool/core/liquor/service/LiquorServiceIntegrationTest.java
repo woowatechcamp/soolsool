@@ -10,10 +10,14 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
+import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -31,7 +36,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({LiquorService.class, LiquorBrewCache.class, LiquorStatusCache.class,
     LiquorRegionCache.class, LiquorQueryDslRepository.class,
     QuerydslConfig.class,
-    RedissonConfig.class, ReceiptRedisRepository.class})
+    RedissonConfig.class, ReceiptRedisRepository.class, LiquorCtrRedisRepository.class})
 @DisplayName("통합 테스트: LiquorService")
 class LiquorServiceIntegrationTest {
 
@@ -41,6 +46,21 @@ class LiquorServiceIntegrationTest {
     @Autowired
     LiquorRepository liquorRepository;
 
+    @Autowired
+    LiquorBrewRepository liquorBrewRepository;
+
+    @Autowired
+    LiquorRegionRepository liquorRegionRepository;
+
+    @Autowired
+    LiquorStatusRepository liquorStatusRepository;
+
+    @Autowired
+    LiquorCtrRedisRepository liquorCtrRedisRepository;
+
+    @Autowired
+    RedissonClient redissonClient;
+
     @Test
     @Sql({
         "/member-type.sql", "/member.sql",
@@ -49,13 +69,12 @@ class LiquorServiceIntegrationTest {
         "/order-type.sql", "/order.sql"
     })
     @DisplayName("상품 상세 정보를 조회한다.")
-    void liquorDetail() throws Exception {
+    void liquorDetail() {
         /* given */
         Long 새로 = 1L;
 
         /* when */
         LiquorDetailResponse response = liquorService.liquorDetail(새로);
-
 
         /* then */
         assertAll(
@@ -122,6 +141,7 @@ class LiquorServiceIntegrationTest {
             100, 12.0, 300,
             LocalDateTime.now().plusYears(10L)
         );
+
         // when & then
         assertThatCode(() -> liquorService.modifyLiquor(liquorId, liquorModifyRequest))
             .isInstanceOf(SoolSoolException.class)
