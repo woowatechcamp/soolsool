@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.statistics.controller;
 
 import com.woowacamp.soolsool.core.statistics.service.StatisticsService;
+import com.woowacamp.soolsool.global.aop.RequestLogging;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,10 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @NoAuth
-    @GetMapping()
+    @RequestLogging
+    @GetMapping
     @Scheduled(cron = "0 0 0 * * *")
     public ResponseEntity<ApiResponse<Void>> updateStatisticsSales() {
-        log.info("/statistics | 자동 통계 집계 쿼리 실행");
-
         statisticsService.updateStatistics();
 
         return ResponseEntity.ok().build();
