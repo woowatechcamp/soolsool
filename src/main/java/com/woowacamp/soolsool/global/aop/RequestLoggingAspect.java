@@ -2,6 +2,7 @@ package com.woowacamp.soolsool.global.aop;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -39,19 +40,24 @@ public class RequestLoggingAspect {
     }
 
     private String mapToFormatted(final Map<String, String[]> params) {
-        final String queryParams = params.entrySet().stream()
-            .map(entry -> String.join(entry.getKey() + "=", entry.getValue()))
+        final String formattedParams = params.entrySet().stream()
+            .map(this::formatParam)
             .collect(Collectors.joining("&"));
 
-        if (StringUtils.hasText(queryParams)) {
-            return "?" + queryParams;
+        if (StringUtils.hasText(formattedParams)) {
+            return "?" + formattedParams;
         }
 
-        return queryParams;
+        return formattedParams;
     }
 
     private String extractBody(final Object[] args) {
         return String.join(",", Arrays.toString(args));
     }
-}
 
+    private String formatParam(final Entry<String, String[]> entry) {
+        return Arrays.stream(entry.getValue())
+            .map(value -> entry.getKey() + "=" + value)
+            .collect(Collectors.joining("&"));
+    }
+}
