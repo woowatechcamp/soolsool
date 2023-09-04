@@ -21,7 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class RequestLoggingAspect {
 
     @Around("@annotation(com.woowacamp.soolsool.global.aop.RequestLogging)")
-    public Object logMethod2(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object logRequest(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         final ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (Objects.isNull(attributes)) {
             return proceedingJoinPoint.proceed();
