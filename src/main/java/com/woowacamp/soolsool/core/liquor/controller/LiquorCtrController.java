@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.liquor.controller;
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrResultCode;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorCtrDetailResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorCtrService;
+import com.woowacamp.soolsool.global.aop.RequestLogging;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class LiquorCtrController {
     private final LiquorCtrService liquorCtrService;
 
     @NoAuth
+    @RequestLogging
     @GetMapping
     public ResponseEntity<ApiResponse<LiquorCtrDetailResponse>> findLiquorCtr(
         @RequestParam final Long liquorId

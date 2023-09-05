@@ -14,11 +14,11 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
+import com.woowacamp.soolsool.global.aop.RequestLogging;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -46,14 +46,11 @@ public class LiquorController {
     private final LiquorService liquorService;
 
     @Vendor
+    @RequestLogging
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveLiquor(
-        final HttpServletRequest httpServletRequest,
         @RequestBody final LiquorSaveRequest liquorSaveRequest
     ) {
-        log.info("{} {} | request : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), liquorSaveRequest);
-
         final Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         return ResponseEntity.created(URI.create("/liquors/" + saveLiquorId))
@@ -61,28 +58,22 @@ public class LiquorController {
     }
 
     @NoAuth
+    @RequestLogging
     @GetMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<LiquorDetailResponse>> liquorDetail(
-        final HttpServletRequest httpServletRequest,
         @PathVariable final Long liquorId
     ) {
-        log.info("{} {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath());
-
         final LiquorDetailResponse response = liquorService.liquorDetail(liquorId);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, response));
     }
 
     @NoAuth
+    @RequestLogging
     @GetMapping("/first")
     public ResponseEntity<ApiResponse<PageLiquorResponse>> getLiquorFirstList(
-        final HttpServletRequest httpServletRequest,
         @PageableDefault final Pageable pageable
     ) {
-        log.info("{} {} |  Pageable : {}", httpServletRequest.getMethod(),
-            httpServletRequest.getServletPath(), pageable);
-
         final PageRequest sortPageable = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
@@ -95,9 +86,9 @@ public class LiquorController {
     }
 
     @NoAuth
+    @RequestLogging
     @GetMapping
     public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorList(
-        final HttpServletRequest httpServletRequest,
         @RequestParam("brew") @Nullable final LiquorBrewType brew,
         @RequestParam("region") @Nullable final LiquorRegionType region,
         @RequestParam("status") @Nullable final LiquorStatusType status,
@@ -105,10 +96,6 @@ public class LiquorController {
         @RequestParam @Nullable final Long cursorId,
         @PageableDefault final Pageable pageable
     ) {
-        log.info("{} {} | brew : {} | region : {} | status : {} | brand : {} | Pageable : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
-            brew, region, status, brand, pageable);
-
         final PageRequest sortPageable = PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
@@ -122,30 +109,23 @@ public class LiquorController {
     }
 
     @Vendor
+    @RequestLogging
     @PutMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> modifyLiquor(
-        final HttpServletRequest httpServletRequest,
         @PathVariable final Long liquorId,
         @RequestBody final LiquorModifyRequest liquorModifyRequest
     ) {
-        log.info("{} {} | request : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
-            liquorModifyRequest);
-
         liquorService.modifyLiquor(liquorId, liquorModifyRequest);
 
         return ResponseEntity.ok(ApiResponse.from(LIQUOR_UPDATED));
     }
 
     @Vendor
+    @RequestLogging
     @DeleteMapping("/{liquorId}")
     public ResponseEntity<ApiResponse<Void>> deleteLiquor(
-        final HttpServletRequest httpServletRequest,
         @PathVariable final Long liquorId
     ) {
-        log.info("{} {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath());
-
         liquorService.deleteLiquor(liquorId);
 
         return ResponseEntity.ok().body(ApiResponse.from(LIQUOR_DELETED));

@@ -6,10 +6,10 @@ import com.woowacamp.soolsool.core.member.dto.request.MemberMileageChargeRequest
 import com.woowacamp.soolsool.core.member.dto.request.MemberModifyRequest;
 import com.woowacamp.soolsool.core.member.dto.response.MemberDetailResponse;
 import com.woowacamp.soolsool.core.member.service.MemberService;
+import com.woowacamp.soolsool.global.aop.RequestLogging;
 import com.woowacamp.soolsool.global.auth.dto.LoginUser;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.common.ApiResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,74 +32,57 @@ public class MemberController {
     private final MemberService memberService;
 
     @NoAuth
+    @RequestLogging
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addMember(
-        final HttpServletRequest httpServletRequest,
         @RequestBody @Valid final MemberAddRequest memberAddRequest
     ) {
-        log.info("{} {} | request : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberAddRequest);
-
         memberService.addMember(memberAddRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.from(MemberResultCode.MEMBER_CREATE_SUCCESS));
     }
 
+    @RequestLogging
     @GetMapping
     public ResponseEntity<ApiResponse<MemberDetailResponse>> findMemberDetails(
-        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("{} {} | memberId : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
-
         final MemberDetailResponse memberDetailResponse = memberService.findMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.of(MemberResultCode.MEMBER_FIND_SUCCESS, memberDetailResponse));
     }
 
+    @RequestLogging
     @PatchMapping
     public ResponseEntity<ApiResponse<Void>> modifyMember(
-        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody @Valid final MemberModifyRequest memberModifyRequest
     ) {
-        log.info("{} {} | memberId : {} | request : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
-            memberId, memberModifyRequest);
-
         memberService.modifyMember(memberId, memberModifyRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(ApiResponse.from(MemberResultCode.MEMBER_MODIFY_SUCCESS));
     }
 
+    @RequestLogging
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> removeMember(
-        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId
     ) {
-        log.info("{} {} | memberId : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(), memberId);
-
         memberService.removeMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(ApiResponse.from(MemberResultCode.MEMBER_DELETE_SUCCESS));
     }
 
+    @RequestLogging
     @PatchMapping("/mileage")
     public ResponseEntity<ApiResponse<Void>> addMemberMileage(
-        final HttpServletRequest httpServletRequest,
         @LoginUser final Long memberId,
         @RequestBody @Valid final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        log.info("{} {} | memberId : {} | request : {}",
-            httpServletRequest.getMethod(), httpServletRequest.getServletPath(),
-            memberId, memberMileageChargeRequest);
-
         memberService.addMemberMileage(memberId, memberMileageChargeRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
