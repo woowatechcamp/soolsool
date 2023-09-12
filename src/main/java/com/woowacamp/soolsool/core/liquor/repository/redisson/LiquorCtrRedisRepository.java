@@ -8,7 +8,9 @@ import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
+
 import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
@@ -90,10 +92,9 @@ public class LiquorCtrRedisRepository {
                 redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
             initLiquorCtrIfAbsent(liquorCtr, liquorId);
-
             final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-
             liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
+
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -138,7 +139,8 @@ public class LiquorCtrRedisRepository {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr =
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.getOrDefault(liquorId, new RedisLiquorCtr(0L, 0L))
+        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.getOrDefault(liquorId,
+                new RedisLiquorCtr(0L, 0L))
             .synchronizedWithDatabase(impression.getImpression(), click.getClick());
 
         if (liquorCtr.containsKey(liquorId)) {
@@ -152,7 +154,11 @@ public class LiquorCtrRedisRepository {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr,
         final Long liquorId
     ) {
-        liquorCtr.putIfAbsent(
+        if (liquorCtr.get(liquorId) != null) {
+            return;
+        }
+        // TODO : 기존 로직에서 putIfAbsent 이 NPE 를 발생 시켜, 다음과 같이 변경하였습니다.
+        liquorCtr.put(
             liquorId,
             new RedisLiquorCtr(0L, 0L),
             LIQUOR_CTR_TTL,
