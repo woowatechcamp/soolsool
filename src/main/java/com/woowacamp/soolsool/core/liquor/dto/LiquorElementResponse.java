@@ -3,19 +3,21 @@ package com.woowacamp.soolsool.core.liquor.dto;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class LiquorElementResponse {
 
-    private final Long id;
-    private final String name;
-    private final String price;
-    private final String imageUrl;
-    private final Integer stock;
+    private Long id;
+    private String name;
+    private String price;
+    private String imageUrl;
+    private Integer stock;
 
     public LiquorElementResponse(final Liquor liquor) {
         this.id = liquor.getId();

@@ -50,7 +50,7 @@ public class LiquorQueryDslRepository {
             .fetch();
     }
 
-    @Cacheable(value = "liquorsFirstPage")
+    @Cacheable(value = "liquorsFirstPage", cacheManager = "redisCacheManager")
     public List<LiquorElementResponse> getCachedList(
         final Pageable pageable
     ) {

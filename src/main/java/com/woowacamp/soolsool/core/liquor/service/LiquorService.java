@@ -152,7 +152,7 @@ public class LiquorService {
         );
     }
 
-    @CacheEvict(value = "liquorsFirstPage")
+    @CacheEvict(value = "liquorsFirstPage", cacheManager = "redisCacheManager")
     @Transactional
     public void deleteLiquor(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
