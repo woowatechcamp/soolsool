@@ -1,8 +1,9 @@
 package com.woowacamp.soolsool.global.config;
 
+import static com.woowacamp.soolsool.global.infra.RedisCacheType.LIQUOR_FIRST_PAGE;
+
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.woowacamp.soolsool.global.infra.CaffeineCacheType;
-import com.woowacamp.soolsool.global.infra.RedisCacheType;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -70,8 +71,13 @@ public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
                 .fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         Map<String, RedisCacheConfiguration> cacheConfiguration = new HashMap<>();
-        cacheConfiguration.put(RedisCacheType.LIQUOR_FIRST_PAGE.getCacheName(),
-            redisCacheConfiguration.entryTtl(Duration.ofSeconds(60L)));
+        cacheConfiguration.put(
+            LIQUOR_FIRST_PAGE.getCacheName(),
+            redisCacheConfiguration.entryTtl(
+                Duration.ofSeconds(LIQUOR_FIRST_PAGE.getExpireSeconds()
+                )
+            )
+        );
 
         return RedisCacheManager.RedisCacheManagerBuilder
             .fromConnectionFactory(redisConnectionFactory)
