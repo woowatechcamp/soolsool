@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.core.receipt.repository;
 import static com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType.INPROGRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacamp.soolsool.config.CacheTestConfig;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 @DataJpaTest
 @Sql("/receipt-type.sql")
 @DisplayName("통합 테스트: ReceiptStatusRepository")
-@Import(ReceiptStatusCache.class)
+@Import({ReceiptStatusCache.class, CacheTestConfig.class})
 class ReceiptStatusRepositoryTest {
 
     @Autowired

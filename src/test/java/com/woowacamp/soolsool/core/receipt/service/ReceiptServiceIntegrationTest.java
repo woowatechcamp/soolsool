@@ -8,6 +8,7 @@ import static com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType.CO
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.woowacamp.soolsool.config.CacheTestConfig;
 import com.woowacamp.soolsool.core.cart.service.CartService;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
@@ -32,7 +33,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({ReceiptService.class, CartService.class, LiquorService.class,
     ReceiptMapper.class, LiquorBrewCache.class, LiquorStatusCache.class,
     LiquorRegionCache.class, ReceiptStatusCache.class,
-    LiquorQueryDslRepository.class, QuerydslConfig.class,
+    LiquorQueryDslRepository.class, QuerydslConfig.class, CacheTestConfig.class,
     RedissonConfig.class, ReceiptRedisRepository.class, LiquorCtrRedisRepository.class})
 @DisplayName("통합 테스트: ReceiptService")
 class ReceiptServiceIntegrationTest {
