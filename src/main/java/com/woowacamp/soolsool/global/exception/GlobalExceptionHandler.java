@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
         log.error("!!! 예상치 못한 예외가 발생했습니다 !!! | code : {} | message : {} | log : {}",
             errorCode.getCode(), e.getMessage(), e.getStackTrace());
-        e.printStackTrace();
+
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
