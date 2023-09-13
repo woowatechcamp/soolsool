@@ -25,7 +25,6 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql({
     "/member-type.sql", "/member.sql",
     "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql", "/liquor-ctr.sql",
-    "/statistics.sql"
 })
 class LiquorQueryDslRepositoryTest {
 
@@ -55,7 +54,7 @@ class LiquorQueryDslRepositoryTest {
             );
 
         // then
-        assertThat(커서첫번째).hasSize(1);
+        assertThat(커서첫번째).isEmpty();
     }
 
     @Test

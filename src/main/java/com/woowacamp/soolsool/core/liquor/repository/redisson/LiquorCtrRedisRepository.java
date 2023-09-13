@@ -92,7 +92,6 @@ public class LiquorCtrRedisRepository {
             initLiquorCtrIfAbsent(liquorCtr, liquorId);
 
             final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-
             liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
@@ -152,7 +151,10 @@ public class LiquorCtrRedisRepository {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr,
         final Long liquorId
     ) {
-        liquorCtr.putIfAbsent(
+        if (liquorCtr.get(liquorId) != null) {
+            return;
+        }
+        liquorCtr.put(
             liquorId,
             new RedisLiquorCtr(0L, 0L),
             LIQUOR_CTR_TTL,
