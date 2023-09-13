@@ -32,6 +32,7 @@ public class LiquorCtrRedisRepository {
 
     private final RedissonClient redissonClient;
 
+    // TODO: RedisLiquorCtr vs LiquorCtr
     public LiquorCtrRedisRepository(
         final LiquorCtrRepository liquorCtrRepository,
         final RedissonClient redissonClient,
@@ -72,25 +73,7 @@ public class LiquorCtrRedisRepository {
             throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
         }
     }
-
-    public LiquorCtrImpression getImpressionByLiquorId(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        initLiquorCtrIfAbsent(liquorCtrs, liquorId);
-
-        return new LiquorCtrImpression(liquorCtrs.get(liquorId).getImpression());
-    }
-
-    public LiquorCtrClick getClickByLiquorId(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        initLiquorCtrIfAbsent(liquorCtrs, liquorId);
-
-        return new LiquorCtrClick(liquorCtrs.get(liquorId).getClick());
-    }
-
+    
     public void increaseImpression(final Long liquorId) {
         final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
 

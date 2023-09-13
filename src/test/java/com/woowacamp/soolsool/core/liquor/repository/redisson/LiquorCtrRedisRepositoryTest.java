@@ -2,15 +2,12 @@ package com.woowacamp.soolsool.core.liquor.repository.redisson;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
+import com.woowacamp.soolsool.config.RedisTestConfig;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
-import com.woowacamp.soolsool.global.config.RedissonConfig;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,11 +19,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({LiquorCtrRedisRepository.class, RedissonConfig.class})
+@Import({LiquorCtrRedisRepository.class, RedisTestConfig.class})
 @DisplayName("통합 테스트 : LiquorCtrRedisRepository")
 class LiquorCtrRedisRepositoryTest {
 
     private static final String LIQUOR_CTR_KEY = "LIQUOR_CTR";
+    private static final Long TARGET_LIQUOR = 1L;
 
     @Autowired
     LiquorCtrRedisRepository liquorCtrRedisRepository;
@@ -37,10 +35,7 @@ class LiquorCtrRedisRepositoryTest {
     @Autowired
     RedissonClient redissonClient;
 
-    Long liquorId = 1L;
-
     @BeforeEach
-    @AfterEach
     void setUpLiquorCtr() {
         RMapCache<Long, RedisLiquorCtr> mapCache = redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
@@ -53,10 +48,10 @@ class LiquorCtrRedisRepositoryTest {
     void getCtr() {
         // given
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(2L, 1L));
+            .put(TARGET_LIQUOR, new RedisLiquorCtr(2L, 1L));
 
         // when
-        double ctr = liquorCtrRedisRepository.getCtr(liquorId);
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
 
         // then
         assertThat(ctr).isEqualTo(0.5);
@@ -69,7 +64,7 @@ class LiquorCtrRedisRepositoryTest {
         // given
 
         // when
-        double ctr = liquorCtrRedisRepository.getCtr(liquorId);
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
 
         // then
         assertThat(ctr).isEqualTo(0.5);
@@ -80,15 +75,15 @@ class LiquorCtrRedisRepositoryTest {
     @DisplayName("Redis에 Ctr 정보가 존재하지 않을 경우 DB를 조회해 Redis에 반영한다.")
     void synchronizeWithDatabase() {
         // given
-        Long expected = liquorCtrRepository.findByLiquorId(liquorId)
+        double expected = liquorCtrRepository.findByLiquorId(TARGET_LIQUOR)
             .orElseThrow(() -> new RuntimeException("LiquorCtr이 존재하지 않습니다."))
-            .getImpression();
+            .getCtr();
 
         // when
-        long result = liquorCtrRedisRepository.getImpressionByLiquorId(liquorId).getImpression();
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
 
         // then
-        assertThat(result).isEqualTo(expected);
+        assertThat(ctr).isEqualTo(expected);
     }
 
     @Test
@@ -96,14 +91,14 @@ class LiquorCtrRedisRepositoryTest {
     void updateImpression() {
         // given
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(0L, 0L));
+            .put(TARGET_LIQUOR, new RedisLiquorCtr(1L, 1L));
 
         // when
-        liquorCtrRedisRepository.increaseImpression(liquorId);
+        liquorCtrRedisRepository.increaseImpression(TARGET_LIQUOR);
 
         // then
-        LiquorCtrImpression click = liquorCtrRedisRepository.getImpressionByLiquorId(liquorId);
-        assertThat(click.getImpression()).isEqualTo(1L);
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
+        assertThat(ctr).isEqualTo(0.5);
     }
 
     @Test
@@ -111,7 +106,7 @@ class LiquorCtrRedisRepositoryTest {
     void updateImpressionByMultiThread() throws InterruptedException {
         // given
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(0L, 0L));
+            .put(TARGET_LIQUOR, new RedisLiquorCtr(50L, 50L));
 
         int threadCount = 50;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -120,15 +115,15 @@ class LiquorCtrRedisRepositoryTest {
         // when
         for (int i = 0; i < threadCount; i++) {
             executor.submit(() -> {
-                liquorCtrRedisRepository.increaseImpression(liquorId);
+                liquorCtrRedisRepository.increaseImpression(TARGET_LIQUOR);
                 latch.countDown();
             });
         }
         latch.await();
 
         // then
-        LiquorCtrImpression click = liquorCtrRedisRepository.getImpressionByLiquorId(liquorId);
-        assertThat(click.getImpression()).isEqualTo(threadCount);
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
+        assertThat(ctr).isEqualTo(0.5);
     }
 
     @Test
@@ -136,14 +131,14 @@ class LiquorCtrRedisRepositoryTest {
     void updateClick() {
         // given
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(0L, 0L));
+            .put(TARGET_LIQUOR, new RedisLiquorCtr(1L, 0L));
 
         // when
-        liquorCtrRedisRepository.increaseClick(liquorId);
+        liquorCtrRedisRepository.increaseClick(TARGET_LIQUOR);
 
         // then
-        LiquorCtrClick click = liquorCtrRedisRepository.getClickByLiquorId(liquorId);
-        assertThat(click.getClick()).isEqualTo(1);
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
+        assertThat(ctr).isEqualTo(1);
     }
 
     @Test
@@ -151,7 +146,7 @@ class LiquorCtrRedisRepositoryTest {
     void updateClickByMultiThread() throws InterruptedException {
         // given
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(0L, 0L));
+            .put(TARGET_LIQUOR, new RedisLiquorCtr(50L, 0L));
 
         int threadCount = 50;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -160,14 +155,14 @@ class LiquorCtrRedisRepositoryTest {
         // when
         for (int i = 0; i < threadCount; i++) {
             executor.submit(() -> {
-                liquorCtrRedisRepository.increaseClick(liquorId);
+                liquorCtrRedisRepository.increaseClick(TARGET_LIQUOR);
                 latch.countDown();
             });
         }
         latch.await();
 
         // then
-        LiquorCtrClick click = liquorCtrRedisRepository.getClickByLiquorId(liquorId);
-        assertThat(click.getClick()).isEqualTo(threadCount);
+        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
+        assertThat(ctr).isEqualTo(1);
     }
 }
