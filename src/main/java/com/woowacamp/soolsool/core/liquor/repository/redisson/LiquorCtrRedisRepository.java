@@ -32,7 +32,8 @@ public class LiquorCtrRedisRepository {
 
     private final RedissonClient redissonClient;
 
-    // TODO: RedisLiquorCtr vs LiquorCtr
+    // TODO: RedisLiquorCtr vs LiquorCtr -> "Best practice(Jpa + Redis)"을 참고하는게 맞을 것 같다.
+    // TODO: LiquorCtrRedisService vs LiquorCtrRedisRepository -> 취향 차이다...
     public LiquorCtrRedisRepository(
         final LiquorCtrRepository liquorCtrRepository,
         final RedissonClient redissonClient,
@@ -51,6 +52,20 @@ public class LiquorCtrRedisRepository {
         this.redissonClient = redissonClient;
     }
 
+    // ?
+    // 여기 repository인데 비즈니스 로직을 하는게 맞나...?
+    // 사실 repository면 getCtr이 아니라 getLiquorCtr을 public으로 제공해야하는거 아닌가?
+
+    // Repository -> storage value -> memory
+    // lockUP 있는게 자연스럽다...
+    // write ... -> writeListener
+    // write가 있는 애...
+
+    // LCRR -> Service
+
+    // 1. LCRR의 로직을 LCS 해야하는거 아닌가?
+    // 2. RedissonClient 감싸는 Repository를 만들어서 LCS에서 남은 로직을 마무리한다.
+    // RedissonClient -> Repository
     public double getCtr(final Long liquorId) {
         final RedisLiquorCtr liquorCtr = lookUpLiquorCtr(liquorId);
         final Long click = liquorCtr.getClick();
@@ -69,6 +84,17 @@ public class LiquorCtrRedisRepository {
         }
     }
 
+    // JpaRepository.updateAgeOne
+    // RedisRepository.updateImpressionOne
+
+    // 비관전락 했을 때 LiquorCtrRepsotiory.findById() <- @Lock
+    // Repository에서 락을 건게 아닌가?
+    // RLock을 Redis에서 빌린다고 생각 -> redissonClient.getLock() 자체가 Redis에 락 요청 보내는거아냐?
+
+    // AOP 구현했을 때 -> @Transactional -> repository에도 붙인다.
+    // Service 메서드에서 트랜잭션 시작을 원치 않을 수도 있다
+    // service.method( repo.m1, repo.m2 )
+    // repository에서 @RedisLock 을 붙이는게 자연스럽다...?
     public void increaseImpression(final Long liquorId) {
         final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
 
@@ -105,6 +131,7 @@ public class LiquorCtrRedisRepository {
         }
     }
 
+    // TODO: 만료 테스트는 어떻게 해야할까?
     private RedisLiquorCtr lookUpLiquorCtr(final Long liquorId) {
         final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
