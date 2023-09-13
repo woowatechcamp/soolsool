@@ -13,7 +13,8 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Statisti
 
     @Modifying
     @Query(value =
-        "INSERT INTO statistics (liquor_id, year, month, week, day, sale_quantity, sale_price, brew_type, region) "
+        "INSERT INTO statistics (liquor_id, statistic_year, statistic_month, statistic_week, "
+            + "statistic_day, sale_quantity, sale_price, brew_type, region) "
             +
             "SELECT ri.liquor_id as liquor_id, " +
             "       YEAR(o.created_at) as year, " +
@@ -29,14 +30,16 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Statisti
             "WHERE o.order_status_id = 1 " +
             "AND o.created_at BETWEEN :startDate AND :endDate " +
             "GROUP BY year, month, week, day, liquor_id, brew_type, region " +
-            "ON DUPLICATE KEY UPDATE sale_quantity = (SELECT sale_quantity), sale_price = (SELECT sale_price) ", nativeQuery = true)
+            "ON DUPLICATE KEY UPDATE sale_quantity = (SELECT sale_quantity), "
+            + "sale_price = (SELECT sale_price) ", nativeQuery = true)
     void updateStatisticsSales(
         final LocalDate startDate,
         final LocalDate endDate
     );
 
     @Modifying
-    @Query(value = "INSERT INTO statistics (year, month, week, day, liquor_id, impression, click) "
+    @Query(value = "INSERT INTO statistics (statistic_year, statistic_month, statistic_week, "
+        + "statistic_day, liquor_id, impression, click) "
         +
         "SELECT YEAR(:date) as year, " +
         "       MONTH(:date) as month, " +
