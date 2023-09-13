@@ -52,12 +52,7 @@ public class LiquorCtrRedisRepository {
     }
 
     public double getCtr(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        initLiquorCtrIfAbsent(liquorCtrs, liquorId);
-
-        final RedisLiquorCtr liquorCtr = liquorCtrs.get(liquorId);
+        final RedisLiquorCtr liquorCtr = lookUpLiquorCtr(liquorId);
         final Long click = liquorCtr.getClick();
         final Long impression = liquorCtr.getImpression();
 
@@ -73,21 +68,14 @@ public class LiquorCtrRedisRepository {
             throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
         }
     }
-    
+
     public void increaseImpression(final Long liquorId) {
         final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
 
         try {
             rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-                redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-            initLiquorCtrIfAbsent(liquorCtr, liquorId);
-
-            final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-
-            liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
+            replaceLiquorCtr(liquorId, lookUpLiquorCtr(liquorId).increaseImpression());
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -105,14 +93,7 @@ public class LiquorCtrRedisRepository {
         try {
             rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-                redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-            initLiquorCtrIfAbsent(liquorCtr, liquorId);
-
-            final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-
-            liquorCtr.replace(liquorId, redisLiquorCtr.increaseClick());
+            replaceLiquorCtr(liquorId, lookUpLiquorCtr(liquorId).increaseClick());
         } catch (final InterruptedException e) {
             log.error("클릭수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -124,10 +105,10 @@ public class LiquorCtrRedisRepository {
         }
     }
 
-    private void initLiquorCtrIfAbsent(
-        final RMapCache<Long, RedisLiquorCtr> liquorCtrs,
-        final Long liquorId
-    ) {
+    private RedisLiquorCtr lookUpLiquorCtr(final Long liquorId) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
+            redissonClient.getMapCache(LIQUOR_CTR_KEY);
+
         if (!liquorCtrs.containsKey(liquorId)) {
             final LiquorCtr liquorCtr = liquorCtrRepository.findByLiquorId(liquorId)
                 .orElseThrow(() -> new SoolSoolException(LiquorCtrErrorCode.NOT_LIQUOR_CTR_FOUND));
@@ -139,5 +120,14 @@ public class LiquorCtrRedisRepository {
                 TimeUnit.MINUTES
             );
         }
+
+        return liquorCtrs.get(liquorId);
+    }
+
+    private void replaceLiquorCtr(final Long liquorId, final RedisLiquorCtr redisLiquorCtr) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
+            redissonClient.getMapCache(LIQUOR_CTR_KEY);
+
+        liquorCtrs.replace(liquorId, redisLiquorCtr);
     }
 }
