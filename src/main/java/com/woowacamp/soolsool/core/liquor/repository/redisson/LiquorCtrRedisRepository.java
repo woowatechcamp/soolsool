@@ -92,7 +92,6 @@ public class LiquorCtrRedisRepository {
             initLiquorCtrIfAbsent(liquorCtr, liquorId);
 
             final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-
             liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
