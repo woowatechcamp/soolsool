@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.statistics.domain;
+package com.woowacamp.soolsool.core.statistics.domain.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 

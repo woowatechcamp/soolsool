@@ -1,6 +1,7 @@
 package com.woowacamp.soolsool.core.statistics.domain;
 
 import com.woowacamp.soolsool.core.statistics.domain.converter.BrewTypeConverter;
+import com.woowacamp.soolsool.core.statistics.domain.converter.ClickConverter;
 import com.woowacamp.soolsool.core.statistics.domain.converter.ImpressionConverter;
 import com.woowacamp.soolsool.core.statistics.domain.converter.RegionConverter;
 import com.woowacamp.soolsool.core.statistics.domain.converter.SalePriceConveter;
@@ -13,7 +14,6 @@ import com.woowacamp.soolsool.core.statistics.domain.vo.SalePrice;
 import com.woowacamp.soolsool.core.statistics.domain.vo.SaleQuantity;
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -43,7 +43,8 @@ public class Statistics {
     @Convert(converter = ImpressionConverter.class)
     private Impression impression;
 
-    @Embedded
+    @Column(name = "click", columnDefinition = "decimal(19,2) default 0.0")
+    @Convert(converter = ClickConverter.class)
     private Click click;
 
     @Column(name = "sale_quantity", columnDefinition = "decimal(19,2) default 0.0")
