@@ -55,12 +55,26 @@ public class LiquorQueryDslRepository {
         final Pageable pageable
     ) {
         log.info("LiquorQueryDslRepository getCachedList");
-        return getList(
-            LiquorSearchCondition.nullObject(),
-            pageable,
-            null
-        );
+        return getList(pageable, null);
     }
+
+    private List<LiquorElementResponse> getList(
+        final Pageable pageable,
+        final Long cursorId
+    ) {
+        return queryFactory.select(
+                Projections.constructor(
+                    LiquorElementResponse.class,
+                    liquor
+                )
+            )
+            .from(liquor)
+            .where(cursorId(cursorId))
+            .orderBy(liquor.id.desc())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
+
 
     private BooleanExpression eqRegion(final LiquorRegion liquorRegion) {
         if (Objects.isNull(liquorRegion)) {
