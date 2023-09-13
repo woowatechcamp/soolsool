@@ -1,7 +1,7 @@
 package com.woowacamp.soolsool.core.liquor.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.QLiquor.liquor;
-import static com.woowacamp.soolsool.core.statistics.domain.QStatistics.statistics;
+import static com.woowacamp.soolsool.core.liquor.domain.QLiquorCtr.liquorCtr;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -12,9 +12,6 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
-import com.woowacamp.soolsool.core.statistics.domain.vo.Click;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -36,28 +33,23 @@ public class LiquorQueryDslRepository {
         final Long cursorId,
         final Long clickCount
     ) {
-
         return queryFactory.select(
                 Projections.constructor(
                     LiquorElementResponse.class,
                     liquor,
-                    statistics.click.count
+                    liquorCtr.click
                 )
             )
             .from(liquor)
-            .join(statistics).on(liquor.id.eq(statistics.statisticsId.liquorId))
+            .join(liquorCtr).on(liquor.id.eq(liquorCtr.liquorId))
             .where(
-                statistics.statisticsId.year.eq(LocalDateTime.now().getYear()),
-                statistics.statisticsId.month.eq(LocalDateTime.now().getMonthValue()),
-                statistics.statisticsId.week.eq(LocalDateTime.now().getDayOfWeek().getValue()),
-                statistics.statisticsId.day.eq(LocalDateTime.now().getDayOfMonth()),
                 eqRegion(condition.getLiquorRegion()),
                 eqBrew(condition.getLiquorBrew()),
                 eqStatus(condition.getLiquorStatus()),
                 eqBrand(condition.getBrand()),
                 cursorId(cursorId, clickCount)
             )
-            .orderBy(liquor.id.desc(), statistics.click.count.desc())
+            .orderBy(liquor.id.desc(), liquorCtr.click.click.desc())
             .limit(pageable.getPageSize())
             .fetch();
     }
@@ -111,8 +103,8 @@ public class LiquorQueryDslRepository {
         }
 
         return
-            statistics.click.count.lt(click)
-                .or(statistics.click.eq(new Click(new BigInteger(click.toString())))
+            liquorCtr.click.click.lt(click)
+                .or(liquorCtr.click.click.eq(click)
                     .and(liquor.id.lt(cursorId)));
     }
 }

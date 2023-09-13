@@ -152,7 +152,10 @@ public class LiquorCtrRedisRepository {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr,
         final Long liquorId
     ) {
-        liquorCtr.putIfAbsent(
+        if (liquorCtr.get(liquorId) != null) {
+            return;
+        }
+        liquorCtr.put(
             liquorId,
             new RedisLiquorCtr(0L, 0L),
             LIQUOR_CTR_TTL,

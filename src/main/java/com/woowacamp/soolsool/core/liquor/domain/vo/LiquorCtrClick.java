@@ -3,12 +3,18 @@ package com.woowacamp.soolsool.core.liquor.domain.vo;
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Embeddable
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class LiquorCtrClick {
 
-    private final Long click;
+    @Column(name = "click", nullable = false)
+    private Long click;
 
     public LiquorCtrClick(final Long Click) {
         validateIsNotNull(Click);
