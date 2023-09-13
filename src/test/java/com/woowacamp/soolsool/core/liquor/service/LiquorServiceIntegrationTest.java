@@ -30,6 +30,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
@@ -39,6 +40,8 @@ import org.springframework.test.context.jdbc.Sql;
     RedissonConfig.class, ReceiptRedisRepository.class, LiquorCtrRedisRepository.class})
 @DisplayName("통합 테스트: LiquorService")
 class LiquorServiceIntegrationTest {
+
+    private static final String LIQUOR_CTR_KEY = "LIQUOR_CTR";
 
     @Autowired
     LiquorService liquorService;
@@ -87,6 +90,41 @@ class LiquorServiceIntegrationTest {
             () -> assertThat(response.getStock()).isEqualTo(100),
             () -> assertThat(response.getRelatedLiquors()).hasSize(1)
         );
+    }
+
+    @Test
+    @Sql({"/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"})
+    @DisplayName("상품 상세정보를 조회할 경우 클릭율을 증가시킨다.")
+    void increaseClick() {
+        // given
+        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
+
+        long liquorId = 1L;
+
+        // when
+        liquorService.liquorDetail(liquorId);
+
+        // then
+        double ctr = liquorCtrRedisRepository.getCtr(liquorId);
+        assertThat(ctr).isEqualTo(1.0);
+    }
+
+    @Test
+    @Sql({"/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"})
+    @DisplayName("상품 목록을 조회할 경우 클릭율을 증가시킨다.")
+    void increaseImpression() {
+        // given
+        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
+
+        long liquorId = 1L;
+
+        // when
+        liquorService.liquorList(null, null, null, null,
+            PageRequest.of(0, 1), liquorId + 1);
+
+        // then
+        double ctr = liquorCtrRedisRepository.getCtr(liquorId);
+        assertThat(ctr).isEqualTo(0.33);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.service.LiquorCtrService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,9 +13,10 @@ public class LiquorCtrExpiredEventListener {
 
     private final LiquorCtrService liquorCtrService;
 
+    @Async
     @EventListener
     public void expiredListener(final LiquorCtrExpiredEvent event) {
-        liquorCtrService.writeBackLiquorCtr(
+        liquorCtrService.writeBackCtr(
             event.getLiquorId(),
             event.getImpression(),
             event.getClick()

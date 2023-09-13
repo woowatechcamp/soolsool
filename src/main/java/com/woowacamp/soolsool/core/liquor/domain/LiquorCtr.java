@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -27,9 +28,11 @@ public class LiquorCtr extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Getter
     private Long id;
 
     @Column(name = "liquor_id", nullable = false)
+    @Getter
     private Long liquorId;
 
     @Column(name = "impression", nullable = false)
@@ -47,19 +50,8 @@ public class LiquorCtr extends BaseEntity {
         this.click = new LiquorCtrClick(0L);
     }
 
-    public void increaseImpressionOne() {
-        this.impression = impression.increaseOne();
-    }
-
-    public void increaseClickOne() {
-        this.click = click.increaseOne();
-    }
-
-    public void saveImpression(final LiquorCtrImpression impression) {
+    public void updateCtr(final LiquorCtrImpression impression, final LiquorCtrClick click) {
         this.impression = impression;
-    }
-
-    public void saveClick(final LiquorCtrClick click) {
         this.click = click;
     }
 
@@ -71,5 +63,13 @@ public class LiquorCtr extends BaseEntity {
         final double ratio = (double) click.getClick() / impression.getImpression();
 
         return Math.round(ratio * 100) / 100.0;
+    }
+
+    public Long getImpression() {
+        return impression.getImpression();
+    }
+
+    public Long getClick() {
+        return click.getClick();
     }
 }

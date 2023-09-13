@@ -2,10 +2,12 @@ package com.woowacamp.soolsool.core.liquor.repository.redisson;
 
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorCtr;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
 import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +28,12 @@ public class LiquorCtrRedisRepository {
     private static final long LOCK_LEASE_TIME = 3L;
     private static final long LIQUOR_CTR_TTL = 5L;
 
+    private final LiquorCtrRepository liquorCtrRepository;
+
     private final RedissonClient redissonClient;
 
     public LiquorCtrRedisRepository(
+        final LiquorCtrRepository liquorCtrRepository,
         final RedissonClient redissonClient,
         final ApplicationEventPublisher publisher
     ) {
@@ -41,43 +46,49 @@ public class LiquorCtrRedisRepository {
                 )
             );
 
+        this.liquorCtrRepository = liquorCtrRepository;
         this.redissonClient = redissonClient;
     }
 
     public double getCtr(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-        validateExistsCtr(liquorId, liquorCtr);
+        initLiquorCtrIfAbsent(liquorCtrs, liquorId);
 
-        final Long click = liquorCtr.get(liquorId).getClick();
-        final Long impression = liquorCtr.get(liquorId).getImpression();
+        final RedisLiquorCtr liquorCtr = liquorCtrs.get(liquorId);
+        final Long click = liquorCtr.getClick();
+        final Long impression = liquorCtr.getImpression();
 
-        if (impression == 0) {
-            throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
-        }
+        validateDividedByZero(impression);
 
         final double ratio = (double) click / impression;
 
         return Math.round(ratio * 100) / 100.0;
     }
 
-    public LiquorCtrImpression findImpressionByLiquorId(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        validateExistsCtr(liquorId, liquorCtr);
-
-        return new LiquorCtrImpression(liquorCtr.get(liquorId).getImpression());
+    private void validateDividedByZero(final Long impression) {
+        if (impression == 0) {
+            throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
+        }
     }
 
-    public LiquorCtrClick findClickByLiquorId(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
+    public LiquorCtrImpression getImpressionByLiquorId(final Long liquorId) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-        validateExistsCtr(liquorId, liquorCtr);
+        initLiquorCtrIfAbsent(liquorCtrs, liquorId);
 
-        return new LiquorCtrClick(liquorCtr.get(liquorId).getClick());
+        return new LiquorCtrImpression(liquorCtrs.get(liquorId).getImpression());
+    }
+
+    public LiquorCtrClick getClickByLiquorId(final Long liquorId) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
+            redissonClient.getMapCache(LIQUOR_CTR_KEY);
+
+        initLiquorCtrIfAbsent(liquorCtrs, liquorId);
+
+        return new LiquorCtrClick(liquorCtrs.get(liquorId).getClick());
     }
 
     public void increaseImpression(final Long liquorId) {
@@ -130,44 +141,20 @@ public class LiquorCtrRedisRepository {
         }
     }
 
-    public void synchronizedWithDatabase(
-        final Long liquorId,
-        final LiquorCtrImpression impression,
-        final LiquorCtrClick click
-    ) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.getOrDefault(liquorId, new RedisLiquorCtr(0L, 0L))
-            .synchronizedWithDatabase(impression.getImpression(), click.getClick());
-
-        if (liquorCtr.containsKey(liquorId)) {
-            liquorCtr.replace(liquorId, synchronizedLiquorCtr);
-        } else {
-            liquorCtr.put(liquorId, synchronizedLiquorCtr, LIQUOR_CTR_TTL, TimeUnit.MINUTES);
-        }
-    }
-
     private void initLiquorCtrIfAbsent(
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr,
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs,
         final Long liquorId
     ) {
-        liquorCtr.putIfAbsent(
-            liquorId,
-            new RedisLiquorCtr(0L, 0L),
-            LIQUOR_CTR_TTL,
-            TimeUnit.MINUTES
-        );
-    }
+        if (!liquorCtrs.containsKey(liquorId)) {
+            final LiquorCtr liquorCtr = liquorCtrRepository.findByLiquorId(liquorId)
+                .orElseThrow(() -> new SoolSoolException(LiquorCtrErrorCode.NOT_LIQUOR_CTR_FOUND));
 
-    private void validateExistsCtr(
-        final Long liquorId,
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr
-    ) {
-        if (!liquorCtr.containsKey(liquorId)) {
-            log.error("Redis에 LiquorId\"{}\"를 Key로 갖는 데이터가 존재하지 않습니다.", liquorId);
-
-            throw new SoolSoolException(LiquorErrorCode.REDIS_HAS_NOT_CTR);
+            liquorCtrs.put(
+                liquorId,
+                new RedisLiquorCtr(liquorCtr.getImpression(), liquorCtr.getClick()),
+                LIQUOR_CTR_TTL,
+                TimeUnit.MINUTES
+            );
         }
     }
 }

@@ -3,6 +3,8 @@ package com.woowacamp.soolsool.core.liquor.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -38,9 +40,7 @@ class LiquorCtrTest {
         LiquorCtr liquorCtr = LiquorCtr.builder()
             .liquorId(1L)
             .build();
-        liquorCtr.increaseImpressionOne();
-        liquorCtr.increaseImpressionOne();
-        liquorCtr.increaseClickOne();
+        liquorCtr.updateCtr(new LiquorCtrImpression(2L), new LiquorCtrClick(1L));
 
         /* when & then */
         assertThat(liquorCtr.getCtr()).isEqualTo(0.5);
