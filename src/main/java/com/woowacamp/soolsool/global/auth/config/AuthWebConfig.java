@@ -22,7 +22,7 @@ public class AuthWebConfig implements WebMvcConfigurer {
             .excludePathPatterns("/pay/success/**")
             .excludePathPatterns("/error", "/css/**", "/assets/**", "/js/**", "/*.ico",
                 "/favicon.ico", "/h2-console/**")
-            .excludePathPatterns("/metrics", "/actuator/**");
+            .excludePathPatterns("/api/metrics", "/api/actuator/**");
     }
 
     @Override

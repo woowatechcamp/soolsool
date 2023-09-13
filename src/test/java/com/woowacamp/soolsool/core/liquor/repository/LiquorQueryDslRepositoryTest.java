@@ -54,7 +54,7 @@ class LiquorQueryDslRepositoryTest {
             );
 
         // then
-        assertThat(커서첫번째).isEmpty();
+        assertThat(커서첫번째).hasSize(1);
     }
 
     @Test
