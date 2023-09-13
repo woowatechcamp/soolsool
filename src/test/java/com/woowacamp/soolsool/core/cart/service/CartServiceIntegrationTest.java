@@ -7,6 +7,7 @@ import static com.woowacamp.soolsool.core.cart.code.CartErrorCode.NOT_FOUND_LIQU
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.woowacamp.soolsool.config.RedisTestConfig;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemModifyRequest;
 import com.woowacamp.soolsool.core.cart.dto.request.CartItemSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
@@ -16,7 +17,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
-import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,8 @@ import org.springframework.test.context.jdbc.Sql;
     LiquorStatusCache.class, LiquorRegionCache.class, LiquorQueryDslRepository.class,
     LiquorStatusCache.class, LiquorRegionCache.class,
     QuerydslConfig.class,
-    RedissonConfig.class, LiquorCtrRedisRepository.class})
+    LiquorCtrRedisRepository.class,
+    RedisTestConfig.class})
 @DisplayName("통합 테스트: CartItemService")
 class CartServiceIntegrationTest {
 
