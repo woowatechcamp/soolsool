@@ -25,6 +25,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql({
     "/member-type.sql", "/member.sql",
     "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql", "/liquor-ctr.sql",
+    "/statistics.sql"
 })
 class LiquorQueryDslRepositoryTest {
 
@@ -50,7 +51,7 @@ class LiquorQueryDslRepositoryTest {
         // when
         final List<LiquorElementResponse> 커서첫번째 = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(region, brew, status, brand),
-                Pageable.ofSize(10), null
+                Pageable.ofSize(10), null, null
             );
 
         // then
@@ -69,7 +70,7 @@ class LiquorQueryDslRepositoryTest {
         // when
         List<LiquorElementResponse> 커서두번째 = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(region, brew, status, brand),
-                Pageable.ofSize(10), 1L
+                Pageable.ofSize(10), 1L, null
             );
 
         // then

@@ -1,11 +1,9 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.math.BigInteger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,13 +14,15 @@ public class LiquorElementResponse {
     private final String price;
     private final String imageUrl;
     private final Integer stock;
+    private final Long clickCount;
 
-    public LiquorElementResponse(final Liquor liquor) {
+    public LiquorElementResponse(final Liquor liquor, final BigInteger clickCount) {
         this.id = liquor.getId();
         this.name = liquor.getName();
         this.price = liquor.getPrice().toString();
         this.imageUrl = liquor.getImageUrl();
         this.stock = liquor.getTotalStock();
+        this.clickCount = clickCount.longValue();
     }
 
     public static LiquorElementResponse from(final Liquor liquor) {
@@ -31,13 +31,18 @@ public class LiquorElementResponse {
             liquor.getName(),
             liquor.getPrice().toString(),
             liquor.getImageUrl(),
-            liquor.getTotalStock()
+            liquor.getTotalStock(),
+            0L
         );
     }
-
-    public static List<LiquorElementResponse> from(final Page<Liquor> liquors) {
-        return liquors.getContent().stream()
-            .map(LiquorElementResponse::from)
-            .collect(Collectors.toList());
+    public static LiquorElementResponse of(final Liquor liquor, final Long clickCount) {
+        return new LiquorElementResponse(
+            liquor.getId(),
+            liquor.getName(),
+            liquor.getPrice().toString(),
+            liquor.getImageUrl(),
+            liquor.getTotalStock(),
+            clickCount
+        );
     }
 }

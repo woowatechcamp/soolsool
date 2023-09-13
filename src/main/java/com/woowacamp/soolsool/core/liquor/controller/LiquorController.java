@@ -94,6 +94,7 @@ public class LiquorController {
         @RequestParam("status") @Nullable final LiquorStatusType status,
         @RequestParam("brand") @Nullable final String brand,
         @RequestParam @Nullable final Long cursorId,
+        @RequestParam @Nullable final Long clickCount,
         @PageableDefault final Pageable pageable
     ) {
         final PageRequest sortPageable = PageRequest.of(
@@ -103,7 +104,7 @@ public class LiquorController {
         );
 
         final PageLiquorResponse response = liquorService
-            .liquorList(brew, region, status, brand, sortPageable, cursorId);
+            .liquorList(brew, region, status, brand, sortPageable, cursorId, clickCount);
 
         return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }

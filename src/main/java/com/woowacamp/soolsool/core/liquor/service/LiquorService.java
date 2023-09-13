@@ -13,8 +13,8 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
@@ -89,7 +89,8 @@ public class LiquorService {
         final LiquorStatusType statusType,
         final String brand,
         final Pageable pageable,
-        final Long cursorId
+        final Long cursorId,
+        final Long clickCount
     ) {
         final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition(
             findLiquorRegionByType(regionType).orElse(null),
@@ -99,7 +100,7 @@ public class LiquorService {
         );
 
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
-            .getList(liquorSearchCondition, pageable, cursorId);
+            .getList(liquorSearchCondition, pageable, cursorId,clickCount);
 
         liquors.stream()
             .map(LiquorElementResponse::getId)
@@ -131,8 +132,9 @@ public class LiquorService {
         }
 
         final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
+        final Long lastReadLiquorClickCount = liquors.get(liquors.size() - 1).getClickCount();
 
-        return PageLiquorResponse.of(true, lastReadLiquorId, liquors);
+        return PageLiquorResponse.of(true, lastReadLiquorId, lastReadLiquorClickCount, liquors);
     }
 
     @CacheEvict(value = "liquorsFirstPage")

@@ -10,20 +10,22 @@ public class PageLiquorResponse {
 
     private final boolean hasNext;
     private final Long nextCursorId;
+    private final Long nextClickCount;
     private final List<LiquorElementResponse> liquors;
 
     public static PageLiquorResponse of(
         final boolean hasNext,
         final Long nextCursorId,
+        final Long nextClickCount,
         final List<LiquorElementResponse> liquors
     ) {
-        return new PageLiquorResponse(hasNext, nextCursorId, liquors);
+        return new PageLiquorResponse(hasNext, nextCursorId, nextClickCount, liquors);
     }
 
     public static PageLiquorResponse of(
         final boolean hasNext,
         final List<LiquorElementResponse> liquors
     ) {
-        return PageLiquorResponse.of(hasNext, null, liquors);
+        return PageLiquorResponse.of(hasNext, null, null, liquors);
     }
 }
