@@ -3,6 +3,7 @@ package com.woowacamp.soolsool.config;
 import static com.woowacamp.soolsool.global.infra.RedisCacheType.LIQUOR_FIRST_PAGE;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.woowacamp.soolsool.global.config.CachingConfigurerSupport;
 import com.woowacamp.soolsool.global.infra.CaffeineCacheType;
 import java.time.Duration;
 import java.util.Arrays;
