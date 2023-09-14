@@ -30,7 +30,7 @@ public class LiquorQueryDslRepository {
     public List<LiquorElementResponse> getList(
         final LiquorSearchCondition condition,
         final Pageable pageable,
-        final Long cursorId,
+        final Long liquorId,
         final Long clickCount
     ) {
         return queryFactory.select(
@@ -47,9 +47,9 @@ public class LiquorQueryDslRepository {
                 eqBrew(condition.getLiquorBrew()),
                 eqStatus(condition.getLiquorStatus()),
                 eqBrand(condition.getBrand()),
-                cursorId(cursorId, clickCount)
+                cursorId(liquorId, clickCount)
             )
-            .orderBy(liquor.id.desc(), liquorCtr.click.click.desc())
+            .orderBy(liquorCtr.click.click.desc(),liquor.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
     }
@@ -94,17 +94,15 @@ public class LiquorQueryDslRepository {
         return liquor.brand.eq(new LiquorBrand(brand));
     }
 
-    private BooleanExpression cursorId(final Long cursorId, final Long click) {
-        if (cursorId == null) {
+    private BooleanExpression cursorId(final Long liquorId, final Long click) {
+        if (liquorId == null) {
             return null;
         }
         if (click == null) {
-            return liquor.id.lt(cursorId);
+            return liquor.id.lt(liquorId);
         }
 
-        return
-            liquorCtr.click.click.lt(click)
-                .or(liquorCtr.click.click.eq(click)
-                    .and(liquor.id.lt(cursorId)));
+        return liquorCtr.click.click.lt(click).or(
+            liquorCtr.click.click.eq(click).and(liquor.id.lt(liquorId)));
     }
 }
