@@ -49,7 +49,7 @@ public class LiquorQueryDslRepository {
                 eqBrand(condition.getBrand()),
                 cursorId(liquorId, clickCount)
             )
-            .orderBy(liquorCtr.click.click.desc(),liquor.id.desc())
+            .orderBy(liquorCtr.click.count.desc(),liquor.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
     }
@@ -102,7 +102,7 @@ public class LiquorQueryDslRepository {
             return liquor.id.lt(liquorId);
         }
 
-        return liquorCtr.click.click.lt(click).or(
-            liquorCtr.click.click.eq(click).and(liquor.id.lt(liquorId)));
+        return liquorCtr.click.count.lt(click).or(
+            liquorCtr.click.count.eq(click).and(liquor.id.lt(liquorId)));
     }
 }

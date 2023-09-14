@@ -67,7 +67,7 @@ public class LiquorCtr extends BaseEntity {
             throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
         }
 
-        final double ratio = (double) click.getClick() / impression.getImpression();
+        final double ratio = (double) click.getCount() / impression.getImpression();
 
         return Math.round(ratio * 100) / 100.0;
     }

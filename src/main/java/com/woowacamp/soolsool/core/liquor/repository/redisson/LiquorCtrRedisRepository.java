@@ -138,7 +138,7 @@ public class LiquorCtrRedisRepository {
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
         final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.getOrDefault(liquorId, new RedisLiquorCtr(0L, 0L))
-            .synchronizedWithDatabase(impression.getImpression(), click.getClick());
+            .synchronizedWithDatabase(impression.getImpression(), click.getCount());
 
         if (liquorCtr.containsKey(liquorId)) {
             liquorCtr.replace(liquorId, synchronizedLiquorCtr);

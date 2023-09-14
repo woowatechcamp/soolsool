@@ -33,7 +33,7 @@ public class LiquorElementResponse {
         this.price = liquor.getPrice().toString();
         this.imageUrl = liquor.getImageUrl();
         this.stock = liquor.getTotalStock();
-        this.clickCount = clickCount.getClick();
+        this.clickCount = clickCount.getCount();
     }
 
     public static LiquorElementResponse from(final Liquor liquor) {

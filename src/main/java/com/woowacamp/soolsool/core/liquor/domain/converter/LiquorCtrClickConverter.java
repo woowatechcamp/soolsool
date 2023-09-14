@@ -7,7 +7,7 @@ public class LiquorCtrClickConverter implements AttributeConverter<LiquorCtrClic
 
     @Override
     public Long convertToDatabaseColumn(final LiquorCtrClick click) {
-        return click.getClick();
+        return click.getCount();
     }
 
     @Override

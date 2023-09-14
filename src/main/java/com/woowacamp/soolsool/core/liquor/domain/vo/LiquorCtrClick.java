@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 public class LiquorCtrClick {
 
     @Column(name = "click", nullable = false)
-    private Long click;
+    private Long count;
 
     public LiquorCtrClick(final Long Click) {
         validateIsNotNull(Click);
         validateIsNotLessThanZero(Click);
 
-        this.click = Click;
+        this.count = Click;
     }
 
     private void validateIsNotNull(final Long Click) {
@@ -36,6 +36,6 @@ public class LiquorCtrClick {
     }
 
     public LiquorCtrClick increaseOne() {
-        return new LiquorCtrClick(this.click + 1);
+        return new LiquorCtrClick(this.count + 1);
     }
 }
