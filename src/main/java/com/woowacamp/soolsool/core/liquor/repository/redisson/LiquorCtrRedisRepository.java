@@ -154,11 +154,7 @@ public class LiquorCtrRedisRepository {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr,
         final Long liquorId
     ) {
-        if (liquorCtr.get(liquorId) != null) {
-            return;
-        }
-        // TODO : 기존 로직에서 putIfAbsent 이 NPE 를 발생 시켜, 다음과 같이 변경하였습니다.
-        liquorCtr.put(
+        liquorCtr.putIfAbsent(
             liquorId,
             new RedisLiquorCtr(0L, 0L),
             LIQUOR_CTR_TTL,
