@@ -93,6 +93,22 @@ public class Liquor extends BaseEntity {
 
     @Builder
     public Liquor(
+        final LiquorBrew brew,
+        final LiquorRegion region,
+        final LiquorStatus status,
+        final String name,
+        final String price,
+        final String brand,
+        final String imageUrl,
+        final Double alcohol,
+        final int volume
+    ) {
+        this(null, brew, region, status,
+            name, price, brand, imageUrl,
+            alcohol, volume);
+    }
+
+    public Liquor(
         final Long id,
         @NonNull final LiquorBrew brew,
         @NonNull final LiquorRegion region,
