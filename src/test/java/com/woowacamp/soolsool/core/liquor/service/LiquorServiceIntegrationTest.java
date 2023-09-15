@@ -10,20 +10,14 @@ import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionRepository;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
-import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RedissonClient;
@@ -45,18 +39,6 @@ class LiquorServiceIntegrationTest {
 
     @Autowired
     LiquorService liquorService;
-
-    @Autowired
-    LiquorRepository liquorRepository;
-
-    @Autowired
-    LiquorBrewRepository liquorBrewRepository;
-
-    @Autowired
-    LiquorRegionRepository liquorRegionRepository;
-
-    @Autowired
-    LiquorStatusRepository liquorStatusRepository;
 
     @Autowired
     LiquorCtrRedisRepository liquorCtrRedisRepository;
@@ -128,7 +110,10 @@ class LiquorServiceIntegrationTest {
     }
 
     @Test
-    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql"})
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql"
+    })
     @DisplayName("liquor를 저장한다.")
     void saveLiquorTest() {
         // given
@@ -143,13 +128,14 @@ class LiquorServiceIntegrationTest {
     }
 
     @Test
-    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql", "/liquor.sql"})
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"
+    })
     @DisplayName("liquor를 수정한다.")
     void modifyLiquorTest() {
         // given
-        Liquor target = liquorRepository.findById(1L)
-            .orElseThrow(() -> new IllegalArgumentException("테스트 데이터가 존재하지 않습니다."));
-
+        LiquorDetailResponse target = liquorService.liquorDetail(1L);
         LiquorModifyRequest liquorModifyRequest = new LiquorModifyRequest(
             "BERRY", "GYEONGGI_DO", "ON_SALE",
             "새로2", "3000", "브랜드", "/url",
@@ -161,14 +147,16 @@ class LiquorServiceIntegrationTest {
         liquorService.modifyLiquor(target.getId(), liquorModifyRequest);
 
         // then
-        Liquor liquor = liquorRepository.findById(target.getId())
-            .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
+        LiquorDetailResponse liquor = liquorService.liquorDetail(1L);
 
         assertThat(liquor.getName()).isEqualTo(liquorModifyRequest.getName());
     }
 
     @Test
-    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql", "/liquor.sql"})
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql"
+    })
     @DisplayName("liquor Id가 존재하지 않을 때, 수정 시 에러를 반환한다.")
     void modifyLiquorTestFailWithNoExistId() {
         // given
@@ -187,21 +175,20 @@ class LiquorServiceIntegrationTest {
     }
 
     @Test
-    @Sql({"/member-type.sql", "/member.sql", "/liquor-type.sql"})
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql"
+    })
     @DisplayName("liquor를 삭제한다.")
     void deleteLiquorTest() {
         // given
-        LiquorSaveRequest liquorSaveRequest = new LiquorSaveRequest(
-            "SOJU", "GYEONGGI_DO", "ON_SALE",
-            "새로", "3000", "브랜드", "/url",
-            12.0, 300);
-        Long saveLiquorId = liquorService.saveLiquor(liquorSaveRequest);
 
         // when
-        liquorService.deleteLiquor(saveLiquorId);
-        Optional<Liquor> liquor = liquorRepository.findById(saveLiquorId);
+        liquorService.deleteLiquor(1L);
 
         // then
-        assertThat(liquor).isEmpty();
+        assertThatCode(() -> liquorService.liquorDetail(1L))
+            .isExactlyInstanceOf(SoolSoolException.class)
+            .hasMessage("술이 존재하지 않습니다.");
     }
 }
