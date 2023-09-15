@@ -4,14 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacamp.soolsool.config.RedisTestConfig;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
-import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -30,16 +28,11 @@ class LiquorCtrRedisRepositoryTest {
     LiquorCtrRedisRepository liquorCtrRedisRepository;
 
     @Autowired
-    LiquorCtrRepository liquorCtrRepository;
-
-    @Autowired
     RedissonClient redissonClient;
 
-    @BeforeEach
-    void setUpLiquorCtr() {
-        RMapCache<Long, RedisLiquorCtr> mapCache = redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        mapCache.clear();
+    @AfterEach
+    void setOffLiquorCtr() {
+        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
     }
 
     @Test
@@ -59,8 +52,8 @@ class LiquorCtrRedisRepositoryTest {
 
     @Test
     @Sql({"/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"})
-    @DisplayName("Redis에 Ctr 정보가 없을 경우 DB에 저장된 Ctr을 조회한다.")
-    void getCtrIfAbsent() {
+    @DisplayName("Redis에 Ctr 정보가 존재하지 않을 경우 DB를 조회해 Redis에 반영한다.")
+    void synchronizeWithDatabase() {
         // given
 
         // when
@@ -68,22 +61,6 @@ class LiquorCtrRedisRepositoryTest {
 
         // then
         assertThat(ctr).isEqualTo(0.5);
-    }
-
-    @Test
-    @Sql({"/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"})
-    @DisplayName("Redis에 Ctr 정보가 존재하지 않을 경우 DB를 조회해 Redis에 반영한다.")
-    void synchronizeWithDatabase() {
-        // given
-        double expected = liquorCtrRepository.findByLiquorId(TARGET_LIQUOR)
-            .orElseThrow(() -> new RuntimeException("LiquorCtr이 존재하지 않습니다."))
-            .getCtr();
-
-        // when
-        double ctr = liquorCtrRedisRepository.getCtr(TARGET_LIQUOR);
-
-        // then
-        assertThat(ctr).isEqualTo(expected);
     }
 
     @Test

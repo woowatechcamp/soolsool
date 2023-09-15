@@ -18,6 +18,7 @@ import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepos
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RedissonClient;
@@ -45,6 +46,11 @@ class LiquorServiceIntegrationTest {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @AfterEach
+    void setOffRedis() {
+        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
+    }
 
     @Test
     @Sql({
@@ -79,8 +85,6 @@ class LiquorServiceIntegrationTest {
     @DisplayName("상품 상세정보를 조회할 경우 클릭율을 증가시킨다.")
     void increaseClick() {
         // given
-        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
-
         long liquorId = 1L;
 
         // when
@@ -96,8 +100,6 @@ class LiquorServiceIntegrationTest {
     @DisplayName("상품 목록을 조회할 경우 클릭율을 증가시킨다.")
     void increaseImpression() {
         // given
-        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
-
         long liquorId = 1L;
 
         // when

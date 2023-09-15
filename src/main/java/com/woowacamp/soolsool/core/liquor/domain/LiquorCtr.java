@@ -28,7 +28,6 @@ public class LiquorCtr extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Getter
     private Long id;
 
     @Column(name = "liquor_id", nullable = false)
@@ -48,7 +47,11 @@ public class LiquorCtr extends BaseEntity {
     }
 
     @Builder
-    public LiquorCtr(@NonNull final Long liquorId, final Long impression, final Long click) {
+    public LiquorCtr(
+        @NonNull final Long liquorId,
+        final Long impression,
+        final Long click
+    ) {
         this.liquorId = liquorId;
         this.impression = new LiquorCtrImpression(impression);
         this.click = new LiquorCtrClick(click);
