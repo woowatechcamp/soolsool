@@ -20,8 +20,8 @@ import org.springframework.util.StopWatch;
 @RequiredArgsConstructor
 public class StatisticsService {
 
-    private static final int SALES_UPDATE_DURATION = 70; // 7
-    private static final int CTR_UPDATE_DURATION = 15; // 1
+    private static final int SALES_UPDATE_DURATION = 7;
+    private static final int CTR_UPDATE_DURATION = 1;
 
     private final StatisticsRepository statisticsRepository;
     private final LiquorRepository liquorRepository;
@@ -55,6 +55,8 @@ public class StatisticsService {
 
         updateStatisticsSales(dateNow);
         updateStatisticsCtr(dateNow);
+
+        rUpdateCacheStatistics();
     }
 
     private void updateStatisticsSales(final LocalDate dateNow) {
@@ -81,5 +83,11 @@ public class StatisticsService {
 
         final double totalTimeSeconds = stopWatch.getTotalTimeSeconds();
         log.info("노출수, 클릭수 자동 통계 집계 쿼리 실행 걸린 총 시간 : {}", totalTimeSeconds);
+    }
+
+    private void rUpdateCacheStatistics() {
+        statisticsRepository.rClearStatistics();
+        statisticsRepository.rFindTop5LiquorBySalePrice();
+        statisticsRepository.rFindTop5LiquorBySaleQuantity();
     }
 }

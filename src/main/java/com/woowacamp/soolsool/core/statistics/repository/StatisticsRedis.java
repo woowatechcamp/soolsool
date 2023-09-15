@@ -9,4 +9,6 @@ public interface StatisticsRedis {
     StatisticsLiquors rFindTop5LiquorBySalePrice();
 
     StatisticsLiquors rFindTop5LiquorBySaleQuantity();
+
+    void rClearStatistics();
 }

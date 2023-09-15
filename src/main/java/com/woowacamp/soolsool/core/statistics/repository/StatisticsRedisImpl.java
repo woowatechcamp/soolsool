@@ -51,4 +51,9 @@ public class StatisticsRedisImpl implements StatisticsRedis {
 
         return top5LiquorIds;
     }
+
+    @Override
+    public void rClearStatistics() {
+        rCacheStatistics.clear();
+    }
 }
