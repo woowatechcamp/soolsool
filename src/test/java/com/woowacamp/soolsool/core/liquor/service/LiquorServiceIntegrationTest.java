@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.config.RedisTestConfig;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
@@ -37,7 +37,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({LiquorService.class, LiquorBrewCache.class, LiquorStatusCache.class,
     LiquorRegionCache.class, LiquorQueryDslRepository.class,
     QuerydslConfig.class,
-    RedissonConfig.class, ReceiptRedisRepository.class, LiquorCtrRedisRepository.class})
+    RedisTestConfig.class, ReceiptRedisRepository.class, LiquorCtrRedisRepository.class})
 @DisplayName("통합 테스트: LiquorService")
 class LiquorServiceIntegrationTest {
 
