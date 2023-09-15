@@ -19,6 +19,7 @@ import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RedissonClient;
@@ -47,8 +48,9 @@ class LiquorServiceIntegrationTest {
     @Autowired
     RedissonClient redissonClient;
 
+    @BeforeEach
     @AfterEach
-    void setOffRedis() {
+    void setRedisLiquorCtr() {
         redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
     }
 
