@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacamp.soolsool.config.CacheTestConfig;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
@@ -20,6 +19,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusRepository;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
+import com.woowacamp.soolsool.global.config.MultipleCacheManagerConfig;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -38,7 +38,7 @@ import org.springframework.test.context.jdbc.Sql;
     LiquorRegionCache.class, LiquorQueryDslRepository.class,
     QuerydslConfig.class,
     RedissonConfig.class, ReceiptRedisRepository.class,
-    LiquorCtrRedisRepository.class, CacheTestConfig.class}
+    LiquorCtrRedisRepository.class, MultipleCacheManagerConfig.class}
 )
 @DisplayName("통합 테스트: LiquorService")
 class LiquorServiceIntegrationTest {
