@@ -9,7 +9,6 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -44,11 +43,15 @@ public class LiquorCtr extends BaseEntity {
     @Convert(converter = LiquorCtrClickConverter.class)
     private LiquorCtrClick click;
 
+    public LiquorCtr(@NonNull final Long liquorId) {
+        this(liquorId, 0L, 0L);
+    }
+
     @Builder
     public LiquorCtr(@NonNull final Long liquorId, final Long impression, final Long click) {
         this.liquorId = liquorId;
-        this.impression = new LiquorCtrImpression(Objects.isNull(impression) ? 0L : impression);
-        this.click = new LiquorCtrClick(Objects.isNull(click) ? 0L : click);
+        this.impression = new LiquorCtrImpression(impression);
+        this.click = new LiquorCtrClick(click);
     }
 
     public void overwrite(final LiquorCtr latest) {

@@ -16,7 +16,7 @@ class LiquorCtrTest {
 
 
         /* when & then */
-        assertThatCode(() -> LiquorCtr.builder().liquorId(1L).build())
+        assertThatCode(() -> new LiquorCtr(1L))
             .doesNotThrowAnyException();
     }
 
@@ -38,7 +38,7 @@ class LiquorCtrTest {
         LiquorCtr liquorCtr = LiquorCtr.builder()
             .liquorId(1L)
             .build();
-        liquorCtr.overwrite(LiquorCtr.builder().liquorId(1L).impression(2L).click(1L).build());
+        liquorCtr.overwrite(new LiquorCtr(1L, 2L, 1L));
 
         /* when & then */
         assertThat(liquorCtr.getCtr()).isEqualTo(0.5);
