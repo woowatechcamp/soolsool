@@ -58,9 +58,8 @@ public class LiquorQueryDslRepository {
         return getList(pageable, null);
     }
 
-    private List<LiquorElementResponse> getList(
-        final Pageable pageable,
-        final Long cursorId
+    private List<LiquorElementResponse> getFirstPageList(
+        final Pageable pageable
     ) {
         return queryFactory.select(
                 Projections.constructor(
@@ -69,7 +68,6 @@ public class LiquorQueryDslRepository {
                 )
             )
             .from(liquor)
-            .where(cursorId(cursorId))
             .orderBy(liquor.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
