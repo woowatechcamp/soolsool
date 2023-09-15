@@ -35,9 +35,7 @@ class LiquorCtrTest {
     @DisplayName("클릭률을 구한다")
     void getCtr() {
         /* given */
-        LiquorCtr liquorCtr = LiquorCtr.builder()
-            .liquorId(1L)
-            .build();
+        LiquorCtr liquorCtr = new LiquorCtr(1L);
         liquorCtr.overwrite(new LiquorCtr(1L, 2L, 1L));
 
         /* when & then */
