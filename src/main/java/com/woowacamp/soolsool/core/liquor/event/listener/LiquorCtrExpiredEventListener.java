@@ -16,10 +16,6 @@ public class LiquorCtrExpiredEventListener {
     @Async
     @EventListener
     public void expiredListener(final LiquorCtrExpiredEvent event) {
-        liquorCtrService.writeBackCtr(
-            event.getLiquorId(),
-            event.getImpression(),
-            event.getClick()
-        );
+        liquorCtrService.writeBackCtr(event.getLiquorCtr());
     }
 }

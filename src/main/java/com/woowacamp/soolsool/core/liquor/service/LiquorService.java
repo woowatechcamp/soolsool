@@ -64,7 +64,11 @@ public class LiquorService {
         final Liquor liquor = liquorRepository
             .save(request.toEntity(liquorBrew, liquorRegion, liquorStatus));
 
-        liquorCtrRepository.save(new LiquorCtr(liquor.getId()));
+        liquorCtrRepository.save(
+            LiquorCtr.builder()
+                .liquorId(liquor.getId())
+                .build()
+        );
 
         return liquor.getId();
     }

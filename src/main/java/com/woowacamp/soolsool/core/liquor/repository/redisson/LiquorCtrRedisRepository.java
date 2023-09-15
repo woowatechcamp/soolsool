@@ -3,8 +3,6 @@ package com.woowacamp.soolsool.core.liquor.repository.redisson;
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorCtr;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
 import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
@@ -32,7 +30,6 @@ public class LiquorCtrRedisRepository {
 
     private final RedissonClient redissonClient;
 
-    // TODO: RedisLiquorCtr vs LiquorCtr -> "Best practice(Jpa + Redis)"을 참고하는게 맞을 것 같다.
     // TODO: LiquorCtrRedisService vs LiquorCtrRedisRepository -> 취향 차이다...
     public LiquorCtrRedisRepository(
         final LiquorCtrRepository liquorCtrRepository,
@@ -41,10 +38,11 @@ public class LiquorCtrRedisRepository {
     ) {
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
             .addListener((EntryExpiredListener<Long, RedisLiquorCtr>) event ->
-                publisher.publishEvent(new LiquorCtrExpiredEvent(
-                    event.getKey(),
-                    new LiquorCtrImpression(event.getValue().getImpression()),
-                    new LiquorCtrClick(event.getValue().getClick()))
+                publisher.publishEvent(
+                    new LiquorCtrExpiredEvent(
+                        event.getKey(),
+                        event.getValue()
+                    )
                 )
             );
 
@@ -52,36 +50,8 @@ public class LiquorCtrRedisRepository {
         this.redissonClient = redissonClient;
     }
 
-    // ?
-    // 여기 repository인데 비즈니스 로직을 하는게 맞나...?
-    // 사실 repository면 getCtr이 아니라 getLiquorCtr을 public으로 제공해야하는거 아닌가?
-
-    // Repository -> storage value -> memory
-    // lockUP 있는게 자연스럽다...
-    // write ... -> writeListener
-    // write가 있는 애...
-
-    // LCRR -> Service
-
-    // 1. LCRR의 로직을 LCS 해야하는거 아닌가?
-    // 2. RedissonClient 감싸는 Repository를 만들어서 LCS에서 남은 로직을 마무리한다.
-    // RedissonClient -> Repository
     public double getCtr(final Long liquorId) {
-        final RedisLiquorCtr liquorCtr = lookUpLiquorCtr(liquorId);
-        final Long click = liquorCtr.getClick();
-        final Long impression = liquorCtr.getImpression();
-
-        validateDividedByZero(impression);
-
-        final double ratio = (double) click / impression;
-
-        return Math.round(ratio * 100) / 100.0;
-    }
-
-    private void validateDividedByZero(final Long impression) {
-        if (impression == 0) {
-            throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
-        }
+        return lookUpLiquorCtr(liquorId).toEntity(liquorId).getCtr();
     }
 
     // JpaRepository.updateAgeOne
