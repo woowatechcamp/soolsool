@@ -1,7 +1,14 @@
 package com.woowacamp.soolsool.core.statistics.service;
 
+import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquors;
+import com.woowacamp.soolsool.core.statistics.dto.response.LiquorSalePriceResponse;
+import com.woowacamp.soolsool.core.statistics.dto.response.LiquorSaleQuantityResponse;
 import com.woowacamp.soolsool.core.statistics.repository.StatisticsRepository;
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,10 +20,34 @@ import org.springframework.util.StopWatch;
 @RequiredArgsConstructor
 public class StatisticsService {
 
-    private static final int SALES_UPDATE_DURATION = 7;
-    private static final int CTR_UPDATE_DURATION = 1;
+    private static final int SALES_UPDATE_DURATION = 70; // 7
+    private static final int CTR_UPDATE_DURATION = 15; // 1
 
     private final StatisticsRepository statisticsRepository;
+    private final LiquorRepository liquorRepository;
+
+    @Transactional(readOnly = true)
+    public List<LiquorSalePriceResponse> findTop5SalePrice() {
+        StatisticsLiquors top5LiquorByPrices = statisticsRepository.rFindTop5LiquorBySalePrice();
+
+        return liquorRepository.findAllById(top5LiquorByPrices.getIds()).stream()
+            .map(liquor ->
+                LiquorSalePriceResponse.from(liquor, top5LiquorByPrices.getValue(liquor.getId())))
+            .sorted(Comparator.comparingLong(LiquorSalePriceResponse::getTotalSalePrice).reversed())
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<LiquorSaleQuantityResponse> findTop5SaleQuantity() {
+        StatisticsLiquors top5LiquorByQuantities = statisticsRepository.rFindTop5LiquorBySaleQuantity();
+
+        return liquorRepository.findAllById(top5LiquorByQuantities.getIds()).stream()
+            .map(liquor -> LiquorSaleQuantityResponse
+                .from(liquor, top5LiquorByQuantities.getValue(liquor.getId())))
+            .sorted(Comparator
+                .comparingLong(LiquorSaleQuantityResponse::getTotalSaleQuantity).reversed())
+            .collect(Collectors.toUnmodifiableList());
+    }
 
     @Transactional
     public void updateStatistics() {
@@ -28,6 +59,7 @@ public class StatisticsService {
 
     private void updateStatisticsSales(final LocalDate dateNow) {
         LocalDate startDate = dateNow.minusDays(SALES_UPDATE_DURATION);
+        log.info("통계 시작일 : {}, 통계 종료일 : {}", startDate, dateNow);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -40,6 +72,7 @@ public class StatisticsService {
 
     private void updateStatisticsCtr(final LocalDate dateNow) {
         LocalDate startDate = dateNow.minusDays(CTR_UPDATE_DURATION);
+        log.info("클릭 통계 집계일 : {}", startDate);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
