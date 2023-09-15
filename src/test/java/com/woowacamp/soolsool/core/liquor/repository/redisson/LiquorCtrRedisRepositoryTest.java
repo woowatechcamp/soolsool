@@ -85,7 +85,7 @@ class LiquorCtrRedisRepositoryTest {
 
         // then
         LiquorCtrClick click = liquorCtrRedisRepository.findClickByLiquorId(1L);
-        assertThat(click.getClick()).isEqualTo(1L);
+        assertThat(click.getCount()).isEqualTo(1L);
     }
 
     @Test
@@ -109,6 +109,6 @@ class LiquorCtrRedisRepositoryTest {
 
         // then
         LiquorCtrClick click = liquorCtrRedisRepository.findClickByLiquorId(liquorId);
-        assertThat(click.getClick()).isEqualTo(threadCount);
+        assertThat(click.getCount()).isEqualTo(threadCount);
     }
 }
