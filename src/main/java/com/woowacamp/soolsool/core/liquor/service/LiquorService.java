@@ -100,7 +100,7 @@ public class LiquorService {
         );
 
         final List<LiquorElementResponse> liquors = liquorQueryDslRepository
-            .getList(liquorSearchCondition, pageable, cursorId,clickCount);
+            .getList(liquorSearchCondition, pageable, cursorId, clickCount);
 
         liquors.stream()
             .map(LiquorElementResponse::getId)
