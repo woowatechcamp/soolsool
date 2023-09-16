@@ -13,11 +13,11 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
@@ -97,11 +97,11 @@ public class LiquorService {
             brand
         );
 
-        List<LiquorElementResponse> liquors = liquorQueryDslRepository
+        List<LiquorClickElementResponse> liquors = liquorQueryDslRepository
             .getList(liquorSearchCondition, pageable, liquorId, clickCount);
 
         liquors.stream()
-            .map(LiquorElementResponse::getId)
+            .map(LiquorClickElementResponse::getId)
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
@@ -110,10 +110,10 @@ public class LiquorService {
 
     @Transactional
     public PageLiquorResponse getFirstPage(final Pageable pageable) {
-        final List<LiquorElementResponse> liquors = liquorQueryDslRepository.getCachedList(pageable);
+        final List<LiquorClickElementResponse> liquors = liquorQueryDslRepository.getCachedList(pageable);
 
         liquors.stream()
-            .map(LiquorElementResponse::getId)
+            .map(LiquorClickElementResponse::getId)
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 

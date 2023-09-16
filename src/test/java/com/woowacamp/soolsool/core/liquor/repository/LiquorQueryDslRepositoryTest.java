@@ -8,11 +8,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ class LiquorQueryDslRepositoryTest {
         String brand = "롯데";
 
         // when
-        final List<LiquorElementResponse> 커서첫번째 = liquorQueryDslRepository
+        final List<LiquorClickElementResponse> 커서첫번째 = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), null, null);
 
@@ -72,7 +72,7 @@ class LiquorQueryDslRepositoryTest {
         String brand = "롯데";
 
         // when
-        List<LiquorElementResponse> 커서두번째 = liquorQueryDslRepository
+        List<LiquorClickElementResponse> 커서두번째 = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), 1L, null);
         // then
@@ -89,7 +89,7 @@ class LiquorQueryDslRepositoryTest {
         String brand = "롯데";
 
         // when
-        List<LiquorElementResponse> cursor  = liquorQueryDslRepository
+        List<LiquorClickElementResponse> cursor  = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), 2L, 100L);
         // then

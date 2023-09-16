@@ -10,8 +10,8 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class LiquorQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<LiquorElementResponse> getList(
+    public List<LiquorClickElementResponse> getList(
         final LiquorSearchCondition condition,
         final Pageable pageable,
         final Long liquorId,
@@ -35,7 +35,7 @@ public class LiquorQueryDslRepository {
     ) {
         return queryFactory.select(
                 Projections.constructor(
-                    LiquorElementResponse.class,
+                    LiquorClickElementResponse.class,
                     liquor,
                     liquorCtr.click
                 )
@@ -55,13 +55,13 @@ public class LiquorQueryDslRepository {
     }
 
     @Cacheable(value = "liquorsFirstPage")
-    public List<LiquorElementResponse> getCachedList(
+    public List<LiquorClickElementResponse> getCachedList(
         final Pageable pageable
     ) {
         log.info("LiquorQueryDslRepository getCachedList");
         return queryFactory.select(
                 Projections.constructor(
-                    LiquorElementResponse.class,
+                    LiquorClickElementResponse.class,
                     liquor,
                     liquorCtr.click
                 )
