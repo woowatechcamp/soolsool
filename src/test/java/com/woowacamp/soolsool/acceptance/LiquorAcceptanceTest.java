@@ -21,7 +21,7 @@ import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorClickResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -213,7 +213,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .accept(APPLICATION_JSON_VALUE)
             .when().get("/api/liquors")
             .then().log().all()
-            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
+            .extract().jsonPath().getObject("data", PageLiquorClickResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -244,7 +244,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("brew", "소주")
             .when().get("/api/liquors")
             .then().log().all()
-            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
+            .extract().jsonPath().getObject("data", PageLiquorClickResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -276,7 +276,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("region", "경기도")
             .when().get("/api/liquors")
             .then().log().all()
-            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
+            .extract().jsonPath().getObject("data", PageLiquorClickResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -309,7 +309,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("status", "판매중지")
             .when().get("/api/liquors")
             .then().log().all()
-            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
+            .extract().jsonPath().getObject("data", PageLiquorClickResponse.class).getLiquors();
 
         // then
         assertAll(
@@ -344,7 +344,7 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             .param("brand", "우영미")
             .when().get("/api/liquors")
             .then().log().all()
-            .extract().jsonPath().getObject("data", PageLiquorResponse.class).getLiquors();
+            .extract().jsonPath().getObject("data", PageLiquorClickResponse.class).getLiquors();
 
         // then
         assertAll(

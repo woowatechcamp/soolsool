@@ -7,28 +7,28 @@ import org.springframework.data.domain.Pageable;
 
 @Getter
 @RequiredArgsConstructor
-public class PageLiquorResponse {
+public class PageLiquorClickResponse {
 
     private final boolean hasNext;
     private final Long nextCursorId;
     private final Long nextClickCount;
     private final List<LiquorClickElementResponse> liquors;
 
-    public static PageLiquorResponse of(
+    public static PageLiquorClickResponse of(
         final Pageable pageable,
         final List<LiquorClickElementResponse> liquors
     ) {
         if (liquors.size() < pageable.getPageSize()) {
-            return new PageLiquorResponse(false, liquors);
+            return new PageLiquorClickResponse(false, liquors);
         }
 
         final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
         final Long lastReadClickCount = liquors.get(liquors.size() - 1).getClickCount();
 
-        return new PageLiquorResponse(true, lastReadLiquorId, lastReadClickCount, liquors);
+        return new PageLiquorClickResponse(true, lastReadLiquorId, lastReadClickCount, liquors);
     }
 
-    private PageLiquorResponse(
+    private PageLiquorClickResponse(
         final boolean hasNext,
         final List<LiquorClickElementResponse> liquors
     ) {

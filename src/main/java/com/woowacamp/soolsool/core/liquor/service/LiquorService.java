@@ -18,7 +18,7 @@ import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorClickResponse;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
@@ -81,7 +81,7 @@ public class LiquorService {
     }
 
     @Transactional
-    public PageLiquorResponse liquorList(
+    public PageLiquorClickResponse liquorList(
         final LiquorBrewType brewType,
         final LiquorRegionType regionType,
         final LiquorStatusType statusType,
@@ -105,11 +105,13 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return PageLiquorResponse.of(pageable, liquors);
+        return PageLiquorClickResponse.of(pageable, liquors);
     }
 
+
+
     @Transactional
-    public PageLiquorResponse getFirstPage(final Pageable pageable) {
+    public PageLiquorClickResponse getFirstPage(final Pageable pageable) {
         final List<LiquorClickElementResponse> liquors = liquorQueryDslRepository.getCachedList(pageable);
 
         liquors.stream()
@@ -117,7 +119,7 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return PageLiquorResponse.of(pageable, liquors);
+        return PageLiquorClickResponse.of(pageable, liquors);
     }
 
     @CacheEvict(value = "liquorsFirstPage")
