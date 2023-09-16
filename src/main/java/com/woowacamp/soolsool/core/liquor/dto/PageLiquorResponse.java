@@ -1,8 +1,11 @@
 package com.woowacamp.soolsool.core.liquor.dto;
 
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 
 @Getter
 @RequiredArgsConstructor
@@ -13,18 +16,23 @@ public class PageLiquorResponse {
     private final List<LiquorElementResponse> liquors;
 
     public static PageLiquorResponse of(
-        final boolean hasNext,
-        final Long nextCursorId,
-        final List<LiquorElementResponse> liquors
+        final Pageable pageable,
+        final List<Liquor> liquors
     ) {
-        return new PageLiquorResponse(hasNext, nextCursorId, liquors);
+        List<LiquorElementResponse> liquorElements = liquors.stream()
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
+
+        if (liquors.size() < pageable.getPageSize()) {
+            return new PageLiquorResponse(false, liquorElements);
+        }
+
+        final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
+
+        return new PageLiquorResponse(true, lastReadLiquorId, liquorElements);
     }
 
-    public static PageLiquorResponse of(
-        final boolean hasNext,
-        final List<LiquorElementResponse> liquors
-    ) {
-        return PageLiquorResponse.of(hasNext, null, liquors);
+    private PageLiquorResponse(final boolean hasNext, final List<LiquorElementResponse> liquors) {
+        this(hasNext, null, liquors);
     }
-
 }

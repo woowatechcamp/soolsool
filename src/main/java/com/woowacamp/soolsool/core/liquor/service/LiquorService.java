@@ -14,7 +14,6 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
@@ -28,7 +27,6 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -105,7 +103,7 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return getPageLiquorResponse(pageable, liquors);
+        return PageLiquorResponse.of(pageable, liquors);
     }
 
     @Transactional
@@ -117,24 +115,7 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return getPageLiquorResponse(pageable, liquors);
-    }
-
-    private PageLiquorResponse getPageLiquorResponse(
-        final Pageable pageable,
-        final List<Liquor> liquors
-    ) {
-        List<LiquorElementResponse> liquorElements = liquors.stream()
-            .map(LiquorElementResponse::from)
-            .collect(Collectors.toList());
-
-        if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, liquorElements);
-        }
-
-        final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
-
-        return PageLiquorResponse.of(true, lastReadLiquorId, liquorElements);
+        return PageLiquorResponse.of(pageable, liquors);
     }
 
     @CacheEvict(value = "liquorsFirstPage")
