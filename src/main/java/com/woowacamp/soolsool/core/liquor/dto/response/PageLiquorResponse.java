@@ -12,11 +12,11 @@ public class PageLiquorResponse {
     private final boolean hasNext;
     private final Long nextCursorId;
     private final Long nextClickCount;
-    private final List<LiquorElementResponse> liquors;
+    private final List<LiquorClickElementResponse> liquors;
 
     public static PageLiquorResponse of(
         final Pageable pageable,
-        final List<LiquorElementResponse> liquors
+        final List<LiquorClickElementResponse> liquors
     ) {
         if (liquors.size() < pageable.getPageSize()) {
             return new PageLiquorResponse(false, liquors);
@@ -30,7 +30,7 @@ public class PageLiquorResponse {
 
     private PageLiquorResponse(
         final boolean hasNext,
-        final List<LiquorElementResponse> liquors
+        final List<LiquorClickElementResponse> liquors
     ) {
         this(hasNext, null, null, liquors);
     }
