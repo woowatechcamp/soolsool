@@ -60,17 +60,35 @@ public interface StatisticsJpaRepository extends JpaRepository<Statistics, Stati
         "                        click = (lc.click - s.sum_click)", nativeQuery = true)
     void updateStatisticsCtr(final LocalDate date);
 
-    @Query(value = "select liquor_id as liquorId, sum(sale_price) as liquorValue "
-        + "from statistics "
-        + "group by liquor_id "
-        + "order by sum(sale_price) desc "
-        + "limit 5", nativeQuery = true)
+    @Query(value = "SELECT l.id as liquorId, "
+        + "                l.name as liquorName, "
+        + "                l.brand as liquorBrand, "
+        + "                l.image_url as liquorImageUrl, "
+        + "                l.price as liquorPrice, "
+        + "                s.liquorValue as liquorValue "
+        + "FROM ( "
+        + "    SELECT liquor_id, SUM(sale_price) AS liquorValue "
+        + "    FROM statistics "
+        + "    GROUP BY liquor_id "
+        + "    ORDER BY SUM(sale_price) DESC "
+        + "    LIMIT 5 "
+        + ") s "
+        + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
     List<StatisticsLiquor> findTop5LiquorIdAndSalePrice();
 
-    @Query(value = "select liquor_id as liquorId, sum(sale_quantity) as liquorValue "
-        + "from statistics "
-        + "group by liquor_id "
-        + "order by sum(sale_quantity) desc "
-        + "limit 5", nativeQuery = true)
+    @Query(value = "SELECT l.id as liquorId, "
+        + "                l.name as liquorName, "
+        + "                l.brand as liquorBrand, "
+        + "                l.image_url as liquorImageUrl, "
+        + "                l.price as liquorPrice, "
+        + "                s.liquorValue as liquorValue "
+        + "FROM ( "
+        + "    SELECT liquor_id, SUM(sale_quantity) AS liquorValue "
+        + "    FROM statistics "
+        + "    GROUP BY liquor_id "
+        + "    ORDER BY SUM(sale_quantity) DESC "
+        + "    LIMIT 5 "
+        + ") s "
+        + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
     List<StatisticsLiquor> findTop5LiquorIdAndSaleQuantity();
 }

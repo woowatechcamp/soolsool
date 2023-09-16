@@ -4,5 +4,13 @@ public interface StatisticsLiquor {
 
     Long getLiquorId();
 
+    String getLiquorName();
+
+    String getLiquorBrand();
+
+    String getLiquorImageUrl();
+
+    Long getLiquorPrice();
+
     Long getLiquorValue();
 }

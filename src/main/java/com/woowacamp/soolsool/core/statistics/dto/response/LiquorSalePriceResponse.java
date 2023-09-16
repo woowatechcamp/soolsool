@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.statistics.dto.response;
 
-import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,19 +11,19 @@ public class LiquorSalePriceResponse {
 
     private Long id;
     private String name;
-    private String brew;
-    private String region;
+    private String brand;
     private String imageUrl;
-    private Long totalSalePrice;
+    private Long price;
+    private Long accumulatedSalePrice;
 
-    public static LiquorSalePriceResponse from(final Liquor liquor, final Long totalSalePrice) {
+    public static LiquorSalePriceResponse from(final StatisticsLiquor statisticsLiquor) {
         return new LiquorSalePriceResponse(
-            liquor.getId(),
-            liquor.getName(),
-            liquor.getBrew().getType().getName(),
-            liquor.getRegion().getType().getName(),
-            liquor.getImageUrl(),
-            totalSalePrice
+            statisticsLiquor.getLiquorId(),
+            statisticsLiquor.getLiquorName(),
+            statisticsLiquor.getLiquorBrand(),
+            statisticsLiquor.getLiquorImageUrl(),
+            statisticsLiquor.getLiquorPrice(),
+            statisticsLiquor.getLiquorValue()
         );
     }
 }

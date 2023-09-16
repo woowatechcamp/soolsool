@@ -1,7 +1,6 @@
 package com.woowacamp.soolsool.core.statistics.infra;
 
 import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquors;
-import java.util.Optional;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
@@ -20,8 +19,8 @@ public class StatisticsRedisImpl implements StatisticsRedis {
     }
 
     @Override
-    public Optional<StatisticsLiquors> findTop5StatisticsLiquorsBySalePrice() {
-        return Optional.of(rCacheStatistics.get(STATISTICS_PRICE));
+    public StatisticsLiquors findTop5StatisticsLiquorsBySalePrice() {
+        return rCacheStatistics.get(STATISTICS_PRICE);
     }
 
     @Override
@@ -32,8 +31,8 @@ public class StatisticsRedisImpl implements StatisticsRedis {
     }
 
     @Override
-    public Optional<StatisticsLiquors> findTop5StatisticsLiquorsBySaleQuantity() {
-        return Optional.of(rCacheStatistics.get(STATISTICS_QUANTITY));
+    public StatisticsLiquors findTop5StatisticsLiquorsBySaleQuantity() {
+        return rCacheStatistics.get(STATISTICS_QUANTITY);
     }
 
     @Override
