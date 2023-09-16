@@ -85,7 +85,7 @@ public class LiquorController {
     @NoAuth
     @RequestLogging
     @GetMapping
-    public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorListByLatest(
+    public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorList(
         @RequestParam("brew") @Nullable final LiquorBrewType brew,
         @RequestParam("region") @Nullable final LiquorRegionType region,
         @RequestParam("status") @Nullable final LiquorStatusType status,
@@ -103,7 +103,7 @@ public class LiquorController {
 
     @NoAuth
     @RequestLogging
-    @GetMapping
+    @GetMapping("/click")
     public ResponseEntity<ApiResponse<PageLiquorClickResponse>> liquorListByClick(
         @RequestParam("brew") @Nullable final LiquorBrewType brew,
         @RequestParam("region") @Nullable final LiquorRegionType region,
