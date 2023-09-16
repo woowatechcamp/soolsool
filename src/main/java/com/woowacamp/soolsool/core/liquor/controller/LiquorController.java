@@ -13,6 +13,7 @@ import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorClickResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.aop.RequestLogging;
 import com.woowacamp.soolsool.global.auth.dto.NoAuth;
@@ -71,16 +72,12 @@ public class LiquorController {
     @NoAuth
     @RequestLogging
     @GetMapping("/first")
-    public ResponseEntity<ApiResponse<PageLiquorClickResponse>> getLiquorFirstList(
+    public ResponseEntity<ApiResponse<PageLiquorResponse>> getLiquorFirstList(
         @PageableDefault final Pageable pageable
     ) {
-        final PageRequest sortPageable = PageRequest.of(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            Sort.by("createdAt").descending()
-        );
+        final PageRequest sortPageable = getSortedPageable(pageable);
 
-        final PageLiquorClickResponse response = liquorService.getFirstPage(sortPageable);
+        final PageLiquorResponse response = liquorService.getFirstPage(sortPageable);
 
         return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }
@@ -88,25 +85,48 @@ public class LiquorController {
     @NoAuth
     @RequestLogging
     @GetMapping
-    public ResponseEntity<ApiResponse<PageLiquorClickResponse>> liquorList(
+    public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorListByLatest(
         @RequestParam("brew") @Nullable final LiquorBrewType brew,
         @RequestParam("region") @Nullable final LiquorRegionType region,
         @RequestParam("status") @Nullable final LiquorStatusType status,
         @RequestParam("brand") @Nullable final String brand,
-        @RequestParam @Nullable final Long cursorId,
+        @RequestParam @Nullable final Long liquorId,
+        @PageableDefault final Pageable pageable
+    ) {
+        final PageRequest sortPageable = getSortedPageable(pageable);
+
+        final PageLiquorResponse response = liquorService
+            .liquorListByLatest(brew, region, status, brand, sortPageable, liquorId);
+
+        return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
+    }
+
+    @NoAuth
+    @RequestLogging
+    @GetMapping
+    public ResponseEntity<ApiResponse<PageLiquorClickResponse>> liquorListByClick(
+        @RequestParam("brew") @Nullable final LiquorBrewType brew,
+        @RequestParam("region") @Nullable final LiquorRegionType region,
+        @RequestParam("status") @Nullable final LiquorStatusType status,
+        @RequestParam("brand") @Nullable final String brand,
+        @RequestParam @Nullable final Long liquorId,
         @RequestParam @Nullable final Long clickCount,
         @PageableDefault final Pageable pageable
     ) {
-        final PageRequest sortPageable = PageRequest.of(
+        final PageRequest sortPageable = getSortedPageable(pageable);
+
+        final PageLiquorClickResponse response = liquorService
+            .liquorListByClick(brew, region, status, brand, sortPageable, liquorId, clickCount);
+
+        return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
+    }
+
+    private  PageRequest getSortedPageable(Pageable pageable) {
+        return PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
             Sort.by("createdAt").descending()
         );
-
-        final PageLiquorClickResponse response = liquorService
-            .liquorList(brew, region, status, brand, sortPageable, cursorId, clickCount);
-
-        return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }
 
     @Vendor

@@ -46,7 +46,7 @@ class LiquorQueryDslRepositoryTest {
 
     @Test
     @DisplayName("커서 첫번째를 조회하는 테스트")
-    void cursorFirstTest() {
+    void cursorFirstTestByClickAndLatest() {
         // given
         LiquorBrew brew = liquorBrewRepository.findByType(LiquorBrewType.SOJU).get();
         LiquorRegion region = liquorRegionRepository.findByType(LiquorRegionType.GYEONGGI_DO).get();
@@ -55,7 +55,7 @@ class LiquorQueryDslRepositoryTest {
 
         // when
         final List<LiquorClickElementResponse> 커서첫번째 = liquorQueryDslRepository
-            .getList(new LiquorSearchCondition(region, brew, status, brand),
+            .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), null, null);
 
         // then
@@ -64,7 +64,7 @@ class LiquorQueryDslRepositoryTest {
 
     @Test
     @DisplayName("커서 clickCount가 null일때 테스트" )
-    void cursorClickCountNullTest() {
+    void cursorClickCountNullTestByClickAndLatest() {
         // given
         LiquorBrew brew = liquorBrewRepository.findByType(SOJU).get();
         LiquorRegion region = liquorRegionRepository.findByType(GYEONGGI_DO).get();
@@ -73,7 +73,7 @@ class LiquorQueryDslRepositoryTest {
 
         // when
         List<LiquorClickElementResponse> 커서두번째 = liquorQueryDslRepository
-            .getList(new LiquorSearchCondition(region, brew, status, brand),
+            .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), 1L, null);
         // then
         assertThat(커서두번째).isEmpty();
@@ -81,7 +81,7 @@ class LiquorQueryDslRepositoryTest {
 
     @Test
     @DisplayName("커서 liquorId와 clickCount가 not null 일때 테스트" )
-    void cursorLiquorIdClickCCountNotNullTest(){
+    void cursorLiquorIdClickCCountNotNullTestByClickAndLatest(){
         // given
         LiquorBrew brew = liquorBrewRepository.findByType(SOJU).get();
         LiquorRegion region = liquorRegionRepository.findByType(GYEONGGI_DO).get();
@@ -90,7 +90,7 @@ class LiquorQueryDslRepositoryTest {
 
         // when
         List<LiquorClickElementResponse> cursor  = liquorQueryDslRepository
-            .getList(new LiquorSearchCondition(region, brew, status, brand),
+            .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), 2L, 100L);
         // then
         assertThat(cursor).hasSize(1);

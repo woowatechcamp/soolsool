@@ -6,6 +6,7 @@ import static com.woowacamp.soolsool.core.liquor.domain.QLiquorCtr.liquorCtr;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
@@ -27,7 +28,38 @@ public class LiquorQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<LiquorClickElementResponse> getList(
+    public List<Liquor> getList(
+        final LiquorSearchCondition condition,
+        final Pageable pageable,
+        final Long liquorId
+    ) {
+        return queryFactory.select(liquor)
+            .from(liquor)
+            .where(
+                eqRegion(condition.getLiquorRegion()),
+                eqBrew(condition.getLiquorBrew()),
+                eqStatus(condition.getLiquorStatus()),
+                eqBrand(condition.getBrand()),
+                cursorId(liquorId, null)
+            )
+            .orderBy(liquor.id.desc())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
+
+    @Cacheable(value = "liquorsFirstPage")
+    public List<Liquor> getCachedList(
+        final Pageable pageable
+    ) {
+        log.info("LiquorQueryDslRepository getCachedList");
+        return queryFactory.select(liquor)
+            .from(liquor)
+            .orderBy(liquor.id.desc())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
+
+    public List<LiquorClickElementResponse> getListByClick(
         final LiquorSearchCondition condition,
         final Pageable pageable,
         final Long liquorId,
@@ -49,26 +81,7 @@ public class LiquorQueryDslRepository {
                 eqBrand(condition.getBrand()),
                 cursorId(liquorId, clickCount)
             )
-            .orderBy(liquorCtr.click.count.desc(),liquor.id.desc())
-            .limit(pageable.getPageSize())
-            .fetch();
-    }
-
-    @Cacheable(value = "liquorsFirstPage")
-    public List<LiquorClickElementResponse> getCachedList(
-        final Pageable pageable
-    ) {
-        log.info("LiquorQueryDslRepository getCachedList");
-        return queryFactory.select(
-                Projections.constructor(
-                    LiquorClickElementResponse.class,
-                    liquor,
-                    liquorCtr.click
-                )
-            )
-            .from(liquor)
-            .join(liquorCtr).on(liquor.id.eq(liquorCtr.liquorId))
-            .orderBy(liquorCtr.click.count.desc(),liquor.id.desc())
+            .orderBy(liquorCtr.click.count.desc(), liquor.id.desc())
             .limit(pageable.getPageSize())
             .fetch();
     }
