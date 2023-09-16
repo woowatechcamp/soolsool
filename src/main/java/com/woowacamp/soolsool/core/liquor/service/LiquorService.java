@@ -105,7 +105,7 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return getPageLiquorResponse(pageable, liquors);
+        return PageLiquorResponse.of(pageable, liquors);
     }
 
     @Transactional
@@ -117,21 +117,7 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return getPageLiquorResponse(pageable, liquors);
-    }
-
-    private PageLiquorResponse getPageLiquorResponse(
-        final Pageable pageable,
-        final List<LiquorElementResponse> liquors
-    ) {
-        if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, liquors);
-        }
-
-        final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
-        final Long lastReadClickCount = liquors.get(liquors.size() - 1).getClickCount();
-
-        return PageLiquorResponse.of(true, lastReadLiquorId, lastReadClickCount, liquors);
+        return PageLiquorResponse.of(pageable, liquors);
     }
 
     @CacheEvict(value = "liquorsFirstPage")
