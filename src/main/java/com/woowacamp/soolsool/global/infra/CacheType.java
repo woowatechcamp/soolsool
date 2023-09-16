@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.global.common;
+package com.woowacamp.soolsool.global.infra;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

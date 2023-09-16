@@ -15,7 +15,7 @@ public class ReceiptStatusCache {
 
     private final ReceiptStatusRepository receiptStatusRepository;
 
-    @Cacheable(value = "receiptStatus", key = "#receiptStatusType")
+    @Cacheable(value = "receiptStatus", key = "#receiptStatusType",unless = "#result==null")
     public Optional<ReceiptStatus> findByType(final ReceiptStatusType receiptStatusType) {
         log.info("ReceiptStatusCache {}", receiptStatusType);
         return receiptStatusRepository.findByType(receiptStatusType);

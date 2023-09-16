@@ -14,13 +14,4 @@ public class LiquorSearchCondition {
     private final LiquorBrew liquorBrew;
     private final LiquorStatus liquorStatus;
     private final String brand;
-
-    public static LiquorSearchCondition nullObject() {
-        return new LiquorSearchCondition(
-            null,
-            null,
-            null,
-            null
-        );
-    }
 }
