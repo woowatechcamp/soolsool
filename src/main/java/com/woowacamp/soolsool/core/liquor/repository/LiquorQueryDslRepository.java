@@ -59,11 +59,18 @@ public class LiquorQueryDslRepository {
         final Pageable pageable
     ) {
         log.info("LiquorQueryDslRepository getCachedList");
-        return getList(
-            LiquorSearchCondition.nullObject(),
-            pageable,
-            null, null
-        );
+        return queryFactory.select(
+                Projections.constructor(
+                    LiquorElementResponse.class,
+                    liquor,
+                    liquorCtr.click
+                )
+            )
+            .from(liquor)
+            .join(liquorCtr).on(liquor.id.eq(liquorCtr.liquorId))
+            .orderBy(liquorCtr.click.count.desc(),liquor.id.desc())
+            .limit(pageable.getPageSize())
+            .fetch();
     }
 
     private BooleanExpression eqRegion(final LiquorRegion liquorRegion) {

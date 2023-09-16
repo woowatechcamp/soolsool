@@ -8,7 +8,9 @@ import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
+
 import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
@@ -90,9 +92,9 @@ public class LiquorCtrRedisRepository {
                 redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
             initLiquorCtrIfAbsent(liquorCtr, liquorId);
-
             final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
             liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
+
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -151,10 +153,7 @@ public class LiquorCtrRedisRepository {
         final RMapCache<Long, RedisLiquorCtr> liquorCtr,
         final Long liquorId
     ) {
-        if (liquorCtr.get(liquorId) != null) {
-            return;
-        }
-        liquorCtr.put(
+        liquorCtr.putIfAbsent(
             liquorId,
             new RedisLiquorCtr(0L, 0L),
             LIQUOR_CTR_TTL,
