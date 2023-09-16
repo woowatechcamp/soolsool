@@ -26,4 +26,5 @@ public class PageLiquorResponse {
     ) {
         return PageLiquorResponse.of(hasNext, null, liquors);
     }
+
 }

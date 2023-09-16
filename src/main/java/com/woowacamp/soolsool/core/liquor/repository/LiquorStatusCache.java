@@ -17,7 +17,7 @@ public class LiquorStatusCache {
 
     private final LiquorStatusRepository liquorStatusRepository;
 
-    @Cacheable(value = "liquorStatus", key = "#type", condition = "#type!=null", unless = "#result==null", cacheManager = "caffeineCacheManager")
+    @Cacheable(value = "liquorStatus", key = "#type", condition = "#type!=null", unless = "#result==null")
     public Optional<LiquorStatus> findByType(final LiquorStatusType type) {
         log.info("LiquorStatusCache {}", type);
         return liquorStatusRepository.findByType(type);

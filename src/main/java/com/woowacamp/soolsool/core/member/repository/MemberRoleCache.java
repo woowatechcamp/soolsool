@@ -15,7 +15,7 @@ public class MemberRoleCache {
 
     private final MemberRoleRepository memberRoleRepository;
 
-    @Cacheable(value = "memberRole", key = "#name", unless = "#result==null", cacheManager = "caffeineCacheManager")
+    @Cacheable(value = "memberRole", key = "#name", unless = "#result==null")
     public Optional<MemberRole> findByName(final MemberRoleType name) {
         log.info("MemberRoleCache findByName");
         return memberRoleRepository.findByName(name);

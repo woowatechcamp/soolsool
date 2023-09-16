@@ -2,14 +2,13 @@ package com.woowacamp.soolsool.core.liquor.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.QLiquor.liquor;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
 import java.util.List;
 import java.util.Objects;
@@ -26,17 +25,12 @@ public class LiquorQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<LiquorElementResponse> getList(
+    public List<Liquor> getList(
         final LiquorSearchCondition condition,
         final Pageable pageable,
         final Long cursorId
     ) {
-        return queryFactory.select(
-                Projections.constructor(
-                    LiquorElementResponse.class,
-                    liquor
-                )
-            )
+        return queryFactory.select(liquor)
             .from(liquor)
             .where(
                 eqRegion(condition.getLiquorRegion()),
@@ -50,17 +44,16 @@ public class LiquorQueryDslRepository {
             .fetch();
     }
 
-    @Cacheable(value = "liquorsFirstPage", cacheManager = "redisCacheManager")
-    public List<LiquorElementResponse> getCachedList(
-        final Pageable pageable
-    ) {
+    @Cacheable(value = "liquorsFirstPage")
+    public List<Liquor> getCachedList(final Pageable pageable) {
         log.info("LiquorQueryDslRepository getCachedList");
-        return getList(
-            LiquorSearchCondition.nullObject(),
-            pageable,
-            null
-        );
+        return queryFactory.select(liquor)
+            .from(liquor)
+            .orderBy(liquor.id.desc())
+            .limit(pageable.getPageSize())
+            .fetch();
     }
+
 
     private BooleanExpression eqRegion(final LiquorRegion liquorRegion) {
         if (Objects.isNull(liquorRegion)) {
