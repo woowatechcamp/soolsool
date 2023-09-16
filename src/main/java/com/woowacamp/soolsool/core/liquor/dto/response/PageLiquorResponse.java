@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.dto;
+package com.woowacamp.soolsool.core.liquor.dto.response;
 
 import java.util.List;
 import lombok.Getter;

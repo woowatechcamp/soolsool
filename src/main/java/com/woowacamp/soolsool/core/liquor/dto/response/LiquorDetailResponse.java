@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.dto;
+package com.woowacamp.soolsool.core.liquor.dto.response;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import java.util.List;

@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;

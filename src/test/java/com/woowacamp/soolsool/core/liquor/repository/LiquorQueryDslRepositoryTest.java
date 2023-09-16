@@ -5,16 +5,14 @@ import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType.GYEO
 import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType.ON_SALE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacamp.soolsool.config.QuerydslTestConfig;
-import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
