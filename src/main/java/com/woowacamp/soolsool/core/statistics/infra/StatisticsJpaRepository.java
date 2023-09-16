@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.statistics.repository;
+package com.woowacamp.soolsool.core.statistics.infra;
 
 import com.woowacamp.soolsool.core.statistics.domain.Statistics;
 import com.woowacamp.soolsool.core.statistics.domain.StatisticsId;
@@ -65,12 +65,12 @@ public interface StatisticsJpaRepository extends JpaRepository<Statistics, Stati
         + "group by liquor_id "
         + "order by sum(sale_price) desc "
         + "limit 5", nativeQuery = true)
-    List<StatisticsLiquor> findTop5LiquorIdBySalePrice();
+    List<StatisticsLiquor> findTop5LiquorIdAndSalePrice();
 
     @Query(value = "select liquor_id as liquorId, sum(sale_quantity) as liquorValue "
         + "from statistics "
         + "group by liquor_id "
         + "order by sum(sale_quantity) desc "
         + "limit 5", nativeQuery = true)
-    List<StatisticsLiquor> findTop5LiquorIdBySaleQuantity();
+    List<StatisticsLiquor> findTop5LiquorIdAndSaleQuantity();
 }

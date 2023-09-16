@@ -1,8 +1,14 @@
 package com.woowacamp.soolsool.core.statistics.repository;
 
-import org.springframework.stereotype.Component;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquors;
+import org.springframework.stereotype.Repository;
 
-@Component
-public interface StatisticsRepository extends StatisticsJpaRepository, StatisticsRedis {
+@Repository
+public interface StatisticsRepository {
 
+    StatisticsLiquors findTop5LiquorIdAndSalePrice();
+
+    StatisticsLiquors findTop5LiquorIdAndSaleQuantity();
+
+    void updateStatistics();
 }

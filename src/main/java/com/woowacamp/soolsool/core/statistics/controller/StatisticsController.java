@@ -42,7 +42,7 @@ public class StatisticsController {
     @GetMapping("/price")
     public ResponseEntity<ApiResponse<List<LiquorSalePriceResponse>>> findTop5SalePrice() {
         final List<LiquorSalePriceResponse> liquorSalePriceResponses
-            = statisticsService.findTop5SalePrice();
+            = statisticsService.findTop5LiquorsBySalePrice();
 
         return ResponseEntity.status(OK)
             .body(ApiResponse.of(STATISTICS_TOP5_SALE_PRICE, liquorSalePriceResponses));
@@ -53,7 +53,7 @@ public class StatisticsController {
     @GetMapping("/quantity")
     public ResponseEntity<ApiResponse<List<LiquorSaleQuantityResponse>>> findTop5SaleQuantity() {
         final List<LiquorSaleQuantityResponse> liquorSaleQuantityResponses
-            = statisticsService.findTop5SaleQuantity();
+            = statisticsService.findTop5LiquorsBySaleQuantity();
 
         return ResponseEntity.status(OK)
             .body(ApiResponse.of(STATISTICS_TOP5_SALE_QUANTITY, liquorSaleQuantityResponses));
