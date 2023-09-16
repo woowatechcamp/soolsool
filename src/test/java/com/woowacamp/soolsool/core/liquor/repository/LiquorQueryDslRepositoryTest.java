@@ -5,10 +5,15 @@ import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType.GYEO
 import static com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType.ON_SALE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacamp.soolsool.config.QuerydslTestConfig;
+import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import java.util.List;
@@ -42,12 +47,12 @@ class LiquorQueryDslRepositoryTest {
 
 
     @Test
-    @DisplayName("커서 LiquorId, clickCount 가 null 일 때 (첫번째 조회)" )
+    @DisplayName("커서 첫번째를 조회하는 테스트")
     void cursorFirstTest() {
         // given
-        LiquorBrew brew = liquorBrewRepository.findByType(SOJU).get();
-        LiquorRegion region = liquorRegionRepository.findByType(GYEONGGI_DO).get();
-        LiquorStatus status = liquorStatusRepository.findByType(ON_SALE).get();
+        LiquorBrew brew = liquorBrewRepository.findByType(LiquorBrewType.SOJU).get();
+        LiquorRegion region = liquorRegionRepository.findByType(LiquorRegionType.GYEONGGI_DO).get();
+        LiquorStatus status = liquorStatusRepository.findByType(LiquorStatusType.ON_SALE).get();
         String brand = "롯데";
 
         // when

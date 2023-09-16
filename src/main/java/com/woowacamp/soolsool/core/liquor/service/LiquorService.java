@@ -28,8 +28,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -74,8 +73,8 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
-        final List<Liquor> relatedLiquors =
-            liquorRepository.findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
+        final List<Liquor> relatedLiquors = liquorRepository
+            .findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
         liquorCtrRedisRepository.increaseClick(liquorId);
 
@@ -93,17 +92,17 @@ public class LiquorService {
         final Long clickCount
     ) {
         final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition(
-            findLiquorRegionByType(regionType).orElse(null),
-            findLiquorBrewByType(brewType).orElse(null),
-            findLiquorStatusByType(statusType).orElse(null),
+            liquorRegionCache.findByType(regionType).orElse(null),
+            liquorBrewCache.findByType(brewType).orElse(null),
+            liquorStatusCache.findByType(statusType).orElse(null),
             brand
         );
 
-        final List<LiquorElementResponse> liquors = liquorQueryDslRepository
-            .getList(liquorSearchCondition, pageable, cursorId, clickCount);
+        List<Liquor> liquors = liquorQueryDslRepository
+            .getList(liquorSearchCondition, pageable, cursorId);
 
         liquors.stream()
-            .map(LiquorElementResponse::getId)
+            .map(Liquor::getId)
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
@@ -112,11 +111,10 @@ public class LiquorService {
 
     @Transactional
     public PageLiquorResponse getFirstPage(final Pageable pageable) {
-        final List<LiquorElementResponse> liquors = liquorQueryDslRepository
-            .getCachedList(pageable);
+        final List<Liquor> liquors = liquorQueryDslRepository.getCachedList(pageable);
 
         liquors.stream()
-            .map(LiquorElementResponse::getId)
+            .map(Liquor::getId)
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
@@ -125,16 +123,19 @@ public class LiquorService {
 
     private PageLiquorResponse getPageLiquorResponse(
         final Pageable pageable,
-        final List<LiquorElementResponse> liquors
+        final List<Liquor> liquors
     ) {
+        List<LiquorElementResponse> liquorElements = liquors.stream()
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
+
         if (liquors.size() < pageable.getPageSize()) {
-            return PageLiquorResponse.of(false, liquors);
+            return PageLiquorResponse.of(false, liquorElements);
         }
 
         final Long lastReadLiquorId = liquors.get(liquors.size() - 1).getId();
-        final Long lastReadLiquorClickCount = liquors.get(liquors.size() - 1).getClickCount();
 
-        return PageLiquorResponse.of(true, lastReadLiquorId, lastReadLiquorClickCount, liquors);
+        return PageLiquorResponse.of(true, lastReadLiquorId, liquorElements);
     }
 
     @CacheEvict(value = "liquorsFirstPage")
@@ -165,7 +166,6 @@ public class LiquorService {
         liquorRepository.delete(liquor);
     }
 
-
     @CacheEvict(value = "liquorsFirstPage")
     @Transactional
     public void decreaseTotalStock(final Long liquorId, final int quantity) {
@@ -175,38 +175,17 @@ public class LiquorService {
     }
 
     private LiquorStatus getLiquorStatusByName(final String name) {
-        return findLiquorStatusByType(LiquorStatusType.valueOf(name))
+        return liquorStatusCache.findByType(LiquorStatusType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_STATUS_FOUND));
     }
 
     private LiquorRegion getLiquorRegionByName(final String name) {
-        return findLiquorRegionByType(LiquorRegionType.valueOf(name))
+        return liquorRegionCache.findByType(LiquorRegionType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_REGION_FOUND));
     }
 
     private LiquorBrew getLiquorBrewBrewByName(final String name) {
-        return findLiquorBrewByType(LiquorBrewType.valueOf(name))
+        return liquorBrewCache.findByType(LiquorBrewType.valueOf(name))
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_BREW_FOUND));
-    }
-
-    private Optional<LiquorStatus> findLiquorStatusByType(final LiquorStatusType statusType) {
-        if (Objects.isNull(statusType)) {
-            return Optional.empty();
-        }
-        return liquorStatusCache.findByType(statusType);
-    }
-
-    private Optional<LiquorRegion> findLiquorRegionByType(final LiquorRegionType regionType) {
-        if (Objects.isNull(regionType)) {
-            return Optional.empty();
-        }
-        return liquorRegionCache.findByType(regionType);
-    }
-
-    private Optional<LiquorBrew> findLiquorBrewByType(final LiquorBrewType brewType) {
-        if (Objects.isNull(brewType)) {
-            return Optional.empty();
-        }
-        return liquorBrewCache.findByType(brewType);
     }
 }
