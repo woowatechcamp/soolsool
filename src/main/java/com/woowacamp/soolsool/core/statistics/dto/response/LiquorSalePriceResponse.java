@@ -1,11 +1,12 @@
 package com.woowacamp.soolsool.core.statistics.dto.response;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class LiquorSalePriceResponse {
 
     private Long id;
