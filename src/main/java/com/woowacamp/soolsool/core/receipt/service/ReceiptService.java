@@ -104,6 +104,10 @@ public class ReceiptService {
 
             final Receipt expiredReceipt = getReceipt(event.getReceiptId());
 
+            if (expiredReceipt.isExpired()) {
+                return;
+            }
+
             expiredReceipt.updateStatus(
                 getReceiptStatus(ReceiptStatusType.EXPIRED)
             );

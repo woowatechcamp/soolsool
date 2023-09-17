@@ -4,6 +4,7 @@ import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemPriceConv
 import com.woowacamp.soolsool.core.receipt.domain.converter.ReceiptItemQuantityConverter;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemPrice;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptItemQuantity;
+import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -94,6 +95,10 @@ public class Receipt extends BaseEntity {
 
     public void updateStatus(final ReceiptStatus receiptStatus) {
         this.receiptStatus = receiptStatus;
+    }
+
+    public boolean isExpired() {
+        return receiptStatus.getType().equals(ReceiptStatusType.EXPIRED);
     }
 
     public BigInteger getOriginalTotalPrice() {
