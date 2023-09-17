@@ -1,6 +1,6 @@
 package com.woowacamp.soolsool.core.statistics.domain;
 
-public interface StatisticsLiquor {
+public interface StatisticLiquor {
 
     Long getLiquorId();
 

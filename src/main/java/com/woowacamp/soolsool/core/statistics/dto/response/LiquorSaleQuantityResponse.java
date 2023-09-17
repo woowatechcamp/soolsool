@@ -1,29 +1,32 @@
 package com.woowacamp.soolsool.core.statistics.dto.response;
 
-import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquor;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticLiquor;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class LiquorSaleQuantityResponse {
 
-    private Long id;
-    private String name;
-    private String brand;
-    private String imageUrl;
-    private Long price;
-    private Long accumulatedSaleQuantity;
+    private final Long id;
+    private final String name;
+    private final String brand;
+    private final String imageUrl;
+    private final Long price;
+    private final Long accumulatedSaleQuantity;
 
-    public static LiquorSaleQuantityResponse from(final StatisticsLiquor statisticsLiquor) {
+    public static LiquorSaleQuantityResponse from(
+        @NonNull final StatisticLiquor statisticLiquor
+    ) {
         return new LiquorSaleQuantityResponse(
-            statisticsLiquor.getLiquorId(),
-            statisticsLiquor.getLiquorName(),
-            statisticsLiquor.getLiquorBrand(),
-            statisticsLiquor.getLiquorImageUrl(),
-            statisticsLiquor.getLiquorPrice(),
-            statisticsLiquor.getLiquorValue()
+            statisticLiquor.getLiquorId(),
+            statisticLiquor.getLiquorName(),
+            statisticLiquor.getLiquorBrand(),
+            statisticLiquor.getLiquorImageUrl(),
+            statisticLiquor.getLiquorPrice(),
+            statisticLiquor.getLiquorValue()
         );
     }
 }

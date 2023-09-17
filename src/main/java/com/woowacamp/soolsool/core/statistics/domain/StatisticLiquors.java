@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class StatisticsLiquors {
+public class StatisticLiquors {
 
-    private final List<StatisticsLiquorImpl> values;
+    private final List<StatisticLiquorImpl> values;
 }

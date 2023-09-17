@@ -1,8 +1,8 @@
 package com.woowacamp.soolsool.core.statistics.infra;
 
-import com.woowacamp.soolsool.core.statistics.domain.Statistics;
-import com.woowacamp.soolsool.core.statistics.domain.StatisticsId;
-import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquor;
+import com.woowacamp.soolsool.core.statistics.domain.Statistic;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticId;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticLiquor;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatisticsJpaRepository extends JpaRepository<Statistics, StatisticsId> {
+public interface StatisticJpaRepository extends JpaRepository<Statistic, StatisticId> {
 
     @Modifying
     @Query(value =
@@ -74,7 +74,7 @@ public interface StatisticsJpaRepository extends JpaRepository<Statistics, Stati
         + "    LIMIT 5 "
         + ") s "
         + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
-    List<StatisticsLiquor> findTop5LiquorIdAndSalePrice();
+    List<StatisticLiquor> findTop5LiquorsAndSalePrice();
 
     @Query(value = "SELECT l.id as liquorId, "
         + "                l.name as liquorName, "
@@ -90,5 +90,5 @@ public interface StatisticsJpaRepository extends JpaRepository<Statistics, Stati
         + "    LIMIT 5 "
         + ") s "
         + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
-    List<StatisticsLiquor> findTop5LiquorIdAndSaleQuantity();
+    List<StatisticLiquor> findTop5LiquorsAndSaleQuantity();
 }

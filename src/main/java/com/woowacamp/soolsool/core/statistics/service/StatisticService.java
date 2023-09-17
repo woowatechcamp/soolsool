@@ -1,43 +1,41 @@
 package com.woowacamp.soolsool.core.statistics.service;
 
-import com.woowacamp.soolsool.core.statistics.domain.StatisticsLiquors;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticLiquors;
 import com.woowacamp.soolsool.core.statistics.dto.response.LiquorSalePriceResponse;
 import com.woowacamp.soolsool.core.statistics.dto.response.LiquorSaleQuantityResponse;
-import com.woowacamp.soolsool.core.statistics.repository.StatisticsRepository;
+import com.woowacamp.soolsool.core.statistics.repository.StatisticRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
-public class StatisticsService {
+public class StatisticService {
 
-    private final StatisticsRepository statisticsRepository;
+    private final StatisticRepository statisticRepository;
 
     @Transactional(readOnly = true)
     public List<LiquorSalePriceResponse> findTop5LiquorsBySalePrice() {
-        final StatisticsLiquors statisticsLiquors = statisticsRepository.findTop5LiquorIdAndSalePrice();
+        final StatisticLiquors statisticLiquors = statisticRepository.findTop5LiquorsBySalePrice();
 
-        return statisticsLiquors.getValues().stream()
+        return statisticLiquors.getValues().stream()
             .map(LiquorSalePriceResponse::from)
             .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
     public List<LiquorSaleQuantityResponse> findTop5LiquorsBySaleQuantity() {
-        final StatisticsLiquors statisticsLiquors = statisticsRepository.findTop5LiquorIdAndSaleQuantity();
+        final StatisticLiquors statisticLiquors = statisticRepository.findTop5LiquorsBySaleQuantity();
 
-        return statisticsLiquors.getValues().stream()
+        return statisticLiquors.getValues().stream()
             .map(LiquorSaleQuantityResponse::from)
             .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public void updateStatistics() {
-        statisticsRepository.updateStatistics();
+    public void updateStatistic() {
+        statisticRepository.updateStatistic();
     }
 }

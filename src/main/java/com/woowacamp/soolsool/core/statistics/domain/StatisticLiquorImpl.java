@@ -1,10 +1,10 @@
 package com.woowacamp.soolsool.core.statistics.domain;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class StatisticsLiquorImpl implements StatisticsLiquor {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class StatisticLiquorImpl implements StatisticLiquor {
 
     private final Long liquorId;
     private final String liquorName;
@@ -13,14 +13,14 @@ public class StatisticsLiquorImpl implements StatisticsLiquor {
     private final Long liquorPrice;
     private final Long liquorValue;
 
-    public static StatisticsLiquorImpl from(final StatisticsLiquor statisticsLiquor) {
-        return new StatisticsLiquorImpl(
-            statisticsLiquor.getLiquorId(),
-            statisticsLiquor.getLiquorName(),
-            statisticsLiquor.getLiquorBrand(),
-            statisticsLiquor.getLiquorImageUrl(),
-            statisticsLiquor.getLiquorPrice(),
-            statisticsLiquor.getLiquorValue()
+    public static StatisticLiquorImpl from(final StatisticLiquor statisticLiquor) {
+        return new StatisticLiquorImpl(
+            statisticLiquor.getLiquorId(),
+            statisticLiquor.getLiquorName(),
+            statisticLiquor.getLiquorBrand(),
+            statisticLiquor.getLiquorImageUrl(),
+            statisticLiquor.getLiquorPrice(),
+            statisticLiquor.getLiquorValue()
         );
     }
 
