@@ -49,7 +49,7 @@ public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
 
     @Bean
     public CacheManager redisCacheManager(final RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
+        final RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
             .defaultCacheConfig()
             .serializeKeysWith(RedisSerializationContext
                 .SerializationPair
@@ -58,7 +58,7 @@ public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
                 .SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
-        Map<String, RedisCacheConfiguration> cacheConfiguration = new HashMap<>();
+        final Map<String, RedisCacheConfiguration> cacheConfiguration = new HashMap<>();
         cacheConfiguration.put(
             LIQUOR_FIRST_PAGE.getCacheName(),
             redisCacheConfiguration.entryTtl(
