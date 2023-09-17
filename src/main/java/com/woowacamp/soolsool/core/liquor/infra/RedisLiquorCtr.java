@@ -1,9 +1,8 @@
 package com.woowacamp.soolsool.core.liquor.infra;
 
-import lombok.Getter;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorCtr;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public class RedisLiquorCtr {
 
@@ -18,7 +17,11 @@ public class RedisLiquorCtr {
         return new RedisLiquorCtr(impression, click + 1);
     }
 
-    public RedisLiquorCtr synchronizedWithDatabase(final Long impression, final Long click) {
-        return new RedisLiquorCtr(this.impression + impression, this.click + click);
+    public LiquorCtr toEntity(final Long liquorId) {
+        return LiquorCtr.builder()
+            .liquorId(liquorId)
+            .impression(impression)
+            .click(click)
+            .build();
     }
 }
