@@ -91,4 +91,18 @@ public interface StatisticJpaRepository extends JpaRepository<Statistic, Statist
         + ") s "
         + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
     List<StatisticLiquor> findTop5LiquorsAndSaleQuantity();
+
+    @Query(value = "select liquor_id as liquorId, sum(sale_price) as liquorValue "
+        + "from statistics "
+        + "group by liquor_id "
+        + "order by sum(sale_price) desc "
+        + "limit 5", nativeQuery = true)
+    List<StatisticLiquor> findTop5LiquorIdAndSalePrice();
+
+    @Query(value = "select liquor_id as liquorId, sum(sale_quantity) as liquorValue "
+        + "from statistics "
+        + "group by liquor_id "
+        + "order by sum(sale_quantity) desc "
+        + "limit 5", nativeQuery = true)
+    List<StatisticLiquor> findTop5LiquorIdAndSaleQuantity();
 }

@@ -1,11 +1,11 @@
 package com.woowacamp.soolsool.core.statistics.domain;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StatisticLiquors {
 
     private final List<StatisticLiquorImpl> values;
