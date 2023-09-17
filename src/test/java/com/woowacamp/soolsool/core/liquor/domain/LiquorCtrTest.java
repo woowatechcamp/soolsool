@@ -40,18 +40,4 @@ class LiquorCtrTest {
         /* when & then */
         assertThat(liquorCtr.getCtr()).isEqualTo(0.5);
     }
-
-    @Test
-    @DisplayName("기존의 노출수와 클릭수를 새로운 LiquorCtr 값으로 덮어쓴다")
-    void overwrite() {
-        /* given */
-        LiquorCtr liquorCtr = new LiquorCtr(1L, 0L, 0L);
-        LiquorCtr newLiquorCtr = new LiquorCtr(1L, 2L, 1L);
-
-        /* when */
-        liquorCtr.overwrite(newLiquorCtr);
-
-        /* when & then */
-        assertThat(liquorCtr.getCtr()).isEqualTo(0.5);
-    }
 }
