@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class LiquorCtrRedisRepository {
-
+    // TODO: ~Repository vs ~Service
     private static final String LIQUOR_CTR_KEY = "LIQUOR_CTR";
     private static final long LOCK_WAIT_TIME = 3L;
     private static final long LOCK_LEASE_TIME = 3L;
@@ -32,7 +32,6 @@ public class LiquorCtrRedisRepository {
 
     private final RMapCache<Long, RedisLiquorCtr> liquorCtrs;
 
-    // TODO: LiquorCtrRedisService vs LiquorCtrRedisRepository -> 취향 차이다...
     public LiquorCtrRedisRepository(
         final LiquorCtrRepository liquorCtrRepository,
         final RedissonClient redissonClient,
@@ -57,17 +56,6 @@ public class LiquorCtrRedisRepository {
         return lookUpLiquorCtr(liquorId).toEntity(liquorId).getCtr();
     }
 
-    // JpaRepository.updateAgeOne
-    // RedisRepository.updateImpressionOne
-
-    // 비관전락 했을 때 LiquorCtrRepsotiory.findById() <- @Lock
-    // Repository에서 락을 건게 아닌가?
-    // RLock을 Redis에서 빌린다고 생각 -> redissonClient.getLock() 자체가 Redis에 락 요청 보내는거아냐?
-
-    // AOP 구현했을 때 -> @Transactional -> repository에도 붙인다.
-    // Service 메서드에서 트랜잭션 시작을 원치 않을 수도 있다
-    // service.method( repo.m1, repo.m2 )
-    // repository에서 @RedisLock 을 붙이는게 자연스럽다...?
     public void increaseImpression(final Long liquorId) {
         final RLock liquorCtrLock = getLiquorCtrLock(liquorId);
 
