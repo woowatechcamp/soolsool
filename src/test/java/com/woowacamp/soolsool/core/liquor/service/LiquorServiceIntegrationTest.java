@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.config.RedisTestConfig;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
@@ -19,6 +20,7 @@ import com.woowacamp.soolsool.global.config.MultipleCacheManagerConfig;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -78,9 +80,27 @@ class LiquorServiceIntegrationTest {
             () -> assertThat(response.getImageUrl()).isEqualTo("/soju-url"),
             () -> assertThat(response.getAlcohol()).isEqualTo(12.0),
             () -> assertThat(response.getVolume()).isEqualTo(300),
-            () -> assertThat(response.getStock()).isEqualTo(100),
-            () -> assertThat(response.getRelatedLiquors()).hasSize(1)
+            () -> assertThat(response.getStock()).isEqualTo(100)
         );
+    }
+
+    @Test
+    @Sql({
+        "/member-type.sql", "/member.sql",
+        "/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql",
+        "/receipt-type.sql", "/receipt.sql",
+        "/order-type.sql", "/order.sql"
+    })
+    @DisplayName("특정 상품과 함께 많이 구매된 상품을 조회한다.")
+    void liquorPurchasedTogether() {
+        /* given */
+        Long 새로 = 1L;
+
+        /* when */
+        List<LiquorElementResponse> response = liquorService.liquorPurchasedTogether(새로);
+
+        /* then */
+        assertThat(response).hasSize(1);
     }
 
     @Test

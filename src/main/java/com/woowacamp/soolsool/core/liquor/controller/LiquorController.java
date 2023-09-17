@@ -10,6 +10,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
@@ -19,6 +20,7 @@ import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -66,6 +68,20 @@ public class LiquorController {
         final LiquorDetailResponse response = liquorService.liquorDetail(liquorId);
 
         return ResponseEntity.ok(ApiResponse.of(LiquorResultCode.LIQUOR_DETAIL_FOUND, response));
+    }
+
+    @NoAuth
+    @RequestLogging
+    @GetMapping("/{liquorId}/related")
+    public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorPurchasedTogether(
+        @PathVariable final Long liquorId
+    ) {
+        final List<LiquorElementResponse> liquorElementResponses =
+            liquorService.liquorPurchasedTogether(liquorId);
+
+        return ResponseEntity.ok(
+            ApiResponse.of(LiquorResultCode.LIQUOR_PURCHASED_TOGETHER_FOUND, liquorElementResponses)
+        );
     }
 
     @NoAuth
