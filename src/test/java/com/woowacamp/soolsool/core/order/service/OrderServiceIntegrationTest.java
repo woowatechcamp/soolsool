@@ -26,7 +26,7 @@ import org.springframework.test.context.jdbc.Sql;
         OrderQueryRepository.class, QuerydslConfig.class, RedissonConfig.class,
         MultipleCacheManagerConfig.class}
 )
-@DisplayName("통합 테스트:제 OrderService")
+@DisplayName("통합 테스트: OrderService")
 class OrderServiceIntegrationTest {
 
     @Autowired
