@@ -15,7 +15,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorPrice;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorVolume;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorModifyRequest;
 import com.woowacamp.soolsool.global.common.BaseEntity;
 import java.math.BigInteger;
 import javax.persistence.Column;
