@@ -4,7 +4,7 @@ import static com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode.NOT_LIQUOR
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStocks;
-import com.woowacamp.soolsool.core.liquor.dto.liquorStock.LiquorStockSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorStockSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStockRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
