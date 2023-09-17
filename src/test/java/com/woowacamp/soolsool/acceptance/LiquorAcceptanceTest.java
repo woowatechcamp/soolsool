@@ -16,11 +16,11 @@ import com.woowacamp.soolsool.acceptance.fixture.RestLiquorStockFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestPayFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestReceiptFixture;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorModifyRequest;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.PageLiquorResponse;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -149,13 +149,12 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
             () -> assertThat(liquorDetailResponse.getStock()).isZero(),
             () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
-            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300),
-            () -> assertThat(liquorDetailResponse.getRelatedLiquors()).isEmpty()
+            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300)
         );
     }
 
     @Test
-    @DisplayName("술 상세정보를 연관된 상품과 함께 조회할 수 있다")
+    @DisplayName("특정 술과 함께 많이 구매된 술을 조회할 수 있다")
     void liquorDetailWithRelatedLiquors() {
         // given
         String vendorAccessToken = RestAuthFixture.로그인_최민족_판매자();
@@ -172,29 +171,20 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         RestPayFixture.결제_성공(customerAccessToken, 주문서_Id);
 
         // when
-        LiquorDetailResponse liquorDetailResponse = RestAssured
+        List<LiquorElementResponse> relatedLiquors = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/api/liquors/{liquorId}", 새로_Id)
+            .when().get("/api/liquors/{liquorId}/related", 새로_Id)
             .then().log().all()
-            .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
-        List<Long> relatedLiquorIds = liquorDetailResponse.getRelatedLiquors().stream()
+        List<Long> relatedLiquorIds = relatedLiquors.stream()
             .map(LiquorElementResponse::getId)
             .collect(Collectors.toList());
 
         // then
-        assertAll(
-            () -> assertThat(liquorDetailResponse.getName()).isEqualTo("새로"),
-            () -> assertThat(liquorDetailResponse.getPrice()).isEqualTo("3000"),
-            () -> assertThat(liquorDetailResponse.getBrand()).isEqualTo("롯데"),
-            () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
-            () -> assertThat(liquorDetailResponse.getStock()).isEqualTo(99),
-            () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
-            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300),
-            () -> assertThat(relatedLiquorIds).containsExactlyInAnyOrder(얼음딸기주_Id)
-        );
+        assertThat(relatedLiquorIds).containsExactlyInAnyOrder(얼음딸기주_Id);
     }
 
     @Test

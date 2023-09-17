@@ -9,7 +9,7 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorSearchCondition;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;

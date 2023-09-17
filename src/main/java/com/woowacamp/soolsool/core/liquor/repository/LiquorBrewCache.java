@@ -2,9 +2,7 @@ package com.woowacamp.soolsool.core.liquor.repository;
 
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
-
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,7 +15,8 @@ public class LiquorBrewCache {
 
     private final LiquorBrewRepository liquorBrewRepository;
 
-    @Cacheable(value = "liquorBrew", key = "#type", condition = "#type!=null", unless = "#result==null")
+    @Cacheable(value = "liquorBrew", key = "#type", condition = "#type!=null",
+        unless = "#result==null", cacheManager = "caffeineCacheManager")
     public Optional<LiquorBrew> findByType(final LiquorBrewType type) {
         log.info("LiquorBrewCache {}", type);
         return liquorBrewRepository.findByType(type);
