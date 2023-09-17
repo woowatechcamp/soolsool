@@ -97,8 +97,8 @@ public class Receipt extends BaseEntity {
         this.receiptStatus = receiptStatus;
     }
 
-    public boolean isExpired() {
-        return receiptStatus.getType().equals(ReceiptStatusType.EXPIRED);
+    public boolean isCompleted() {
+        return receiptStatus.getType().equals(ReceiptStatusType.COMPLETED);
     }
 
     public BigInteger getOriginalTotalPrice() {

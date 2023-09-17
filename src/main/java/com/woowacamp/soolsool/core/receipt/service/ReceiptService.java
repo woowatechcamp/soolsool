@@ -104,7 +104,7 @@ public class ReceiptService {
 
             final Receipt expiredReceipt = getReceipt(event.getReceiptId());
 
-            if (expiredReceipt.isExpired()) {
+            if (expiredReceipt.isCompleted()) {
                 return;
             }
 
