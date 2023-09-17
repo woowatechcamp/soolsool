@@ -13,6 +13,7 @@ import com.woowacamp.soolsool.core.payment.infra.PayClient;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
+import com.woowacamp.soolsool.core.receipt.event.ReceiptRemoveEvent;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,8 @@ public class PayService {
     private final LiquorService liquorService;
 
     private final PayClient payClient;
+
+    private final ApplicationEventPublisher publisher;
 
     private final RedissonClient redissonClient;
 
@@ -80,6 +84,8 @@ public class PayService {
 
             orderService.addPaymentInfo(
                 payClient.payApprove(receipt, pgToken).toEntity(order.getId()));
+
+            publisher.publishEvent(new ReceiptRemoveEvent(receiptId));
 
             return order;
         } catch (final InterruptedException e) {
