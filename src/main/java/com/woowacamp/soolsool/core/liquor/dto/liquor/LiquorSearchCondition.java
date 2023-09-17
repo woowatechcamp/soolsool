@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.dto;
+package com.woowacamp.soolsool.core.liquor.dto.liquor;
 
 import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
