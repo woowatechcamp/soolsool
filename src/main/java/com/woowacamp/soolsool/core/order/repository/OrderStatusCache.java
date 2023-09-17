@@ -15,7 +15,7 @@ public class OrderStatusCache {
 
     private final OrderStatusRepository orderStatusRepository;
 
-    @Cacheable(value = "orderStatus", key = "#type", unless = "#result==null")
+    @Cacheable(value = "orderStatus", key = "#type", unless = "#result==null", cacheManager = "caffeineCacheManager")
     public Optional<OrderStatus> findByType(final OrderStatusType type) {
         log.info("OrderStatusCache {}", type);
         return orderStatusRepository.findByType(type);
