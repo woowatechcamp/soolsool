@@ -58,6 +58,7 @@ public class PayService {
 
         final List<RLock> locks = new ArrayList<>();
         locks.add(getMemberLock(memberId));
+        locks.add(getReceiptLock(receiptId));
         locks.addAll(getLiquorLocks(receipt.getReceiptItems()));
 
         final RLock multiLock = redissonClient.getMultiLock(
@@ -92,6 +93,10 @@ public class PayService {
 
     private RLock getMemberLock(final Long memberId) {
         return redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
+    }
+
+    private RLock getReceiptLock(final Long receiptId) {
+        return redissonClient.getLock(LockType.RECEIPT.getPrefix() + receiptId);
     }
 
     private List<RLock> getLiquorLocks(final List<ReceiptItem> receiptItems) {
