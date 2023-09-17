@@ -2,7 +2,7 @@ package com.woowacamp.soolsool.acceptance.fixture;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorSaveRequest;
 import io.restassured.RestAssured;
 import org.springframework.http.HttpHeaders;
 
@@ -48,25 +48,5 @@ public abstract class RestLiquorFixture extends RestFixture {
             .when().post("/api/liquors")
             .then().log().all()
             .extract().header("Location").split("/")[2]);
-    }
-
-    public static void 술_목록_조회() {
-        RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .accept(APPLICATION_JSON_VALUE)
-            .when().get("/api/liquors")
-            .then().log().all()
-            .statusCode(200);
-    }
-
-    public static void 술_상세_조회(Long liquorId) {
-        RestAssured
-            .given().log().all()
-            .contentType(APPLICATION_JSON_VALUE)
-            .accept(APPLICATION_JSON_VALUE)
-            .when().get("/api/liquors/{liquorId}", liquorId)
-            .then().log().all()
-            .statusCode(200);
     }
 }

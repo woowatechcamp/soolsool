@@ -9,7 +9,7 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorSearchCondition;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +37,6 @@ class LiquorQueryDslRepositoryTest {
     @Autowired
     private LiquorBrewRepository liquorBrewRepository;
 
-
     @Test
     @DisplayName("커서 첫번째를 조회하는 테스트")
     void cursorFirstTest() {
@@ -48,7 +47,7 @@ class LiquorQueryDslRepositoryTest {
         String brand = "롯데";
 
         // when
-        final List<Liquor> 커서첫번째 = liquorQueryDslRepository
+        List<Liquor> 커서첫번째 = liquorQueryDslRepository
             .getList(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(10), null
             );

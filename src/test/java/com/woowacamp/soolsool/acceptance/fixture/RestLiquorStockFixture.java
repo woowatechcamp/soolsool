@@ -2,7 +2,7 @@ package com.woowacamp.soolsool.acceptance.fixture;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.woowacamp.soolsool.core.liquor.dto.LiquorStockSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.liquorStock.LiquorStockSaveRequest;
 import io.restassured.RestAssured;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;

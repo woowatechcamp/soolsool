@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum LiquorCtrResultCode implements ResultCode {
-    
+
     FIND_LQUOR_CTR_SUCCESS(OK.value(), "LC001", "술 클릭률 조회에 성공했습니다."),
+    INCREASE_IMPRESSION_SUCCESS(OK.value(), "LC002", "술 노출수 증가에 성공했습니다."),
+    INCREASE_CLICK_SUCCESS(OK.value(), "LC003", "술 클릭수 증가에 성공했습니다."),
     ;
 
     private final int status;
