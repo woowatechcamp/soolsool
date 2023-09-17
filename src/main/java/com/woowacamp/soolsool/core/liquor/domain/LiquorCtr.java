@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -30,6 +31,7 @@ public class LiquorCtr extends BaseEntity {
     private Long id;
 
     @Column(name = "liquor_id", nullable = false)
+    @Getter
     private Long liquorId;
 
     @Column(name = "impression", nullable = false)
@@ -40,27 +42,19 @@ public class LiquorCtr extends BaseEntity {
     @Convert(converter = LiquorCtrClickConverter.class)
     private LiquorCtrClick click;
 
-    @Builder
     public LiquorCtr(@NonNull final Long liquorId) {
+        this(liquorId, 0L, 0L);
+    }
+
+    @Builder
+    public LiquorCtr(
+        @NonNull final Long liquorId,
+        final Long impression,
+        final Long click
+    ) {
         this.liquorId = liquorId;
-        this.impression = new LiquorCtrImpression(0L);
-        this.click = new LiquorCtrClick(0L);
-    }
-
-    public void increaseImpressionOne() {
-        this.impression = impression.increaseOne();
-    }
-
-    public void increaseClickOne() {
-        this.click = click.increaseOne();
-    }
-
-    public void saveImpression(final LiquorCtrImpression impression) {
-        this.impression = impression;
-    }
-
-    public void saveClick(final LiquorCtrClick click) {
-        this.click = click;
+        this.impression = new LiquorCtrImpression(impression);
+        this.click = new LiquorCtrClick(click);
     }
 
     public double getCtr() {
@@ -71,5 +65,13 @@ public class LiquorCtr extends BaseEntity {
         final double ratio = (double) click.getClick() / impression.getImpression();
 
         return Math.round(ratio * 100) / 100.0;
+    }
+
+    public Long getImpression() {
+        return impression.getImpression();
+    }
+
+    public Long getClick() {
+        return click.getClick();
     }
 }
