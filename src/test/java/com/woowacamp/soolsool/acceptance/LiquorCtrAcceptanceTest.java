@@ -4,13 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
-import com.woowacamp.soolsool.acceptance.fixture.RestLiquorCtrFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
-import com.woowacamp.soolsool.core.liquor.dto.liquorStock.LiquorCtrDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorCtrDetailResponse;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import io.restassured.RestAssured;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,10 +40,10 @@ class LiquorCtrAcceptanceTest extends AcceptanceTest {
     @DisplayName("주류 클릭률을 조회한다.")
     void getLiquorCtr() {
         /* given */
-        RestLiquorCtrFixture.술_노출수_증가(List.of(새로));
-        RestLiquorCtrFixture.술_노출수_증가(List.of(새로));
-        RestLiquorCtrFixture.술_노출수_증가(List.of(새로));
-        RestLiquorCtrFixture.술_클릭수_증가(새로);
+        RestLiquorFixture.술_목록_조회();
+        RestLiquorFixture.술_목록_조회();
+        RestLiquorFixture.술_목록_조회();
+        RestLiquorFixture.술_상세_조회(새로);
 
         /* when */
         LiquorCtrDetailResponse response = RestAssured

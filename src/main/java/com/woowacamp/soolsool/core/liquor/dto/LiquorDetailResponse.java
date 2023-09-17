@@ -1,6 +1,8 @@
-package com.woowacamp.soolsool.core.liquor.dto.liquor;
+package com.woowacamp.soolsool.core.liquor.dto;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,8 +18,13 @@ public class LiquorDetailResponse {
     private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
+    private final List<LiquorElementResponse> relatedLiquors; // TODO: 연관 상품 API 분리
 
-    public static LiquorDetailResponse of(final Liquor liquor) {
+    public static LiquorDetailResponse of(final Liquor liquor, final List<Liquor> relatedLiquors) {
+        final List<LiquorElementResponse> relatedLiquorResponses = relatedLiquors.stream()
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
+
         return new LiquorDetailResponse(
             liquor.getId(),
             liquor.getName(),
@@ -26,7 +33,8 @@ public class LiquorDetailResponse {
             liquor.getImageUrl(),
             liquor.getTotalStock(),
             liquor.getAlcohol(),
-            liquor.getVolume()
+            liquor.getVolume(),
+            relatedLiquorResponses
         );
     }
 }
