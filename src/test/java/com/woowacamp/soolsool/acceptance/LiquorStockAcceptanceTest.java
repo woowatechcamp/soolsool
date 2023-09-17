@@ -6,7 +6,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import com.woowacamp.soolsool.acceptance.fixture.RestAuthFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestLiquorFixture;
 import com.woowacamp.soolsool.acceptance.fixture.RestMemberFixture;
-import com.woowacamp.soolsool.core.liquor.dto.liquorStock.LiquorStockSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorStockSaveRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

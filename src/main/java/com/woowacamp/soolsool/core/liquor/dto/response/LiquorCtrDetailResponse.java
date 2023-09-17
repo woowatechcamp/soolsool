@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.dto.liquorStock;
+package com.woowacamp.soolsool.core.liquor.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
