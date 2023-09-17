@@ -68,7 +68,7 @@ public class LiquorService {
         return liquor.getId();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LiquorDetailResponse liquorDetail(final Long liquorId) {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));

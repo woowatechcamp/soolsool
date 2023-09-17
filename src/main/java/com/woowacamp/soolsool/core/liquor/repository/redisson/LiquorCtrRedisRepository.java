@@ -2,15 +2,13 @@ package com.woowacamp.soolsool.core.liquor.repository.redisson;
 
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
 import com.woowacamp.soolsool.core.liquor.code.LiquorErrorCode;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
-import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
+import com.woowacamp.soolsool.core.liquor.domain.LiquorCtr;
 import com.woowacamp.soolsool.core.liquor.event.LiquorCtrExpiredEvent;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
+import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
-
 import java.util.concurrent.TimeUnit;
-
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
@@ -28,73 +26,52 @@ public class LiquorCtrRedisRepository {
     private static final long LOCK_LEASE_TIME = 3L;
     private static final long LIQUOR_CTR_TTL = 5L;
 
+    private final LiquorCtrRepository liquorCtrRepository;
+
     private final RedissonClient redissonClient;
 
+    // TODO: LiquorCtrRedisService vs LiquorCtrRedisRepository -> 취향 차이다...
     public LiquorCtrRedisRepository(
+        final LiquorCtrRepository liquorCtrRepository,
         final RedissonClient redissonClient,
         final ApplicationEventPublisher publisher
     ) {
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
             .addListener((EntryExpiredListener<Long, RedisLiquorCtr>) event ->
-                publisher.publishEvent(new LiquorCtrExpiredEvent(
-                    event.getKey(),
-                    new LiquorCtrImpression(event.getValue().getImpression()),
-                    new LiquorCtrClick(event.getValue().getClick()))
+                publisher.publishEvent(
+                    new LiquorCtrExpiredEvent(
+                        event.getKey(),
+                        event.getValue()
+                    )
                 )
             );
 
+        this.liquorCtrRepository = liquorCtrRepository;
         this.redissonClient = redissonClient;
     }
 
     public double getCtr(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        validateExistsCtr(liquorId, liquorCtr);
-
-        final Long click = liquorCtr.get(liquorId).getClick();
-        final Long impression = liquorCtr.get(liquorId).getImpression();
-
-        if (impression == 0) {
-            throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
-        }
-
-        final double ratio = (double) click / impression;
-
-        return Math.round(ratio * 100) / 100.0;
+        return lookUpLiquorCtr(liquorId).toEntity(liquorId).getCtr();
     }
 
-    public LiquorCtrImpression findImpressionByLiquorId(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
+    // JpaRepository.updateAgeOne
+    // RedisRepository.updateImpressionOne
 
-        validateExistsCtr(liquorId, liquorCtr);
+    // 비관전락 했을 때 LiquorCtrRepsotiory.findById() <- @Lock
+    // Repository에서 락을 건게 아닌가?
+    // RLock을 Redis에서 빌린다고 생각 -> redissonClient.getLock() 자체가 Redis에 락 요청 보내는거아냐?
 
-        return new LiquorCtrImpression(liquorCtr.get(liquorId).getImpression());
-    }
-
-    public LiquorCtrClick findClickByLiquorId(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        validateExistsCtr(liquorId, liquorCtr);
-
-        return new LiquorCtrClick(liquorCtr.get(liquorId).getClick());
-    }
-
+    // AOP 구현했을 때 -> @Transactional -> repository에도 붙인다.
+    // Service 메서드에서 트랜잭션 시작을 원치 않을 수도 있다
+    // service.method( repo.m1, repo.m2 )
+    // repository에서 @RedisLock 을 붙이는게 자연스럽다...?
     public void increaseImpression(final Long liquorId) {
         final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
 
         try {
             rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-                redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-            initLiquorCtrIfAbsent(liquorCtr, liquorId);
-            final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-            liquorCtr.replace(liquorId, redisLiquorCtr.increaseImpression());
-
+            replaceLiquorCtr(liquorId, lookUpLiquorCtr(liquorId).increaseImpression());
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -112,14 +89,7 @@ public class LiquorCtrRedisRepository {
         try {
             rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            final RMapCache<Long, RedisLiquorCtr> liquorCtr =
-                redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-            initLiquorCtrIfAbsent(liquorCtr, liquorId);
-
-            final RedisLiquorCtr redisLiquorCtr = liquorCtr.get(liquorId);
-
-            liquorCtr.replace(liquorId, redisLiquorCtr.increaseClick());
+            replaceLiquorCtr(liquorId, lookUpLiquorCtr(liquorId).increaseClick());
         } catch (final InterruptedException e) {
             log.error("클릭수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -131,45 +101,30 @@ public class LiquorCtrRedisRepository {
         }
     }
 
-    public void synchronizedWithDatabase(
-        final Long liquorId,
-        final LiquorCtrImpression impression,
-        final LiquorCtrClick click
-    ) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr =
+    // TODO: 만료 테스트는 어떻게 해야할까?
+    private RedisLiquorCtr lookUpLiquorCtr(final Long liquorId) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
             redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-        final RedisLiquorCtr synchronizedLiquorCtr = liquorCtr.getOrDefault(liquorId,
-                new RedisLiquorCtr(0L, 0L))
-            .synchronizedWithDatabase(impression.getImpression(), click.getClick());
+        if (!liquorCtrs.containsKey(liquorId)) {
+            final LiquorCtr liquorCtr = liquorCtrRepository.findByLiquorId(liquorId)
+                .orElseThrow(() -> new SoolSoolException(LiquorCtrErrorCode.NOT_LIQUOR_CTR_FOUND));
 
-        if (liquorCtr.containsKey(liquorId)) {
-            liquorCtr.replace(liquorId, synchronizedLiquorCtr);
-        } else {
-            liquorCtr.put(liquorId, synchronizedLiquorCtr, LIQUOR_CTR_TTL, TimeUnit.MINUTES);
+            liquorCtrs.put(
+                liquorId,
+                new RedisLiquorCtr(liquorCtr.getImpression(), liquorCtr.getClick()),
+                LIQUOR_CTR_TTL,
+                TimeUnit.MINUTES
+            );
         }
+
+        return liquorCtrs.get(liquorId);
     }
 
-    private void initLiquorCtrIfAbsent(
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr,
-        final Long liquorId
-    ) {
-        liquorCtr.putIfAbsent(
-            liquorId,
-            new RedisLiquorCtr(0L, 0L),
-            LIQUOR_CTR_TTL,
-            TimeUnit.MINUTES
-        );
-    }
+    private void replaceLiquorCtr(final Long liquorId, final RedisLiquorCtr redisLiquorCtr) {
+        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
+            redissonClient.getMapCache(LIQUOR_CTR_KEY);
 
-    private void validateExistsCtr(
-        final Long liquorId,
-        final RMapCache<Long, RedisLiquorCtr> liquorCtr
-    ) {
-        if (!liquorCtr.containsKey(liquorId)) {
-            log.error("Redis에 LiquorId\"{}\"를 Key로 갖는 데이터가 존재하지 않습니다.", liquorId);
-
-            throw new SoolSoolException(LiquorErrorCode.REDIS_HAS_NOT_CTR);
-        }
+        liquorCtrs.replace(liquorId, redisLiquorCtr);
     }
 }
