@@ -30,7 +30,7 @@ public class PageLiquorResponse {
         final Pageable pageable,
         final List<Liquor> liquors
     ) {
-        List<LiquorElementResponse> liquorElements = liquors.stream()
+        final List<LiquorElementResponse> liquorElements = liquors.stream()
             .map(LiquorElementResponse::from)
             .collect(Collectors.toList());
 
