@@ -41,13 +41,4 @@ public class LiquorElementResponse {
             liquor.getTotalStock()
         );
     }
-    public static LiquorElementResponse of(final Liquor liquor) {
-        return new LiquorElementResponse(
-            liquor.getId(),
-            liquor.getName(),
-            liquor.getPrice().toString(),
-            liquor.getImageUrl(),
-            liquor.getTotalStock()
-        );
-    }
 }
