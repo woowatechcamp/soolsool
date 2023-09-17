@@ -30,6 +30,8 @@ public class LiquorCtrRedisRepository {
 
     private final RedissonClient redissonClient;
 
+    private final RMapCache<Long, RedisLiquorCtr> liquorCtrs;
+
     // TODO: LiquorCtrRedisService vs LiquorCtrRedisRepository -> 취향 차이다...
     public LiquorCtrRedisRepository(
         final LiquorCtrRepository liquorCtrRepository,
@@ -48,6 +50,7 @@ public class LiquorCtrRedisRepository {
 
         this.liquorCtrRepository = liquorCtrRepository;
         this.redissonClient = redissonClient;
+        liquorCtrs = redissonClient.getMapCache(LIQUOR_CTR_KEY);
     }
 
     public double getCtr(final Long liquorId) {
@@ -66,12 +69,12 @@ public class LiquorCtrRedisRepository {
     // service.method( repo.m1, repo.m2 )
     // repository에서 @RedisLock 을 붙이는게 자연스럽다...?
     public void increaseImpression(final Long liquorId) {
-        final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
+        final RLock liquorCtrLock = getLiquorCtrLock(liquorId);
 
         try {
-            rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            liquorCtrLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            replaceLiquorCtr(liquorId, lookUpLiquorCtr(liquorId).increaseImpression());
+            liquorCtrs.replace(liquorId, lookUpLiquorCtr(liquorId).increaseImpression());
         } catch (final InterruptedException e) {
             log.error("노출수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -79,17 +82,17 @@ public class LiquorCtrRedisRepository {
 
             throw new SoolSoolException(LiquorErrorCode.INTERRUPTED_THREAD);
         } finally {
-            rLock.unlock();
+            unlock(liquorCtrLock);
         }
     }
 
     public void increaseClick(final Long liquorId) {
-        final RLock rLock = redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
+        final RLock liquorCtrLock = getLiquorCtrLock(liquorId);
 
         try {
-            rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            liquorCtrLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            replaceLiquorCtr(liquorId, lookUpLiquorCtr(liquorId).increaseClick());
+            liquorCtrs.replace(liquorId, lookUpLiquorCtr(liquorId).increaseClick());
         } catch (final InterruptedException e) {
             log.error("클릭수 갱신에 실패했습니다. | liquorId : {}", liquorId);
 
@@ -97,15 +100,22 @@ public class LiquorCtrRedisRepository {
 
             throw new SoolSoolException(LiquorErrorCode.INTERRUPTED_THREAD);
         } finally {
+            unlock(liquorCtrLock);
+        }
+    }
+
+    private RLock getLiquorCtrLock(final Long liquorId) {
+        return redissonClient.getLock(LockType.LIQUOR_CTR.getPrefix() + liquorId);
+    }
+
+    private void unlock(final RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
             rLock.unlock();
         }
     }
 
     // TODO: 만료 테스트는 어떻게 해야할까?
     private RedisLiquorCtr lookUpLiquorCtr(final Long liquorId) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
         if (!liquorCtrs.containsKey(liquorId)) {
             final LiquorCtr liquorCtr = liquorCtrRepository.findByLiquorId(liquorId)
                 .orElseThrow(() -> new SoolSoolException(LiquorCtrErrorCode.NOT_LIQUOR_CTR_FOUND));
@@ -119,12 +129,5 @@ public class LiquorCtrRedisRepository {
         }
 
         return liquorCtrs.get(liquorId);
-    }
-
-    private void replaceLiquorCtr(final Long liquorId, final RedisLiquorCtr redisLiquorCtr) {
-        final RMapCache<Long, RedisLiquorCtr> liquorCtrs =
-            redissonClient.getMapCache(LIQUOR_CTR_KEY);
-
-        liquorCtrs.replace(liquorId, redisLiquorCtr);
     }
 }
