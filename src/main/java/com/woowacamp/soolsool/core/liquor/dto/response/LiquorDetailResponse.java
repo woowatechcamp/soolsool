@@ -18,7 +18,7 @@ public class LiquorDetailResponse {
     private final Integer stock;
     private final Double alcohol;
     private final Integer volume;
-    private final List<LiquorElementResponse> relatedLiquors;
+    private final List<LiquorElementResponse> relatedLiquors; // TODO: 연관 상품 API 분리
 
     public static LiquorDetailResponse of(final Liquor liquor, final List<Liquor> relatedLiquors) {
         final List<LiquorElementResponse> relatedLiquorResponses = relatedLiquors.stream()

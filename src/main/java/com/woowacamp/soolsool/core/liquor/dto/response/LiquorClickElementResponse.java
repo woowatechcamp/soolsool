@@ -1,10 +1,12 @@
 package com.woowacamp.soolsool.core.liquor.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class LiquorClickElementResponse {
 
     private final Long id;
@@ -14,26 +16,14 @@ public class LiquorClickElementResponse {
     private final Integer stock;
     private final Long clickCount;
 
-    @JsonCreator
-    public LiquorClickElementResponse(final Long id, final String name, final String price,
-        final String imageUrl, final Integer stock, final Long clickCount
-    ) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.stock = stock;
-        this.clickCount = clickCount;
-    }
-
-    public static LiquorClickElementResponse of(final Liquor liquor, final Long clickCount) {
-        return new LiquorClickElementResponse(
+    public LiquorClickElementResponse(final Liquor liquor, final LiquorCtrClick clickCount) {
+        this(
             liquor.getId(),
             liquor.getName(),
             liquor.getPrice().toString(),
             liquor.getImageUrl(),
             liquor.getTotalStock(),
-            clickCount
+            clickCount.getCount()
         );
     }
 }

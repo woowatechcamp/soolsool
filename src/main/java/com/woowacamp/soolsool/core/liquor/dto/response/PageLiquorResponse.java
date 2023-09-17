@@ -30,7 +30,7 @@ public class PageLiquorResponse {
         final List<Liquor> liquors
     ) {
         final List<LiquorElementResponse> liquorElements = liquors.stream()
-            .map(LiquorElementResponse::of)
+            .map(LiquorElementResponse::from)
             .collect(Collectors.toList());
 
         if (liquors.size() < pageable.getPageSize()) {
