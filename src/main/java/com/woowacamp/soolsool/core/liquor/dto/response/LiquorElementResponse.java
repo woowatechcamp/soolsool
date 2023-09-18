@@ -1,6 +1,5 @@
 package com.woowacamp.soolsool.core.liquor.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import lombok.Getter;
 
@@ -13,9 +12,12 @@ public class LiquorElementResponse {
     private final String imageUrl;
     private final Integer stock;
 
-    @JsonCreator
-    public LiquorElementResponse(final Long id, final String name, final String price,
-        final String imageUrl, final Integer stock
+    public LiquorElementResponse(
+        final Long id,
+        final String name,
+        final String price,
+        final String imageUrl,
+        final Integer stock
     ) {
         this.id = id;
         this.name = name;
