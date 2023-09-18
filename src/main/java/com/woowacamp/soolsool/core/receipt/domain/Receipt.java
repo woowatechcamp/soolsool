@@ -97,8 +97,8 @@ public class Receipt extends BaseEntity {
         this.receiptStatus = receiptStatus;
     }
 
-    public boolean isCompleted() {
-        return receiptStatus.getType().equals(ReceiptStatusType.COMPLETED);
+    public boolean isNotInProgress() {
+        return !receiptStatus.getType().equals(ReceiptStatusType.INPROGRESS);
     }
 
     public BigInteger getOriginalTotalPrice() {

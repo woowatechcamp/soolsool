@@ -14,7 +14,6 @@ import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptStatus;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
-import com.woowacamp.soolsool.core.receipt.event.ReceiptExpiredEvent;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptRepository;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
@@ -23,16 +22,12 @@ import com.woowacamp.soolsool.global.infra.LockType;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ReceiptService {
 
@@ -82,40 +77,25 @@ public class ReceiptService {
         final Long receiptId,
         final ReceiptStatusType receiptStatusType
     ) {
-        final Receipt receipt = getReceipt(receiptId);
-
-        if (!Objects.equals(receipt.getMemberId(), memberId)) {
-            throw new SoolSoolException(NOT_EQUALS_MEMBER);
-        }
-
-        receipt.updateStatus(
-            getReceiptStatus(receiptStatusType)
-        );
-    }
-
-    @Async
-    @EventListener
-    @Transactional
-    public void expireReceipt(final ReceiptExpiredEvent event) {
-        final RLock receiptLock = getReceiptLock(event.getReceiptId());
+        final RLock receiptLock = getReceiptLock(receiptId);
 
         try {
             receiptLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
-            final Receipt expiredReceipt = getReceipt(event.getReceiptId());
+            final Receipt receipt = getReceipt(receiptId);
 
-            if (expiredReceipt.isCompleted()) {
-                return;
+            if (!Objects.equals(receipt.getMemberId(), memberId)) {
+                throw new SoolSoolException(NOT_EQUALS_MEMBER);
             }
 
-            expiredReceipt.updateStatus(
-                getReceiptStatus(ReceiptStatusType.EXPIRED)
+            if (receipt.isNotInProgress()) {
+                throw new SoolSoolException(ReceiptErrorCode.UNMODIFIABLE_STATUS);
+            }
+
+            receipt.updateStatus(
+                getReceiptStatus(receiptStatusType)
             );
-
-            log.info("Member {}'s Receipt {} Expired", event.getMemberId(), event.getReceiptId());
         } catch (final InterruptedException e) {
-            Thread.currentThread().interrupt();
-
             throw new SoolSoolException(ReceiptErrorCode.INTERRUPTED_THREAD);
         } finally {
             unlock(receiptLock);
