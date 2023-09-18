@@ -5,7 +5,6 @@ import com.woowacamp.soolsool.core.liquor.domain.Liquor;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
 @Getter
