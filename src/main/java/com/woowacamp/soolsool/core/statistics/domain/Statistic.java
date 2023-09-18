@@ -26,10 +26,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "statistics")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Statistics {
+public class Statistic {
 
     @EmbeddedId
-    private StatisticsId statisticsId;
+    private StatisticId statisticId;
 
     @Column(name = "region")
     @Convert(converter = RegionConverter.class)
@@ -56,7 +56,7 @@ public class Statistics {
     private SalePrice salePrice;
 
     @Builder
-    public Statistics(
+    public Statistic(
         final Region region,
         final BrewType brewType,
         final Impression impression,
