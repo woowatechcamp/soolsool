@@ -7,7 +7,6 @@ import com.woowacamp.soolsool.core.liquor.dto.liquorCtr.LiquorClickAddRequest;
 import com.woowacamp.soolsool.core.liquor.dto.liquorCtr.LiquorImpressionAddRequest;
 import com.woowacamp.soolsool.core.liquor.infra.RedisLiquorCtr;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
-import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +19,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({LiquorCtrService.class, RedisTestConfig.class, ReceiptRedisRepository.class,
-    LiquorCtrRedisRepository.class})
+@Import({LiquorCtrService.class, RedisTestConfig.class, LiquorCtrRedisRepository.class})
 @DisplayName("통합 테스트: LiquorCtrService")
 class LiquorCtrServiceIntegrationTest {
 
@@ -46,14 +44,16 @@ class LiquorCtrServiceIntegrationTest {
         // given
         long liquorId = 1L;
 
+        long impression = 1L;
+        long click = 1L;
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(1L, 1L));
+            .put(liquorId, new RedisLiquorCtr(impression, click));
 
         // when
         double ctr = liquorCtrService.getLiquorCtrByLiquorId(liquorId);
 
         // then
-        assertThat(ctr).isEqualTo(1.0);
+        assertThat(ctr).isEqualTo(getExpectedCtr(impression, click));
     }
 
     @Test
@@ -64,15 +64,17 @@ class LiquorCtrServiceIntegrationTest {
         long liquorId = 1L;
         LiquorImpressionAddRequest request = new LiquorImpressionAddRequest(List.of(liquorId));
 
+        long impression = 1L;
+        long click = 1L;
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(1L, 1L));
+            .put(liquorId, new RedisLiquorCtr(impression, click));
 
         // when
         liquorCtrService.increaseImpression(request);
 
         // then
         double ctr = liquorCtrService.getLiquorCtrByLiquorId(liquorId);
-        assertThat(ctr).isEqualTo(0.5);
+        assertThat(ctr).isEqualTo(getExpectedCtr(impression + 1, click));
     }
 
     @Test
@@ -83,14 +85,22 @@ class LiquorCtrServiceIntegrationTest {
         long liquorId = 1L;
         LiquorClickAddRequest request = new LiquorClickAddRequest(liquorId);
 
+        long impression = 2L;
+        long click = 1L;
         redissonClient.getMapCache(LIQUOR_CTR_KEY)
-            .put(liquorId, new RedisLiquorCtr(2L, 1L));
+            .put(liquorId, new RedisLiquorCtr(impression, click));
 
         // when
         liquorCtrService.increaseClick(request);
 
         // then
         double ctr = liquorCtrService.getLiquorCtrByLiquorId(liquorId);
-        assertThat(ctr).isEqualTo(1.0);
+        assertThat(ctr).isEqualTo(getExpectedCtr(impression, click + 1));
+    }
+
+    private double getExpectedCtr(long impression, long click) {
+        double ratio = (double) click / impression;
+
+        return Math.round(ratio * 100) / 100.0;
     }
 }
