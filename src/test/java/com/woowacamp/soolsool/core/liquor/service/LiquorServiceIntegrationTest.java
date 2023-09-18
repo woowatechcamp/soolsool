@@ -106,7 +106,7 @@ class LiquorServiceIntegrationTest {
         long liquorId = 1L;
         LiquorListRequest liquorListRequest = new LiquorListRequest(
             null, null, null,
-            null, liquorId+1, null
+            null, liquorId + 1, null
         );
 
         // when
