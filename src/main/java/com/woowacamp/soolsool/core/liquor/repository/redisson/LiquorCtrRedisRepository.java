@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 public class LiquorCtrRedisRepository {
     // TODO: ~Repository vs ~Service
     private static final String LIQUOR_CTR_KEY = "LIQUOR_CTR";
-    private static final long LOCK_WAIT_TIME = 3L;
-    private static final long LOCK_LEASE_TIME = 3L;
+    private static final long LOCK_WAIT_TIME = 1L;
+    private static final long LOCK_LEASE_TIME = 1L;
     private static final long LIQUOR_CTR_TTL = 5L;
 
     private final LiquorCtrRepository liquorCtrRepository;
