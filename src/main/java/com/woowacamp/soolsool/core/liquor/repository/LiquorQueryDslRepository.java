@@ -12,7 +12,7 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementDto;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class LiquorQueryDslRepository {
             .fetch();
     }
 
-    public List<LiquorClickElementResponse> getListByClick(
+    public List<LiquorClickElementDto> getListByClick(
         final LiquorSearchCondition condition,
         final Pageable pageable,
         final Long liquorId,
@@ -67,7 +67,7 @@ public class LiquorQueryDslRepository {
     ) {
         return queryFactory.select(
                 Projections.constructor(
-                    LiquorClickElementResponse.class,
+                    LiquorClickElementDto.class,
                     liquor,
                     liquorCtr.click
                 )

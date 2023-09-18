@@ -17,11 +17,10 @@ import com.woowacamp.soolsool.core.liquor.dto.request.LiquorListRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementDto;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorClickResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
-
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
@@ -31,6 +30,7 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -84,7 +84,7 @@ public class LiquorService {
     }
 
     @Transactional
-    public PageLiquorClickResponse liquorListByClick(
+    public PageLiquorResponse liquorListByClick(
         final LiquorListRequest liquorListRequest,
         final Pageable pageable
     ) {
@@ -95,7 +95,7 @@ public class LiquorService {
             liquorListRequest.getBrand()
         );
 
-        List<LiquorClickElementResponse> liquors = liquorQueryDslRepository
+        List<LiquorClickElementDto> liquors = liquorQueryDslRepository
             .getListByClick(
                 liquorSearchCondition, pageable,
                 liquorListRequest.getLiquorId(),
@@ -103,11 +103,24 @@ public class LiquorService {
             );
 
         liquors.stream()
-            .map(LiquorClickElementResponse::getId)
+            .map(LiquorClickElementDto::getId)
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return PageLiquorClickResponse.of(pageable, liquors);
+        return PageLiquorResponse.of(pageable, getLiquorElementResponseFromClick(liquors));
+    }
+
+    private List<LiquorElementResponse> getLiquorElementResponseFromClick(
+        List<LiquorClickElementDto> liquors) {
+        return liquors.stream().map(
+            liquor -> new LiquorElementResponse(
+                liquor.getId(),
+                liquor.getName(),
+                liquor.getPrice(),
+                liquor.getImageUrl(),
+                liquor.getStock()
+            )
+        ).collect(Collectors.toList());
     }
 
 
@@ -123,7 +136,7 @@ public class LiquorService {
             liquorListRequest.getBrand()
         );
 
-        List<Liquor> liquors = liquorQueryDslRepository.getList(
+        final List<Liquor> liquors = liquorQueryDslRepository.getList(
             liquorSearchCondition, pageable,
             liquorListRequest.getLiquorId()
         );
@@ -133,10 +146,14 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return PageLiquorResponse.of(pageable, liquors);
+        return PageLiquorResponse.of(pageable, getLiquorElementsFromLiquor(liquors));
     }
 
-
+    private static List<LiquorElementResponse> getLiquorElementsFromLiquor(List<Liquor> liquors) {
+        return liquors.stream()
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
+    }
 
     @Transactional
     public PageLiquorResponse getFirstPage(final Pageable pageable) {
@@ -147,7 +164,7 @@ public class LiquorService {
             .sorted()
             .forEach(liquorCtrRedisRepository::increaseImpression);
 
-        return PageLiquorResponse.of(pageable, liquors);
+        return PageLiquorResponse.of(pageable, getLiquorElementsFromLiquor(liquors));
     }
 
     @CacheEvict(value = "liquorsFirstPage")

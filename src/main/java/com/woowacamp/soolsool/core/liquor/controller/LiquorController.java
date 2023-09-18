@@ -10,7 +10,6 @@ import com.woowacamp.soolsool.core.liquor.dto.request.LiquorListRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorClickResponse;
 import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.aop.RequestLogging;
@@ -97,13 +96,13 @@ public class LiquorController {
     @NoAuth
     @RequestLogging
     @GetMapping("/click")
-    public ResponseEntity<ApiResponse<PageLiquorClickResponse>> liquorListByClick(
+    public ResponseEntity<ApiResponse<PageLiquorResponse>> liquorListByClick(
         @ModelAttribute final LiquorListRequest liquorListRequest,
         @PageableDefault final Pageable pageable
     ) {
         final PageRequest sortPageable = getSortedPageable(pageable);
 
-        final PageLiquorClickResponse response = liquorService
+        final PageLiquorResponse response = liquorService
             .liquorListByClick(liquorListRequest, sortPageable);
 
         return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));

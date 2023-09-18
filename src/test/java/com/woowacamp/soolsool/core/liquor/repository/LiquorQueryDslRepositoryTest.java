@@ -7,7 +7,7 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
-import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementDto;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -92,7 +92,7 @@ class LiquorQueryDslRepositoryTest {
         Long clickCount = null;
 
         // when
-        final List<LiquorClickElementResponse> 커서첫번째 = liquorQueryDslRepository
+        final List<LiquorClickElementDto> 커서첫번째 = liquorQueryDslRepository
             .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(1), liquorId, clickCount);
 
@@ -112,7 +112,7 @@ class LiquorQueryDslRepositoryTest {
         Long clickCount = null;
 
         // when
-        List<LiquorClickElementResponse> 커서첫번째 = liquorQueryDslRepository
+        List<LiquorClickElementDto> 커서첫번째 = liquorQueryDslRepository
             .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(1), liquorId, clickCount);
         Long 커서첫번째_liquorId = 커서첫번째.get(커서첫번째.size() - 1).getId();
@@ -133,13 +133,13 @@ class LiquorQueryDslRepositoryTest {
         Long clickCount = 100L;
 
         // when
-        List<LiquorClickElementResponse> 커서첫번째 = liquorQueryDslRepository
+        List<LiquorClickElementDto> 커서첫번째 = liquorQueryDslRepository
             .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(1), liquorId, clickCount);
         Long 커서첫번째_liquorId = 커서첫번째.get(커서첫번째.size() - 1).getClickCount();
         Long 커서첫번째_clickCount = 커서첫번째.get(커서첫번째.size() - 1).getClickCount();
 
-        List<LiquorClickElementResponse> 커서두번째 = liquorQueryDslRepository
+        List<LiquorClickElementDto> 커서두번째 = liquorQueryDslRepository
             .getListByClick(new LiquorSearchCondition(region, brew, status, brand),
                 Pageable.ofSize(1), 커서첫번째_liquorId, 커서첫번째_clickCount);
         Long 커서두번째_clickCount = 커서두번째.get(커서두번째.size() - 1).getClickCount();

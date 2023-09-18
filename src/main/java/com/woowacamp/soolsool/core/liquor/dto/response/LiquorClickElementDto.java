@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class LiquorClickElementResponse {
+public class LiquorClickElementDto {
 
     private final Long id;
     private final String name;
@@ -16,7 +16,7 @@ public class LiquorClickElementResponse {
     private final Integer stock;
     private final Long clickCount;
 
-    public LiquorClickElementResponse(final Liquor liquor, final LiquorCtrClick clickCount) {
+    public LiquorClickElementDto(final Liquor liquor, final LiquorCtrClick clickCount) {
         this(
             liquor.getId(),
             liquor.getName(),
