@@ -6,10 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacamp.soolsool.config.RedisTestConfig;
-import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorElementResponse;
-import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorModifyRequest;
-import com.woowacamp.soolsool.core.liquor.dto.liquor.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
@@ -20,12 +19,15 @@ import com.woowacamp.soolsool.global.config.MultipleCacheManagerConfig;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
@@ -36,8 +38,22 @@ import org.springframework.test.context.jdbc.Sql;
 @DisplayName("통합 테스트: LiquorService")
 class LiquorServiceIntegrationTest {
 
+    private static final String LIQUOR_CTR_KEY = "LIQUOR_CTR";
+
     @Autowired
     LiquorService liquorService;
+
+    @Autowired
+    LiquorCtrRedisRepository liquorCtrRedisRepository;
+
+    @Autowired
+    RedissonClient redissonClient;
+
+    @BeforeEach
+    @AfterEach
+    void setRedisLiquorCtr() {
+        redissonClient.getMapCache(LIQUOR_CTR_KEY).clear();
+    }
 
     @Test
     @Sql({
@@ -62,27 +78,40 @@ class LiquorServiceIntegrationTest {
             () -> assertThat(response.getImageUrl()).isEqualTo("/soju-url"),
             () -> assertThat(response.getAlcohol()).isEqualTo(12.0),
             () -> assertThat(response.getVolume()).isEqualTo(300),
-            () -> assertThat(response.getStock()).isEqualTo(100)
+            () -> assertThat(response.getStock()).isEqualTo(100),
+            () -> assertThat(response.getRelatedLiquors()).hasSize(1)
         );
     }
 
     @Test
-    @Sql({
-        "/member-type.sql", "/member.sql",
-        "/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql",
-        "/receipt-type.sql", "/receipt.sql",
-        "/order-type.sql", "/order.sql"
-    })
-    @DisplayName("특정 상품과 함께 많이 구매된 상품을 조회한다.")
-    void liquorPurchasedTogether() {
-        /* given */
-        Long 새로 = 1L;
+    @Sql({"/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"})
+    @DisplayName("상품 상세정보를 조회할 경우 클릭율을 증가시킨다.")
+    void increaseClick() {
+        // given
+        long liquorId = 1L;
 
-        /* when */
-        List<LiquorElementResponse> response = liquorService.liquorPurchasedTogether(새로);
+        // when
+        liquorService.liquorDetail(liquorId);
 
-        /* then */
-        assertThat(response).hasSize(1);
+        // then
+        double ctr = liquorCtrRedisRepository.getCtr(liquorId);
+        assertThat(ctr).isEqualTo(1.0);
+    }
+
+    @Test
+    @Sql({"/liquor-type.sql", "/liquor.sql", "/liquor-ctr.sql"})
+    @DisplayName("상품 목록을 조회할 경우 클릭율을 증가시킨다.")
+    void increaseImpression() {
+        // given
+        long liquorId = 1L;
+
+        // when
+        liquorService.liquorList(null, null, null, null,
+            PageRequest.of(0, 1), liquorId + 1);
+
+        // then
+        double ctr = liquorCtrRedisRepository.getCtr(liquorId);
+        assertThat(ctr).isEqualTo(0.33);
     }
 
     @Test

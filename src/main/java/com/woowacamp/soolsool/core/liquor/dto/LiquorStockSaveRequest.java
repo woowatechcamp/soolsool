@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.dto.liquorStock;
+package com.woowacamp.soolsool.core.liquor.dto;
 
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStock;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStockCount;
