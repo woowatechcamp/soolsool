@@ -18,6 +18,7 @@ import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.core.receipt.dto.response.ReceiptDetailResponse;
 import com.woowacamp.soolsool.core.receipt.repository.ReceiptStatusCache;
 import com.woowacamp.soolsool.core.receipt.repository.redisson.ReceiptRedisRepository;
+import com.woowacamp.soolsool.global.config.MultipleCacheManagerConfig;
 import com.woowacamp.soolsool.global.config.QuerydslConfig;
 import com.woowacamp.soolsool.global.config.RedissonConfig;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
@@ -32,7 +33,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import({ReceiptService.class, CartService.class, LiquorService.class,
     ReceiptMapper.class, LiquorBrewCache.class, LiquorStatusCache.class,
     LiquorRegionCache.class, ReceiptStatusCache.class,
-    LiquorQueryDslRepository.class, QuerydslConfig.class,
+    LiquorQueryDslRepository.class, QuerydslConfig.class, MultipleCacheManagerConfig.class,
     RedissonConfig.class, ReceiptRedisRepository.class, LiquorCtrRedisRepository.class})
 @DisplayName("통합 테스트: ReceiptService")
 class ReceiptServiceIntegrationTest {

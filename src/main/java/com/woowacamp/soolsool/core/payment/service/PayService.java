@@ -13,15 +13,18 @@ import com.woowacamp.soolsool.core.payment.infra.PayClient;
 import com.woowacamp.soolsool.core.receipt.domain.Receipt;
 import com.woowacamp.soolsool.core.receipt.domain.ReceiptItem;
 import com.woowacamp.soolsool.core.receipt.domain.vo.ReceiptStatusType;
+import com.woowacamp.soolsool.core.receipt.event.ReceiptRemoveEvent;
 import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import com.woowacamp.soolsool.global.infra.LockType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,8 @@ public class PayService {
 
     private final PayClient payClient;
 
+    private final ApplicationEventPublisher publisher;
+
     private final RedissonClient redissonClient;
 
     @Transactional
@@ -55,21 +60,17 @@ public class PayService {
     public Order approve(final Long memberId, final Long receiptId, final String pgToken) {
         final Receipt receipt = receiptService.getMemberReceipt(memberId, receiptId);
 
-        receiptService.modifyReceiptStatus(memberId, receiptId, ReceiptStatusType.COMPLETED);
+        final List<RLock> locks = new ArrayList<>();
+        locks.add(getMemberLock(memberId));
+        locks.add(getReceiptLock(receiptId));
+        locks.addAll(getLiquorLocks(receipt.getReceiptItems()));
 
-        final RLock memberLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
-        final List<RLock> liquorLocks = receipt.getReceiptItems().stream()
-            .map(ReceiptItem::getLiquorId)
-            .sorted()
-            .map(liquorId -> redissonClient.getLock(
-                LockType.LIQUOR_STOCK.getPrefix() + liquorId))
-            .collect(Collectors.toList());
+        final RLock multiLock = redissonClient.getMultiLock(
+            locks.toArray(locks.toArray(new RLock[0]))
+        );
 
         try {
-            memberLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
-            for (RLock liquorLock : liquorLocks) {
-                liquorLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
-            }
+            multiLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
             decreaseStocks(receipt);
 
@@ -79,8 +80,12 @@ public class PayService {
 
             cartService.removeCartItems(memberId);
 
+            receiptService.modifyReceiptStatus(memberId, receiptId, ReceiptStatusType.COMPLETED);
+
             orderService.addPaymentInfo(
                 payClient.payApprove(receipt, pgToken).toEntity(order.getId()));
+
+            publisher.publishEvent(new ReceiptRemoveEvent(receiptId));
 
             return order;
         } catch (final InterruptedException e) {
@@ -88,9 +93,25 @@ public class PayService {
 
             throw new SoolSoolException(PayErrorCode.INTERRUPTED_THREAD);
         } finally {
-            liquorLocks.forEach(this::unlock);
-            unlock(memberLock);
+            multiLock.unlock();
         }
+    }
+
+    private RLock getMemberLock(final Long memberId) {
+        return redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
+    }
+
+    private RLock getReceiptLock(final Long receiptId) {
+        return redissonClient.getLock(LockType.RECEIPT.getPrefix() + receiptId);
+    }
+
+    private List<RLock> getLiquorLocks(final List<ReceiptItem> receiptItems) {
+        return receiptItems.stream()
+            .map(ReceiptItem::getLiquorId)
+            .sorted()
+            .map(liquorId -> redissonClient.getLock(
+                LockType.LIQUOR_STOCK.getPrefix() + liquorId))
+            .collect(Collectors.toList());
     }
 
     private void decreaseStocks(final Receipt receipt) {
@@ -99,12 +120,6 @@ public class PayService {
                 receiptItem.getQuantity());
             liquorService.decreaseTotalStock(receiptItem.getLiquorId(),
                 receiptItem.getQuantity());
-        }
-    }
-
-    private void unlock(final RLock rLock) {
-        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-            rLock.unlock();
         }
     }
 

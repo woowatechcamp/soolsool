@@ -19,10 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Import({
-    QuerydslConfig.class,
-    LiquorQueryDslRepository.class
-})
+@Import({QuerydslConfig.class, LiquorQueryDslRepository.class})
 @Sql({
     "/member-type.sql", "/member.sql",
     "/liquor-type.sql", "/liquor.sql", "/liquor-stock.sql", "/liquor-ctr.sql",

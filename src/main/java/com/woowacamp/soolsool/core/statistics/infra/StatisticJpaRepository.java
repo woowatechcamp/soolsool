@@ -1,15 +1,17 @@
-package com.woowacamp.soolsool.core.statistics.repository;
+package com.woowacamp.soolsool.core.statistics.infra;
 
-import com.woowacamp.soolsool.core.statistics.domain.Statistics;
-import com.woowacamp.soolsool.core.statistics.domain.StatisticsId;
+import com.woowacamp.soolsool.core.statistics.domain.Statistic;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticId;
+import com.woowacamp.soolsool.core.statistics.domain.StatisticLiquor;
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StatisticsRepository extends JpaRepository<Statistics, StatisticsId> {
+public interface StatisticJpaRepository extends JpaRepository<Statistic, StatisticId> {
 
     @Modifying
     @Query(value =
@@ -60,4 +62,50 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Statisti
         "ON DUPLICATE KEY UPDATE impression = (lc.impression - s.sum_impression), " +
         "                        click = (lc.click - s.sum_click)", nativeQuery = true)
     void updateStatisticsCtr(final LocalDate date);
+
+    @Query(value = "SELECT l.id as liquorId, "
+        + "                l.name as liquorName, "
+        + "                l.brand as liquorBrand, "
+        + "                l.image_url as liquorImageUrl, "
+        + "                l.price as liquorPrice, "
+        + "                s.liquorValue as liquorValue "
+        + "FROM ( "
+        + "    SELECT liquor_id, SUM(sale_price) AS liquorValue "
+        + "    FROM statistics "
+        + "    GROUP BY liquor_id "
+        + "    ORDER BY SUM(sale_price) DESC "
+        + "    LIMIT 5 "
+        + ") s "
+        + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
+    List<StatisticLiquor> findTop5LiquorsAndSalePrice();
+
+    @Query(value = "SELECT l.id as liquorId, "
+        + "                l.name as liquorName, "
+        + "                l.brand as liquorBrand, "
+        + "                l.image_url as liquorImageUrl, "
+        + "                l.price as liquorPrice, "
+        + "                s.liquorValue as liquorValue "
+        + "FROM ( "
+        + "    SELECT liquor_id, SUM(sale_quantity) AS liquorValue "
+        + "    FROM statistics "
+        + "    GROUP BY liquor_id "
+        + "    ORDER BY SUM(sale_quantity) DESC "
+        + "    LIMIT 5 "
+        + ") s "
+        + "JOIN liquors l ON s.liquor_id = l.id ", nativeQuery = true)
+    List<StatisticLiquor> findTop5LiquorsAndSaleQuantity();
+
+    @Query(value = "select liquor_id as liquorId, sum(sale_price) as liquorValue "
+        + "from statistics "
+        + "group by liquor_id "
+        + "order by sum(sale_price) desc "
+        + "limit 5", nativeQuery = true)
+    List<StatisticLiquor> findTop5LiquorIdAndSalePrice();
+
+    @Query(value = "select liquor_id as liquorId, sum(sale_quantity) as liquorValue "
+        + "from statistics "
+        + "group by liquor_id "
+        + "order by sum(sale_quantity) desc "
+        + "limit 5", nativeQuery = true)
+    List<StatisticLiquor> findTop5LiquorIdAndSaleQuantity();
 }

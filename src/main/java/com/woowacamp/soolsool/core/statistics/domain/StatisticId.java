@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class StatisticsId implements Serializable {
+public class StatisticId implements Serializable {
 
     @Column(name = "statistic_year")
     private int year;

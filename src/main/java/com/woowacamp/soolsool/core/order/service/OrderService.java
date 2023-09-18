@@ -91,12 +91,13 @@ public class OrderService {
 
     @Transactional
     public Order cancelOrder(final Long memberId, final Long orderId) {
-        final RLock memberLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
-        final RLock orderLock = redissonClient.getLock(LockType.ORDER.getPrefix() + orderId);
+        final RLock multiLock = redissonClient.getMultiLock(
+            getMemberLock(memberId),
+            getOrderLock(orderId)
+        );
 
         try {
-            memberLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
-            orderLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
+            multiLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
 
             final Order order = orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new SoolSoolException(OrderErrorCode.NOT_EXISTS_ORDER));
@@ -115,15 +116,16 @@ public class OrderService {
 
             throw new SoolSoolException(OrderErrorCode.INTERRUPTED_THREAD);
         } finally {
-            unlock(orderLock);
-            unlock(memberLock);
+            multiLock.unlock();
         }
     }
 
-    private void unlock(final RLock rLock) {
-        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-            rLock.unlock();
-        }
+    private RLock getOrderLock(Long orderId) {
+        return redissonClient.getLock(LockType.ORDER.getPrefix() + orderId);
+    }
+
+    private RLock getMemberLock(Long memberId) {
+        return redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
     }
 
     @Transactional(readOnly = true)

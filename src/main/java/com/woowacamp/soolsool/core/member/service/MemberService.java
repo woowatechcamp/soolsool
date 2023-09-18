@@ -107,7 +107,7 @@ public class MemberService {
         final Long memberId,
         final MemberMileageChargeRequest memberMileageChargeRequest
     ) {
-        final RLock rLock = redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
+        final RLock rLock = getMemberLock(memberId);
 
         try {
             rLock.tryLock(LOCK_WAIT_TIME, LOCK_LEASE_TIME, TimeUnit.SECONDS);
@@ -128,6 +128,10 @@ public class MemberService {
         } finally {
             unlock(rLock);
         }
+    }
+
+    private RLock getMemberLock(Long memberId) {
+        return redissonClient.getLock(LockType.MEMBER.getPrefix() + memberId);
     }
 
     private void unlock(final RLock rLock) {

@@ -11,6 +11,7 @@ public enum LockType {
     LIQUOR_CTR("LIQUOR_CTR:"),
     LIQUOR_STOCK("LIQUOR_STOCK:"),
     ORDER("ORDER:"),
+    RECEIPT("RECEIPT:"),
     ;
 
     private final String prefix;

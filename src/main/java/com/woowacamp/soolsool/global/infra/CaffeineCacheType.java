@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CacheType {
+public enum CaffeineCacheType {
 
     LIQUOR_STATUS("liquorStatus", 60 * 60 * 24, 100),
     LIQUOR_BREW("liquorBrew", 60 * 60 * 24, 100),

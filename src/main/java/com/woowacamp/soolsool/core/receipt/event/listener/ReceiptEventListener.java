@@ -6,19 +6,23 @@ import com.woowacamp.soolsool.core.receipt.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
+@Slf4j
 @RequiredArgsConstructor
-public class ReceiptExpiredEventListener {
+public class ReceiptEventListener {
 
     private final ReceiptService receiptService;
 
+    @Async
     @EventListener
-    public void expiredListener(final ReceiptExpiredEvent event) {
+    public void expireReceipt(final ReceiptExpiredEvent event) {
         receiptService.modifyReceiptStatus(
-            event.getMemberId(), event.getReceiptId(), ReceiptStatusType.EXPIRED
+            event.getMemberId(),
+            event.getReceiptId(),
+            ReceiptStatusType.EXPIRED
         );
 
         log.info("Member {}'s Receipt {} Expired", event.getMemberId(), event.getReceiptId());
