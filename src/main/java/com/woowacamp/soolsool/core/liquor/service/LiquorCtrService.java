@@ -1,6 +1,8 @@
 package com.woowacamp.soolsool.core.liquor.service;
 
 import com.woowacamp.soolsool.core.liquor.domain.LiquorCtr;
+import com.woowacamp.soolsool.core.liquor.dto.liquorCtr.LiquorClickAddRequest;
+import com.woowacamp.soolsool.core.liquor.dto.liquorCtr.LiquorImpressionAddRequest;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,14 @@ public class LiquorCtrService {
     @Transactional(readOnly = true)
     public double getLiquorCtrByLiquorId(final Long liquorId) {
         return liquorCtrRedisRepository.getCtr(liquorId);
+    }
+
+    public void increaseImpression(final LiquorImpressionAddRequest request) {
+        request.getLiquorIds().forEach(liquorCtrRedisRepository::increaseImpression);
+    }
+
+    public void increaseClick(final LiquorClickAddRequest request) {
+        liquorCtrRedisRepository.increaseClick(request.getLiquorId());
     }
 
     @Transactional

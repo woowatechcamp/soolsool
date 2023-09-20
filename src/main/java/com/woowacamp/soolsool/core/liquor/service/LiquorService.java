@@ -14,6 +14,7 @@ import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
@@ -24,9 +25,9 @@ import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRegionCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorStatusCache;
-import com.woowacamp.soolsool.core.liquor.repository.redisson.LiquorCtrRedisRepository;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -49,8 +50,6 @@ public class LiquorService {
     private final LiquorCtrRepository liquorCtrRepository;
     private final LiquorQueryDslRepository liquorQueryDslRepository;
 
-    private final LiquorCtrRedisRepository liquorCtrRedisRepository;
-
     @CacheEvict(value = "liquorsFirstPage")
     @Transactional
     public Long saveLiquor(final LiquorSaveRequest request) {
@@ -71,12 +70,17 @@ public class LiquorService {
         final Liquor liquor = liquorRepository.findById(liquorId)
             .orElseThrow(() -> new SoolSoolException(NOT_LIQUOR_FOUND));
 
+        return LiquorDetailResponse.of(liquor);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LiquorElementResponse> liquorPurchasedTogether(final Long liquorId) {
         final List<Liquor> relatedLiquors = liquorRepository
             .findLiquorsPurchasedTogether(liquorId, TOP_RANK_PAGEABLE);
 
-        liquorCtrRedisRepository.increaseClick(liquorId);
-
-        return LiquorDetailResponse.of(liquor, relatedLiquors);
+        return relatedLiquors.stream()
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -95,13 +99,8 @@ public class LiquorService {
             brand
         );
 
-        List<Liquor> liquors = liquorQueryDslRepository
+        final List<Liquor> liquors = liquorQueryDslRepository
             .getList(liquorSearchCondition, pageable, cursorId);
-
-        liquors.stream()
-            .map(Liquor::getId)
-            .sorted()
-            .forEach(liquorCtrRedisRepository::increaseImpression);
 
         return PageLiquorResponse.of(pageable, liquors);
     }
@@ -109,11 +108,6 @@ public class LiquorService {
     @Transactional
     public PageLiquorResponse getFirstPage(final Pageable pageable) {
         final List<Liquor> liquors = liquorQueryDslRepository.getCachedList(pageable);
-
-        liquors.stream()
-            .map(Liquor::getId)
-            .sorted()
-            .forEach(liquorCtrRedisRepository::increaseImpression);
 
         return PageLiquorResponse.of(pageable, liquors);
     }
