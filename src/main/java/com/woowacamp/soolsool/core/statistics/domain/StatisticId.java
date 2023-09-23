@@ -1,11 +1,12 @@
 package com.woowacamp.soolsool.core.statistics.domain;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Getter
 @NoArgsConstructor
@@ -13,16 +14,16 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class StatisticId implements Serializable {
 
-    @Column(name = "year")
+    @Column(name = "statistics_year")
     private int year;
 
-    @Column(name = "month")
+    @Column(name = "statistics_month")
     private int month;
 
-    @Column(name = "week")
+    @Column(name = "statistics_week")
     private int week;
 
-    @Column(name = "day")
+    @Column(name = "statistics_day")
     private int day;
 
     @Column(name = "liquor_id")

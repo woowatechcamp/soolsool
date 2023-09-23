@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -106,4 +107,10 @@ public interface StatisticJpaRepository extends JpaRepository<Statistic, Statist
             + "order by sum(sale_quantity) desc "
             + "limit 5", nativeQuery = true)
     List<StatisticLiquor> findTop5LiquorIdAndSaleQuantity();
+
+    @Query("select s from Statistic s " +
+            "where s.statisticId.year between year(:startDate) and year(:endDate) " +
+            "and s.statisticId.month between month(:startDate) and month(:endDate) " +
+            "and s.statisticId.day between day(:startDate) and day(:endDate) ")
+    List<Statistic> findAllByDateBetween(final LocalDateTime startDate, final LocalDateTime endDate);
 }
