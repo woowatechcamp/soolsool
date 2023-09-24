@@ -1,26 +1,14 @@
 package com.woowacamp.soolsool.core.statistics.domain;
 
-import com.woowacamp.soolsool.core.statistics.domain.converter.BrewTypeConverter;
-import com.woowacamp.soolsool.core.statistics.domain.converter.ClickConverter;
-import com.woowacamp.soolsool.core.statistics.domain.converter.ImpressionConverter;
-import com.woowacamp.soolsool.core.statistics.domain.converter.RegionConverter;
-import com.woowacamp.soolsool.core.statistics.domain.converter.SalePriceConveter;
-import com.woowacamp.soolsool.core.statistics.domain.converter.SaleQuantityConverter;
-import com.woowacamp.soolsool.core.statistics.domain.vo.BrewType;
-import com.woowacamp.soolsool.core.statistics.domain.vo.Click;
-import com.woowacamp.soolsool.core.statistics.domain.vo.Impression;
-import com.woowacamp.soolsool.core.statistics.domain.vo.Region;
-import com.woowacamp.soolsool.core.statistics.domain.vo.SalePrice;
-import com.woowacamp.soolsool.core.statistics.domain.vo.SaleQuantity;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.woowacamp.soolsool.core.statistics.domain.converter.*;
+import com.woowacamp.soolsool.core.statistics.domain.vo.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.math.BigInteger;
 
 @Entity
 @Table(name = "statistics")
@@ -57,18 +45,32 @@ public class Statistic {
 
     @Builder
     public Statistic(
-        final Region region,
-        final BrewType brewType,
-        final Impression impression,
-        final Click click,
-        final SaleQuantity saleQuantity,
-        final SalePrice salePrice
+            final StatisticId statisticId,
+            final String region,
+            final String brewType,
+            final BigInteger impression,
+            final BigInteger click,
+            final BigInteger saleQuantity,
+            final BigInteger salePrice
     ) {
-        this.region = region;
-        this.brewType = brewType;
-        this.impression = impression;
-        this.click = click;
-        this.saleQuantity = saleQuantity;
-        this.salePrice = salePrice;
+        this.statisticId = statisticId;
+        this.region = new Region(region);
+        this.brewType = new BrewType(brewType);
+        this.impression = new Impression(impression);
+        this.click = new Click(click);
+        this.saleQuantity = new SaleQuantity(saleQuantity);
+        this.salePrice = new SalePrice(salePrice);
+    }
+
+    public Statistic addSaleQuantityAndPrice(final BigInteger saleQuantity, final BigInteger salePrice) {
+        return Statistic.builder()
+                .statisticId(this.statisticId)
+                .region(this.region.getName())
+                .brewType(this.brewType.getType())
+                .impression(this.impression.getCount())
+                .click(this.click.getCount())
+                .saleQuantity(this.saleQuantity.add(saleQuantity).getQuantity())
+                .salePrice(this.salePrice.add(salePrice).getPrice())
+                .build();
     }
 }

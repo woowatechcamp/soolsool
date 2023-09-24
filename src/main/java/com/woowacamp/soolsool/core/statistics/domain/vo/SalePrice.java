@@ -2,10 +2,11 @@ package com.woowacamp.soolsool.core.statistics.domain.vo;
 
 import com.woowacamp.soolsool.core.member.code.MemberErrorCode;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
-import java.math.BigInteger;
-import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
+import java.math.BigInteger;
+import java.util.Objects;
 
 @Getter
 @EqualsAndHashCode
@@ -30,5 +31,9 @@ public class SalePrice {
         if (Objects.isNull(salePrice)) {
             throw new SoolSoolException(MemberErrorCode.NO_CONTENT_MILEAGE);
         }
+    }
+
+    public SalePrice add(final BigInteger value) {
+        return new SalePrice(this.price.add(value));
     }
 }
