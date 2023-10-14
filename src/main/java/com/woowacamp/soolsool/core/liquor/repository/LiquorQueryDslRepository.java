@@ -1,7 +1,9 @@
 package com.woowacamp.soolsool.core.liquor.repository;
 
 import static com.woowacamp.soolsool.core.liquor.domain.QLiquor.liquor;
+import static com.woowacamp.soolsool.core.liquor.domain.QLiquorCtr.liquorCtr;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
@@ -9,7 +11,8 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorBrew;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorRegion;
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrand;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementDto;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +31,7 @@ public class LiquorQueryDslRepository {
     public List<Liquor> getList(
         final LiquorSearchCondition condition,
         final Pageable pageable,
-        final Long cursorId
+        final Long liquorId
     ) {
         return queryFactory.select(liquor)
             .from(liquor)
@@ -37,7 +40,7 @@ public class LiquorQueryDslRepository {
                 eqBrew(condition.getLiquorBrew()),
                 eqStatus(condition.getLiquorStatus()),
                 eqBrand(condition.getBrand()),
-                cursorId(cursorId)
+                cursorId(liquorId, null)
             )
             .orderBy(liquor.id.desc())
             .limit(pageable.getPageSize())
@@ -45,7 +48,9 @@ public class LiquorQueryDslRepository {
     }
 
     @Cacheable(value = "liquorsFirstPage")
-    public List<Liquor> getCachedList(final Pageable pageable) {
+    public List<Liquor> getCachedList(
+        final Pageable pageable
+    ) {
         log.info("LiquorQueryDslRepository getCachedList");
         return queryFactory.select(liquor)
             .from(liquor)
@@ -54,6 +59,32 @@ public class LiquorQueryDslRepository {
             .fetch();
     }
 
+    public List<LiquorClickElementDto> getListByClick(
+        final LiquorSearchCondition condition,
+        final Pageable pageable,
+        final Long liquorId,
+        final Long clickCount
+    ) {
+        return queryFactory.select(
+                Projections.constructor(
+                    LiquorClickElementDto.class,
+                    liquor,
+                    liquorCtr.click
+                )
+            )
+            .from(liquor)
+            .join(liquorCtr).on(liquor.id.eq(liquorCtr.liquorId))
+            .where(
+                eqRegion(condition.getLiquorRegion()),
+                eqBrew(condition.getLiquorBrew()),
+                eqStatus(condition.getLiquorStatus()),
+                eqBrand(condition.getBrand()),
+                cursorId(liquorId, clickCount)
+            )
+            .orderBy(liquorCtr.click.count.desc(), liquor.id.desc())
+            .limit(pageable.getPageSize())
+            .fetch();
+    }
 
     private BooleanExpression eqRegion(final LiquorRegion liquorRegion) {
         if (Objects.isNull(liquorRegion)) {
@@ -73,7 +104,7 @@ public class LiquorQueryDslRepository {
         if (Objects.isNull(liquorStatus)) {
             return null;
         }
-        return liquor.status.type.eq(liquorStatus.getType());
+        return liquor.status.eq(liquorStatus);
     }
 
     private BooleanExpression eqBrand(final String brand) {
@@ -83,10 +114,15 @@ public class LiquorQueryDslRepository {
         return liquor.brand.eq(new LiquorBrand(brand));
     }
 
-    private BooleanExpression cursorId(final Long cursorId) {
-        if (cursorId == null) {
+    private BooleanExpression cursorId(final Long liquorId, final Long click) {
+        if (liquorId == null) {
             return null;
         }
-        return liquor.id.lt(cursorId);
+        if (click == null) {
+            return liquor.id.lt(liquorId);
+        }
+
+        return liquorCtr.click.count.lt(click).or(
+            liquorCtr.click.count.eq(click).and(liquor.id.lt(liquorId)));
     }
 }

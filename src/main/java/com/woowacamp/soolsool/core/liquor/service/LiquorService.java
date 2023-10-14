@@ -13,12 +13,14 @@ import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorBrewType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorRegionType;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorDetailResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorElementResponse;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorModifyRequest;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSaveRequest;
-import com.woowacamp.soolsool.core.liquor.dto.LiquorSearchCondition;
-import com.woowacamp.soolsool.core.liquor.dto.PageLiquorResponse;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorListRequest;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
+import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSearchCondition;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorClickElementDto;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorBrewCache;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorCtrRepository;
 import com.woowacamp.soolsool.core.liquor.repository.LiquorQueryDslRepository;
@@ -84,32 +86,72 @@ public class LiquorService {
     }
 
     @Transactional
-    public PageLiquorResponse liquorList(
-        final LiquorBrewType brewType,
-        final LiquorRegionType regionType,
-        final LiquorStatusType statusType,
-        final String brand,
-        final Pageable pageable,
-        final Long cursorId
+    public PageLiquorResponse liquorListByClick(
+        final LiquorListRequest liquorListRequest,
+        final Pageable pageable
     ) {
         final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition(
-            liquorRegionCache.findByType(regionType).orElse(null),
-            liquorBrewCache.findByType(brewType).orElse(null),
-            liquorStatusCache.findByType(statusType).orElse(null),
-            brand
+            liquorRegionCache.findByType(liquorListRequest.getRegion()).orElse(null),
+            liquorBrewCache.findByType(liquorListRequest.getBrew()).orElse(null),
+            liquorStatusCache.findByType(liquorListRequest.getStatus()).orElse(null),
+            liquorListRequest.getBrand()
         );
 
-        final List<Liquor> liquors = liquorQueryDslRepository
-            .getList(liquorSearchCondition, pageable, cursorId);
+        final List<LiquorClickElementDto> liquors = liquorQueryDslRepository
+            .getListByClick(
+                liquorSearchCondition, pageable,
+                liquorListRequest.getLiquorId(),
+                liquorListRequest.getClickCount()
+            );
 
-        return PageLiquorResponse.of(pageable, liquors);
+        return PageLiquorResponse.of(pageable, getLiquorElementResponseFromClick(liquors));
+    }
+
+    private List<LiquorElementResponse> getLiquorElementResponseFromClick(
+        List<LiquorClickElementDto> liquors) {
+        return liquors.stream().map(
+            liquor -> new LiquorElementResponse(
+                liquor.getId(),
+                liquor.getName(),
+                liquor.getPrice(),
+                liquor.getImageUrl(),
+                liquor.getStock()
+            )
+        ).collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public PageLiquorResponse liquorListByLatest(
+        final LiquorListRequest liquorListRequest,
+        final Pageable pageable
+    ) {
+        final LiquorSearchCondition liquorSearchCondition = new LiquorSearchCondition(
+            liquorRegionCache.findByType(liquorListRequest.getRegion()).orElse(null),
+            liquorBrewCache.findByType(liquorListRequest.getBrew()).orElse(null),
+            liquorStatusCache.findByType(liquorListRequest.getStatus()).orElse(null),
+            liquorListRequest.getBrand()
+        );
+
+        final List<Liquor> liquors = liquorQueryDslRepository.getList(
+            liquorSearchCondition, pageable,
+            liquorListRequest.getLiquorId()
+        );
+
+        return PageLiquorResponse.of(pageable, getLiquorElementsFromLiquor(liquors));
+    }
+
+    private static List<LiquorElementResponse> getLiquorElementsFromLiquor(List<Liquor> liquors) {
+        return liquors.stream()
+            .map(LiquorElementResponse::from)
+            .collect(Collectors.toList());
     }
 
     @Transactional
     public PageLiquorResponse getFirstPage(final Pageable pageable) {
         final List<Liquor> liquors = liquorQueryDslRepository.getCachedList(pageable);
 
-        return PageLiquorResponse.of(pageable, liquors);
+        return PageLiquorResponse.of(pageable, getLiquorElementsFromLiquor(liquors));
     }
 
     @CacheEvict(value = "liquorsFirstPage")

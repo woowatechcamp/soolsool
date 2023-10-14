@@ -13,16 +13,16 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class StatisticId implements Serializable {
 
-    @Column(name = "year")
+    @Column(name = "statistic_year")
     private int year;
 
-    @Column(name = "month")
+    @Column(name = "statistic_month")
     private int month;
 
-    @Column(name = "week")
+    @Column(name = "statistic_week")
     private int week;
 
-    @Column(name = "day")
+    @Column(name = "statistic_day")
     private int day;
 
     @Column(name = "liquor_id")

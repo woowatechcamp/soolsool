@@ -1,32 +1,29 @@
-package com.woowacamp.soolsool.core.liquor.dto;
+package com.woowacamp.soolsool.core.liquor.dto.response;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
+import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class LiquorDetailResponse {
+public class LiquorClickElementDto {
 
     private final Long id;
     private final String name;
     private final String price;
-    private final String brand;
     private final String imageUrl;
     private final Integer stock;
-    private final Double alcohol;
-    private final Integer volume;
+    private final Long clickCount;
 
-    public static LiquorDetailResponse of(final Liquor liquor) {
-        return new LiquorDetailResponse(
+    public LiquorClickElementDto(final Liquor liquor, final LiquorCtrClick clickCount) {
+        this(
             liquor.getId(),
             liquor.getName(),
             liquor.getPrice().toString(),
-            liquor.getBrand(),
             liquor.getImageUrl(),
             liquor.getTotalStock(),
-            liquor.getAlcohol(),
-            liquor.getVolume()
+            clickCount.getCount()
         );
     }
 }

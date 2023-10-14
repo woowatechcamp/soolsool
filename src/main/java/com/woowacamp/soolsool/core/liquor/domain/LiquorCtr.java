@@ -3,7 +3,6 @@ package com.woowacamp.soolsool.core.liquor.domain;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import com.woowacamp.soolsool.core.liquor.code.LiquorCtrErrorCode;
-import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrClickConverter;
 import com.woowacamp.soolsool.core.liquor.domain.converter.LiquorCtrImpressionConverter;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrClick;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorCtrImpression;
@@ -11,6 +10,7 @@ import com.woowacamp.soolsool.global.common.BaseEntity;
 import com.woowacamp.soolsool.global.exception.SoolSoolException;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,8 +38,7 @@ public class LiquorCtr extends BaseEntity {
     @Convert(converter = LiquorCtrImpressionConverter.class)
     private LiquorCtrImpression impression;
 
-    @Column(name = "click", nullable = false)
-    @Convert(converter = LiquorCtrClickConverter.class)
+    @Embedded
     private LiquorCtrClick click;
 
     public LiquorCtr(@NonNull final Long liquorId) {
@@ -62,7 +61,7 @@ public class LiquorCtr extends BaseEntity {
             throw new SoolSoolException(LiquorCtrErrorCode.DIVIDE_BY_ZERO_IMPRESSION);
         }
 
-        final double ratio = (double) click.getClick() / impression.getImpression();
+        final double ratio = (double) click.getCount() / impression.getImpression();
 
         return Math.round(ratio * 100) / 100.0;
     }
@@ -72,6 +71,6 @@ public class LiquorCtr extends BaseEntity {
     }
 
     public Long getClick() {
-        return click.getClick();
+        return click.getCount();
     }
 }

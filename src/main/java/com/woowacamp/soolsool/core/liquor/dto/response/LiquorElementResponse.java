@@ -1,14 +1,9 @@
-package com.woowacamp.soolsool.core.liquor.dto;
+package com.woowacamp.soolsool.core.liquor.dto.response;
 
 import com.woowacamp.soolsool.core.liquor.domain.Liquor;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 
 @Getter
-@RequiredArgsConstructor
 public class LiquorElementResponse {
 
     private final Long id;
@@ -16,6 +11,20 @@ public class LiquorElementResponse {
     private final String price;
     private final String imageUrl;
     private final Integer stock;
+
+    public LiquorElementResponse(
+        final Long id,
+        final String name,
+        final String price,
+        final String imageUrl,
+        final Integer stock
+    ) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.stock = stock;
+    }
 
     public LiquorElementResponse(final Liquor liquor) {
         this.id = liquor.getId();
@@ -33,11 +42,5 @@ public class LiquorElementResponse {
             liquor.getImageUrl(),
             liquor.getTotalStock()
         );
-    }
-
-    public static List<LiquorElementResponse> from(final Page<Liquor> liquors) {
-        return liquors.getContent().stream()
-            .map(LiquorElementResponse::from)
-            .collect(Collectors.toList());
     }
 }

@@ -1,4 +1,4 @@
-package com.woowacamp.soolsool.core.liquor.dto;
+package com.woowacamp.soolsool.core.liquor.dto.request;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
