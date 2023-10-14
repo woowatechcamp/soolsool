@@ -149,14 +149,13 @@ class LiquorAcceptanceTest extends AcceptanceTest {
             () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
             () -> assertThat(liquorDetailResponse.getStock()).isZero(),
             () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
-            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300),
-            () -> assertThat(liquorDetailResponse.getRelatedLiquors()).isEmpty()
+            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300)
         );
     }
 
     @Test
-    @DisplayName("술 상세정보를 연관된 상품과 함께 조회할 수 있다")
-    void liquorDetailWithRelatedLiquors() {
+    @DisplayName("특정 상품과 함께 많이 구매된 상품 목록을 조회할 수 있다")
+    void liquorPurchasedTogether() {
         // given
         String vendorAccessToken = RestAuthFixture.로그인_최민족_판매자();
         Long 새로_Id = RestLiquorFixture.술_등록_새로_판매중(vendorAccessToken);
@@ -172,29 +171,20 @@ class LiquorAcceptanceTest extends AcceptanceTest {
         RestPayFixture.결제_성공(customerAccessToken, 주문서_Id);
 
         // when
-        LiquorDetailResponse liquorDetailResponse = RestAssured
+        List<LiquorElementResponse> responses = RestAssured
             .given().log().all()
             .contentType(APPLICATION_JSON_VALUE)
             .accept(APPLICATION_JSON_VALUE)
-            .when().get("/api/liquors/{liquorId}", 새로_Id)
+            .when().get("/api/liquors/{liquorId}/related", 새로_Id)
             .then().log().all()
-            .extract().jsonPath().getObject("data", LiquorDetailResponse.class);
+            .extract().jsonPath().getList("data", LiquorElementResponse.class);
 
-        List<Long> relatedLiquorIds = liquorDetailResponse.getRelatedLiquors().stream()
+        List<Long> relatedLiquorIds = responses.stream()
             .map(LiquorElementResponse::getId)
             .collect(Collectors.toList());
 
         // then
-        assertAll(
-            () -> assertThat(liquorDetailResponse.getName()).isEqualTo("새로"),
-            () -> assertThat(liquorDetailResponse.getPrice()).isEqualTo("3000"),
-            () -> assertThat(liquorDetailResponse.getBrand()).isEqualTo("롯데"),
-            () -> assertThat(liquorDetailResponse.getImageUrl()).isEqualTo("/soju-url"),
-            () -> assertThat(liquorDetailResponse.getStock()).isEqualTo(99),
-            () -> assertThat(liquorDetailResponse.getAlcohol()).isEqualTo(12.0),
-            () -> assertThat(liquorDetailResponse.getVolume()).isEqualTo(300),
-            () -> assertThat(relatedLiquorIds).containsExactlyInAnyOrder(얼음딸기주_Id)
-        );
+        assertThat(relatedLiquorIds).containsExactlyInAnyOrder(얼음딸기주_Id);
     }
 
     @Test

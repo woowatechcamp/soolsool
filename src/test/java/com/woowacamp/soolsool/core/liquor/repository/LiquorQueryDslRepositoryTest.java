@@ -101,7 +101,7 @@ class LiquorQueryDslRepositoryTest {
     }
 
     @Test
-    @DisplayName("클릭순 + 최신순 : 커서 click Count가 null일때, liquorId가 최신순인 것으로 정렬된다." )
+    @DisplayName("클릭순 + 최신순 : 커서 click Count가 null일때, liquorId가 최신순인 것으로 정렬된다.")
     void cursorClickCountNullTestByClickAndLatest() {
         // given
         LiquorBrew brew = null;
@@ -122,8 +122,8 @@ class LiquorQueryDslRepositoryTest {
     }
 
     @Test
-    @DisplayName("클릭순+최신순 : 커서 liquorId와 clickCount가 not null 일때, 클릭률 순으로, 클릭률 같다면 최신 순으로 정렬" )
-    void cursorLiquorIdClickCCountNotNullTestByClickAndLatest(){
+    @DisplayName("클릭순+최신순 : 커서 liquorId와 clickCount가 not null 일때, 클릭률 순으로, 클릭률 같다면 최신 순으로 정렬")
+    void cursorLiquorIdClickCCountNotNullTestByClickAndLatest() {
         // given
         LiquorBrew brew = null;
         LiquorRegion region = null;

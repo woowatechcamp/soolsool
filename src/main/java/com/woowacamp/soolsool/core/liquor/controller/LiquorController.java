@@ -10,6 +10,7 @@ import com.woowacamp.soolsool.core.liquor.dto.request.LiquorListRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorModifyRequest;
 import com.woowacamp.soolsool.core.liquor.dto.request.LiquorSaveRequest;
 import com.woowacamp.soolsool.core.liquor.dto.response.LiquorDetailResponse;
+import com.woowacamp.soolsool.core.liquor.dto.response.LiquorElementResponse;
 import com.woowacamp.soolsool.core.liquor.dto.response.PageLiquorResponse;
 import com.woowacamp.soolsool.core.liquor.service.LiquorService;
 import com.woowacamp.soolsool.global.aop.RequestLogging;
@@ -17,6 +18,7 @@ import com.woowacamp.soolsool.global.auth.dto.NoAuth;
 import com.woowacamp.soolsool.global.auth.dto.Vendor;
 import com.woowacamp.soolsool.global.common.ApiResponse;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -67,6 +69,19 @@ public class LiquorController {
 
     @NoAuth
     @RequestLogging
+    @GetMapping("/{liquorId}/related")
+    public ResponseEntity<ApiResponse<List<LiquorElementResponse>>> liquorPurchasedTogether(
+        @PathVariable final Long liquorId
+    ) {
+        final List<LiquorElementResponse> response = liquorService.liquorPurchasedTogether(
+            liquorId);
+
+        return ResponseEntity.ok(
+            ApiResponse.of(LiquorResultCode.LIQUOR_PURCHASED_TOGETHER_FOUND, response));
+    }
+
+    @NoAuth
+    @RequestLogging
     @GetMapping("/first")
     public ResponseEntity<ApiResponse<PageLiquorResponse>> getLiquorFirstList(
         @PageableDefault final Pageable pageable
@@ -88,7 +103,7 @@ public class LiquorController {
         final PageRequest sortPageable = getSortedPageable(pageable);
 
         final PageLiquorResponse response = liquorService
-            .liquorListByLatest(liquorListRequest,sortPageable);
+            .liquorListByLatest(liquorListRequest, sortPageable);
 
         return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }
@@ -108,7 +123,7 @@ public class LiquorController {
         return ResponseEntity.ok(ApiResponse.of(LIQUOR_LIST_FOUND, response));
     }
 
-    private  PageRequest getSortedPageable(Pageable pageable) {
+    private PageRequest getSortedPageable(Pageable pageable) {
         return PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),

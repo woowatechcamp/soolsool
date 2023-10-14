@@ -2,9 +2,7 @@ package com.woowacamp.soolsool.core.liquor.repository;
 
 import com.woowacamp.soolsool.core.liquor.domain.LiquorStatus;
 import com.woowacamp.soolsool.core.liquor.domain.vo.LiquorStatusType;
-
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
